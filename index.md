@@ -4,7 +4,7 @@ Department of Mathematics
 IIT Guwahati  
 email: drdebmath[at]gmail.com
 
-[DBLP](dblp.uni-trier.de/pers/hd/p/Pattanayak:Debasish)
+[DBLP](https://dblp.uni-trier.de/pers/hd/p/Pattanayak:Debasish)
 
 ## Research Interests
 My research interests include
