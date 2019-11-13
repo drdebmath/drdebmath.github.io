@@ -1,4 +1,4 @@
-<table style="border:0;">
+<table style="border:none;">
 <tr>
   <td>
     Department of Mathematics<br>
