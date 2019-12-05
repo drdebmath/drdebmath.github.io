@@ -11,8 +11,10 @@ My research interests include
 
 # Publications
 [DBLP](https://dblp.uni-trier.de/pers/hd/p/Pattanayak:Debasish)
+
 ## Journal
 - Debasish Pattanayak, Kaushik Mondal, H. Ramesh, and Partha Sarathi Mandal. _Gathering of mobile robots with weak multiplicity detection in presence of crash-faults._ J. Parallel Distrib. Comput., 123:145–155, 2019. [arXiv](https://arxiv.org/pdf/1608.02432.pdf)
+
 ## Conferences
 1. Debasish Pattanayak, Kaushik Mondal, H. Ramesh, Partha Sarathi Mandal. _Fault-Tolerant Gathering of Mobile Robots with Weak Multiplicity Detection._ In Proceedings of the 18th International Conference on Distributed Computing and Networking, Hyderabad, India, January 5-7, 2017.[arXiv](https://arxiv.org/pdf/1608.02432.pdf)
 2. Debasish Pattanayak, Kaushik Mondal, Partha Sarathi Mandal, and Stefan Schmid. _Convergence of even simpler robots without position information._ In Networked Systems - 5th International Conference, NETYS 2017, Marrakech, Morocco, May 17-19, 2017, Proceedings, pages 69–85, 2017. [arXiv](https://arxiv.org/pdf/1608.06002.pdf)
