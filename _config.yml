@@ -5,3 +5,5 @@ description: Department of Mathematics, IIT Guwahati
 # social links
 twitter_username: drdebmath
 github_username:  drdebmath
+github:
+  is_project_page: false
