@@ -1,7 +1,7 @@
 # About Me
 I am a PhD student at Department of Mathematics, IIT Guwahati under the supervision of [Prof. Partha Sarathi Mandal](https://www.iitg.ac.in/psm/) and [Dr. H. Ramesh](https://www.iitg.ac.in/ramesh_h/). From July to December 2019, I was visiting [Prof. Stefan Schmid](https://www.univie.ac.at/ct/stefan/) at the University of Vienna under the SERB Overseas Visiting Doctoral Fellowship.
 
-[CV](/DebasishCV.pdf)
+[CV.pdf](/DebasishCV.pdf)
 
 # Research Interests
 My research interests include
@@ -30,3 +30,12 @@ My research interests include
 # Awards/Fellowships
 1. Best Poster award in Doctoral Symposium, ICDCN 2020.
 2. SERB Overseas Visiting Doctoral Fellowship, 2018-19.
+
+# Community Services
+* I have been a reviewer for ICDCN 2017, ICDCN 2019, OPODIS 2019, CALDAM 2020.
+* Part of the Organizing Committee of the [13th International Conference and Workshop on Algorithms and Computation (WALCOM), 2019](https://www.iitg.ac.in/walcom2019/).
+
+# Skills
+## Programming
+•C •C++ •Python •LATEX •HTML •CSS •MATLAB •Mathematica  
+Recently, I am using python for simulation.
