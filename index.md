@@ -1,7 +1,7 @@
 # About Me
 I am a PhD student at Department of Mathematics, IIT Guwahati under the supervision of [Prof. Partha Sarathi Mandal](https://www.iitg.ac.in/psm/) and [Dr. H. Ramesh](https://www.iitg.ac.in/ramesh_h/). From July to December 2019, I was visiting [Prof. Stefan Schmid](https://www.univie.ac.at/ct/stefan/) at the University of Vienna under the SERB Overseas Visiting Doctoral Fellowship.
 
-[Short CV](/CV_Debasish.pdf)
+[CV](/DebasishCV.pdf)
 
 # Research Interests
 My research interests include
