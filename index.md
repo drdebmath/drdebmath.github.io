@@ -8,9 +8,11 @@ My research interests include
 * Distributed Algorithms
 * Fault-tolerance
 * Swarm Robots
+* Randomized Algorithms
 
 # Publications
 [DBLP](https://dblp.uni-trier.de/pers/hd/p/Pattanayak:Debasish)
+[Google Scholar](https://scholar.google.com/citations?user=E-jjx9gAAAAJ&hl=en&oi=ao)
 
 ## Journal
 - Debasish Pattanayak, Kaushik Mondal, H. Ramesh, and Partha Sarathi Mandal. _Gathering of mobile robots with weak multiplicity detection in presence of crash-faults._ J. Parallel Distrib. Comput., 123:145–155, 2019. [arXiv](https://arxiv.org/pdf/1608.02432.pdf)
