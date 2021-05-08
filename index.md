@@ -17,9 +17,9 @@ My research interests include
 
 ## Journals
 1. Debasish Pattanayak, Kaushik Mondal, H. Ramesh, and Partha Sarathi Mandal. _Gathering of mobile robots with weak multiplicity detection in presence of crash-faults._ J. Parallel Distrib. Comput., 123:145–155, 2019. [arXiv](https://arxiv.org/pdf/1608.02432.pdf)
-2. Dibakar Saha, Debasish Pattanayak, and Partha Sarathi Mandal. _Surveillance of Uneven Surface with Self-organizing Unmanned Aerial Vehicles._ IEEE Transactions on Mobile Computing
-3.  Debasish Pattanayak, Kaushik Mondal, Partha Sarathi Mandal, and Stefan Schmid. _Area Convergence of Weaker Robots with Additional Capabilities._ The Computer Journal (Oxford)
-4. Debasish Pattanayak, John Augustine, Partha Sarathi Mandal. _Randomized Gathering of Asynchronous Mobile Robots._ Theoretical Computer Science (Elsevier)
+2. Dibakar Saha, Debasish Pattanayak, and Partha Sarathi Mandal. _Surveillance of Uneven Surface with Self-organizing Unmanned Aerial Vehicles._ IEEE Transactions on Mobile Computing.
+3.  Debasish Pattanayak, Kaushik Mondal, Partha Sarathi Mandal, and Stefan Schmid. _Area Convergence of Weaker Robots with Additional Capabilities._ The Computer Journal (Oxford).
+4. Debasish Pattanayak, John Augustine, Partha Sarathi Mandal. _Randomized Gathering of Asynchronous Mobile Robots._ Theoretical Computer Science (Elsevier). [doi](https://doi.org/10.1016/j.tcs.2020.11.048)
 
 ## Conferences
 1. Debasish Pattanayak, Kaushik Mondal, H. Ramesh, Partha Sarathi Mandal. _Fault-Tolerant Gathering of Mobile Robots with Weak Multiplicity Detection._ In Proceedings of the 18th International Conference on Distributed Computing and Networking, Hyderabad, India, January 5-7, 2017.[arXiv](https://arxiv.org/pdf/1608.02432.pdf)
@@ -28,8 +28,9 @@ My research interests include
 4. Debasish Pattanayak, H. Ramesh, and Partha Sarathi Mandal. _Chauffeuring a crashed robot from a disk._ In Algorithms for Sensor Systems - 15th International Symposium on Algorithms and Experiments for Wireless Sensor Networks, ALGOSENSORS 2019, Munich, Germany, September 12-13, 2019, Revised Selected Papers, pages 177–191, 2019. [arXiv](https://arxiv.org/pdf/1906.03024.pdf)
 5. Dibakar Saha, Debasish Pattanayak, and Partha Sarathi Mandal. _Surveillance of uneven surface with unmanned aerial vehicles._ In Proceedings of the 21st International Conference on Distributed Computing and Networking, ICDCN 2020, Kolkata, India, January 4-7, 2020.
 6. Debasish Pattanayak, Klaus-Tycho Foerster, Partha Sarathi Mandal, Stefan Schmid. _Conic Formation in Presence of Faulty Robots._ ALGOSENSORS'20, Pisa, Italy, September 7-10, 2020, Lecture Notes in Computer Science, vol 12503. Springer, Cham. [doi](https://doi.org/10.1007/978-3-030-62401-9\_12)
-7. Debasish Pattanayak, Dibakar Saha, Debarati Mitra, and Partha Sarathi Mandal. _A Reconstructive Model for Identifying the Global Spread in a Pandemic_ ICDCIT'21 (To appear)
-8. Kartikey Kant, Debasish Pattanayak, Partha Sarathi Mandal. _Fort Formation by an Automaton._ COMSNET'21 (To appear)
+8. Debasish Pattanayak, Gokarna Sharma, Partha Sarathi Mandal. _Dispersion of Mobile Robots Tolerating Faults._ WDALFR, ICDCN (Adjunct Volume) 2021: 133-138. [doi](https://doi.org/10.1145/3427477.3429464)
+7. Debasish Pattanayak, Dibakar Saha, Debarati Mitra, and Partha Sarathi Mandal. _A Reconstructive Model for Identifying the Global Spread in a Pandemic_ ICDCIT'21. [doi](https://doi.org/10.1007/978-3-030-65621-8_12)
+8. Kartikey Kant, Debasish Pattanayak, Partha Sarathi Mandal. _Fort Formation by an Automaton._ COMSNET'21. [doi](https://doi.org/10.1109/COMSNETS51098.2021.9352839)
 
 ## Abstracts/Posters
 1. Debasish Pattanayak, H. Ramesh, Partha Sarathi Mandal. _Collaborative Evacuation of Mobile Robots._ In Doctoral Symposium ICDCN 2020, Kolkata, India, January 4-7, 2020. (Best poster award)
@@ -47,4 +48,4 @@ My research interests include
 # Skills
 ## Programming
 •C •C++ •Python •LATEX •HTML •CSS •MATLAB •Mathematica  
-Recently, I am using python for simulation.
+Recently, I am using C++ and Python.
