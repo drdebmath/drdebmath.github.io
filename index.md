@@ -1,6 +1,7 @@
 # About Me
 I am a Postdoctoral researcher at LUISS Guido Carli, Rome working with [Prof. Giuseppe F. Italiano](http://docenti.luiss.it/italiano/).
-I obtained my PhD from the Department of Mathematics, IIT Guwahati under the supervision of [Prof. Partha Sarathi Mandal](https://www.iitg.ac.in/psm/) and [Dr. H. Ramesh](https://www.iitg.ac.in/ramesh_h/). From July to December 2019, I was visiting [Prof. Stefan Schmid](https://www.univie.ac.at/ct/stefan/) at the University of Vienna under the SERB Overseas Visiting Doctoral Fellowship.
+I obtained my PhD from the Department of Mathematics, IIT Guwahati under the supervision of [Prof. Partha Sarathi Mandal](https://www.iitg.ac.in/psm/) and [Dr. H. Ramesh](https://www.iitg.ac.in/ramesh_h/). From July to December 2019, I was visiting [Prof. Stefan Schmid](https://www.univie.ac.at/ct/stefan/) at the University of Vienna under the SERB Overseas Visiting Doctoral Fellowship. From March to September 2020, I was a visiting scientist at ISI Kolkata working with [Dr. Anisur Rahaman Molla](https://sites.google.com/site/mollaanisurrahaman/).
+
 
 [CV.pdf](/DebasishCV.pdf)
 
@@ -31,9 +32,18 @@ My research interests include
 8. Debasish Pattanayak, Gokarna Sharma, Partha Sarathi Mandal. _Dispersion of Mobile Robots Tolerating Faults._ WDALFR, ICDCN (Adjunct Volume) 2021: 133-138. [doi](https://doi.org/10.1145/3427477.3429464)
 7. Debasish Pattanayak, Dibakar Saha, Debarati Mitra, and Partha Sarathi Mandal. _A Reconstructive Model for Identifying the Global Spread in a Pandemic_ ICDCIT'21. [doi](https://doi.org/10.1007/978-3-030-65621-8_12)
 8. Kartikey Kant, Debasish Pattanayak, Partha Sarathi Mandal. _Fort Formation by an Automaton._ COMSNET'21. [doi](https://doi.org/10.1109/COMSNETS51098.2021.9352839)
+9. Giuseppe F. Italiano, Debasish Pattanayak, Gokarna Sharma. _Dispersion in Directed Graphs._ SIROCCO'22. [To appear]
 
 ## Abstracts/Posters
 1. Debasish Pattanayak, H. Ramesh, Partha Sarathi Mandal. _Collaborative Evacuation of Mobile Robots._ In Doctoral Symposium ICDCN 2020, Kolkata, India, January 4-7, 2020. (Best poster award)
+
+# Talks
+1. A Demo of GPT-3 at LUISS School of Journalism. [Tweet](https://twitter.com/Zeta_Luiss/status/1403267050785710080) [Column](https://www.osservatoreromano.va/it/news/2021-07/quo-148/la-voce-delle-macchine-br-e-il-diritto-alla-verita.html) and [article](https://www.repubblica.it/commenti/2021/05/30/news/i_ribelli_dell_intelligenza_artificiale_commento_gianni_riotta-303374245/) by [Prof. Gianni Riotta](https://riotta.it/bio-riotta/)
+2. On the capabilties of GPT-3 at The AI Times Workshop. [Tweet](https://twitter.com/LuissDataLab/status/1442517724928876544)
+
+# Teaching
+1. AI and ML (Bachelor) Sep-Dec 2021, LUISS
+2. ML (Master) Feb-May 2022, LUISS
 
 # Awards/Fellowships
 1. Best Doctoral Thesis award from the Department of Mathematics, IIT Guwahati.
@@ -42,10 +52,13 @@ My research interests include
 3. SERB Overseas Visiting Doctoral Fellowship, 2018-19.
 
 # Community Services
-* I have been a reviewer for ICDCN 2017, ICDCN 2019, OPODIS 2019, CALDAM 2020, SSS 2020.
+* I have been a reviewer for ICDCN 2017, ICDCN 2019, OPODIS 2019, CALDAM 2020, SIROCCO 2020, SSS 2021, ALGOSENSORS 2021, ISAAC 2021, ICDCS 2021, SODA 2022, ICDCN 2022, IEEE Access, TCS, JPDC.
 * Part of the Organizing Committee of the [13th International Conference and Workshop on Algorithms and Computation (WALCOM), 2019](https://www.iitg.ac.in/walcom2019/).
+* Part of PC member of the [Doctoral Symposium, ICDCN 2022](https://icdcn2022.iiitd.edu.in/docsymp.html). 
 
 # Skills
 ## Programming
-•C •C++ •Python •LATEX •HTML •CSS •MATLAB •Mathematica  
-Recently, I am using C++ and Python.
+•C •C++ •Python •LATEX •HTML •CSS •MATLAB •Mathematica •Markdown
+## Python Libraries
+•Numpy •Matplotlib •PyTorch •SkLearn •Pandas
+
