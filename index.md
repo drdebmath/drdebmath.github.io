@@ -11,6 +11,7 @@ My research interests include
 * Fault-tolerance
 * Swarm Robots
 * Randomized Algorithms
+* Graph Algorithms
 
 # Publications
 [DBLP](https://dblp.uni-trier.de/pers/hd/p/Pattanayak:Debasish)
