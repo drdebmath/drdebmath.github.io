@@ -3,7 +3,7 @@ I am a Postdoctoral researcher at LUISS Guido Carli, Rome working with [Prof. Gi
 I obtained my PhD from the Department of Mathematics, IIT Guwahati under the supervision of [Prof. Partha Sarathi Mandal](https://www.iitg.ac.in/psm/) and [Dr. H. Ramesh](https://www.iitg.ac.in/ramesh_h/). From July to December 2019, I was visiting [Prof. Stefan Schmid](https://www.univie.ac.at/ct/stefan/) at the University of Vienna under the SERB Overseas Visiting Doctoral Fellowship. From March to September 2020, I was a visiting scientist at ISI Kolkata working with [Dr. Anisur Rahaman Molla](https://sites.google.com/site/mollaanisurrahaman/).
 
 
-[CV.pdf](/DebasishCV.pdf)
+[CV.pdf](/AcademicCV_github.pdf)
 
 # Research Interests
 My research interests include
