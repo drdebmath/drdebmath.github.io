@@ -33,7 +33,7 @@ My research interests include
 8. Debasish Pattanayak, Gokarna Sharma, Partha Sarathi Mandal. _Dispersion of Mobile Robots Tolerating Faults._ WDALFR, ICDCN (Adjunct Volume) 2021: 133-138. [doi](https://doi.org/10.1145/3427477.3429464)
 7. Debasish Pattanayak, Dibakar Saha, Debarati Mitra, and Partha Sarathi Mandal. _A Reconstructive Model for Identifying the Global Spread in a Pandemic_ ICDCIT'21. [doi](https://doi.org/10.1007/978-3-030-65621-8_12)
 8. Kartikey Kant, Debasish Pattanayak, Partha Sarathi Mandal. _Fort Formation by an Automaton._ COMSNET'21. [doi](https://doi.org/10.1109/COMSNETS51098.2021.9352839)
-9. Giuseppe F. Italiano, Debasish Pattanayak, Gokarna Sharma. _Dispersion in Directed Graphs._ SIROCCO'22. [slides](https://www.dropbox.com/s/ttg2cb7hmyvyzzj/siroccoppt.pptx?dl=0)
+9. Giuseppe F. Italiano, Debasish Pattanayak, Gokarna Sharma. _Dispersion in Directed Graphs._ SIROCCO'22. [doi](https://link.springer.com/chapter/10.1007/978-3-031-09993-9_11)[slides](https://www.dropbox.com/s/ttg2cb7hmyvyzzj/siroccoppt.pptx?dl=0)
 
 ## Abstracts/Posters
 1. Debasish Pattanayak, H. Ramesh, Partha Sarathi Mandal. _Collaborative Evacuation of Mobile Robots._ In Doctoral Symposium ICDCN 2020, Kolkata, India, January 4-7, 2020. (Best poster award)
