@@ -1,6 +1,6 @@
 # About Me
-I am a Postdoctoral researcher at LUISS Guido Carli, Rome working with [Prof. Giuseppe F. Italiano](http://docenti.luiss.it/italiano/).
-I obtained my PhD from the Department of Mathematics, IIT Guwahati under the supervision of [Prof. Partha Sarathi Mandal](https://www.iitg.ac.in/psm/) and [Dr. H. Ramesh](https://www.iitg.ac.in/ramesh_h/). From July to December 2019, I was visiting [Prof. Stefan Schmid](https://www.univie.ac.at/ct/stefan/) at the University of Vienna under the SERB Overseas Visiting Doctoral Fellowship. From March to September 2020, I was a visiting scientist at ISI Kolkata working with [Dr. Anisur Rahaman Molla](https://sites.google.com/site/mollaanisurrahaman/).
+I am currently a Postdoctoral researcher at [UQO](https://www.uqo.ca/), Canada working with [Prof. Andrzej Pelc](http://w3.uqo.ca/pelc/main.html).
+I obtained my PhD from the Department of Mathematics, IIT Guwahati under the supervision of [Prof. Partha Sarathi Mandal](https://www.iitg.ac.in/psm/) and [Dr. H. Ramesh](https://www.iitg.ac.in/ramesh_h/). From July to December 2019, I was visiting [Prof. Stefan Schmid](https://www.univie.ac.at/ct/stefan/) at the University of Vienna under the SERB Overseas Visiting Doctoral Fellowship. From March to September 2020, I was a visiting scientist at ISI Kolkata working with [Dr. Anisur Rahaman Molla](https://sites.google.com/site/mollaanisurrahaman/). From October 2020 to October 2022, I was a Postdoctoral researcher at [LUISS Guido Carli](https://www.luiss.it), Rome working with [Prof. Giuseppe F. Italiano](https://docenti.luiss.it/italiano/).
 
 
 [CV.pdf](/AcademicCV_github.pdf)
@@ -31,16 +31,18 @@ My research interests include
 5. Dibakar Saha, Debasish Pattanayak, and Partha Sarathi Mandal. _Surveillance of uneven surface with unmanned aerial vehicles._ In Proceedings of the 21st International Conference on Distributed Computing and Networking, ICDCN 2020, Kolkata, India, January 4-7, 2020.
 6. Debasish Pattanayak, Klaus-Tycho Foerster, Partha Sarathi Mandal, Stefan Schmid. _Conic Formation in Presence of Faulty Robots._ ALGOSENSORS'20, Pisa, Italy, September 7-10, 2020, Lecture Notes in Computer Science, vol 12503. Springer, Cham. [doi](https://doi.org/10.1007/978-3-030-62401-9\_12)
 8. Debasish Pattanayak, Gokarna Sharma, Partha Sarathi Mandal. _Dispersion of Mobile Robots Tolerating Faults._ WDALFR, ICDCN (Adjunct Volume) 2021: 133-138. [doi](https://doi.org/10.1145/3427477.3429464)
-7. Debasish Pattanayak, Dibakar Saha, Debarati Mitra, and Partha Sarathi Mandal. _A Reconstructive Model for Identifying the Global Spread in a Pandemic_ ICDCIT'21. [doi](https://doi.org/10.1007/978-3-030-65621-8_12)
-8. Kartikey Kant, Debasish Pattanayak, Partha Sarathi Mandal. _Fort Formation by an Automaton._ COMSNET'21. [doi](https://doi.org/10.1109/COMSNETS51098.2021.9352839)
-9. Giuseppe F. Italiano, Debasish Pattanayak, Gokarna Sharma. _Dispersion in Directed Graphs._ SIROCCO'22. [doi](https://link.springer.com/chapter/10.1007/978-3-031-09993-9_11)[slides](https://www.dropbox.com/s/ttg2cb7hmyvyzzj/siroccoppt.pptx?dl=0)
+9. Debasish Pattanayak, Dibakar Saha, Debarati Mitra, and Partha Sarathi Mandal. _A Reconstructive Model for Identifying the Global Spread in a Pandemic_ ICDCIT'21. [doi](https://doi.org/10.1007/978-3-030-65621-8_12)
+10. Kartikey Kant, Debasish Pattanayak, Partha Sarathi Mandal. _Fort Formation by an Automaton._ COMSNET'21. [doi](https://doi.org/10.1109/COMSNETS51098.2021.9352839)
+11. Giuseppe F. Italiano, Debasish Pattanayak, Gokarna Sharma. _Dispersion in Directed Graphs._ SIROCCO'22. [doi](https://link.springer.com/chapter/10.1007/978-3-031-09993-9_11) [slides](https://www.dropbox.com/s/ttg2cb7hmyvyzzj/siroccoppt.pptx?dl=0)
+12. Subhajit Pramanick, Sai Vamshi Samala, Debasish Pattanayak, Partha Sarathi Mandal. _Filling MIS Vertices by Myopic Luminous Robots._ ICDCIT'23 [arxiv](https://arxiv.org/abs/2107.04885)
 
 ## Abstracts/Posters
 1. Debasish Pattanayak, H. Ramesh, Partha Sarathi Mandal. _Collaborative Evacuation of Mobile Robots._ In Doctoral Symposium ICDCN 2020, Kolkata, India, January 4-7, 2020. (Best poster award)
 
 # Talks
-1. A Demo of GPT-3 at LUISS School of Journalism. [Tweet](https://twitter.com/Zeta_Luiss/status/1403267050785710080) [Column](https://www.osservatoreromano.va/it/news/2021-07/quo-148/la-voce-delle-macchine-br-e-il-diritto-alla-verita.html) and [article](https://www.repubblica.it/commenti/2021/05/30/news/i_ribelli_dell_intelligenza_artificiale_commento_gianni_riotta-303374245/) by [Prof. Gianni Riotta](https://riotta.it/bio-riotta/)
-2. On the capabilties of GPT-3 at The AI Times Workshop. [Tweet](https://twitter.com/LuissDataLab/status/1442517724928876544)
+1. _A Demo of GPT-3_ at LUISS School of Journalism. [Tweet](https://twitter.com/Zeta_Luiss/status/1403267050785710080) [Column](https://www.osservatoreromano.va/it/news/2021-07/quo-148/la-voce-delle-macchine-br-e-il-diritto-alla-verita.html) and [article](https://www.repubblica.it/commenti/2021/05/30/news/i_ribelli_dell_intelligenza_artificiale_commento_gianni_riotta-303374245/) by [Prof. Gianni Riotta](https://riotta.it/bio-riotta/)
+2. _On the capabilties of GPT-3_ at The AI Times Workshop by LUISS DataLab. [Tweet](https://twitter.com/LuissDataLab/status/1442517724928876544)
+3. _Dispersion of Mobile Robots_ at IIT Bhilai. 
 
 # Teaching
 1. AI and ML (Bachelor) Sep-Dec 2021, LUISS
@@ -48,14 +50,15 @@ My research interests include
 
 # Awards/Fellowships
 1. Best Doctoral Thesis award from the Department of Mathematics, IIT Guwahati.
-1. Awarded LUISS Guido Carli research grant titled ``AHeAD: efficient Algorithms for HArnessing networked Data".
-2. Best Poster award in Doctoral Symposium, ICDCN 2020.
-3. SERB Overseas Visiting Doctoral Fellowship, 2018-19.
+2. Awarded Distributed Computing Chair Research Grant, 2022 to work at UQO, Canada.
+3. Awarded PRIN research grant titled "AHeAD: efficient Algorithms for HArnessing networked Data" to work at LUISS Guido Carli, Italy.
+4. Best Poster award in Doctoral Symposium, ICDCN 2020.
+5. SERB Overseas Visiting Doctoral Fellowship, 2018-19 to work at University of Vienna.
 
 # Community Services
-* I have been a reviewer for ICDCN 2017, ICDCN 2019, OPODIS 2019, CALDAM 2020, SIROCCO 2020, SSS 2021, ALGOSENSORS 2021, ISAAC 2021, ICDCS 2021, SODA 2022, ICDCN 2022, IEEE Access, TCS, JPDC.
+* I have been a reviewer for the conferences ICDCN 2017, ICDCN 2019, OPODIS 2019, CALDAM 2020, SIROCCO 2020, SSS 2021, ALGOSENSORS 2021, ISAAC 2021, ICDCS 2021, SODA 2022, ICDCN 2022, and journals TCS, JPDC, IEEE Access.
 * Part of the Organizing Committee of the [13th International Conference and Workshop on Algorithms and Computation (WALCOM), 2019](https://www.iitg.ac.in/walcom2019/).
-* Part of PC member of the [Doctoral Symposium, ICDCN 2022](https://icdcn2022.iiitd.edu.in/docsymp.html). 
+* PC member of the [Doctoral Symposium, ICDCN 2022](https://icdcn2022.iiitd.edu.in/docsymp.html), [Distributed Computing Track of ICDCIT'23](https://icdcit.ac.in/19th-icdcit-2023/). 
 
 # Skills
 ## Programming
