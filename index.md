@@ -5,6 +5,7 @@ I obtained my PhD from the Department of Mathematics, IIT Guwahati under the sup
 
 [CV.pdf](/AcademicCV_github.pdf)
 
+
 # Research Interests
 My research interests include
 * Distributed Algorithms
@@ -12,6 +13,8 @@ My research interests include
 * Swarm Robots
 * Randomized Algorithms
 * Graph Algorithms
+
+I am currently working on algorithms for automatons on graphs.
 
 # Publications
 [DBLP](https://dblp.uni-trier.de/pers/hd/p/Pattanayak:Debasish)
@@ -35,12 +38,13 @@ My research interests include
 10. Kartikey Kant, Debasish Pattanayak, Partha Sarathi Mandal. _Fort Formation by an Automaton._ COMSNET'21. [doi](https://doi.org/10.1109/COMSNETS51098.2021.9352839)
 11. Giuseppe F. Italiano, Debasish Pattanayak, Gokarna Sharma. _Dispersion in Directed Graphs._ SIROCCO'22. [doi](https://link.springer.com/chapter/10.1007/978-3-031-09993-9_11) [slides](https://www.dropbox.com/s/ttg2cb7hmyvyzzj/siroccoppt.pptx?dl=0)
 12. Subhajit Pramanick, Sai Vamshi Samala, Debasish Pattanayak, Partha Sarathi Mandal. _Filling MIS Vertices by Myopic Luminous Robots._ ICDCIT'23 [arxiv](https://arxiv.org/abs/2107.04885)
+13. Loukas Georgiadis, Giuseppe F. Italiano, Evangelos Kosinas, Debasish Pattanayak. _On maximal 3-edge-connected subgraphs of undirected graphs._ [arxiv](https://arxiv.org/abs/2211.06521)
 
 ## Abstracts/Posters
 1. Debasish Pattanayak, H. Ramesh, Partha Sarathi Mandal. _Collaborative Evacuation of Mobile Robots._ In Doctoral Symposium ICDCN 2020, Kolkata, India, January 4-7, 2020. (Best poster award)
 
 # Talks
-1. _A Demo of GPT-3_ at LUISS School of Journalism. [Tweet](https://twitter.com/Zeta_Luiss/status/1403267050785710080) [Column](https://www.osservatoreromano.va/it/news/2021-07/quo-148/la-voce-delle-macchine-br-e-il-diritto-alla-verita.html) and [article](https://www.repubblica.it/commenti/2021/05/30/news/i_ribelli_dell_intelligenza_artificiale_commento_gianni_riotta-303374245/) by [Prof. Gianni Riotta](https://riotta.it/bio-riotta/)
+1. _A Demo of GPT-3_ at LUISS School of Journalism. [Tweet](https://twitter.com/Zeta_Luiss/status/1403267050785710080), [Column](https://www.osservatoreromano.va/it/news/2021-07/quo-148/la-voce-delle-macchine-br-e-il-diritto-alla-verita.html) and [article](https://www.repubblica.it/commenti/2021/05/30/news/i_ribelli_dell_intelligenza_artificiale_commento_gianni_riotta-303374245/) by [Prof. Gianni Riotta](https://riotta.it/bio-riotta/)
 2. _On the capabilties of GPT-3_ at The AI Times Workshop by LUISS DataLab. [Tweet](https://twitter.com/LuissDataLab/status/1442517724928876544)
 3. _Dispersion of Mobile Robots_ at IIT Bhilai. 
 
