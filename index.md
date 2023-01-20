@@ -37,7 +37,7 @@ I am currently working on algorithms for automatons on graphs.
 9. Debasish Pattanayak, Dibakar Saha, Debarati Mitra, and Partha Sarathi Mandal. _A Reconstructive Model for Identifying the Global Spread in a Pandemic_ ICDCIT'21. [doi](https://doi.org/10.1007/978-3-030-65621-8_12)
 10. Kartikey Kant, Debasish Pattanayak, Partha Sarathi Mandal. _Fort Formation by an Automaton._ COMSNET'21. [doi](https://doi.org/10.1109/COMSNETS51098.2021.9352839)
 11. Giuseppe F. Italiano, Debasish Pattanayak, Gokarna Sharma. _Dispersion in Directed Graphs._ SIROCCO'22. [doi](https://link.springer.com/chapter/10.1007/978-3-031-09993-9_11) [slides](https://www.dropbox.com/s/ttg2cb7hmyvyzzj/siroccoppt.pptx?dl=0)
-12. Subhajit Pramanick, Sai Vamshi Samala, Debasish Pattanayak, Partha Sarathi Mandal. _Filling MIS Vertices by Myopic Luminous Robots._ ICDCIT'23 [arxiv](https://arxiv.org/abs/2107.04885)
+12. Subhajit Pramanick, Sai Vamshi Samala, Debasish Pattanayak, Partha Sarathi Mandal. _Filling MIS Vertices by Myopic Luminous Robots._ ICDCIT'23 (Best paper award) [arxiv](https://arxiv.org/abs/2107.04885) 
 13. Loukas Georgiadis, Giuseppe F. Italiano, Evangelos Kosinas, Debasish Pattanayak. _On maximal 3-edge-connected subgraphs of undirected graphs._ [arxiv](https://arxiv.org/abs/2211.06521)
 
 ## Abstracts/Posters
