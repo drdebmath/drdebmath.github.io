@@ -6,8 +6,8 @@ I obtained my PhD from the Department of Mathematics, IIT Guwahati under the sup
 
 ## News
 <!--- - I am joining Carleton University as a Postdoctoral Research Fellow starting October 2023, working with [Prof. Nicola Santoro](https://research.nicola-santoro.com/) and [Prof. Paola Flocchini](https://www.site.uottawa.ca/~flocchin/).--->
-- [New paper accepted in TCS on Distributed MIS filling.](https://doi.org/10.1016/j.tcs.2023.114187)
-- [New paper appearing in SSS'23 on Dispersion despite faults.](https://www.stabilizationsafetysecurity2023.com/) [Conference Schedule](https://www.stabilizationsafetysecurity2023.com/_files/ugd/1ad9fa_f324e80495674ac28f09cd7bac780442.pdf)
+- [Paper on Distributed MIS filling accepted in TCS Journal.](https://doi.org/10.1016/j.tcs.2023.114187)
+- [Paper on Dispersion despite faults will be appearing in SSS'23.](https://www.stabilizationsafetysecurity2023.com/) [Check out SSS'23 Schedule](https://www.stabilizationsafetysecurity2023.com/_files/ugd/1ad9fa_f324e80495674ac28f09cd7bac780442.pdf)
 
 
 # Research Interests
