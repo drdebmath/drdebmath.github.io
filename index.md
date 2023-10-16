@@ -5,9 +5,11 @@ I obtained my PhD from the Department of Mathematics, IIT Guwahati under the sup
 [CV.pdf](/AcademicCV_github.pdf)
 
 ## News
-<!--- - I am joining Carleton University as a Postdoctoral Research Fellow starting October 2023, working with [Prof. Nicola Santoro](https://research.nicola-santoro.com/) and [Prof. Paola Flocchini](https://www.site.uottawa.ca/~flocchin/).--->
-- [Paper on Distributed MIS filling accepted in TCS Journal.](https://doi.org/10.1016/j.tcs.2023.114187)
-- [Paper on Dispersion despite faults will be appearing in SSS'23.](https://www.stabilizationsafetysecurity2023.com/) [Check out SSS'23 Schedule](https://www.stabilizationsafetysecurity2023.com/_files/ugd/1ad9fa_f324e80495674ac28f09cd7bac780442.pdf)
+- [23 Sept 2023] [Paper on Distributed MIS filling accepted in TCS Journal.](https://doi.org/10.1016/j.tcs.2023.114187)
+- [4 Oct 2023] [Paper on Dispersion despite faults appeared in SSS'23.](https://www.stabilizationsafetysecurity2023.com/) [Slides](https://www.dropbox.com/scl/fi/r3ap3qj7vugo09q3org50/TUE-Ses4num3.pptx?rlkey=d7blof327zqvotzmzc60nzkdl&dl=0)
+- [11 Oct 2023] I am part of the SIROCCO 2024 Program Committee. Deadline: December 5 2023.
+- [20 Oct 2023] I am joining Carleton University as a Postdoctoral Research Fellow working with [Prof. Nicola Santoro](https://research.nicola-santoro.com/) and [Prof. Paola Flocchini](https://www.site.uottawa.ca/~flocchin/).
+- [5 Jan 2024] Paper on MIS by Mobile robots accepted to ICDCN'24.
 
 
 # Research Interests
@@ -43,11 +45,16 @@ I am currently working on algorithms for automatons on graphs.
 9. Kartikey Kant, Debasish Pattanayak, Partha Sarathi Mandal. _Fort Formation by an Automaton._ COMSNET'21. [doi](https://doi.org/10.1109/COMSNETS51098.2021.9352839)
 10. Giuseppe F. Italiano, Debasish Pattanayak, Gokarna Sharma. _Dispersion in Directed Graphs._ SIROCCO'22. [doi](https://link.springer.com/chapter/10.1007/978-3-031-09993-9_11) [slides](https://www.dropbox.com/s/ttg2cb7hmyvyzzj/siroccoppt.pptx?dl=0)
 11. Subhajit Pramanick, Sai Vamshi Samala, Debasish Pattanayak, Partha Sarathi Mandal. _Filling MIS Vertices by Myopic Luminous Robots._ ICDCIT'23 (Best paper award) [arxiv](https://arxiv.org/abs/2107.04885) 
-12. Loukas Georgiadis, Giuseppe F. Italiano, Evangelos Kosinas, Debasish Pattanayak. _On maximal 3-edge-connected subgraphs of undirected graphs._ [arxiv](https://arxiv.org/abs/2211.06521)
-13. Debasish Pattanayak, Gokarna Sharma, Partha Sarathi Mandal. _Dispersion of Mobile Robots in Spite of Faults._ SSS'23.
+12. Debasish Pattanayak, Gokarna Sharma, Partha Sarathi Mandal. _Dispersion of Mobile Robots in Spite of Faults._ SSS'23.
+13. Debasish Pattanayak, Subhash Bhagat, Sruti Gan Choudhuri, Anisur Rahaman Molla. _Maximal Independent Set via Mobile Robots._ ICDCN’24 [To appear]
 
 ## Abstracts/Posters
 1. Debasish Pattanayak, H. Ramesh, Partha Sarathi Mandal. _Collaborative Evacuation of Mobile Robots._ In Doctoral Symposium ICDCN 2020, Kolkata, India, January 4-7, 2020. (Best poster award)
+
+## Preprints
+1. Loukas Georgiadis, Giuseppe F. Italiano, Evangelos Kosinas, Debasish Pattanayak. _On maximal 3-edge-connected subgraphs of undirected graphs._ [arXiv](https://arxiv.org/abs/2211.06521)
+2. Debasish Pattanayak, Andrzej Pelc. _Computing Functions by Teams of Deterministic Finite Automata._ [arXiv](https://arxiv.org/abs/2310.01151)
+3. Debasish Pattanayak, Andrzej Pelc. _Deterministic Treasure Hunt and Rendezvous in Arbitrary Connected Graphs._ [arXiv](https://arxiv.org/abs/2310.01136)
 
 # Talks
 1. _A Demo of GPT-3_ at LUISS School of Journalism. [Tweet](https://twitter.com/Zeta_Luiss/status/1403267050785710080), [Column](https://www.osservatoreromano.va/it/news/2021-07/quo-148/la-voce-delle-macchine-br-e-il-diritto-alla-verita.html) and [article](https://www.repubblica.it/commenti/2021/05/30/news/i_ribelli_dell_intelligenza_artificiale_commento_gianni_riotta-303374245/) by [Prof. Gianni Riotta](https://riotta.it/bio-riotta/)
