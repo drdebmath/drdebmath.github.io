@@ -45,7 +45,7 @@ I am currently working on algorithms for automatons on graphs.
 9. Kartikey Kant, Debasish Pattanayak, Partha Sarathi Mandal. _Fort Formation by an Automaton._ COMSNET'21. [doi](https://doi.org/10.1109/COMSNETS51098.2021.9352839)
 10. Giuseppe F. Italiano, Debasish Pattanayak, Gokarna Sharma. _Dispersion in Directed Graphs._ SIROCCO'22. [doi](https://link.springer.com/chapter/10.1007/978-3-031-09993-9_11) [slides](https://www.dropbox.com/s/ttg2cb7hmyvyzzj/siroccoppt.pptx?dl=0)
 11. Subhajit Pramanick, Sai Vamshi Samala, Debasish Pattanayak, Partha Sarathi Mandal. _Filling MIS Vertices by Myopic Luminous Robots._ ICDCIT'23 (Best paper award) [arxiv](https://arxiv.org/abs/2107.04885) 
-12. Debasish Pattanayak, Gokarna Sharma, Partha Sarathi Mandal. _Dispersion of Mobile Robots in Spite of Faults._ SSS'23.
+12. Debasish Pattanayak, Gokarna Sharma, Partha Sarathi Mandal. _Dispersion of Mobile Robots in Spite of Faults._ SSS'23. [doi](https://doi.org/10.1007/978-3-031-44274-2_31)
 13. Debasish Pattanayak, Subhash Bhagat, Sruti Gan Choudhuri, Anisur Rahaman Molla. _Maximal Independent Set via Mobile Robots._ ICDCN’24 [To appear]
 
 ## Abstracts/Posters
@@ -64,6 +64,10 @@ I am currently working on algorithms for automatons on graphs.
 # Teaching
 1. AI and ML (Bachelor) Sep-Dec 2021, LUISS
 2. ML (Master) Feb-May 2022, LUISS
+3. Introduction to Programming with Python, Online Course 2022, LUISS
+4. Data Structures and Algorithms Lab, Jul-Nov 2018 IIT Guwahati
+5. Object oriented programming with C++, Jan-Apr 2018 IIT Guwahati
+6. Introduction to Programming, Jul-Nov 2016 & 2017, IIT Guwahati
 
 # Awards/Fellowships
 1. Best Doctoral Thesis award from the Department of Mathematics, IIT Guwahati.
