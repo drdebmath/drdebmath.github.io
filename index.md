@@ -5,12 +5,12 @@ I obtained my PhD from the Department of Mathematics, IIT Guwahati under the sup
 [CV.pdf](/AcademicCV_github.pdf)
 
 ## News
+- [14 Sep 2023] I am joining Carleton University as a Postdoctoral Research Fellow working with [Prof. Nicola Santoro](https://research.nicola-santoro.com/) and [Prof. Paola Flocchini](https://www.site.uottawa.ca/~flocchin/).
 - [23 Sept 2023] [Paper on Distributed MIS filling accepted in TCS Journal.](https://doi.org/10.1016/j.tcs.2023.114187)
 - [4 Oct 2023] [Paper on Dispersion despite faults appeared in SSS'23.](https://www.stabilizationsafetysecurity2023.com/) [Slides](https://www.dropbox.com/scl/fi/r3ap3qj7vugo09q3org50/TUE-Ses4num3.pptx?rlkey=d7blof327zqvotzmzc60nzkdl&dl=0)
-- [11 Oct 2023] I am part of the SIROCCO 2024 Program Committee. Deadline: December 5 2023.
-- [20 Oct 2023] I am joining Carleton University as a Postdoctoral Research Fellow working with [Prof. Nicola Santoro](https://research.nicola-santoro.com/) and [Prof. Paola Flocchini](https://www.site.uottawa.ca/~flocchin/).
-- [5 Jan 2024] Paper on MIS by Mobile robots accepted to ICDCN'24.
-
+- [11 Oct 2023] I am part of the [SIROCCO 2024](http://sirocco2024.di.unisa.it/) Program Committee. Deadline: December 5 2023.
+- [12 Oct 2023] Paper on MIS by Mobile robots accepted to [ICDCN'24](http://cse.iitm.ac.in/~icdcn2024/).
+- [18 Oct 2023] Paper on Treasure hunt and Rendezvous accepted to IPL.
 
 # Research Interests
 My research interests include
@@ -32,6 +32,7 @@ I am currently working on algorithms for automatons on graphs.
 3.  Debasish Pattanayak, Kaushik Mondal, Partha Sarathi Mandal, and Stefan Schmid. _Area Convergence of Weaker Robots with Additional Capabilities._ The Computer Journal (Oxford).[doi](https://doi.org/10.1093/comjnl/bxaa182)
 4. Debasish Pattanayak, John Augustine, Partha Sarathi Mandal. _Randomized Gathering of Asynchronous Mobile Robots._ Theoretical Computer Science (Elsevier). [doi](https://doi.org/10.1016/j.tcs.2020.11.048)
 5. Subhajit Pramanick, Sai Vamshi Samala, Debasish Pattanayak, Partha Sarathi Mandal. _Distributed Algorithms for Filling MIS Vertices of an Arbitrary Graph by Myopic Luminous Robots._ Theoretical Computer Science (Elsevier). [doi](https://doi.org/10.1016/j.tcs.2023.114187)
+6. Debasish Pattanayak, Andrzej Pelc. _Deterministic Treasure Hunt and Rendezvous in Arbitrary Connected Graphs._ Information Processing Letters (Elsevier). [arXiv](https://arxiv.org/abs/2310.01136)
 
 ## Conferences
 1. Debasish Pattanayak, Kaushik Mondal, H. Ramesh, Partha Sarathi Mandal. _Fault-Tolerant Gathering of Mobile Robots with Weak Multiplicity Detection._ In Proceedings of the 18th International Conference on Distributed Computing and Networking, Hyderabad, India, January 5-7, 2017.[arXiv](https://arxiv.org/pdf/1608.02432.pdf)
@@ -54,7 +55,6 @@ I am currently working on algorithms for automatons on graphs.
 ## Preprints
 1. Loukas Georgiadis, Giuseppe F. Italiano, Evangelos Kosinas, Debasish Pattanayak. _On maximal 3-edge-connected subgraphs of undirected graphs._ [arXiv](https://arxiv.org/abs/2211.06521)
 2. Debasish Pattanayak, Andrzej Pelc. _Computing Functions by Teams of Deterministic Finite Automata._ [arXiv](https://arxiv.org/abs/2310.01151)
-3. Debasish Pattanayak, Andrzej Pelc. _Deterministic Treasure Hunt and Rendezvous in Arbitrary Connected Graphs._ [arXiv](https://arxiv.org/abs/2310.01136)
 
 # Talks
 1. _A Demo of GPT-3_ at LUISS School of Journalism. [Tweet](https://twitter.com/Zeta_Luiss/status/1403267050785710080), [Column](https://www.osservatoreromano.va/it/news/2021-07/quo-148/la-voce-delle-macchine-br-e-il-diritto-alla-verita.html) and [article](https://www.repubblica.it/commenti/2021/05/30/news/i_ribelli_dell_intelligenza_artificiale_commento_gianni_riotta-303374245/) by [Prof. Gianni Riotta](https://riotta.it/bio-riotta/)
@@ -79,7 +79,7 @@ I am currently working on algorithms for automatons on graphs.
 # Community Services
 * I have been a reviewer for the conferences ICDCN 2017, ICDCN 2019, OPODIS 2019, CALDAM 2020, SIROCCO 2020, SSS 2021, ALGOSENSORS 2021, ISAAC 2021, ICDCS 2021, SODA 2022, ICDCN 2022, SSS 2023, and journals TCS, JPDC, IEEE Access, Distributed Computing.
 * Part of the Organizing Committee of the [13th International Conference and Workshop on Algorithms and Computation (WALCOM), 2019](https://www.iitg.ac.in/walcom2019/).
-* PC member of the [Doctoral Symposium, ICDCN 2022](https://icdcn2022.iiitd.edu.in/docsymp.html), [Distributed Computing Track of ICDCIT'23](https://archive.icdcit.ac.in/2023/program-committee/), [Distributed Computing Track of ICDCIT'24](https://icdcit.ac.in/organization/), and SIROCCO'24. 
+* PC member of the [Doctoral Symposium, ICDCN 2022](https://icdcn2022.iiitd.edu.in/docsymp.html), [Distributed Computing Track of ICDCIT'23](https://archive.icdcit.ac.in/2023/program-committee/), [Distributed Computing Track of ICDCIT'24](https://icdcit.ac.in/organization/), and [SIROCCO 2024](http://sirocco2024.di.unisa.it/). 
 
 # Skills
 ## Programming
