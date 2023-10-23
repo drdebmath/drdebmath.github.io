@@ -10,7 +10,7 @@ I obtained my PhD from the Department of Mathematics, IIT Guwahati under the sup
 - [4 Oct 2023] [Paper on Dispersion despite faults appeared in SSS'23.](https://www.stabilizationsafetysecurity2023.com/) [Slides](https://www.dropbox.com/scl/fi/r3ap3qj7vugo09q3org50/TUE-Ses4num3.pptx?rlkey=d7blof327zqvotzmzc60nzkdl&dl=0)
 - [11 Oct 2023] I am part of the [SIROCCO 2024](http://sirocco2024.di.unisa.it/) Program Committee. Deadline: December 5 2023.
 - [12 Oct 2023] Paper on MIS by Mobile robots accepted to [ICDCN'24](http://cse.iitm.ac.in/~icdcn2024/).
-- [18 Oct 2023] Paper on Treasure hunt and Rendezvous accepted to IPL.
+- [18 Oct 2023] Paper on Treasure hunt and Rendezvous accepted to [IPL](https://doi.org/10.1016/j.ipl.2023.106455).
 
 # Research Interests
 My research interests include
@@ -32,7 +32,7 @@ I am currently working on algorithms for automatons on graphs.
 3.  Debasish Pattanayak, Kaushik Mondal, Partha Sarathi Mandal, and Stefan Schmid. _Area Convergence of Weaker Robots with Additional Capabilities._ The Computer Journal (Oxford).[doi](https://doi.org/10.1093/comjnl/bxaa182)
 4. Debasish Pattanayak, John Augustine, Partha Sarathi Mandal. _Randomized Gathering of Asynchronous Mobile Robots._ Theoretical Computer Science (Elsevier). [doi](https://doi.org/10.1016/j.tcs.2020.11.048)
 5. Subhajit Pramanick, Sai Vamshi Samala, Debasish Pattanayak, Partha Sarathi Mandal. _Distributed Algorithms for Filling MIS Vertices of an Arbitrary Graph by Myopic Luminous Robots._ Theoretical Computer Science (Elsevier). [doi](https://doi.org/10.1016/j.tcs.2023.114187)
-6. Debasish Pattanayak, Andrzej Pelc. _Deterministic Treasure Hunt and Rendezvous in Arbitrary Connected Graphs._ Information Processing Letters (Elsevier). [arXiv](https://arxiv.org/abs/2310.01136)
+6. Debasish Pattanayak, Andrzej Pelc. _Deterministic Treasure Hunt and Rendezvous in Arbitrary Connected Graphs._ Information Processing Letters (Elsevier). [arXiv](https://arxiv.org/abs/2310.01136) [doi](https://doi.org/10.1016/j.ipl.2023.106455)
 
 ## Conferences
 1. Debasish Pattanayak, Kaushik Mondal, H. Ramesh, Partha Sarathi Mandal. _Fault-Tolerant Gathering of Mobile Robots with Weak Multiplicity Detection._ In Proceedings of the 18th International Conference on Distributed Computing and Networking, Hyderabad, India, January 5-7, 2017.[arXiv](https://arxiv.org/pdf/1608.02432.pdf)
