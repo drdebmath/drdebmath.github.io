@@ -20,7 +20,7 @@ My research interests include
 * Randomized Algorithms
 * Graph Algorithms
 
-I am currently working on algorithms for automatons on graphs.
+I am currently working on algorithms for mobile robots on graphs and planes.
 
 # Publications
 [DBLP](https://dblp.uni-trier.de/pers/hd/p/Pattanayak:Debasish)
