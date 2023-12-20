@@ -10,6 +10,7 @@ I am currently a Postdoctoral Research Fellow at [Carleton University](https://c
 - [11 Oct 2023] I am part of the [SIROCCO 2024](http://sirocco2024.di.unisa.it/) Program Committee. Deadline: December 5 2023.
 - [12 Oct 2023] Paper on MIS by Mobile robots accepted to [ICDCN'24](http://cse.iitm.ac.in/~icdcn2024/).
 - [18 Oct 2023] Paper on Treasure hunt and Rendezvous accepted to [IPL](https://doi.org/10.1016/j.ipl.2023.106455).
+- [19 Dec 2023] Paper on Uniform Circle Formation accepted to [IPDPS'24](https://www.ipdps.org/).
 
 # Research Interests
 My research interests include
