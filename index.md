@@ -48,6 +48,7 @@ I am currently working on algorithms for mobile robots on graphs and planes.
 11. Subhajit Pramanick, Sai Vamshi Samala, Debasish Pattanayak, Partha Sarathi Mandal. _Filling MIS Vertices by Myopic Luminous Robots._ ICDCIT'23 (Best paper award) [arxiv](https://arxiv.org/abs/2107.04885) 
 12. Debasish Pattanayak, Gokarna Sharma, Partha Sarathi Mandal. _Dispersion of Mobile Robots in Spite of Faults._ SSS'23. [doi](https://doi.org/10.1007/978-3-031-44274-2_31)
 13. Debasish Pattanayak, Subhash Bhagat, Sruti Gan Choudhuri, Anisur Rahaman Molla. _Maximal Independent Set via Mobile Robots._ ICDCN’24 [To appear]
+14. Debasish Pattanayak, Gokarna Sharma. _Time-Color Tradeoff on Uniform Circle Formation by Asynchronous Robots._ IPDPS'24 [To appear]
 
 ## Abstracts/Posters
 1. Debasish Pattanayak, H. Ramesh, Partha Sarathi Mandal. _Collaborative Evacuation of Mobile Robots._ In Doctoral Symposium ICDCN 2020, Kolkata, India, January 4-7, 2020. (Best poster award)
