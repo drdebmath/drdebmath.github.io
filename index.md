@@ -4,8 +4,6 @@ I am currently a Postdoctoral Research Fellow at [Carleton University](https://c
 [CV.pdf](/AcademicCV_github.pdf)
 
 ## News
-- [14 Sep 2023] I am joining Carleton University as a Postdoctoral Research Fellow working with [Prof. Nicola Santoro](https://research.nicola-santoro.com/) and [Prof. Paola Flocchini](https://www.site.uottawa.ca/~flocchin/).
-- [23 Sept 2023] [Paper on Distributed MIS filling accepted in TCS Journal.](https://doi.org/10.1016/j.tcs.2023.114187)
 - [4 Oct 2023] [Paper on Dispersion despite faults appeared in SSS'23.](https://www.stabilizationsafetysecurity2023.com/) [Slides](https://www.dropbox.com/scl/fi/r3ap3qj7vugo09q3org50/TUE-Ses4num3.pptx?rlkey=d7blof327zqvotzmzc60nzkdl&dl=0)
 - [11 Oct 2023] I am part of the [SIROCCO 2024](http://sirocco2024.di.unisa.it/) Program Committee. Deadline: December 5 2023.
 - [12 Oct 2023] Paper on MIS by Mobile robots accepted to [ICDCN'24](http://cse.iitm.ac.in/~icdcn2024/).
