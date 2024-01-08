@@ -9,6 +9,7 @@ I am currently a Postdoctoral Research Fellow at [Carleton University](https://c
 - [12 Oct 2023] Paper on MIS by Mobile robots accepted to [ICDCN'24](http://cse.iitm.ac.in/~icdcn2024/).
 - [18 Oct 2023] Paper on Treasure hunt and Rendezvous accepted to [IPL](https://doi.org/10.1016/j.ipl.2023.106455).
 - [19 Dec 2023] Paper on Uniform Circle Formation accepted to [IPDPS'24](https://www.ipdps.org/).
+- [5 Jan 2024] [Slides of MIS formation.](https://www.dropbox.com/scl/fi/ue3s5jczbpqxnrkpkgqeq/icdcn24.pptx?rlkey=av9cwmc0f9z7r54qkcqlw5mfl&dl=0)
 
 # Research Interests
 My research interests include
@@ -45,7 +46,7 @@ I am currently working on algorithms for mobile robots on graphs and planes.
 10. Giuseppe F. Italiano, Debasish Pattanayak, Gokarna Sharma. _Dispersion in Directed Graphs._ SIROCCO'22. [doi](https://link.springer.com/chapter/10.1007/978-3-031-09993-9_11) [slides](https://www.dropbox.com/s/ttg2cb7hmyvyzzj/siroccoppt.pptx?dl=0)
 11. Subhajit Pramanick, Sai Vamshi Samala, Debasish Pattanayak, Partha Sarathi Mandal. _Filling MIS Vertices by Myopic Luminous Robots._ ICDCIT'23 (Best paper award) [arxiv](https://arxiv.org/abs/2107.04885) 
 12. Debasish Pattanayak, Gokarna Sharma, Partha Sarathi Mandal. _Dispersion of Mobile Robots in Spite of Faults._ SSS'23. [doi](https://doi.org/10.1007/978-3-031-44274-2_31)
-13. Debasish Pattanayak, Subhash Bhagat, Sruti Gan Choudhuri, Anisur Rahaman Molla. _Maximal Independent Set via Mobile Robots._ ICDCN’24 [To appear]
+13. Debasish Pattanayak, Subhash Bhagat, Sruti Gan Choudhuri, Anisur Rahaman Molla. _Maximal Independent Set via Mobile Robots._ ICDCN’24 [Slides](https://www.dropbox.com/scl/fi/ue3s5jczbpqxnrkpkgqeq/icdcn24.pptx?rlkey=av9cwmc0f9z7r54qkcqlw5mfl&dl=0)
 14. Debasish Pattanayak, Gokarna Sharma. _Time-Color Tradeoff on Uniform Circle Formation by Asynchronous Robots._ IPDPS'24 [To appear]
 
 ## Abstracts/Posters
