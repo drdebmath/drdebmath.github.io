@@ -26,7 +26,7 @@ I am currently working on algorithms for mobile robots on graphs and planes.
 [Google Scholar](https://scholar.google.com/citations?user=E-jjx9gAAAAJ&hl=en&oi=ao)
 
 ## Journals
-1. Debasish Pattanayak, Kaushik Mondal, H. Ramesh, and Partha Sarathi Mandal. _Gathering of mobile robots with weak multiplicity detection in presence of crash-faults._ J. Parallel Distrib. Comput., 123:145–155, 2019. [arXiv](https://arxiv.org/pdf/1608.02432.pdf)
+1. Debasish Pattanayak, Kaushik Mondal, H. Ramesh, and Partha Sarathi Mandal. _Gathering of mobile robots with weak multiplicity detection in presence of crash-faults._ J. Parallel Distrib. Comput., 123:145–155, 2019. [doi](https://doi.org/10.1016/j.jpdc.2018.09.015) [arXiv](https://arxiv.org/pdf/1608.02432.pdf)
 2. Dibakar Saha, Debasish Pattanayak, and Partha Sarathi Mandal. _Surveillance of Uneven Surface with Self-organizing Unmanned Aerial Vehicles._ IEEE Transactions on Mobile Computing. [doi](https://doi.org/10.1109/TMC.2020.3022075)
 3.  Debasish Pattanayak, Kaushik Mondal, Partha Sarathi Mandal, and Stefan Schmid. _Area Convergence of Weaker Robots with Additional Capabilities._ The Computer Journal (Oxford).[doi](https://doi.org/10.1093/comjnl/bxaa182)
 4. Debasish Pattanayak, John Augustine, Partha Sarathi Mandal. _Randomized Gathering of Asynchronous Mobile Robots._ Theoretical Computer Science (Elsevier). [doi](https://doi.org/10.1016/j.tcs.2020.11.048)
