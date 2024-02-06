@@ -77,7 +77,7 @@ I am currently working on algorithms for mobile robots on graphs and planes.
 5. SERB Overseas Visiting Doctoral Fellowship, 2018-19 to work at University of Vienna.
 
 # Community Services
-* I have been a reviewer for the conferences ICDCN 2017, ICDCN 2019, OPODIS 2019, CALDAM 2020, SIROCCO 2020, SSS 2021, ALGOSENSORS 2021, ISAAC 2021, ICDCS 2021, SODA 2022, ICDCN 2022, SSS 2023, and journals TCS, JPDC, IEEE Access, Distributed Computing.
+* I have been a reviewer for the conferences ICDCN 2017, ICDCN 2019, OPODIS 2019, CALDAM 2020, SIROCCO 2020, SSS 2021, ALGOSENSORS 2021, ISAAC 2021, ICDCS 2021, SODA 2022, ICDCN 2022, SSS 2023, and journals TCS, JPDC, IEEE Access, Distributed Computing, Journal of Supercomputing.
 * Part of the Organizing Committee of the [13th International Conference and Workshop on Algorithms and Computation (WALCOM), 2019](https://www.iitg.ac.in/walcom2019/).
 * PC member of the [Doctoral Symposium, ICDCN 2022](https://icdcn2022.iiitd.edu.in/docsymp.html), [Distributed Computing Track of ICDCIT'23](https://archive.icdcit.ac.in/2023/program-committee/), [Distributed Computing Track of ICDCIT'24](https://icdcit.ac.in/organization/), and [SIROCCO 2024](http://sirocco2024.di.unisa.it/). 
 
