@@ -10,6 +10,7 @@ I am currently a Postdoctoral Research Fellow at [Carleton University](https://c
 - [18 Oct 2023] Paper on Treasure hunt and Rendezvous accepted to [IPL](https://doi.org/10.1016/j.ipl.2023.106455).
 - [19 Dec 2023] Paper on Uniform Circle Formation accepted to [IPDPS'24](https://www.ipdps.org/).
 - [22 Jan 2024] [Paper](https://doi.org/10.1145/3631461.3631543) and [slides](https://www.dropbox.com/scl/fi/ue3s5jczbpqxnrkpkgqeq/icdcn24.pptx?rlkey=av9cwmc0f9z7r54qkcqlw5mfl&dl=0) of MIS formation.
+- [11 Mar 2024] Reached 100 citations in [Google Scholar](https://scholar.google.com/citations?user=E-jjx9gAAAAJ&hl=en&oi=ao)!
 
 # Research Interests
 My research interests include
