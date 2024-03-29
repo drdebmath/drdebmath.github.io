@@ -55,7 +55,7 @@ I am currently working on algorithms for mobile robots on graphs and planes.
 
 ## Preprints
 1. Loukas Georgiadis, Giuseppe F. Italiano, Evangelos Kosinas, Debasish Pattanayak. _On maximal 3-edge-connected subgraphs of undirected graphs._ [arXiv](https://arxiv.org/abs/2211.06521)
-2. Debasish Pattanayak, Andrzej Pelc. _Computing Functions by Teams of Deterministic Finite Automata._ [arXiv](https://arxiv.org/abs/2310.01151)
+
 
 # Talks
 1. _A Demo of GPT-3_ at LUISS School of Journalism. [Tweet](https://twitter.com/Zeta_Luiss/status/1403267050785710080), [Column](https://www.osservatoreromano.va/it/news/2021-07/quo-148/la-voce-delle-macchine-br-e-il-diritto-alla-verita.html) and [article](https://www.repubblica.it/commenti/2021/05/30/news/i_ribelli_dell_intelligenza_artificiale_commento_gianni_riotta-303374245/) by [Prof. Gianni Riotta](https://riotta.it/bio-riotta/)
