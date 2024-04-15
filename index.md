@@ -11,6 +11,7 @@ I am currently a Postdoctoral Research Fellow at [Carleton University](https://c
 - [19 Dec 2023] Paper on Uniform Circle Formation accepted to [IPDPS'24](https://www.ipdps.org/).
 - [22 Jan 2024] [Paper](https://doi.org/10.1145/3631461.3631543) and [slides](https://www.dropbox.com/scl/fi/ue3s5jczbpqxnrkpkgqeq/icdcn24.pptx?rlkey=av9cwmc0f9z7r54qkcqlw5mfl&dl=0) of MIS formation.
 - [11 Mar 2024] Reached 100 citations in [Google Scholar](https://scholar.google.com/citations?user=E-jjx9gAAAAJ&hl=en&oi=ao)!
+- [15 Apr 2024] Paper on K-grouping accepted to [IWOCA 2024](http://iwoca2024.di.unisa.it/index.html).
 
 # Research Interests
 My research interests include
@@ -49,6 +50,7 @@ I am currently working on algorithms for mobile robots on graphs and planes.
 12. Debasish Pattanayak, Gokarna Sharma, Partha Sarathi Mandal. _Dispersion of Mobile Robots in Spite of Faults._ SSS'23. [doi](https://doi.org/10.1007/978-3-031-44274-2_31)
 13. Debasish Pattanayak, Subhash Bhagat, Sruti Gan Choudhuri, Anisur Rahaman Molla. _Maximal Independent Set via Mobile Robots._ ICDCN’24 [doi](https://doi.org/10.1145/3631461.3631543) [Slides](https://www.dropbox.com/scl/fi/ue3s5jczbpqxnrkpkgqeq/icdcn24.pptx?rlkey=av9cwmc0f9z7r54qkcqlw5mfl&dl=0)
 14. Debasish Pattanayak, Gokarna Sharma. _Time-Color Tradeoff on Uniform Circle Formation by Asynchronous Robots._ IPDPS'24 [To appear]
+15. Paola Flocchini, Debasish Pattanayak, Nicola Santoro, Masafumi Yamashita. _The Minimum Algorithm Size of k-Grouping by Silent Oblivious Robots._ IWOCA 2024 [To appear]
 
 ## Abstracts/Posters
 1. Debasish Pattanayak, H. Ramesh, Partha Sarathi Mandal. _Collaborative Evacuation of Mobile Robots._ In Doctoral Symposium ICDCN 2020, Kolkata, India, January 4-7, 2020. (Best poster award)
