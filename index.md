@@ -12,6 +12,7 @@ I am currently a Postdoctoral Research Fellow at [Carleton University](https://c
 - [22 Jan 2024] [Paper](https://doi.org/10.1145/3631461.3631543) and [slides](https://www.dropbox.com/scl/fi/ue3s5jczbpqxnrkpkgqeq/icdcn24.pptx?rlkey=av9cwmc0f9z7r54qkcqlw5mfl&dl=0) of MIS formation.
 - [11 Mar 2024] Reached 100 citations in [Google Scholar](https://scholar.google.com/citations?user=E-jjx9gAAAAJ&hl=en&oi=ao)!
 - [15 Apr 2024] Paper on K-grouping accepted to [IWOCA 2024](http://iwoca2024.di.unisa.it/index.html).
+- [10 May 2024] Paper on Optimal Asynchronous Uniform Circle Formation in [ArXiV](https://arxiv.org/abs/2405.06617).
 
 # Research Interests
 My research interests include
@@ -56,7 +57,8 @@ I am currently working on algorithms for mobile robots on graphs and planes.
 1. Debasish Pattanayak, H. Ramesh, Partha Sarathi Mandal. _Collaborative Evacuation of Mobile Robots._ In Doctoral Symposium ICDCN 2020, Kolkata, India, January 4-7, 2020. (Best poster award)
 
 ## Preprints
-1. Loukas Georgiadis, Giuseppe F. Italiano, Evangelos Kosinas, Debasish Pattanayak. _On maximal 3-edge-connected subgraphs of undirected graphs._ [arXiv](https://arxiv.org/abs/2211.06521)
+1. Loukas Georgiadis, Giuseppe F. Italiano, Evangelos Kosinas, Debasish Pattanayak. _On maximal k-edge-connected subgraphs of undirected graphs._ [arXiv](https://arxiv.org/abs/2211.06521)
+2. Caterina Feletti, Debasish Pattanayak, Gokarna Sharma. _Optimal Uniform Circle Formation by Asynchronous Luminous Robots._ [arXiv](https://arxiv.org/abs/2405.06617)
 
 
 # Talks
