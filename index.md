@@ -4,12 +4,12 @@ I am currently a Postdoctoral Research Fellow at [Carleton University](https://c
 [CV.pdf](/AcademicCV_github.pdf)
 
 ## News
-- [19 Dec 2023] Paper on Uniform Circle Formation accepted to [IPDPS'24](https://www.ipdps.org/).
-- [22 Jan 2024] [Paper](https://doi.org/10.1145/3631461.3631543) and [slides](https://www.dropbox.com/scl/fi/ue3s5jczbpqxnrkpkgqeq/icdcn24.pptx?rlkey=av9cwmc0f9z7r54qkcqlw5mfl&dl=0) of MIS formation.
-- [11 Mar 2024] Reached 100 citations in [Google Scholar](https://scholar.google.com/citations?user=E-jjx9gAAAAJ&hl=en&oi=ao)!
-- [15 Apr 2024] Paper on K-grouping accepted to [IWOCA 2024](http://iwoca2024.di.unisa.it/index.html).
-- [10 May 2024] Paper on Optimal Asynchronous Uniform Circle Formation in [ArXiV](https://arxiv.org/abs/2405.06617).
 - [28 May 2024] Paper on Graph exploration by Automaton with pebbles is accepted to Discrete Applied Mathematics journal.
+- [10 May 2024] Paper on Optimal Asynchronous Uniform Circle Formation in [ArXiV](https://arxiv.org/abs/2405.06617).
+- [15 Apr 2024] Paper on K-grouping accepted to [IWOCA 2024](http://iwoca2024.di.unisa.it/index.html).
+- [11 Mar 2024] Reached 100 citations in [Google Scholar](https://scholar.google.com/citations?user=E-jjx9gAAAAJ&hl=en&oi=ao)!
+- [22 Jan 2024] [Paper](https://doi.org/10.1145/3631461.3631543) and [slides](https://www.dropbox.com/scl/fi/ue3s5jczbpqxnrkpkgqeq/icdcn24.pptx?rlkey=av9cwmc0f9z7r54qkcqlw5mfl&dl=0) of MIS formation.
+- [19 Dec 2023] Paper on Uniform Circle Formation accepted to [IPDPS'24](https://www.ipdps.org/).
 
 [Archive](#archive)
 
@@ -93,7 +93,7 @@ I am currently working on algorithms for mobile robots on graphs and planes.
 •Numpy •Matplotlib •PyTorch •SkLearn •Pandas
 
 # Archive
-- [4 Oct 2023] [Paper on Dispersion despite faults appeared in SSS'23.](https://www.stabilizationsafetysecurity2023.com/) [Slides](https://www.dropbox.com/scl/fi/r3ap3qj7vugo09q3org50/TUE-Ses4num3.pptx?rlkey=d7blof327zqvotzmzc60nzkdl&dl=0)
-- [11 Oct 2023] I am part of the [SIROCCO 2024](http://sirocco2024.di.unisa.it/) Program Committee. Deadline: December 5 2023.
-- [12 Oct 2023] Paper on MIS by Mobile robots accepted to [ICDCN'24](http://cse.iitm.ac.in/~icdcn2024/).
 - [18 Oct 2023] Paper on Treasure hunt and Rendezvous accepted to [IPL](https://doi.org/10.1016/j.ipl.2023.106455).
+- ß[12 Oct 2023] Paper on MIS by Mobile robots accepted to [ICDCN'24](http://cse.iitm.ac.in/~icdcn2024/).
+- [11 Oct 2023] I am part of the [SIROCCO 2024](http://sirocco2024.di.unisa.it/) Program Committee. Deadline: December 5 2023.
+- [4 Oct 2023] [Paper on Dispersion despite faults appeared in SSS'23.](https://www.stabilizationsafetysecurity2023.com/) [Slides](https://www.dropbox.com/scl/fi/r3ap3qj7vugo09q3org50/TUE-Ses4num3.pptx?rlkey=d7blof327zqvotzmzc60nzkdl&dl=0)
