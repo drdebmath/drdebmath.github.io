@@ -1,10 +1,12 @@
 let commonAuthors = {};
-let publications = []; // Declare publications variable
+let publications = [];
+let darkMode = false;
 
 document.addEventListener("DOMContentLoaded", () => {
   fetch("data.json")
     .then((response) => response.json())
     .then((data) => {
+      darkMode = false; // Set default to light mode
       setupHeader(data.about_me);
       commonAuthors = data.common_authors;
       publications = data.publications;
@@ -12,9 +14,9 @@ document.addEventListener("DOMContentLoaded", () => {
       setupNavbar(Object.keys(data));
       displayAboutMe(data.about_me);
       displayNewsAndArchive(data.news);
-      displayResearchInterests(data.research_interests);
+      displayResearchInterests(data.research);
       displayCurrentResearch(data.current_research);
-      displayAllPublications(data.publications, "year");
+      displayAllPublications(publications, "year"); 
       displayTalks(data.talks);
       displayAwards(data.awards);
       displaySkills(data.skills);
@@ -22,8 +24,50 @@ document.addEventListener("DOMContentLoaded", () => {
       displayCommunityServices(data.community_services);
       setupGroupingButtons();
       setupDarkMode();
+      setupGoToTopButton();
     });
 });
+
+
+function setupDarkMode() {
+  const darkModeToggle = document.getElementById('darkModeToggle');
+  const htmlElement = document.documentElement;
+  
+  // Check for saved dark mode preference
+  const savedDarkMode = localStorage.getItem('darkMode');
+  if (savedDarkMode === 'true') {
+    htmlElement.classList.add('dark');
+    darkMode = true;
+  } else {
+    htmlElement.classList.remove('dark');
+    darkMode = false;
+  }
+
+  darkModeToggle.addEventListener('click', () => {
+    htmlElement.classList.toggle('dark');
+    darkMode = !darkMode;
+    localStorage.setItem('darkMode', darkMode.toString());
+  });
+}
+
+function setupGoToTopButton() {
+  const goToTopButton = document.getElementById('goToTop');
+  
+  window.addEventListener('scroll', () => {
+    if (window.pageYOffset > window.innerHeight) {
+      goToTopButton.style.display = 'block';
+    } else {
+      goToTopButton.style.display = 'none';
+    }
+  });
+
+  goToTopButton.addEventListener('click', () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+}
 
 function setupHeader(aboutMe) {
   document.getElementById("name").textContent = aboutMe.name;
@@ -57,7 +101,7 @@ function setupNavbar(sections) {
   );
 
   const highLevelSections = [
-    "research_interests",
+    "research",
     "publications",
     "talks",
     "teaching"
@@ -68,7 +112,7 @@ function setupNavbar(sections) {
       const li = document.createElement("li");
       li.innerHTML = `
         <a href="#${section}" class="text-gray-100 hover:underline">
-          ${section.replace("_", " ").toUpperCase()}
+          ${section.replace("_", " ").charAt(0).toUpperCase() + section.replace("_", " ").slice(1)}
         </a>`;
       navbarList.appendChild(li);
     }
@@ -257,8 +301,6 @@ function setupGroupingButtons() {
 
   groupByYearBtn.addEventListener("click", () => {
     displayAllPublications(publications, "year");
-    console.log(publications);
-    console.log(groupPublicationsByYear(publications));
   });
 }
 
@@ -316,7 +358,6 @@ function groupPublicationsByYear(publications) {
 
   return groupedPublicationsArray;
 }
-
 function displayAsCard(item, groupBy, colors) {
   let marginClass = "";
   if (item.title.length <= 50) {
@@ -329,23 +370,21 @@ function displayAsCard(item, groupBy, colors) {
     marginClass = "mb-2";
   }
 
+  let journalOrConference = "";
+  if (item.type === "preprint") {
+    journalOrConference = "arXiv";
+  } else {
+    journalOrConference = item.conference?.short || item.journal?.short || "";
+  }
+
   return `
     <div class="p-4 shadow-lg rounded-lg border-l-4 w-full sm:w-64 ${colors[item.type]} flex flex-col justify-between">
       <p class="text-md font-bold text-black dark:text-white ${marginClass}">${item.title}</p>
       <p class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">${formatAuthors(item.authors)}</p>
-      ${groupBy === "year" ? "" : `<p class="text-sm text-gray-700 dark:text-gray-300 mb-2">${item.year}</p>`}
-      ${
-        groupBy === "type"
-          ? ""
-          : item.type !== "preprint"
-          ? `<p class="text-sm text-gray-700 dark:text-gray-300 mb-2">${item.conference || item.journal}</p>`
-          : ""
-      }
-      <div class="flex justify-between items-center mt-auto">
-        ${item.arxiv ? `<span class="text-xs font-medium bg-gray-200 dark:bg-gray-700 rounded px-2 py-1">Arxiv</span>` : ""}
-        ${item.slides ? `<span class="text-xs font-medium bg-gray-200 dark:bg-gray-700 rounded px-2 py-1">Slides</span>` : ""}
-        ${item.abstract ? `<span class="text-xs font-medium bg-gray-200 dark:bg-gray-700 rounded px-2 py-1">Abstract</span>` : ""}
-      </div>
+      <p class="text-sm text-gray-700 dark:text-gray-300 mb-2">
+        ${journalOrConference}
+        ${groupBy === "type" ? ` (${item.year})` : ""}
+      </p>
     </div>
   `;
 }
@@ -370,7 +409,7 @@ function displayAllPublications(publications, groupBy = "type") {
       (group) => `
       <div class="w-full">
         <h3 class="text-xl font-bold mb-4 dark:text-white">${
-          groupBy === "type" ? group.type.toUpperCase() : group.year
+          groupBy === "type" ? group.type.charAt(0).toUpperCase() + group.type.slice(1).toLowerCase() + "s" : group.year
         }</h3>
         <div class="flex flex-wrap gap-4">
           ${group.publications
@@ -488,3 +527,4 @@ function displayCommunityServices(services) {
     .map((service) => `<li class="mb-2 dark:text-white">${service}</li>`)
     .join("");
 }
+

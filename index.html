@@ -1,20 +1,175 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personal Website</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            bg: '#1a202c',
+                            text: '#e2e8f0',
+                        },
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            html.light {
+                color-scheme: light;
+            }
+            html.dark {
+                color-scheme: dark;
+            }
+        }
+        .node { fill: #598e49; }
+        .link { stroke: #e60909; stroke-opacity: 0.6; }
+        @keyframes pulse {
+            0% { r: 5; }
+            50% { r: 8; }
+            100% { r: 5; }
+        }
+        @keyframes transmit {
+            0% { stroke-dashoffset: 100; }
+            100% { stroke-dashoffset: 0; }
+        }
+    </style>
 </head>
-<body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
-    <header class="bg-blue-600 text-white p-4">
+<body class="bg-gray-100 text-gray-900 dark:bg-dark-bg dark:text-dark-text transition-colors duration-200">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200" class="fixed inset-0 w-full h-full" style="z-index: -1; opacity: 0.3;">
+        <!-- Network links -->
+        <line class="link" x1="25" y1="50" x2="75" y2="25" stroke-dasharray="5,5">
+            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
+        </line>
+        <line class="link" x1="75" y1="25" x2="125" y2="50" stroke-dasharray="5,5">
+            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
+        </line>
+        <line class="link" x1="25" y1="50" x2="75" y2="75" stroke-dasharray="5,5">
+            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
+        </line>
+        <line class="link" x1="75" y1="75" x2="125" y2="50" stroke-dasharray="5,5">
+            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
+        </line>
+        
+        <line class="link" x1="125" y1="50" x2="175" y2="25" stroke-dasharray="5,5">
+            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
+        </line>
+        <line class="link" x1="175" y1="25" x2="225" y2="50" stroke-dasharray="5,5">
+            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
+        </line>
+        <line class="link" x1="125" y1="50" x2="175" y2="75" stroke-dasharray="5,5">
+            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
+        </line>
+        <line class="link" x1="175" y1="75" x2="225" y2="50" stroke-dasharray="5,5">
+            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
+        </line>
+        
+        <line class="link" x1="25" y1="150" x2="75" y2="125" stroke-dasharray="5,5">
+            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
+        </line>
+        <line class="link" x1="75" y1="125" x2="125" y2="150" stroke-dasharray="5,5">
+            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
+        </line>
+        <line class="link" x1="25" y1="150" x2="75" y2="175" stroke-dasharray="5,5">
+            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
+        </line>
+        <line class="link" x1="75" y1="175" x2="125" y2="150" stroke-dasharray="5,5">
+            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
+        </line>
+        
+        <line class="link" x1="125" y1="150" x2="175" y2="125" stroke-dasharray="5,5">
+            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
+        </line>
+        <line class="link" x1="175" y1="125" x2="225" y2="150" stroke-dasharray="5,5">
+            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
+        </line>
+        <line class="link" x1="125" y1="150" x2="175" y2="175" stroke-dasharray="5,5">
+            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
+        </line>
+        <line class="link" x1="175" y1="175" x2="225" y2="150" stroke-dasharray="5,5">
+            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
+        </line>
+        
+        <!-- Network nodes -->
+        <circle class="node" cx="25" cy="50" r="5">
+            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" />
+        </circle>
+        <circle class="node" cx="75" cy="25" r="5">
+            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="0.25s" />
+        </circle>
+        <circle class="node" cx="125" cy="50" r="5">
+            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="0.5s" />
+        </circle>
+        <circle class="node" cx="75" cy="75" r="5">
+            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="0.75s" />
+        </circle>
+        
+        <circle class="node" cx="175" cy="25" r="5">
+            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="1s" />
+        </circle>
+        <circle class="node" cx="225" cy="50" r="5">
+            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="1.25s" />
+        </circle>
+        <circle class="node" cx="175" cy="75" r="5">
+            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="1.5s" />
+        </circle>
+        
+        <circle class="node" cx="25" cy="150" r="5">
+            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="1.75s" />
+        </circle>
+        <circle class="node" cx="75" cy="125" r="5">
+            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" />
+        </circle>
+        <circle class="node" cx="125" cy="150" r="5">
+            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="0.25s" />
+        </circle>
+        <circle class="node" cx="75" cy="175" r="5">
+            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="0.5s" />
+        </circle>
+        
+        <circle class="node" cx="175" cy="125" r="5">
+            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="0.75s" />
+        </circle>
+        <circle class="node" cx="225" cy="150" r="5">
+            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="1s" />
+        </circle>
+        <circle class="node" cx="175" cy="175" r="5">
+            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="1.25s" />
+        </circle>
+
+        <!-- Moving dots -->
+        <circle class="dot" r="3" fill="#ff0000">
+            <animateMotion dur="4s" repeatCount="indefinite" path="M25,50 L75,25 L125,50 L175,25 L225,50" />
+        </circle>
+        <circle class="dot" r="3" fill="#00ff00">
+            <animateMotion dur="4s" repeatCount="indefinite" path="M25,50 L75,75 L125,50 L175,75 L225,50" />
+        </circle>
+        <circle class="dot" r="3" fill="#0000ff">
+            <animateMotion dur="4s" repeatCount="indefinite" path="M25,150 L75,125 L125,150 L175,125 L225,150" />
+        </circle>
+        <circle class="dot" r="3" fill="#ffff00">
+            <animateMotion dur="4s" repeatCount="indefinite" path="M25,150 L75,175 L125,150 L175,175 L225,150" />
+        </circle>
+    </svg>
+    <nav class="sticky top-0 z-50 bg-blue-600 dark:bg-blue-800">
+        <div class="container mx-auto flex justify-between items-center">
+            <ul id="navbar" class="flex space-x-4"></ul>
+            <button id="darkModeToggle" class="text-xs p-1 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center focus:outline-none ml-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-yellow-500 dark:text-white" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd" />
+                </svg>
+            </button>
+        </div>
+    </nav>
+    <header class="bg-blue-600 dark:bg-blue-800 text-white p-4">
         <div class="container mx-auto">
-            <nav class="flex justify-between items-center mb-4">
-                <ul id="navbar" class="flex space-x-4"></ul>
-                <button id="darkModeToggle" class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-3 py-1 rounded-full text-sm">
-                    Dark Mode
-                </button>
-            </nav>
             <h1 id="name" class="text-3xl font-bold"></h1>
             <h3 id="position" class="text-md font-bold"></h3>
             <h3 id="links" class="text-md font-bold"></h3>
@@ -70,6 +225,9 @@
             <ul id="archive_list" class="mt-4 list-disc list-inside"></ul>
         </section>
     </main>
+    <button id="goToTop" class="fixed bottom-4 right-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full shadow-lg hidden">
+        ↑
+    </button>
     <script src="script.js"></script>
 </body>
 </html>
