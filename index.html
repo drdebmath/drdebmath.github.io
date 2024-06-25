@@ -20,6 +20,7 @@
             },
         }
     </script>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
     <style>
         @media (prefers-color-scheme: dark) {
             html.light {
@@ -42,7 +43,8 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-900 dark:bg-dark-bg dark:text-dark-text transition-colors duration-200">
+<body class="bg-gray-100 text-gray-900 dark:bg-dark-bg dark:text-dark-text transition-colors duration-200 items-center justify-center min-h-screen">
+    <div class="flex items-center justify-center">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200" class="fixed inset-0 w-full h-full" style="z-index: -1; opacity: 0.3;">
         <!-- Network links -->
         <line class="link" x1="25" y1="50" x2="75" y2="25" stroke-dasharray="5,5">
@@ -158,8 +160,9 @@
             <animateMotion dur="4s" repeatCount="indefinite" path="M25,150 L75,175 L125,150 L175,175 L225,150" />
         </circle>
     </svg>
-    <nav class="sticky top-0 z-50 bg-blue-600 dark:bg-blue-800">
-        <div class="container mx-auto flex justify-between items-center">
+    </div>
+    <nav class="sticky top-0 z-50 bg-blue-600 dark:bg-blue-800 flex justify-center items-center">
+        <div class="w-full max-w-screen-md flex justify-between items-center">
             <ul id="navbar" class="flex space-x-4"></ul>
             <button id="darkModeToggle" class="text-xs p-1 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center focus:outline-none ml-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-yellow-500 dark:text-white" viewBox="0 0 20 20" fill="currentColor">
@@ -169,13 +172,13 @@
         </div>
     </nav>
     <header class="bg-blue-600 dark:bg-blue-800 text-white p-4">
-        <div class="container mx-auto">
+        <div class="container mx-auto max-w-screen-md">
             <h1 id="name" class="text-3xl font-bold"></h1>
             <h3 id="position" class="text-md font-bold"></h3>
             <h3 id="links" class="text-md font-bold"></h3>
         </div>
     </header>
-    <main class="container mx-auto p-4">
+    <main class="container mx-auto p-4 max-w-screen-md">
         <section id="about_me" class="my-8">
             <h2 class="text-2xl font-semibold">About Me</h2>
             <div id="about_me_content" class="mt-4"></div>
