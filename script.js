@@ -297,12 +297,27 @@ function setupGroupingButtons() {
 
   groupByTypeBtn.addEventListener("click", () => {
     displayAllPublications(publications, "type");
+    setActiveButton(groupByTypeBtn, groupByYearBtn);
   });
 
   groupByYearBtn.addEventListener("click", () => {
     displayAllPublications(publications, "year");
+    setActiveButton(groupByYearBtn, groupByTypeBtn);
   });
+  
+  // Set the initial active button (optional)
+  setActiveButton(groupByYearBtn, groupByTypeBtn);
 }
+
+function setActiveButton(activeBtn, inactiveBtn) {
+  activeBtn.classList.add('bg-blue-700', 'text-white');
+  activeBtn.classList.remove('bg-blue-500');
+  inactiveBtn.classList.remove('bg-blue-700');
+  inactiveBtn.classList.add('bg-blue-500', 'text-white');
+}
+
+// Call the function to setup the buttons
+setupGroupingButtons();
 
 function groupPublicationsByType(publications) {
   const groupedPublications = {};
@@ -381,7 +396,7 @@ function displayAsCard(item, groupBy, colors) {
   const titleContent = item.doi ? `<a href="${item.doi}" target="_blank" class="hover:underline">${item.title}</a>` : item.title;
 
   return `
-    <div class="p-4 shadow-lg rounded-lg border-l-4 w-full sm:w-64 ${colors[item.type]} flex flex-col justify-between relative overflow-hidden">
+    <div class="p-4 shadow-lg rounded-lg border-l-4 w-full sm:w-56 ${colors[item.type]} flex flex-col justify-between relative overflow-hidden">
       ${toAppearBanner}
       <p class="text-md font-bold text-black dark:text-white ${marginClass}">${titleContent}</p>
       <p class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">${formatAuthors(item.authors)}</p>
@@ -416,7 +431,7 @@ function displayAllPublications(publications, groupBy = "type") {
         <h3 class="text-xl font-bold mb-4 dark:text-white">${
           groupBy === "type" ? group.type.charAt(0).toUpperCase() + group.type.slice(1).toLowerCase() + "s" : group.year
         }</h3>
-        <div class="flex flex-wrap gap-4">
+        <div class="flex flex-wrap gap-2">
           ${group.publications
             .map((item) => displayAsCard(item, groupBy, colors))
             .join("")}
