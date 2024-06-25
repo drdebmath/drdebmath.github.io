@@ -377,9 +377,13 @@ function displayAsCard(item, groupBy, colors) {
     journalOrConference = item.conference?.short || item.journal?.short || "";
   }
 
+  const toAppearBanner = !item.doi ? `<div class="absolute top-0 right-0 bg-yellow-500 text-white px-1 py-0 origin-top-right text-xs rounded-l">To appear</div>` : '';
+  const titleContent = item.doi ? `<a href="${item.doi}" target="_blank" class="hover:underline">${item.title}</a>` : item.title;
+
   return `
-    <div class="p-4 shadow-lg rounded-lg border-l-4 w-full sm:w-64 ${colors[item.type]} flex flex-col justify-between">
-      <p class="text-md font-bold text-black dark:text-white ${marginClass}">${item.title}</p>
+    <div class="p-4 shadow-lg rounded-lg border-l-4 w-full sm:w-64 ${colors[item.type]} flex flex-col justify-between relative overflow-hidden">
+      ${toAppearBanner}
+      <p class="text-md font-bold text-black dark:text-white ${marginClass}">${titleContent}</p>
       <p class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">${formatAuthors(item.authors)}</p>
       <p class="text-sm text-gray-700 dark:text-gray-300 mb-2">
         ${journalOrConference}
@@ -389,15 +393,16 @@ function displayAsCard(item, groupBy, colors) {
   `;
 }
 
+
 function displayAllPublications(publications, groupBy = "type") {
   const container = document.getElementById("publications_list");
   container.className = "flex flex-wrap gap-4 justify-center items-stretch";
 
   const colors = {
-    journal: "bg-blue-100 dark:bg-blue-900 border-blue-600",
-    conference: "bg-green-100 dark:bg-green-900 border-green-600",
+    journal: "bg-red-100 dark:bg-red-900 border-red-600",
+    conference: "bg-blue-100 dark:bg-blue-900 border-blue-600",
     poster: "bg-yellow-100 dark:bg-yellow-900 border-yellow-600",
-    preprint: "bg-purple-100 dark:bg-purple-900 border-purple-600",
+    preprint: "bg-gray-100 dark:bg-gray-900 border-gray-600",
   };
 
   const groupFunction =

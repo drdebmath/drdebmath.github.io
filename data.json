@@ -295,6 +295,7 @@
         "full": "Discrete Applied Mathematics",
         "short": "Discrete Appl. Math."
       },
+      "doi": "https://doi.org/10.1016/j.dam.2024.05.024",
       "year": 2024,
       "type": "journal"
     },
@@ -310,6 +311,7 @@
         "full": "International Conference on Distributed Computing and Networking",
         "short": "ICDCN"
       },
+      "doi": "https://doi.org/10.1145/3007748.3007786",
       "location": "Hyderabad, India",
       "date": "January 5-7, 2017",
       "arxiv": "https://arxiv.org/pdf/1608.02432.pdf",
@@ -328,6 +330,7 @@
         "full": "Networked Systems - International Conference",
         "short": "NETYS"
       },
+      "doi": "https://doi.org/10.1007/978-3-319-59647-1_6",
       "location": "Marrakech, Morocco",
       "date": "May 17-19, 2017",
       "arxiv": "https://arxiv.org/pdf/1608.06002.pdf",
@@ -346,6 +349,7 @@
         "full": "International Conference on Distributed Computing and Networking",
         "short": "ICDCN"
       },
+      "doi": "https://doi.org/10.1145/3154273.3154313",
       "location": "Varanasi, India",
       "date": "January 4-7, 2018",
       "arxiv": "https://arxiv.org/pdf/1708.03792.pdf",
@@ -363,6 +367,7 @@
         "full": "International Symposium on Algorithms and Experiments for Wireless Sensor Networks",
         "short": "ALGOSENSORS"
       },
+      "doi": "https://doi.org/10.1007/978-3-030-34405-4_10",
       "location": "Munich, Germany",
       "date": "September 12-13, 2019",
       "arxiv": "https://arxiv.org/pdf/1906.03024.pdf",
@@ -483,6 +488,7 @@
         "full": "International Conference on Distributed Computing and Internet Technology",
         "short": "ICDCIT"
       },
+      "doi": "https://doi.org/10.1007/978-3-031-24848-1_1",
       "date": "Jan 18-22, 2023",
       "award": "Best paper award",
       "arxiv": "https://arxiv.org/abs/2107.04885",
@@ -534,7 +540,6 @@
         "short": "IPDPS"
       },
       "date": "May 27-30, 2024",
-      "status": "To appear",
       "type": "conference",
       "year": 2024
     },
@@ -550,7 +555,7 @@
         "full": "International Workshop on Combinatorial Algorithms",
         "short": "IWOCA"
       },
-      "status": "To appear",
+      "doi": "https://doi.org/10.10007/978-3-031-63021-7_36",
       "type": "conference",
       "year": 2024
     },
@@ -565,6 +570,7 @@
         "full": "Doctoral Symposium, International Conference on Distributed Computing and Networking",
         "short": "ICDCN"
       },
+      "doi": "https://doi.org/10.1145/3369740.3373806",
       "location": "Kolkata, India",
       "date": "January 4-7, 2020",
       "award": "Best poster award",
@@ -578,6 +584,7 @@
         "Evangelos Kosinas",
         "Debasish Pattanayak"
       ],
+      "doi": "https://doi.org/10.48550/arXiv.2211.06521",
       "title": "On maximal k-edge-connected subgraphs of undirected graphs.",
       "arxiv": "https://arxiv.org/abs/2211.06521",
       "type": "preprint",
@@ -589,6 +596,7 @@
         "Debasish Pattanayak",
         "Gokarna Sharma"
       ],
+      "doi": "https://doi.org/10.48550/arXiv.2405.06617",
       "title": "Optimal Uniform Circle Formation by Asynchronous Luminous Robots.",
       "arxiv": "https://arxiv.org/abs/2405.06617",
       "type": "preprint",
