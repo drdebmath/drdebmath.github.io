@@ -134,7 +134,7 @@ function convertToLinks(bioData) {
 
 function displayAboutMe(aboutMe) {
   const container = document.getElementById("about_me_content");
-  container.classList.add("text-justify", "dark:text-white", "bg-white");
+  container.classList.add("text-justify", "dark:text-white", "bg-white", "p-4", "rounded-lg", "shadow-md");
 
   container.innerHTML = `
         <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
