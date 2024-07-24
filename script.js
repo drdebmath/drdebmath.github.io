@@ -543,8 +543,35 @@ function displayTeaching(teaching) {
 
 function displayCommunityServices(services) {
   const list = document.getElementById("community_services_list");
-  list.innerHTML = services
-    .map((service) => `<li class="mb-2 dark:text-white">${service}</li>`)
-    .join("");
+  list.classList.add("bg-white", "dark:bg-gray-800", "p-4", "shadow", "rounded");
+  list.innerHTML = `
+    <ul class="list-disc pl-5">
+      <li class="mb-2 dark:text-white">
+        <strong>Reviewer:</strong>
+        <ul class="ml-4 list-disc">
+          <li>
+            <strong>Conferences:</strong>
+            <ul class="ml-4 list-disc">
+              ${services.reviewer_for.conferences.map(conf => `${conf}`).join(', ')}
+            </ul>
+          </li>
+          <li>
+            <strong>Journals:</strong>
+            <ul class="ml-4 list-disc">
+              ${services.reviewer_for.journals.map(journal => `${journal}`).join(', ')}
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li class="mb-2 dark:text-white">
+        <strong>PC member:</strong>
+        <p class="ml-4">${services.pc_member_for.join(", ")}</p>
+      </li>
+      <li class="mb-2 dark:text-white">
+        <strong>Organizing committee:</strong>
+        <p class="ml-4">${services.organizing_committee.join(", ")}</p>
+      </li>
+    </ul>
+  `;
 }
 

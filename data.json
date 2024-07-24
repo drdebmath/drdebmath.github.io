@@ -127,8 +127,13 @@
   },
   "news": [
     {
+      "date": "24 Jul 2024",
+      "title": "Paper on Uniform Circle Formation accepted to DISC as Brief Announcement."
+    },
+    {
       "date": "28 May 2024",
-      "title": "Paper on Graph exploration by Automaton with pebbles is accepted to Discrete Applied Mathematics journal."
+      "title": "Paper on Graph exploration by Automaton with pebbles is accepted to Discrete Applied Mathematics journal.",
+      "url": "https://doi.org/10.1016/j.dam.2024.05.024"
     },
     {
       "date": "10 May 2024",
@@ -599,9 +604,14 @@
         "Gokarna Sharma"
       ],
       "doi": "https://doi.org/10.48550/arXiv.2405.06617",
-      "title": "Optimal Uniform Circle Formation by Asynchronous Luminous Robots.",
+      "title": "Brief Announcement: Optimal Uniform Circle Formation by Asynchronous Luminous Robots.",
       "arxiv": "https://arxiv.org/abs/2405.06617",
-      "type": "preprint",
+      "type": "conference",
+      "date": "Oct 29-31, 2024",
+      "conference":{
+        "full": "International Symposium on Distributed Computing",
+        "short": "DISC"
+      },
       "year": 2024
     }
   ],
@@ -673,11 +683,42 @@
     "Best Poster award in Doctoral Symposium, ICDCN 2020.",
     "SERB Overseas Visiting Doctoral Fellowship, 2018-19 to work at University of Vienna."
   ],
-  "community_services": [
-    "Reviewer for the conferences ICDCN 2017, ICDCN 2019, OPODIS 2019, CALDAM 2020, SIROCCO 2020, SSS 2021, ALGOSENSORS 2021, ISAAC 2021, ICDCS 2021, SODA 2022, ICDCN 2022, SSS 2023, and journals TCS, JPDC, IEEE Access, Distributed Computing, Journal of Supercomputing, Journal of Field Robotics.",
-    "Part of the Organizing Committee of the 13th International Conference and Workshop on Algorithms and Computation (WALCOM), 2019.",
-    "PC member of the Doctoral Symposium, ICDCN 2022, Distributed Computing Track of ICDCIT'23, Distributed Computing Track of ICDCIT'24, and SIROCCO 2024."
-  ],
+  "community_services": {
+    "reviewer_for": {
+      "conferences": [
+        "ICDCN 2017",
+        "ICDCN 2019",
+        "OPODIS 2019",
+        "CALDAM 2020",
+        "SIROCCO 2020",
+        "SSS 2021",
+        "ALGOSENSORS 2021",
+        "ISAAC 2021",
+        "ICDCS 2021",
+        "SODA 2022",
+        "ICDCN 2022",
+        "SSS 2023"
+      ],
+      "journals": [
+        "TCS",
+        "JPDC",
+        "IEEE Access",
+        "Distributed Computing",
+        "Journal of Supercomputing",
+        "Journal of Field Robotics"
+      ]
+    },
+    "pc_member_for": [
+      "Doctoral Symposium, ICDCN 2022",
+      "Distributed Computing Track of ICDCIT'23",
+      "Distributed Computing Track of ICDCIT'24",
+      "SIROCCO 2024",
+      "ICAIHC 2025"
+    ],
+    "organizing_committee": [
+      "13th International Conference and Workshop on Algorithms and Computation (WALCOM), 2019"
+    ]
+  },
   "skills": {
     "programming": [
       "C",
