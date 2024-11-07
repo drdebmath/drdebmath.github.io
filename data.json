@@ -127,6 +127,11 @@
   },
   "news": [
     {
+      "date": "25 Sep 2024",
+      "title": "Paper on Asynchronous Separation of Unconscious Colored Robots accepted to PDAA.",
+      "url":"https://is-candar.org/pdaa24"
+    },
+    {
       "date": "24 Jul 2024",
       "title": "Paper on Uniform Circle Formation accepted to DISC as Brief Announcement."
     },
@@ -206,6 +211,7 @@
         "full": "Journal of Parallel and Distributed Computing",
         "short": "J. Parallel Distrib. Comput."
       },
+      "if": "3.4",
       "volume": "123",
       "pages": "145–155",
       "year": 2019,
@@ -224,6 +230,7 @@
         "full": "IEEE Transactions on Mobile Computing",
         "short": "IEEE Trans. Mobile Comput."
       },
+      "if": "7.7",
       "doi": "https://doi.org/10.1109/TMC.2020.3022075",
       "year": 2020,
       "type": "journal"
@@ -240,6 +247,7 @@
         "full": "The Computer Journal",
         "short": "Comput. J."
       },
+      "if":"1.5",
       "doi": "https://doi.org/10.1093/comjnl/bxaa182",
       "year": 2022,
       "type": "journal"
@@ -255,6 +263,7 @@
         "full": "Theoretical Computer Science",
         "short": "Theor. Comput. Sci."
       },
+      "if":"0.9",
       "doi": "https://doi.org/10.1016/j.tcs.2020.11.048",
       "year": 2021,
       "type": "journal"
@@ -271,6 +280,7 @@
         "full": "Theoretical Computer Science",
         "short": "Theor. Comput. Sci."
       },
+      "if":"0.9",
       "doi": "https://doi.org/10.1016/j.tcs.2023.114187",
       "year": 2023,
       "type": "journal"
@@ -285,6 +295,7 @@
         "full": "Information Processing Letters",
         "short": "Inf. Process. Lett."
       },
+      "if":"0.7",
       "doi": "https://doi.org/10.1016/j.ipl.2023.106455",
       "arxiv": "https://arxiv.org/abs/2310.01136",
       "year": 2024,
@@ -300,6 +311,7 @@
         "full": "Discrete Applied Mathematics",
         "short": "Discrete Appl. Math."
       },
+      "if": "1.0",
       "doi": "https://doi.org/10.1016/j.dam.2024.05.024",
       "year": 2024,
       "type": "journal"
@@ -613,6 +625,23 @@
         "short": "DISC"
       },
       "year": 2024
+    },
+    {
+      "authors":[
+        "Paola Flocchini",
+        "Debasish Pattanayak",
+        "Francesco Piselli",
+        "Nicola Santoro",
+        "Yukiko Yamauchi"
+      ],
+      "title":"Asynchronous Separation of Unconscious Colored Robots",
+      "type":"conference",
+      "date":"Nov 26-29, 2024",
+      "conference":{
+        "full": "16th International Workshop on Parallel and Distributed Algorithms and Applications",
+        "short":"PDAA'24"
+      },
+      "year": 2024
     }
   ],
   "talks": [
@@ -697,7 +726,8 @@
         "ICDCS 2021",
         "SODA 2022",
         "ICDCN 2022",
-        "SSS 2023"
+        "SSS 2023",
+        "OPODIS 2024"
       ],
       "journals": [
         "TCS",
@@ -713,6 +743,7 @@
       "Distributed Computing Track of ICDCIT'23",
       "Distributed Computing Track of ICDCIT'24",
       "SIROCCO 2024",
+      "IEEE ANTS Early Researchers' Forum 2024",
       "ICAIHC 2025"
     ],
     "organizing_committee": [
@@ -811,6 +842,12 @@
     },
     "Caterina Feletti": {
       "url": "https://scholar.google.com/citations?user=lAIwajgAAAAJ&hl=en"
+    },
+    "Yukiko Yamauchi": {
+      "url": "http://tcs.inf.kyushu-u.ac.jp/~yamauchi/"
+    },
+    "Francesco Piselli":{
+      "url": "https://scholar.google.com/citations?user=zdFY4eoAAAAJ"
     }
   }
 }
