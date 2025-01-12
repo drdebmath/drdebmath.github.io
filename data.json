@@ -531,6 +531,17 @@
     {
       "authors": [
         "Debasish Pattanayak",
+        "Andrzej Pelc"
+      ],
+      "title": "Computing Functions by Teams of Deterministic Finite Automata",
+      "doi": "https://doi.org/10.48550/arXiv.2310.01151",
+      "arxiv": "https://arxiv.org/abs/2310.01151",
+      "type": "preprint",
+      "year": 2023
+    },
+    {
+      "authors": [
+        "Debasish Pattanayak",
         "Subhash Bhagat",
         "Sruti Gan Choudhuri",
         "Anisur Rahaman Molla"
@@ -615,7 +626,7 @@
         "Debasish Pattanayak",
         "Gokarna Sharma"
       ],
-      "doi": "https://doi.org/10.48550/arXiv.2405.06617",
+      "doi": "https://doi.org/10.4230/LIPIcs.DISC.2024.46",
       "title": "Brief Announcement: Optimal Uniform Circle Formation by Asynchronous Luminous Robots.",
       "arxiv": "https://arxiv.org/abs/2405.06617",
       "type": "conference",
@@ -636,11 +647,26 @@
       ],
       "title":"Asynchronous Separation of Unconscious Colored Robots",
       "type":"conference",
+      "doi":"https://doi.org/10.1109/CANDARW64572.2024.00037",
       "date":"Nov 26-29, 2024",
       "conference":{
         "full": "16th International Workshop on Parallel and Distributed Algorithms and Applications",
-        "short":"PDAA'24"
+        "short":"CANDARW:PDAA"
       },
+      "year": 2024
+    },
+    {
+      "authors":[
+        "Paola Flocchini",
+        "Alfredo Navarra",
+        "Debasish Pattanayak",
+        "Francesco Piselli",
+        "Nicola Santoro"
+      ],
+      "title":"Oblivious Robots Under Sequential Schedulers: Universal Pattern Formation",
+      "type":"preprint",
+      "arxiv":"https://arxiv.org/abs/2412.10733",
+      "doi":"https://arxiv.org/abs/2412.10733",
       "year": 2024
     }
   ],
@@ -707,6 +733,7 @@
   ],
   "awards": [
     "Best Doctoral Thesis award from the Department of Mathematics, IIT Guwahati.",
+    "Best Paper award at ICDCIT 2023 for paper on MIS Filling.",
     "Awarded Distributed Computing Chair Research Grant, 2022 to work at UQO, Canada.",
     "Awarded PRIN research grant titled 'AHeAD: efficient Algorithms for HArnessing networked Data' to work at LUISS Guido Carli, Italy.",
     "Best Poster award in Doctoral Symposium, ICDCN 2020.",
@@ -727,15 +754,21 @@
         "SODA 2022",
         "ICDCN 2022",
         "SSS 2023",
-        "OPODIS 2024"
+        "IWOCA 2024",
+        "OPODIS 2024",
+        "SSS 2024",
+        "ICDCIT 2025",
+        "SIROCCO 2025"
       ],
       "journals": [
-        "TCS",
-        "JPDC",
+        "Theoretical Computer Science",
+        "Journal of Parallel and Distributed Computing",
         "IEEE Access",
         "Distributed Computing",
         "Journal of Supercomputing",
-        "Journal of Field Robotics"
+        "Journal of Field Robotics",
+        "Information and Computation",
+        "International Journal of Foundations of Computer Science"
       ]
     },
     "pc_member_for": [
@@ -743,8 +776,7 @@
       "Distributed Computing Track of ICDCIT'23",
       "Distributed Computing Track of ICDCIT'24",
       "SIROCCO 2024",
-      "IEEE ANTS Early Researchers' Forum 2024",
-      "ICAIHC 2025"
+      "IEEE ANTS Early Researchers' Forum 2024"
     ],
     "organizing_committee": [
       "13th International Conference and Workshop on Algorithms and Computation (WALCOM), 2019"

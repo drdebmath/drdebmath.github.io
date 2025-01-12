@@ -394,6 +394,7 @@ function displayAsCard(item, groupBy, colors) {
 
   const toAppearBanner = !item.doi ? `<div class="absolute top-0 right-0 bg-yellow-500 text-white px-1 py-0 origin-top-right text-xs rounded-l">To appear</div>` : '';
   const titleContent = item.doi ? `<a href="${item.doi}" target="_blank" class="hover:underline">${item.title}</a>` : item.title;
+  const arxivBottomBanner = item.arxiv ? `<div class="absolute bottom-0 right-0 bg-green-500 text-white px-2 py-0.5 text-xs rounded-l"><a href="${item.arxiv}" target="_blank" class="hover:underline">arXiv</a></div>` : '';
 
   return `
     <div class="p-4 shadow-lg rounded-lg border-l-4 w-full sm:w-56 ${colors[item.type]} flex flex-col justify-between relative overflow-hidden">
@@ -404,6 +405,7 @@ function displayAsCard(item, groupBy, colors) {
         ${journalOrConference}
         ${groupBy === "type" ? ` (${item.year})` : ""}
       </p>
+      ${arxivBottomBanner}
     </div>
   `;
 }
