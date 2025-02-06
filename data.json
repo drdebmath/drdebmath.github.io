@@ -127,6 +127,11 @@
   },
   "news": [
     {
+      "date": "31 Jan 2025",
+      "title": "Paper on Pattern Formation under Sequential Schedulers accepted to SIROCCO 2025, in Delphi, Greece.",
+      "url": "https://www.torontomu.ca/sirocco-2025/accepted-papers/"
+    },
+    {
       "date": "25 Sep 2024",
       "title": "Paper on Asynchronous Separation of Unconscious Colored Robots accepted to PDAA.",
       "url":"https://is-candar.org/pdaa24"
