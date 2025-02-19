@@ -6,8 +6,8 @@
     "orcid": "https://orcid.org/0000-0003-2862-2795",
     "position": "Postdoctoral Research Fellow",
     "current_institution": {
-      "name": "Carleton University",
-      "url": "https://carleton.ca/"
+      "name": "University of Ottawa",
+      "url": "https://www.uottawa.ca/en"
     },
     "biodata": {
       "urls": {
@@ -34,7 +34,11 @@
     "current_supervisors": [
       {
         "name": "Prof. Nicola Santoro",
-        "url": "https://research.nicola-santoro.com/"
+        "url": "https://research.nicola-santoro.com/",
+        "institution": {
+          "name": "Carleton University, Ottawa",
+          "url": "https://carleton.ca/"
+        }
       },
       {
         "name": "Prof. Paola Flocchini",
@@ -71,10 +75,10 @@
         ]
       }
     ],
-    "previous_positions": [
+    "positions": [
       {
-        "position": "Visiting Fellow",
-        "duration": "July to December 2019",
+        "title": "Visiting Fellow",
+        "duration": "Six months",
         "institution": {
           "name": "University of Vienna",
           "supervisor": {
@@ -82,22 +86,26 @@
             "url": "https://www.univie.ac.at/ct/stefan/"
           }
         },
-        "fellowship": "SERB Overseas Visiting Doctoral Fellowship"
+        "fellowship": "SERB Overseas Visiting Doctoral Fellowship",
+        "start_date": "2019-07-01",
+        "end_date": "2019-12-31"
       },
       {
-        "position": "Visiting Scientist",
-        "duration": "March to September 2020",
+        "title": "Visiting Scientist",
+        "duration": "Six months",
         "institution": {
           "name": "ISI Kolkata",
           "supervisor": {
             "name": "Dr. Anisur Rahaman Molla",
             "url": "https://sites.google.com/site/mollaanisurrahaman/"
           }
-        }
+        },
+        "start_date": "2020-03-15",
+        "end_date": "2020-09-15"
       },
       {
-        "position": "Postdoctoral Researcher",
-        "duration": "October 2020 to October 2022",
+        "title": "Postdoctoral Researcher",
+        "duration": "Two years",
         "institution": {
           "name": "LUISS Guido Carli",
           "url": "https://www.luiss.it",
@@ -105,11 +113,13 @@
             "name": "Prof. Giuseppe F. Italiano",
             "url": "https://docenti.luiss.it/italiano/"
           }
-        }
+        },
+        "start_date": "2020-10-15",
+        "end_date": "2022-10-15"
       },
       {
-        "position": "Postdoctoral Researcher",
-        "duration": "October 2022 to October 2023",
+        "tile": "Postdoctoral Researcher",
+        "duration": "One year",
         "institution": {
           "name": "UQO",
           "url": "https://www.uqo.ca/",
@@ -117,7 +127,23 @@
             "name": "Prof. Andrzej Pelc",
             "url": "http://w3.uqo.ca/pelc/main.html"
           }
-        }
+        },
+        "start_date": "2022-10-20",
+        "end_date": "2023-10-19"
+      },
+      {
+        "title": "Postdoctoral Researcher",
+        "duration": "One year",
+        "institution": {
+          "name": "Carleton University",
+          "url": "https://www.carleton.ca/",
+          "supervisor": {
+            "name": "Prof. Nicola Santoro",
+            "url": "https://research.nicola-santoro.com/"
+          }
+        },
+        "start_date": "2023-10-20",
+        "end_date": "2024-10-20"
       }
     ],
     "cv": {

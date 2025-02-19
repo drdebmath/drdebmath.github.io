@@ -1,236 +1,272 @@
 <!DOCTYPE html>
-<html lang="en" class="light">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Debasish Pattanayak</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        dark: {
-                            bg: '#1a202c',
-                            text: '#e2e8f0',
-                        },
-                    },
-                },
-            },
-        }
-    </script>
-    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-    <style>
-        @media (prefers-color-scheme: dark) {
-            html.light {
-                color-scheme: light;
-            }
-            html.dark {
-                color-scheme: dark;
-            }
-        }
-        .node { fill: #598e49; }
-        .link { stroke: #e60909; stroke-opacity: 0.6; }
-        @keyframes pulse {
-            0% { r: 5; }
-            50% { r: 8; }
-            100% { r: 5; }
-        }
-        @keyframes transmit {
-            0% { stroke-dashoffset: 100; }
-            100% { stroke-dashoffset: 0; }
-        }
-    </style>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
 </head>
-<body class="bg-gray-100 text-gray-900 dark:bg-dark-bg dark:text-dark-text transition-colors duration-200 items-center justify-center min-h-screen">
-    <div class="flex items-center justify-center">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200" class="fixed inset-0 w-full h-full" style="z-index: -1; opacity: 0.3;">
-        <!-- Network links -->
-        <line class="link" x1="25" y1="50" x2="75" y2="25" stroke-dasharray="5,5">
-            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
-        </line>
-        <line class="link" x1="75" y1="25" x2="125" y2="50" stroke-dasharray="5,5">
-            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
-        </line>
-        <line class="link" x1="25" y1="50" x2="75" y2="75" stroke-dasharray="5,5">
-            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
-        </line>
-        <line class="link" x1="75" y1="75" x2="125" y2="50" stroke-dasharray="5,5">
-            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
-        </line>
-        
-        <line class="link" x1="125" y1="50" x2="175" y2="25" stroke-dasharray="5,5">
-            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
-        </line>
-        <line class="link" x1="175" y1="25" x2="225" y2="50" stroke-dasharray="5,5">
-            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
-        </line>
-        <line class="link" x1="125" y1="50" x2="175" y2="75" stroke-dasharray="5,5">
-            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
-        </line>
-        <line class="link" x1="175" y1="75" x2="225" y2="50" stroke-dasharray="5,5">
-            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
-        </line>
-        
-        <line class="link" x1="25" y1="150" x2="75" y2="125" stroke-dasharray="5,5">
-            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
-        </line>
-        <line class="link" x1="75" y1="125" x2="125" y2="150" stroke-dasharray="5,5">
-            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
-        </line>
-        <line class="link" x1="25" y1="150" x2="75" y2="175" stroke-dasharray="5,5">
-            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
-        </line>
-        <line class="link" x1="75" y1="175" x2="125" y2="150" stroke-dasharray="5,5">
-            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
-        </line>
-        
-        <line class="link" x1="125" y1="150" x2="175" y2="125" stroke-dasharray="5,5">
-            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
-        </line>
-        <line class="link" x1="175" y1="125" x2="225" y2="150" stroke-dasharray="5,5">
-            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
-        </line>
-        <line class="link" x1="125" y1="150" x2="175" y2="175" stroke-dasharray="5,5">
-            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
-        </line>
-        <line class="link" x1="175" y1="175" x2="225" y2="150" stroke-dasharray="5,5">
-            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
-        </line>
-        
-        <!-- Network nodes -->
-        <circle class="node" cx="25" cy="50" r="5">
-            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" />
-        </circle>
-        <circle class="node" cx="75" cy="25" r="5">
-            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="0.25s" />
-        </circle>
-        <circle class="node" cx="125" cy="50" r="5">
-            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="0.5s" />
-        </circle>
-        <circle class="node" cx="75" cy="75" r="5">
-            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="0.75s" />
-        </circle>
-        
-        <circle class="node" cx="175" cy="25" r="5">
-            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="1s" />
-        </circle>
-        <circle class="node" cx="225" cy="50" r="5">
-            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="1.25s" />
-        </circle>
-        <circle class="node" cx="175" cy="75" r="5">
-            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="1.5s" />
-        </circle>
-        
-        <circle class="node" cx="25" cy="150" r="5">
-            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="1.75s" />
-        </circle>
-        <circle class="node" cx="75" cy="125" r="5">
-            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" />
-        </circle>
-        <circle class="node" cx="125" cy="150" r="5">
-            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="0.25s" />
-        </circle>
-        <circle class="node" cx="75" cy="175" r="5">
-            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="0.5s" />
-        </circle>
-        
-        <circle class="node" cx="175" cy="125" r="5">
-            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="0.75s" />
-        </circle>
-        <circle class="node" cx="225" cy="150" r="5">
-            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="1s" />
-        </circle>
-        <circle class="node" cx="175" cy="175" r="5">
-            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="1.25s" />
-        </circle>
+<body>
+    <div id="root"></div>
+    
+    <!-- React Application -->
+    <script>
+        const { useState, useEffect } = React;
+        const e = React.createElement;
 
-        <!-- Moving dots -->
-        <circle class="dot" r="3" fill="#ff0000">
-            <animateMotion dur="4s" repeatCount="indefinite" path="M25,50 L75,25 L125,50 L175,25 L225,50" />
-        </circle>
-        <circle class="dot" r="3" fill="#00ff00">
-            <animateMotion dur="4s" repeatCount="indefinite" path="M25,50 L75,75 L125,50 L175,75 L225,50" />
-        </circle>
-        <circle class="dot" r="3" fill="#0000ff">
-            <animateMotion dur="4s" repeatCount="indefinite" path="M25,150 L75,125 L125,150 L175,125 L225,150" />
-        </circle>
-        <circle class="dot" r="3" fill="#ffff00">
-            <animateMotion dur="4s" repeatCount="indefinite" path="M25,150 L75,175 L125,150 L175,175 L225,150" />
-        </circle>
-    </svg>
-    </div>
-    <nav class="sticky top-0 z-50 bg-blue-600 dark:bg-blue-800 flex justify-center items-center">
-        <div class="w-full max-w-screen-md flex justify-between items-center">
-            <ul id="navbar" class="flex space-x-4"></ul>
-            <button id="darkModeToggle" class="text-xs p-1 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center focus:outline-none ml-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-yellow-500 dark:text-white" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z" />
-                </svg>
-            </button>
-        </div>
-    </nav>
-    <header class="bg-blue-600 dark:bg-blue-800 text-white p-4">
-        <div class="container mx-auto max-w-screen-md">
-            <h1 id="name" class="text-3xl font-bold"></h1>
-            <h3 id="position" class="text-md font-bold"></h3>
-            <h3 id="links" class="text-md font-bold"></h3>
-        </div>
-    </header>
-    <main class="container mx-auto p-4 max-w-screen-md">
-        <section id="about_me" class="my-8">
-            <h2 class="text-2xl font-semibold">About Me</h2>
-            <div id="about_me_content" class="mt-4"></div>
-        </section>
-        <section id="news" class="my-8">
-            <h2 class="text-2xl font-semibold">News</h2>
-            <div id="news_content" class="mt-4"></div>
-        </section>
-        <section id="research" class="my-8">
-            <h2 class="text-2xl font-semibold">Research Interests</h2>
-            <div id="research_interests_content" class="mt-4"></div>
-        </section>
-        <section id="current_research" class="my-8">
-            <h2 class="text-2xl font-semibold">Current Research</h2>
-            <div id="current_research_content" class="mt-4"></div>
-        </section>
-        <section id="publications" class="my-8">
-            <h2 class="text-2xl font-semibold">Publications</h2>
-            <div class="mb-4 flex">
-                <button id="group_by_type" class="bg-blue-500 hover:bg-blue-700 text-white py-1 pl-4 pr-2 rounded-l-full border-r-0">By type</button>
-                <button id="group_by_year" class="bg-blue-500 hover:bg-blue-700 text-white py-1 pr-4 pl-2 rounded-r-full">By year</button>
-            </div>
-            <ul id="publications_list" class="mt-4 list-disc list-inside"></ul>
-        </section>
-        <section id="talks" class="my-8">
-            <h2 class="text-2xl font-semibold">Talks</h2>
-            <ul id="talks_list" class="mt-4 list-disc list-inside"></ul>
-        </section>
-        <section id="awards" class="my-8">
-            <h2 class="text-2xl font-semibold">Awards</h2>
-            <div id="awards_content" class="mt-4"></div>
-        </section>
-        <section id="skills" class="my-8">
-            <h2 class="text-2xl font-semibold">Skills</h2>
-            <div id="skills_content" class="mt-4"></div>
-        </section>
-        <section id="teaching" class="my-8">
-            <h2 class="text-2xl font-semibold">Teaching</h2>
-            <ul id="teaching_list" class="mt-4 list-disc list-inside"></ul>
-        </section>
-        <section id="community_services" class="my-8">
-            <h2 class="text-2xl font-semibold">Community Services</h2>
-            <ul id="community_services_list" class="mt-4 list-disc list-inside"></ul>
-        </section>
-        <section id="archive" class="my-8">
-            <h2 class="text-2xl font-semibold">Archive</h2>
-            <ul id="archive_list" class="mt-4 list-disc list-inside"></ul>
-        </section>
-    </main>
-    <button id="goToTop" class="fixed bottom-4 right-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full shadow-lg hidden">
-        ↑
-    </button>
-    <script src="script.js"></script>
+        const Tab = ({ id, label, active, onClick }) => {
+            return e('button', {
+                onClick: () => onClick(id),
+                className: `px-4 py-2 ${active ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100'} rounded-lg`
+            }, label);
+        };
+
+        const About = ({ data }) => {
+            return e('div', { className: 'space-y-6' },
+                e('div', { className: 'bg-white p-6 rounded-lg shadow' },
+                    e('h2', { className: 'text-2xl font-bold' }, data.about_me.name),
+                    e('p', { className: 'text-gray-600 mt-2' },
+                        `${data.about_me.position} at ${data.about_me.current_institution.name}`
+                    ),
+                    e('div', { className: 'mt-4' },
+                        e('h3', { className: 'font-semibold mb-2' }, 'Research Areas:'),
+                        e('div', { className: 'flex flex-wrap gap-2' },
+                            data.research.map((topic, index) =>
+                                e('span', {
+                                    key: index,
+                                    className: 'bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm'
+                                }, topic)
+                            )
+                        )
+                    ),
+                    e('div', { className: 'mt-6' },
+                        e('h3', { className: 'font-semibold mb-2' }, 'Bio:'),
+                        e('p', { className: 'text-gray-600' }, data.about_me.biodata.short_bio[0])
+                    )
+                ),
+                e(News, { data })
+            );
+        };
+
+        const News = ({ data }) => {
+            const [currentNewsIndex, setCurrentNewsIndex] = useState(0);
+
+            useEffect(() => {
+                const timer = setInterval(() => {
+                    setCurrentNewsIndex((prevIndex) => 
+                        prevIndex === data.news.length - 1 ? 0 : prevIndex + 1
+                    );
+                }, 5000); // Change news every 5 seconds
+
+                return () => clearInterval(timer);
+            }, [data.news.length]);
+
+            const currentNews = data.news[currentNewsIndex];
+
+            const newsContent = e('div', { className: 'space-y-2' },
+                e('p', { className: 'text-sm text-gray-500 font-medium' }, currentNews.date),
+                e('p', { className: 'mt-1' }, currentNews.title)
+            );
+
+            return e('div', { className: 'bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow' },
+                e('div', { className: 'flex justify-between items-center mb-2' },
+                    e('h3', { className: 'font-semibold text-lg' }, 'Latest News'),
+                    e('div', { className: 'flex space-x-2' },
+                        e('button', {
+                            onClick: () => setCurrentNewsIndex(prev => 
+                                prev === 0 ? data.news.length - 1 : prev - 1
+                            ),
+                            className: 'text-gray-600 hover:text-gray-800 p-1'
+                        }, '←'),
+                        e('button', {
+                            onClick: () => setCurrentNewsIndex(prev => 
+                                prev === data.news.length - 1 ? 0 : prev + 1
+                            ),
+                            className: 'text-gray-600 hover:text-gray-800 p-1'
+                        }, '→')
+                    )
+                ),
+                currentNews.url 
+                    ? e('a', {
+                        href: currentNews.url,
+                        className: 'block cursor-pointer hover:bg-gray-50 rounded transition-colors',
+                        target: '_blank',
+                        rel: 'noopener noreferrer'
+                    }, newsContent)
+                    : newsContent,
+                e('div', { className: 'flex justify-center space-x-1 mt-3' },
+                    data.news.map((_, index) => 
+                        e('div', {
+                            key: index,
+                            className: `h-2 w-2 rounded-full ${
+                                index === currentNewsIndex ? 'bg-blue-600' : 'bg-gray-300'
+                            }`
+                        })
+                    )
+                )
+            );
+        };
+
+        const Publications = ({ data }) => {
+            const [selectedType, setSelectedType] = useState('all');
+            const [sortBy, setSortBy] = useState('year');
+            const [sortOrder, setSortOrder] = useState('desc');
+            
+            const publicationTypes = ['all', 'journal', 'conference', 'preprint'];
+            
+            // Type-specific colors
+            const typeColors = {
+                journal: 'bg-green-100 border-green-200',
+                conference: 'bg-blue-100 border-blue-200',
+                preprint: 'bg-yellow-100 border-yellow-200'
+            };
+
+            const filteredPublications = data.publications
+                .filter(pub => selectedType === 'all' || pub.type === selectedType)
+                .sort((a, b) => {
+                    if (sortBy === 'year') {
+                        return sortOrder === 'desc' ? b.year - a.year : a.year - b.year;
+                    }
+                    // Sort by type and then by year
+                    if (sortBy === 'type') {
+                        if (a.type === b.type) {
+                            return sortOrder === 'desc' ? b.year - a.year : a.year - b.year;
+                        }
+                        return a.type.localeCompare(b.type);
+                    }
+                    return 0;
+                });
+
+            return e('div', { className: 'space-y-4' },
+                e('div', { className: 'mb-4 space-y-2' },
+                    // Publication type filters
+                    e('div', { className: 'flex space-x-2' },
+                        publicationTypes.map(type => 
+                            e('button', {
+                                key: type,
+                                onClick: () => setSelectedType(type),
+                                className: `px-3 py-1 rounded-full text-sm ${
+                                    selectedType === type 
+                                        ? 'bg-blue-600 text-white' 
+                                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                }`
+                            }, type.charAt(0).toUpperCase() + type.slice(1))
+                        )
+                    ),
+                    // Sorting options
+                    e('div', { className: 'flex items-center space-x-4' },
+                        e('div', { className: 'flex items-center space-x-2 bg-gray-100 p-1 rounded-full' },
+                            e('button', {
+                                onClick: () => setSortBy('year'),
+                                className: `px-3 py-1 rounded-full text-sm transition-colors ${
+                                    sortBy === 'year'
+                                        ? 'bg-white text-gray-800 shadow'
+                                        : 'text-gray-600 hover:text-gray-800'
+                                }`
+                            }, 'Year'),
+                            e('button', {
+                                onClick: () => setSortBy('type'),
+                                className: `px-3 py-1 rounded-full text-sm transition-colors ${
+                                    sortBy === 'type'
+                                        ? 'bg-white text-gray-800 shadow'
+                                        : 'text-gray-600 hover:text-gray-800'
+                                }`
+                            }, 'Type')
+                        ),
+                        e('button', {
+                            onClick: () => setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc'),
+                            className: 'text-sm text-gray-600 hover:text-gray-800'
+                        },
+                            sortOrder === 'desc' ? '↓ Descending' : '↑ Ascending'
+                        )
+                    )
+                ),
+                filteredPublications.map((pub, index) =>
+                    e('div', {
+                        key: index,
+                        className: `p-4 rounded-lg shadow hover:shadow-md transition-shadow border ${
+                            typeColors[pub.type] || 'bg-white'
+                        }`
+                    },
+                        e('div', { className: 'flex justify-between items-start' },
+                            e('p', { className: 'font-medium flex-grow' }, pub.title),
+                            e('span', {
+                                className: 'text-xs px-2 py-1 rounded-full bg-opacity-50',
+                                style: { backgroundColor: pub.type === 'journal' ? '#def7ec' : 
+                                                        pub.type === 'conference' ? '#e1effe' : 
+                                                        '#fef3c7' }
+                            }, pub.type)
+                        ),
+                        e('p', { className: 'text-sm text-gray-600 mt-1' },
+                            pub.authors.join(', ')
+                        ),
+                        e('p', { className: 'text-sm text-gray-500 mt-1' },
+                            `${pub.journal?.full || pub.conference?.name} (${pub.year})`
+                        ),
+                        pub.doi && e('a', {
+                            href: pub.doi,
+                            className: 'text-blue-600 hover:text-blue-800 text-sm mt-2 inline-block',
+                            target: '_blank',
+                            rel: 'noopener noreferrer'
+                        }, 'DOI →')
+                    )
+                )
+            );
+        };
+
+        const App = () => {
+            const [activeTab, setActiveTab] = useState('about');
+            const [data, setData] = useState(null);
+            const [loading, setLoading] = useState(true);
+
+            useEffect(() => {
+                fetch('data.json')
+                    .then(response => response.json())
+                    .then(data => {
+                        setData(data);
+                        setLoading(false);
+                    })
+                    .catch(error => {
+                        console.error('Error loading data:', error);
+                        setLoading(false);
+                    });
+            }, []);
+
+            if (loading) {
+                return e('div', { className: 'min-h-screen flex items-center justify-center' },
+                    e('p', { className: 'text-xl' }, 'Loading...')
+                );
+            }
+
+            if (!data) {
+                return e('div', { className: 'min-h-screen flex items-center justify-center' },
+                    e('p', { className: 'text-xl text-red-600' }, 'Error loading data')
+                );
+            }
+
+            return e('div', { className: 'min-h-screen bg-gray-50' },
+                e('header', { className: 'bg-white shadow' },
+                    e('div', { className: 'container mx-auto px-4 py-6' },
+                        e('h1', { className: 'text-xl font-bold' }, data.about_me.name),
+                        e('p', { className: 'text-gray-600 mt-1' },
+                            `${data.about_me.position} at ${data.about_me.current_institution.name}`
+                        )
+                    )
+                ),
+                e('main', { className: 'container mx-auto px-4 py-8 max-w-4xl' },
+                    e('div', { className: 'flex space-x-4 mb-6' },
+                        e(Tab, { id: 'about', label: 'About', active: activeTab === 'about', onClick: setActiveTab }),
+                        e(Tab, { id: 'publications', label: 'Publications', active: activeTab === 'publications', onClick: setActiveTab })
+                    ),
+                    activeTab === 'about' && e(About, { data }),
+                    activeTab === 'publications' && e(Publications, { data })
+                )
+            );
+        };
+
+        ReactDOM.render(e(App), document.getElementById('root'));
+    </script>
 </body>
 </html>
