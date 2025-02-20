@@ -23,13 +23,170 @@
             }, label);
         };
 
+        const Timeline = ({ positions }) => {
+            return e('div', { className: 'mt-8 space-y-8 relative' },
+                // Single rocket at the top
+                e('div', { className: 'flex justify-center mb-4' },
+    e('svg', {
+        xmlns: 'http://www.w3.org/2000/svg',
+        viewBox: '0 0 100 100',
+        className: 'w-16 h-16'
+    },
+        // Gradient for metallic effect
+        e('defs', null,
+            e('linearGradient', {
+                id: 'metallic',
+                x1: '0%',
+                y1: '0%',
+                x2: '100%',
+                y2: '0%'
+            },
+                e('stop', {
+                    offset: '0%',
+                    style: { stopColor: '#A1A1AA', stopOpacity: 1 }
+                }),
+                e('stop', {
+                    offset: '50%',
+                    style: { stopColor: '#D4D4D8', stopOpacity: 1 }
+                }),
+                e('stop', {
+                    offset: '100%',
+                    style: { stopColor: '#A1A1AA', stopOpacity: 1 }
+                })
+            )
+        ),
+        // Main body cylinder
+        e('path', {
+            d: 'M45 85 L45 30 C45 25 55 25 55 30 L55 85 C55 90 45 90 45 85',
+            fill: 'url(#metallic)',
+            stroke: '#71717A',
+            strokeWidth: '1'
+        }),
+        // Nose cone
+        e('path', {
+            d: 'M45 30 C45 25 50 15 50 15 C50 15 55 25 55 30',
+            fill: 'url(#metallic)',
+            stroke: '#71717A',
+            strokeWidth: '1'
+        }),
+        // Upper flaps
+        e('path', {
+            d: 'M45 35 L35 40 L45 45',
+            fill: '#A1A1AA',
+            stroke: '#71717A',
+            strokeWidth: '1'
+        }),
+        e('path', {
+            d: 'M55 35 L65 40 L55 45',
+            fill: '#A1A1AA',
+            stroke: '#71717A',
+            strokeWidth: '1'
+        }),
+        // Lower flaps
+        e('path', {
+            d: 'M45 75 L30 85 L45 85',
+            fill: '#A1A1AA',
+            stroke: '#71717A',
+            strokeWidth: '1'
+        }),
+        e('path', {
+            d: 'M55 75 L70 85 L55 85',
+            fill: '#A1A1AA',
+            stroke: '#71717A',
+            strokeWidth: '1'
+        }),
+        // Windows
+        e('circle', {
+            cx: '50',
+            cy: '40',
+            r: '2',
+            fill: '#18181B',
+            stroke: '#71717A',
+            strokeWidth: '0.5'
+        }),
+        // Engine flame effect
+        e('path', {
+            d: 'M45 85 Q50 100 55 85',
+            fill: 'none',
+            stroke: '#EF4444',
+            strokeWidth: '2'
+        },
+            e('animate', {
+                attributeName: 'd',
+                dur: '0.5s',
+                repeatCount: 'indefinite',
+                values: 'M45 85 Q50 100 55 85;M45 85 Q50 90 55 85;M45 85 Q50 100 55 85'
+            })
+        ),
+        // Additional engine flame for more realistic effect
+        e('path', {
+            d: 'M47 85 Q50 95 53 85',
+            fill: 'none',
+            stroke: '#FCA5A5',
+            strokeWidth: '1.5'
+        },
+            e('animate', {
+                attributeName: 'd',
+                dur: '0.3s',
+                repeatCount: 'indefinite',
+                values: 'M47 85 Q50 95 53 85;M47 85 Q50 88 53 85;M47 85 Q50 95 53 85'
+            })
+        )
+    )
+),
+                // Timeline line
+                e('div', { 
+                    className: 'absolute left-1/2 top-16 bottom-0 w-0.5 bg-blue-200 transform -translate-x-1/2',
+                    style: { zIndex: 0 }
+                }),
+                // Timeline items
+                positions
+                    .sort((a, b) => new Date(b.start_date) - new Date(a.start_date))
+                    .map((position, index) => 
+                        e('div', { 
+                            key: index,
+                            className: 'relative flex items-center' 
+                        },
+                            // Dot indicator
+                            e('div', { 
+                                className: 'absolute left-1/2 w-4 h-4 rounded-full bg-blue-500 border-2 border-white transform -translate-x-1/2',
+                                style: { zIndex: 1 }
+                            }),
+                            // Content
+                            e('div', { 
+                                className: `w-1/2 ${index % 2 === 0 ? 'pr-8 text-right' : 'pl-8 ml-auto'}`,
+                            },
+                                e('div', { 
+                                    className: 'bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow'
+                                },
+                                    e('h3', { className: 'font-bold text-gray-900' }, 
+                                        position.title || position.tile
+                                    ),
+                                    e('p', { className: 'mt-1 text-gray-600' },
+                                        `at ${position.institution.name}`
+                                    ),
+                                    position.institution.supervisor && e('p', { className: 'mt-1 text-sm text-gray-500' },
+                                        `with ${position.institution.supervisor.name}`
+                                    ),
+                                    e('div', { className: 'mt-2 text-sm text-gray-500' },
+                                        `${new Date(position.start_date).toLocaleDateString('en-US', {
+                                            month: 'short',
+                                            year: 'numeric'
+                                        })} ${position.end_date ? `- ${new Date(position.end_date).toLocaleDateString('en-US', {
+                                            month: 'short',
+                                            year: 'numeric'
+                                        })}` : ''}`
+                                    )
+                                )
+                            )
+                        )
+                    )
+            );
+        };
+
         const About = ({ data }) => {
             return e('div', { className: 'space-y-6' },
                 e('div', { className: 'bg-white p-6 rounded-lg shadow' },
-                    e('h2', { className: 'text-2xl font-bold' }, data.about_me.name),
-                    e('p', { className: 'text-gray-600 mt-2' },
-                        `${data.about_me.position} at ${data.about_me.current_institution.name}`
-                    ),
                     e('div', { className: 'mt-4' },
                         e('h3', { className: 'font-semibold mb-2' }, 'Research Areas:'),
                         e('div', { className: 'flex flex-wrap gap-2' },
@@ -46,7 +203,11 @@
                         e('p', { className: 'text-gray-600' }, data.about_me.biodata.short_bio[0])
                     )
                 ),
-                e(News, { data })
+                e(News, { data }),
+                e('div', { className: 'bg-white p-6 rounded-lg shadow mt-6' },
+                    e('h2', { className: 'text-2xl font-bold mb-4' }, 'Academic Journey'),
+                    e(Timeline, { positions: data.about_me.positions })
+                )
             );
         };
 
@@ -281,17 +442,21 @@
             return e('div', { className: 'min-h-screen bg-gray-50' },
                 e('header', { className: 'bg-white shadow' },
                     e('div', { className: 'container mx-auto px-4 py-6' },
-                        e('h1', { className: 'text-xl font-bold' }, data.about_me.name),
-                        e('p', { className: 'text-gray-600 mt-1' },
-                            `${data.about_me.position} at ${data.about_me.current_institution.name}`
+                        e('div', { className: 'flex justify-between items-center' },
+                            e('div', null,
+                                e('h1', { className: 'text-xl font-bold' }, data.about_me.name),
+                                e('p', { className: 'text-gray-600 mt-1' },
+                                    `${data.about_me.position} at ${data.about_me.current_institution.name}`
+                                )
+                            ),
+                            e('div', { className: 'flex space-x-4' },
+                                e(Tab, { id: 'about', label: 'About', active: activeTab === 'about', onClick: setActiveTab }),
+                                e(Tab, { id: 'publications', label: 'Publications', active: activeTab === 'publications', onClick: setActiveTab })
+                            )
                         )
                     )
                 ),
                 e('main', { className: 'container mx-auto px-4 py-8 max-w-4xl' },
-                    e('div', { className: 'flex space-x-4 mb-6' },
-                        e(Tab, { id: 'about', label: 'About', active: activeTab === 'about', onClick: setActiveTab }),
-                        e(Tab, { id: 'publications', label: 'Publications', active: activeTab === 'publications', onClick: setActiveTab })
-                    ),
                     activeTab === 'about' && e(About, { data }),
                     activeTab === 'publications' && e(Publications, { data })
                 )

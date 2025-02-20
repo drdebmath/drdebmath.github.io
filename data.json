@@ -144,6 +144,20 @@
         },
         "start_date": "2023-10-20",
         "end_date": "2024-10-20"
+      },
+      {
+        "title": "Postdoctoral Researcher",
+        "duration": "One year",
+        "institution": {
+          "name": "University of Ottawa",
+          "url": "https://www.uottawa.ca/en",
+          "supervisor": {
+            "name": "Prof. Paola Flocchini",
+            "url": "https://www.site.uottawa.ca/~flocchin/"
+          }
+        },
+        "start_date": "2024-10-20",
+        "end_date": "2025-10-20"
       }
     ],
     "cv": {
