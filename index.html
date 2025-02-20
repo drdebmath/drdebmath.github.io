@@ -52,58 +52,90 @@
 
         const News = ({ data }) => {
             const [currentNewsIndex, setCurrentNewsIndex] = useState(0);
+            const [showAllNews, setShowAllNews] = useState(false);
 
+            // Get only the 5 most recent news items for the carousel
+            const recentNews = data.news.slice(0, 5);
+            
             useEffect(() => {
                 const timer = setInterval(() => {
                     setCurrentNewsIndex((prevIndex) => 
-                        prevIndex === data.news.length - 1 ? 0 : prevIndex + 1
+                        prevIndex === recentNews.length - 1 ? 0 : prevIndex + 1
                     );
-                }, 5000); // Change news every 5 seconds
+                }, 5000);
 
                 return () => clearInterval(timer);
-            }, [data.news.length]);
+            }, [recentNews.length]);
 
-            const currentNews = data.news[currentNewsIndex];
+            const currentNews = recentNews[currentNewsIndex];
 
-            const newsContent = e('div', { className: 'space-y-2' },
-                e('p', { className: 'text-sm text-gray-500 font-medium' }, currentNews.date),
-                e('p', { className: 'mt-1' }, currentNews.title)
+            const NewsItem = ({ news }) => e('div', { className: 'space-y-2' },
+                e('p', { className: 'text-sm text-gray-500 font-medium' }, news.date),
+                e('p', { className: 'mt-1' }, news.title)
             );
 
-            return e('div', { className: 'bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow' },
-                e('div', { className: 'flex justify-between items-center mb-2' },
-                    e('h3', { className: 'font-semibold text-lg' }, 'Latest News'),
-                    e('div', { className: 'flex space-x-2' },
-                        e('button', {
-                            onClick: () => setCurrentNewsIndex(prev => 
-                                prev === 0 ? data.news.length - 1 : prev - 1
-                            ),
-                            className: 'text-gray-600 hover:text-gray-800 p-1'
-                        }, '←'),
-                        e('button', {
-                            onClick: () => setCurrentNewsIndex(prev => 
-                                prev === data.news.length - 1 ? 0 : prev + 1
-                            ),
-                            className: 'text-gray-600 hover:text-gray-800 p-1'
-                        }, '→')
+            return e('div', { className: 'space-y-4' },
+                // Recent News Carousel
+                e('div', { className: 'bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow' },
+                    e('div', { className: 'flex justify-between items-center mb-2' },
+                        e('h3', { className: 'font-semibold text-lg' }, 'Latest News'),
+                        e('div', { className: 'flex space-x-2' },
+                            e('button', {
+                                onClick: () => setCurrentNewsIndex(prev => 
+                                    prev === 0 ? recentNews.length - 1 : prev - 1
+                                ),
+                                className: 'text-gray-600 hover:text-gray-800 p-1'
+                            }, '←'),
+                            e('button', {
+                                onClick: () => setCurrentNewsIndex(prev => 
+                                    prev === recentNews.length - 1 ? 0 : prev + 1
+                                ),
+                                className: 'text-gray-600 hover:text-gray-800 p-1'
+                            }, '→')
+                        )
+                    ),
+                    currentNews.url 
+                        ? e('a', {
+                            href: currentNews.url,
+                            className: 'block cursor-pointer hover:bg-gray-50 rounded transition-colors',
+                            target: '_blank',
+                            rel: 'noopener noreferrer'
+                        }, e(NewsItem, { news: currentNews }))
+                        : e(NewsItem, { news: currentNews }),
+                    e('div', { className: 'flex justify-center space-x-1 mt-3' },
+                        recentNews.map((_, index) => 
+                            e('div', {
+                                key: index,
+                                className: `h-2 w-2 rounded-full ${
+                                    index === currentNewsIndex ? 'bg-blue-600' : 'bg-gray-300'
+                                }`
+                            })
+                        )
                     )
                 ),
-                currentNews.url 
-                    ? e('a', {
-                        href: currentNews.url,
-                        className: 'block cursor-pointer hover:bg-gray-50 rounded transition-colors',
-                        target: '_blank',
-                        rel: 'noopener noreferrer'
-                    }, newsContent)
-                    : newsContent,
-                e('div', { className: 'flex justify-center space-x-1 mt-3' },
-                    data.news.map((_, index) => 
-                        e('div', {
-                            key: index,
-                            className: `h-2 w-2 rounded-full ${
-                                index === currentNewsIndex ? 'bg-blue-600' : 'bg-gray-300'
-                            }`
-                        })
+                
+                // All News Section
+                e('div', { className: 'mt-4' },
+                    e('button', {
+                        onClick: () => setShowAllNews(!showAllNews),
+                        className: 'text-blue-600 hover:text-blue-800 text-sm font-medium'
+                    }, showAllNews ? 'Hide All News' : 'View All News'),
+                    showAllNews && e('div', { className: 'mt-4 space-y-4' },
+                        data.news.map((news, index) => 
+                            e('div', {
+                                key: index,
+                                className: 'bg-white p-4 rounded-lg shadow'
+                            },
+                                news.url 
+                                    ? e('a', {
+                                        href: news.url,
+                                        className: 'block cursor-pointer hover:bg-gray-50 rounded transition-colors',
+                                        target: '_blank',
+                                        rel: 'noopener noreferrer'
+                                    }, e(NewsItem, { news }))
+                                    : e(NewsItem, { news })
+                            )
+                        )
                     )
                 )
             );
