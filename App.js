@@ -250,483 +250,496 @@ const Timeline = ({ positions }) => {
   );
 };
 
+function convertToLinks(bioData) {
+    const { urls, short_bio } = bioData;
+    let bioText = short_bio[0];
+
+    for (const [name, url] of Object.entries(urls)) {
+        const link = `<a class=\"text-blue-600 dark:text-blue-400 hover:underline\" href=\"${url}\" target=\"_blank\" rel=\"noopener noreferrer\">${name}</a>`;
+        bioText = bioText.replace(new RegExp(name, "g"), link);
+    }
+
+    return bioText;
+}
+
 // Refined About section with better layout and styling
 const About = ({ data }) => {
-  return e(
-    "div",
-    {
-      className: `space-y-8 dark:bg-gray-800 dark:text-gray-200`, // Dark mode support
-    },
-    e(
-      "div",
-      {
-        className: `bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700`, // Enhanced card styling for About section with dark mode
-      },
-      e(
+    const biodata = data.about_me.biodata;
+    const bioWithLinks = convertToLinks(biodata);
+
+    return e(
         "div",
-        { className: "mb-6" }, // Spacing for "About Me" text
-        e("h2", { className: "text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4" }, "About Me"), // Section title styling
+        { className: "space-y-8 dark:bg-gray-800 dark:text-gray-200" }, // Dark mode support
         e(
-          "div",
-          { className: "text-gray-700 dark:text-gray-300 leading-relaxed" }, // Improved text styling
-          data.about_me.biodata.short_bio[0]
-        )
-      ),
-      e(
-        "div",
-        null,
-        e("h3", { className: "font-semibold text-lg text-gray-800 dark:text-gray-200 mb-3" }, "Research Interests"), // Sub-section title styling
-        e(
-          "div",
-          { className: "flex flex-wrap gap-3" }, // Improved gap for research topics
-          data.research.map((topic, index) =>
+            "div",
+            {
+                className: `bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700`, // Enhanced card styling for About section with dark mode
+            },
             e(
-              "span",
-              {
-                key: index,
-                className:
-                  "bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 px-4 py-2 rounded-full text-sm font-medium hover:bg-indigo-200 dark:hover:bg-indigo-800 transition-colors duration-200", // Enhanced tag styling with dark mode
-              },
-              topic
-            )
-          )
+                "div",
+                { className: "mb-6" }, // Spacing for "About Me" text
+                e("h2", { className: "text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4" }, "About Me"), // Section title styling
+                e(
+                    "div",
+                    { className: "text-gray-700 dark:text-gray-300 leading-relaxed" },
+                    e("p", { dangerouslySetInnerHTML: { __html: bioWithLinks } })
+                )
+            ),
+            e(
+                "div",
+                null,
+                e("h3", { className: "font-semibold text-lg text-gray-800 dark:text-gray-200 mb-3" }, "Research Interests"), // Sub-section title styling
+                e(
+                    "div",
+                    { className: "flex flex-wrap gap-3" }, // Improved gap for research topics
+                    data.research.map((topic, index) =>
+                        e(
+                            "span",
+                            {
+                                key: index,
+                                className:
+                                    "bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 px-4 py-2 rounded-full text-sm font-medium hover:bg-indigo-200 dark:hover:bg-indigo-800 transition-colors duration-200", // Enhanced tag styling with dark mode
+                            },
+                            topic
+                        )
+                    )
+                )
+            ),
+        ),
+        e(News, { data }), // News section remains largely the same but inherits overall styling
+        e(
+            "div",
+            {
+                className: `bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700`, // Consistent card styling for Academic Journey with dark mode
+            },
+            e("h2", { className: "text-2xl font-bold text-gray-800 dark:text-gray-200 mb-6" }, "Academic Journey"), // Section title
+            e(Timeline, { positions: data.about_me.positions })
         )
-      ),
-    ),
-    e(News, { data }), // News section remains largely the same but inherits overall styling
-    e(
-      "div",
-      {
-        className: `bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700`, // Consistent card styling for Academic Journey with dark mode
-      },
-      e("h2", { className: "text-2xl font-bold text-gray-800 dark:text-gray-200 mb-6" }, "Academic Journey"), // Section title
-      e(Timeline, { positions: data.about_me.positions })
-    )
-  );
+    );
 };
 
 // News section with subtle visual enhancements
 const News = ({ data }) => {
-  const [currentNewsIndex, setCurrentNewsIndex] = useState(0);
-  const [showAllNews, setShowAllNews] = useState(false);
+    const [currentNewsIndex, setCurrentNewsIndex] = useState(0);
+    const [showAllNews, setShowAllNews] = useState(false);
 
-  const recentNews = data.news.slice(0, 5);
+    const recentNews = data.news.slice(0, 5);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentNewsIndex((prevIndex) =>
-        prevIndex === recentNews.length - 1 ? 0 : prevIndex + 1
-      );
-    }, 5000);
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentNewsIndex((prevIndex) =>
+                prevIndex === recentNews.length - 1 ? 0 : prevIndex + 1
+            );
+        }, 5000);
 
-    return () => clearInterval(timer);
-  }, [recentNews.length]);
+        return () => clearInterval(timer);
+    }, [recentNews.length]);
 
-  const currentNews = recentNews[currentNewsIndex];
+    const currentNews = recentNews[currentNewsIndex];
 
-  const NewsItem = ({ news }) =>
-    e(
-      "div",
-      { className: "space-y-3 dark:text-gray-200" }, // Slightly increased spacing in news item
-      e("p", { className: "text-sm text-gray-600 dark:text-gray-300 font-medium" }, news.date), // Darker date
-      e("p", { className: "mt-1 text-gray-800 dark:text-gray-200" }, news.title) // Darker title
-    );
-
-  return e(
-    "div",
-    { className: "space-y-6 mt-8 dark:bg-gray-800" }, // Increased marginTop for news section
-    // Recent News Carousel - enhanced card and controls
-    e(
-      "div",
-      {
-        className:
-          "bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100 dark:border-gray-700", // Enhanced card styling
-      },
-      e(
-        "div",
-        { className: "flex justify-between items-center mb-4 dark:text-gray-200" }, // Spacing for title and controls
-        e("h3", { className: "font-semibold text-lg" }, "Latest News"), // Darker title
+    const NewsItem = ({ news }) =>
         e(
-          "div",
-          { className: "flex space-x-3" }, // Spacing for buttons
-          e(
-            "button",
-            {
-              onClick: () =>
-                setCurrentNewsIndex((prev) =>
-                  prev === 0 ? recentNews.length - 1 : prev - 1
-                ),
-              className: "text-gray-700 dark:text-gray-300 hover:text-indigo-500 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200", // Styled buttons
-            },
-            "←"
-          ),
-          e(
-            "button",
-            {
-              onClick: () =>
-                setCurrentNewsIndex((prev) =>
-                  prev === recentNews.length - 1 ? 0 : prev + 1
-                ),
-              className: "text-gray-700 dark:text-gray-300 hover:text-indigo-500 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200", // Styled buttons
-            },
-            "→"
-          )
-        )
-      ),
-      currentNews.url
-        ? e(
-            "a",
-            {
-              href: currentNews.url,
-              className:
-                "block cursor-pointer hover:bg-gray-50 rounded-lg p-4 transition-colors duration-200 dark:hover:bg-gray-700", // Added padding and rounded corners on hover
-              target: "_blank",
-              rel: "noopener noreferrer",
-            },
-            e(NewsItem, { news: currentNews })
-          )
-        : e(NewsItem, { news: currentNews }),
-      e(
-        "div",
-        { className: "flex justify-center space-x-2 mt-4" }, // Spacing for dots
-        recentNews.map((_, index) =>
-          e("div", {
-            key: index,
-            className: `h-2.5 w-2.5 rounded-full ${
-              index === currentNewsIndex ? "bg-indigo-600 dark:bg-indigo-300" : "bg-gray-300 dark:bg-gray-600" // Indigo active dot
-            }`,
-          })
-        )
-      )
-    ),
+            "div",
+            { className: "space-y-3 dark:text-gray-200" }, // Slightly increased spacing in news item
+            e("p", { className: "text-sm text-gray-600 dark:text-gray-300 font-medium" }, news.date), // Darker date
+            e("p", { className: "mt-1 text-gray-800 dark:text-gray-200" }, news.title) // Darker title
+        );
 
-    // All News Section - styled button and list
-    e(
-      "div",
-      { className: "mt-6 dark:text-gray-200" }, // Spacing for "View All News" button
-      e(
-        "button",
-        {
-          onClick: () => setShowAllNews(!showAllNews),
-          className: "text-indigo-600 hover:text-indigo-800 text-sm font-medium transition-colors duration-200 dark:text-gray-300 dark:hover:text-gray-200", // Indigo button
-        },
-        showAllNews ? "Hide All News" : "View All News"
-      ),
-      showAllNews &&
+    return e(
+        "div",
+        { className: "space-y-6 mt-8 dark:bg-gray-800" }, // Increased marginTop for news section
+        // Recent News Carousel - enhanced card and controls
         e(
-          "div",
-          { className: "mt-5 space-y-5" }, // Spacing for all news list
-          data.news.map((news, index) =>
+            "div",
+            {
+                className:
+                    "bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100 dark:border-gray-700", // Enhanced card styling
+            },
             e(
-              "div",
-              {
-                key: index,
-                className: "bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md border border-gray-100 dark:border-gray-700 hover:shadow-lg transition-shadow duration-300", // Consistent card styling
-              },
-              news.url
+                "div",
+                { className: "flex justify-between items-center mb-4 dark:text-gray-200" }, // Spacing for title and controls
+                e("h3", { className: "font-semibold text-lg" }, "Latest News"), // Darker title
+                e(
+                    "div",
+                    { className: "flex space-x-3" }, // Spacing for buttons
+                    e(
+                        "button",
+                        {
+                            onClick: () =>
+                                setCurrentNewsIndex((prev) =>
+                                    prev === 0 ? recentNews.length - 1 : prev - 1
+                                ),
+                            className: "text-gray-700 dark:text-gray-300 hover:text-indigo-500 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200", // Styled buttons
+                        },
+                        "←"
+                    ),
+                    e(
+                        "button",
+                        {
+                            onClick: () =>
+                                setCurrentNewsIndex((prev) =>
+                                    prev === recentNews.length - 1 ? 0 : prev + 1
+                                ),
+                            className: "text-gray-700 dark:text-gray-300 hover:text-indigo-500 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200", // Styled buttons
+                        },
+                        "→"
+                    )
+                )
+            ),
+            currentNews.url
                 ? e(
                     "a",
                     {
-                      href: news.url,
-                      className:
-                        "block cursor-pointer hover:bg-gray-50 rounded-lg p-4 transition-colors duration-200 dark:hover:bg-gray-700", // Hover effect for all news items
-                      target: "_blank",
-                      rel: "noopener noreferrer",
+                        href: currentNews.url,
+                        className:
+                            "block cursor-pointer hover:bg-gray-50 rounded-lg p-4 transition-colors duration-200 dark:hover:bg-gray-700", // Added padding and rounded corners on hover
+                        target: "_blank",
+                        rel: "noopener noreferrer",
                     },
-                    e(NewsItem, { news })
-                  )
-                : e(NewsItem, { news })
+                    e(NewsItem, { news: currentNews })
+                )
+                : e(NewsItem, { news: currentNews }),
+            e(
+                "div",
+                { className: "flex justify-center space-x-2 mt-4" }, // Spacing for dots
+                recentNews.map((_, index) =>
+                    e("div", {
+                        key: index,
+                        className: `h-2.5 w-2.5 rounded-full ${
+                            index === currentNewsIndex ? "bg-indigo-600 dark:bg-indigo-300" : "bg-gray-300 dark:bg-gray-600" // Indigo active dot
+                        }`,
+                    })
+                )
             )
-          )
+        ),
+
+        // All News Section - styled button and list
+        e(
+            "div",
+            { className: "mt-6 dark:text-gray-200" }, // Spacing for "View All News" button
+            e(
+                "button",
+                {
+                    onClick: () => setShowAllNews(!showAllNews),
+                    className: "text-indigo-600 hover:text-indigo-800 text-sm font-medium transition-colors duration-200 dark:text-gray-300 dark:hover:text-gray-200", // Indigo button
+                },
+                showAllNews ? "Hide All News" : "View All News"
+            ),
+            showAllNews &&
+                e(
+                    "div",
+                    { className: "mt-5 space-y-5" }, // Spacing for all news list
+                    data.news.map((news, index) =>
+                        e(
+                            "div",
+                            {
+                                key: index,
+                                className: "bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md border border-gray-100 dark:border-gray-700 hover:shadow-lg transition-shadow duration-300", // Consistent card styling
+                            },
+                            news.url
+                                ? e(
+                                    "a",
+                                    {
+                                        href: news.url,
+                                        className:
+                                            "block cursor-pointer hover:bg-gray-50 rounded-lg p-4 transition-colors duration-200 dark:hover:bg-gray-700", // Hover effect for all news items
+                                        target: "_blank",
+                                        rel: "noopener noreferrer",
+                                    },
+                                    e(NewsItem, { news })
+                                )
+                                : e(NewsItem, { news })
+                        )
+                    )
+                )
         )
-    )
-  );
+    );
 };
 
 // Publications section - improved filters and list appearance
 const Publications = ({ data }) => {
-  const [selectedType, setSelectedType] = useState("all");
-  const [sortBy, setSortBy] = useState("year");
-  const [sortOrder, setSortOrder] = useState("desc");
+    const [selectedType, setSelectedType] = useState("all");
+    const [sortBy, setSortBy] = useState("year");
+    const [sortOrder, setSortOrder] = useState("desc");
 
-  const publicationTypes = ["all", "journal", "conference", "preprint"];
+    const publicationTypes = ["all", "journal", "conference", "preprint"];
 
-  const typeColors = {
-    journal: "bg-green-50 dark:bg-green-900 border-green-200 dark:border-green-700 text-green-800 dark:text-green-200", // Green color scheme
-    conference: "bg-blue-50 dark:bg-blue-900 border-blue-200 dark:border-blue-700 text-blue-800 dark:text-blue-200", // Blue color scheme
-    preprint: "bg-yellow-50 dark:bg-yellow-900 border-yellow-200 dark:border-yellow-700 text-yellow-800 dark:text-yellow-200", // Yellow color scheme
-  };
+    const typeColors = {
+        journal: "bg-green-50 dark:bg-green-900 border-green-200 dark:border-green-700 text-green-800 dark:text-green-200", // Green color scheme
+        conference: "bg-blue-50 dark:bg-blue-900 border-blue-200 dark:border-blue-700 text-blue-800 dark:text-blue-200", // Blue color scheme
+        preprint: "bg-yellow-50 dark:bg-yellow-900 border-yellow-200 dark:border-yellow-700 text-yellow-800 dark:text-yellow-200", // Yellow color scheme
+    };
 
-  const filteredPublications = data.publications
-    .filter((pub) => selectedType === "all" || pub.type === selectedType)
-    .sort((a, b) => {
-      if (sortBy === "year") {
-        return sortOrder === "desc" ? b.year - a.year : a.year - b.year;
-      }
-      if (sortBy === "type") {
-        if (a.type === b.type) {
-          return sortOrder === "desc" ? b.year - a.year : a.year - b.year;
-        }
-        return a.type.localeCompare(b.type);
-      }
-      return 0;
-    });
-
-  return e(
-    "div",
-    { className: "space-y-6 mt-8" }, // Increased marginTop for publications section
-    e(
-      "div",
-      { className: "mb-6 space-y-3" }, // Spacing for filter section
-      // Publication type filters - enhanced button styling
-      e(
-        "div",
-        { className: "flex space-x-3 justify-start" }, // Aligned filters to start
-        publicationTypes.map((type) =>
-          e(
-            "button",
-            {
-              key: type,
-              onClick: () => setSelectedType(type),
-              className: `
-                px-4 py-2 rounded-full text-sm font-medium
-                transition-colors duration-200
-                ${
-                  selectedType === type
-                    ? "bg-indigo-600 dark:bg-indigo-300 text-white shadow-md hover:bg-indigo-500 dark:hover:bg-indigo-200" // Indigo active state
-                    : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700" // Gray default state
+    const filteredPublications = data.publications
+        .filter((pub) => selectedType === "all" || pub.type === selectedType)
+        .sort((a, b) => {
+            if (sortBy === "year") {
+                return sortOrder === "desc" ? b.year - a.year : a.year - b.year;
+            }
+            if (sortBy === "type") {
+                if (a.type === b.type) {
+                    return sortOrder === "desc" ? b.year - a.year : a.year - b.year;
                 }
-              `,
-            },
-            type === "all" ? "All" : type.charAt(0).toUpperCase() + type.slice(1) + "s"
-          )
-        )
-      ),
-      // Sorting options - styled sorting controls
-      e(
+                return a.type.localeCompare(b.type);
+            }
+            return 0;
+        });
+
+    return e(
         "div",
-        { className: "flex items-center space-x-5 justify-start" }, // Aligned sorting to start
+        { className: "space-y-6 mt-8" }, // Increased marginTop for publications section
         e(
-          "div",
-          {
-            className:
-              "flex items-center space-x-1 bg-gray-100 dark:bg-gray-800 p-1.5 rounded-full", // Rounded container for sort buttons
-          },
-          e(
-            "button",
-            {
-              onClick: () => setSortBy("year"),
-              className: `px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 ${
-                sortBy === "year"
-                  ? "bg-white dark:bg-gray-700 text-gray-800 shadow-sm dark:text-gray-200" // White active state
-                  : "text-gray-600 dark:text-gray-300 hover:text-gray-800 hover:bg-gray-200 dark:hover:bg-gray-600" // Gray default state
-              }`,
-            },
-            "Year"
-          ),
-          e(
-            "button",
-            {
-              onClick: () => setSortBy("type"),
-              className: `px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 ${
-                sortBy === "type"
-                  ? "bg-white dark:bg-gray-700 text-gray-800 shadow-sm dark:text-gray-200" // White active state
-                  : "text-gray-600 dark:text-gray-300 hover:text-gray-800 hover:bg-gray-200 dark:hover:bg-gray-600" // Gray default state
-              }`,
-            },
-            "Type"
-          )
+            "div",
+            { className: "mb-6 space-y-3" }, // Spacing for filter section
+            // Publication type filters - enhanced button styling
+            e(
+                "div",
+                { className: "flex space-x-3 justify-start" }, // Aligned filters to start
+                publicationTypes.map((type) =>
+                    e(
+                        "button",
+                        {
+                            key: type,
+                            onClick: () => setSelectedType(type),
+                            className: `
+                                px-4 py-2 rounded-full text-sm font-medium
+                                transition-colors duration-200
+                                ${
+                                    selectedType === type
+                                        ? "bg-indigo-600 dark:bg-indigo-300 text-white shadow-md hover:bg-indigo-500 dark:hover:bg-indigo-200" // Indigo active state
+                                        : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700" // Gray default state
+                                }
+                            `,
+                        },
+                        type === "all" ? "All" : type.charAt(0).toUpperCase() + type.slice(1) + "s"
+                    )
+                )
+            ),
+            // Sorting options - styled sorting controls
+            e(
+                "div",
+                { className: "flex items-center space-x-5 justify-start" }, // Aligned sorting to start
+                e(
+                    "div",
+                    {
+                        className:
+                            "flex items-center space-x-1 bg-gray-100 dark:bg-gray-800 p-1.5 rounded-full", // Rounded container for sort buttons
+                    },
+                    e(
+                        "button",
+                        {
+                            onClick: () => setSortBy("year"),
+                            className: `px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 ${
+                                sortBy === "year"
+                                    ? "bg-white dark:bg-gray-700 text-gray-800 shadow-sm dark:text-gray-200" // White active state
+                                    : "text-gray-600 dark:text-gray-300 hover:text-gray-800 hover:bg-gray-200 dark:hover:bg-gray-600" // Gray default state
+                            }`,
+                        },
+                        "Year"
+                    ),
+                    e(
+                        "button",
+                        {
+                            onClick: () => setSortBy("type"),
+                            className: `px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 ${
+                                sortBy === "type"
+                                    ? "bg-white dark:bg-gray-700 text-gray-800 shadow-sm dark:text-gray-200" // White active state
+                                    : "text-gray-600 dark:text-gray-300 hover:text-gray-800 hover:bg-gray-200 dark:hover:bg-gray-600" // Gray default state
+                            }`,
+                        },
+                        "Type"
+                    )
+                ),
+                e(
+                    "button",
+                    {
+                        onClick: () => setSortOrder(sortOrder === "desc" ? "asc" : "desc"),
+                        className: "text-sm text-gray-600 dark:text-gray-300 hover:text-indigo-500 transition-colors duration-200", // Indigo sort order button
+                    },
+                    sortOrder === "desc" ? "↓ Descending" : "↑ Ascending"
+                )
+            )
         ),
-        e(
-          "button",
-          {
-            onClick: () => setSortOrder(sortOrder === "desc" ? "asc" : "desc"),
-            className: "text-sm text-gray-600 dark:text-gray-300 hover:text-indigo-500 transition-colors duration-200", // Indigo sort order button
-          },
-          sortOrder === "desc" ? "↓ Descending" : "↑ Ascending"
+        // Publication list - enhanced card styling and type badges
+        filteredPublications.map((pub, index) =>
+            e(
+                "div",
+                {
+                    key: index,
+                    className: `p-5 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border ${
+                        typeColors[pub.type] || "bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700" // Type-based background and border
+                    }`,
+                },
+                e(
+                    "div",
+                    { className: "flex justify-between items-start mb-3" }, // Spacing for title and type
+                    e("p", { className: "font-medium flex-grow text-gray-800 dark:text-gray-200" }, pub.title), // Darker title
+                    e(
+                        "span",
+                        {
+                            className: `text-xs px-3 py-1 rounded-full font-semibold border ${typeColors[pub.type]}`, // Type-based badge styling
+                        },
+                        pub.type.toUpperCase()
+                    )
+                ),
+                e(
+                    "p",
+                    { className: "text-sm text-gray-700 dark:text-gray-400 mt-1" }, // Darker authors
+                    pub.authors.join(", ")
+                ),
+                e(
+                    "p",
+                    { className: "text-sm text-gray-600 dark:text-gray-500 mt-2" }, // Darker journal/conference info
+                    `${pub.journal?.full || pub.conference?.full || pub.arxiv} (${pub.year})`
+                ),
+                pub.doi &&
+                    e(
+                        "a",
+                        {
+                            href: pub.doi||pub.arxiv,
+                            className:
+                                "text-indigo-600 dark:text-indigo-300 hover:text-indigo-800 dark:hover:text-indigo-400 text-sm mt-3 inline-block font-medium transition-colors duration-200", // Indigo DOI link
+                            target: "_blank",
+                            rel: "noopener noreferrer",
+                        },
+                        "doi" // More descriptive link text
+                    )
+            )
         )
-      )
-    ),
-    // Publication list - enhanced card styling and type badges
-    filteredPublications.map((pub, index) =>
-      e(
-        "div",
-        {
-          key: index,
-          className: `p-5 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border ${
-            typeColors[pub.type] || "bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700" // Type-based background and border
-          }`,
-        },
-        e(
-          "div",
-          { className: "flex justify-between items-start mb-3" }, // Spacing for title and type
-          e("p", { className: "font-medium flex-grow text-gray-800 dark:text-gray-200" }, pub.title), // Darker title
-          e(
-            "span",
-            {
-              className: `text-xs px-3 py-1 rounded-full font-semibold border ${typeColors[pub.type]}`, // Type-based badge styling
-            },
-            pub.type.toUpperCase()
-          )
-        ),
-        e(
-          "p",
-          { className: "text-sm text-gray-700 dark:text-gray-400 mt-1" }, // Darker authors
-          pub.authors.join(", ")
-        ),
-        e(
-          "p",
-          { className: "text-sm text-gray-600 dark:text-gray-500 mt-2" }, // Darker journal/conference info
-          `${pub.journal?.full || pub.conference?.full || pub.arxiv} (${pub.year})`
-        ),
-        pub.doi &&
-          e(
-            "a",
-            {
-              href: pub.doi||pub.arxiv,
-              className:
-                "text-indigo-600 dark:text-indigo-300 hover:text-indigo-800 dark:hover:text-indigo-400 text-sm mt-3 inline-block font-medium transition-colors duration-200", // Indigo DOI link
-              target: "_blank",
-              rel: "noopener noreferrer",
-            },
-            "doi" // More descriptive link text
-          )
-      )
-    )
-  );
+    );
 };
 
 // Main App component - enhanced header and overall layout
 const App = () => {
-  const [activeTab, setActiveTab] = useState("about");
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+    const [activeTab, setActiveTab] = useState("about");
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [isDarkMode, setIsDarkMode] = useState(false);
 
-  // Handle dark mode
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    setIsDarkMode(mediaQuery.matches);
+    // Handle dark mode
+    useEffect(() => {
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        setIsDarkMode(mediaQuery.matches);
 
-    const handler = (e) => setIsDarkMode(e.matches);
-    mediaQuery.addEventListener('change', handler);
-    return () => mediaQuery.removeEventListener('change', handler);
-  }, []);
+        const handler = (e) => setIsDarkMode(e.matches);
+        mediaQuery.addEventListener('change', handler);
+        return () => mediaQuery.removeEventListener('change', handler);
+    }, []);
 
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [isDarkMode]);
-
-  // Fetch data
-  useEffect(() => {
-    fetch("data.json")
-      .then((response) => response.json())
-      .then((data) => {
-        setData(data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error loading data:", error);
-        setLoading(false);
-      });
-  }, []);
-
-  useEffect(() => {
-    window.onscroll = function() {
-      const button = document.getElementById('goToTop');
-      if (button) {
-        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-          button.style.display = 'block';
+    useEffect(() => {
+        if (isDarkMode) {
+            document.documentElement.classList.add('dark');
         } else {
-          button.style.display = 'none';
+            document.documentElement.classList.remove('dark');
         }
-      }
-    };
-  }, []);
+    }, [isDarkMode]);
 
-  if (loading) {
+    // Fetch data
+    useEffect(() => {
+        fetch("data.json")
+            .then((response) => response.json())
+            .then((data) => {
+                setData(data);
+                setLoading(false);
+            })
+            .catch((error) => {
+                console.error("Error loading data:", error);
+                setLoading(false);
+            });
+    }, []);
+
+    useEffect(() => {
+        window.onscroll = function() {
+            const button = document.getElementById('goToTop');
+            if (button) {
+                if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                    button.style.display = 'block';
+                } else {
+                    button.style.display = 'none';
+                }
+            }
+        };
+    }, []);
+
+    if (loading) {
+        return e(
+            "div",
+            { className: "min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900" },
+            e("p", { className: "text-xl text-gray-700 dark:text-gray-300 font-semibold" }, "Loading...")
+        );
+    }
+
+    if (!data) {
+        return e(
+            "div",
+            { className: "min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900" },
+            e("p", { className: "text-xl text-red-700 dark:text-red-400 font-bold" }, "Error loading data")
+        );
+    }
+
     return e(
-      "div",
-      { className: "min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900" },
-      e("p", { className: "text-xl text-gray-700 dark:text-gray-300 font-semibold" }, "Loading...")
-    );
-  }
-
-  if (!data) {
-    return e(
-      "div",
-      { className: "min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900" },
-      e("p", { className: "text-xl text-red-700 dark:text-red-400 font-bold" }, "Error loading data")
-    );
-  }
-
-  return e(
-    "div",
-    { className: "min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-200" },
-    e(
-      "header",
-      { className: "bg-white dark:bg-gray-800 shadow-md" },
-      e(
         "div",
-        { className: "container mx-auto px-6 py-8" },
+        { className: "min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-200" },
         e(
-          "div",
-          { className: "flex justify-between items-center" },
-          e(
-            "div",
-            null,
-            e("h1", { className: "text-2xl font-bold text-indigo-800 dark:text-indigo-400" }, data.about_me.name),
+            "header",
+            { className: "bg-white dark:bg-gray-800 shadow-md" },
             e(
-              "p",
-              { className: "text-gray-700 dark:text-gray-300 mt-2" },
-              `${data.about_me.position}, ${data.about_me.current_institution.name}`
+                "div",
+                { className: "container mx-auto px-6 py-8" },
+                e(
+                    "div",
+                    { className: "flex justify-between items-center" },
+                    e(
+                        "div",
+                        null,
+                        e("h1", { className: "text-2xl font-bold text-indigo-800 dark:text-indigo-400" }, data.about_me.name),
+                        e(
+                            "p",
+                            { className: "text-gray-700 dark:text-gray-300 mt-2" },
+                            `${data.about_me.position}, ${data.about_me.current_institution.name}`
+                        )
+                    ),
+                    e(
+                        "div",
+                        { className: "flex items-center space-x-5" },
+                        e(
+                            "nav",
+                            { className: "flex space-x-5" },
+                            e(Tab, {
+                                id: "about",
+                                label: "About",
+                                active: activeTab === "about",
+                                onClick: setActiveTab,
+                            }),
+                            e(Tab, {
+                                id: "publications",
+                                label: "Publications",
+                                active: activeTab === "publications",
+                                onClick: setActiveTab,
+                            }),
+                            e(DarkModeToggle, { isDark: isDarkMode, onToggle: () => setIsDarkMode(!isDarkMode) })
+                        )
+                    )
+                )
             )
-          ),
-          e(
-            "div",
-            { className: "flex items-center space-x-5" },
-            e(
-              "nav",
-              { className: "flex space-x-5" },
-              e(Tab, {
-                id: "about",
-                label: "About",
-                active: activeTab === "about",
-                onClick: setActiveTab,
-              }),
-              e(Tab, {
-                id: "publications",
-                label: "Publications",
-                active: activeTab === "publications",
-                onClick: setActiveTab,
-              }),
-              e(DarkModeToggle, { isDark: isDarkMode, onToggle: () => setIsDarkMode(!isDarkMode) })
-            )
-          )
+        ),
+        e(
+            "main",
+            { className: "container mx-auto px-6 py-10 max-w-5xl" },
+            activeTab === "about" && e(About, { data }),
+            activeTab === "publications" && e(Publications, { data })
+        ),
+        e(
+            "button",
+            {
+                id: "goToTop",
+                className: "fixed bottom-10 right-10 p-2 rounded-full bg-indigo-600 dark:bg-indigo-300 text-white shadow-md hover:bg-indigo-500 dark:hover:bg-indigo-200 transition-colors duration-200",
+                style: { display: "none" },
+                onClick: () => window.scrollTo({ top: 0, behavior: 'smooth' }),
+            },
+            "↑"
         )
-      )
-    ),
-    e(
-      "main",
-      { className: "container mx-auto px-6 py-10 max-w-5xl" },
-      activeTab === "about" && e(About, { data }),
-      activeTab === "publications" && e(Publications, { data })
-    ),
-    e(
-      "button",
-      {
-        id: "goToTop",
-        className: "fixed bottom-10 right-10 p-2 rounded-full bg-indigo-600 dark:bg-indigo-300 text-white shadow-md hover:bg-indigo-500 dark:hover:bg-indigo-200 transition-colors duration-200",
-        style: { display: "none" },
-        onClick: () => window.scrollTo({ top: 0, behavior: 'smooth' }),
-      },
-      "↑"
-    )
-  );
+    );
 };
 
 ReactDOM.render(e(App), document.getElementById("root"));
