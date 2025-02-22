@@ -577,19 +577,19 @@ const Publications = ({ data }) => {
         e(
           "p",
           { className: "text-sm text-gray-600 dark:text-gray-500 mt-2" }, // Darker journal/conference info
-          `${pub.journal?.full || pub.conference?.name} (${pub.year})`
+          `${pub.journal?.full || pub.conference?.full || pub.arxiv} (${pub.year})`
         ),
         pub.doi &&
           e(
             "a",
             {
-              href: pub.doi,
+              href: pub.doi||pub.arxiv,
               className:
                 "text-indigo-600 dark:text-indigo-300 hover:text-indigo-800 dark:hover:text-indigo-400 text-sm mt-3 inline-block font-medium transition-colors duration-200", // Indigo DOI link
               target: "_blank",
               rel: "noopener noreferrer",
             },
-            "View DOI →" // More descriptive link text
+            "doi" // More descriptive link text
           )
       )
     )
@@ -633,6 +633,19 @@ const App = () => {
         console.error("Error loading data:", error);
         setLoading(false);
       });
+  }, []);
+
+  useEffect(() => {
+    window.onscroll = function() {
+      const button = document.getElementById('goToTop');
+      if (button) {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+          button.style.display = 'block';
+        } else {
+          button.style.display = 'none';
+        }
+      }
+    };
   }, []);
 
   if (loading) {
@@ -702,6 +715,16 @@ const App = () => {
       { className: "container mx-auto px-6 py-10 max-w-5xl" },
       activeTab === "about" && e(About, { data }),
       activeTab === "publications" && e(Publications, { data })
+    ),
+    e(
+      "button",
+      {
+        id: "goToTop",
+        className: "fixed bottom-10 right-10 p-2 rounded-full bg-indigo-600 dark:bg-indigo-300 text-white shadow-md hover:bg-indigo-500 dark:hover:bg-indigo-200 transition-colors duration-200",
+        style: { display: "none" },
+        onClick: () => window.scrollTo({ top: 0, behavior: 'smooth' }),
+      },
+      "↑"
     )
   );
 };
