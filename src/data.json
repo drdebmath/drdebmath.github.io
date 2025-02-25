@@ -732,8 +732,12 @@
     },
     {
       "title": "On the capabilities of GPT-3",
-      "event": "The AI Times Workshop by LUISS DataLab",
-      "tweet": "https://twitter.com/LuissDataLab/status/1442517724928876544"
+      "event": "The AI Times Workshop",
+      "tweet": "https://twitter.com/LuissDataLab/status/1442517724928876544",
+      "Organizer": {
+        "name": "Luiss DataLab",
+        "url": "https://www.luiss.edu/research/research-centers/data-lab"
+      }
     },
     {
       "title": "Dispersion of Mobile Robots",

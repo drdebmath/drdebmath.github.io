@@ -106,6 +106,12 @@ const App = () => {
                                 active: activeTab === "publications",
                                 onClick: setActiveTab,
                             }),
+                            React.createElement(Tab, {
+                                id: "teaching",
+                                label: "Teaching",
+                                active: activeTab === "teaching",
+                                onClick: setActiveTab,
+                            }),
                             React.createElement(DarkModeToggle, { isDark: isDarkMode, onToggle: () => setIsDarkMode(!isDarkMode) })
                         )
                     )
@@ -116,7 +122,8 @@ const App = () => {
             "main",
             { className: "container mx-auto px-6 py-10 max-w-5xl" },
             activeTab === "about" && React.createElement(About, { data }),
-            activeTab === "publications" && React.createElement(Publications, { data })
+            activeTab === "publications" && React.createElement(Publications, { data }),
+            activeTab === "teaching" && React.createElement(TeachingAndTalks, { data }),
         ),
         React.createElement(
             "button",
