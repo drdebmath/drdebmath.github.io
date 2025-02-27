@@ -6,8 +6,8 @@
     "orcid": "https://orcid.org/0000-0003-2862-2795",
     "position": "Postdoctoral Research Fellow",
     "current_institution": {
-      "name": "Carleton University",
-      "url": "https://carleton.ca/"
+      "name": "University of Ottawa",
+      "url": "https://www.uottawa.ca/en"
     },
     "biodata": {
       "urls": {
@@ -34,7 +34,11 @@
     "current_supervisors": [
       {
         "name": "Prof. Nicola Santoro",
-        "url": "https://research.nicola-santoro.com/"
+        "url": "https://research.nicola-santoro.com/",
+        "institution": {
+          "name": "Carleton University, Ottawa",
+          "url": "https://carleton.ca/"
+        }
       },
       {
         "name": "Prof. Paola Flocchini",
@@ -71,10 +75,10 @@
         ]
       }
     ],
-    "previous_positions": [
+    "positions": [
       {
-        "position": "Visiting Fellow",
-        "duration": "July to December 2019",
+        "title": "Visiting Fellow",
+        "duration": "Six months",
         "institution": {
           "name": "University of Vienna",
           "supervisor": {
@@ -82,34 +86,40 @@
             "url": "https://www.univie.ac.at/ct/stefan/"
           }
         },
-        "fellowship": "SERB Overseas Visiting Doctoral Fellowship"
+        "fellowship": "SERB Overseas Visiting Doctoral Fellowship",
+        "start_date": "2019-07-01",
+        "end_date": "2019-12-31"
       },
       {
-        "position": "Visiting Scientist",
-        "duration": "March to September 2020",
+        "title": "Visiting Scientist",
+        "duration": "Six months",
         "institution": {
           "name": "ISI Kolkata",
           "supervisor": {
             "name": "Dr. Anisur Rahaman Molla",
             "url": "https://sites.google.com/site/mollaanisurrahaman/"
           }
-        }
+        },
+        "start_date": "2020-03-15",
+        "end_date": "2020-09-15"
       },
       {
-        "position": "Postdoctoral Researcher",
-        "duration": "October 2020 to October 2022",
+        "title": "Postdoctoral Researcher",
+        "duration": "Two years",
         "institution": {
           "name": "LUISS Guido Carli",
           "url": "https://www.luiss.it",
           "supervisor": {
             "name": "Prof. Giuseppe F. Italiano",
-            "url": "https://docenti.luiss.it/italiano/"
+            "url": "https://www.luiss.edu/faculty/350980"
           }
-        }
+        },
+        "start_date": "2020-10-15",
+        "end_date": "2022-10-15"
       },
       {
-        "position": "Postdoctoral Researcher",
-        "duration": "October 2022 to October 2023",
+        "tile": "Postdoctoral Researcher",
+        "duration": "One year",
         "institution": {
           "name": "UQO",
           "url": "https://www.uqo.ca/",
@@ -117,7 +127,37 @@
             "name": "Prof. Andrzej Pelc",
             "url": "http://w3.uqo.ca/pelc/main.html"
           }
-        }
+        },
+        "start_date": "2022-10-20",
+        "end_date": "2023-10-19"
+      },
+      {
+        "title": "Postdoctoral Researcher",
+        "duration": "One year",
+        "institution": {
+          "name": "Carleton University",
+          "url": "https://www.carleton.ca/",
+          "supervisor": {
+            "name": "Prof. Nicola Santoro",
+            "url": "https://research.nicola-santoro.com/"
+          }
+        },
+        "start_date": "2023-10-20",
+        "end_date": "2024-10-20"
+      },
+      {
+        "title": "Postdoctoral Researcher",
+        "duration": "One year",
+        "institution": {
+          "name": "University of Ottawa",
+          "url": "https://www.uottawa.ca/en",
+          "supervisor": {
+            "name": "Prof. Paola Flocchini",
+            "url": "https://www.site.uottawa.ca/~flocchin/"
+          }
+        },
+        "start_date": "2024-10-20",
+        "end_date": "2025-10-20"
       }
     ],
     "cv": {
@@ -126,6 +166,11 @@
     }
   },
   "news": [
+    {
+      "date": "20 February 2025",
+      "title": "SSS 2025 announcement is out. I am part of PC in Track C: Moving and Computing.",
+      "url": "https://sss2025.conf.lip6.fr/"
+    },
     {
       "date": "31 Jan 2025",
       "title": "Paper on Pattern Formation under Sequential Schedulers accepted to SIROCCO 2025, in Delphi, Greece.",
@@ -138,7 +183,8 @@
     },
     {
       "date": "24 Jul 2024",
-      "title": "Paper on Uniform Circle Formation accepted to DISC as Brief Announcement."
+      "title": "Paper on Uniform Circle Formation accepted to DISC as Brief Announcement.",
+      "url": "https://doi.org/10.4230/LIPIcs.DISC.2024.46"
     },
     {
       "date": "28 May 2024",
@@ -691,8 +737,12 @@
     },
     {
       "title": "On the capabilities of GPT-3",
-      "event": "The AI Times Workshop by LUISS DataLab",
-      "tweet": "https://twitter.com/LuissDataLab/status/1442517724928876544"
+      "event": "The AI Times Workshop",
+      "tweet": "https://twitter.com/LuissDataLab/status/1442517724928876544",
+      "Organizer": {
+        "name": "Luiss DataLab",
+        "url": "https://www.luiss.edu/research/research-centers/data-lab"
+      }
     },
     {
       "title": "Dispersion of Mobile Robots",
@@ -781,7 +831,8 @@
       "Distributed Computing Track of ICDCIT'23",
       "Distributed Computing Track of ICDCIT'24",
       "SIROCCO 2024",
-      "IEEE ANTS Early Researchers' Forum 2024"
+      "IEEE ANTS Early Researchers' Forum 2024",
+      "SSS 2025"
     ],
     "organizing_committee": [
       "13th International Conference and Workshop on Algorithms and Computation (WALCOM), 2019"
@@ -857,7 +908,7 @@
       "url": "#"
     },
     "Giuseppe F. Italiano": {
-      "url": "https://scholar.google.com/citations?user=6jiwt-UAAAAJ&hl=en"
+      "url": "https://www.luiss.edu/faculty/350980"
     },
     "Andrzej Pelc" : {
       "url": "http://w3.uqo.ca/pelc/main.html"
