@@ -21,146 +21,10 @@
         }
     </script>
     <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-    <style>
-        @media (prefers-color-scheme: dark) {
-            html.light {
-                color-scheme: light;
-            }
-            html.dark {
-                color-scheme: dark;
-            }
-        }
-        .node { fill: #598e49; }
-        .link { stroke: #e60909; stroke-opacity: 0.6; }
-        @keyframes pulse {
-            0% { r: 5; }
-            50% { r: 8; }
-            100% { r: 5; }
-        }
-        @keyframes transmit {
-            0% { stroke-dashoffset: 100; }
-            100% { stroke-dashoffset: 0; }
-        }
-    </style>
+    <script async src="https://unpkg.com/cytoscape@3.31.1/dist/cytoscape.min.js" charset="utf-8"></script>
+
 </head>
 <body class="bg-gray-100 text-gray-900 dark:bg-dark-bg dark:text-dark-text transition-colors duration-200 items-center justify-center min-h-screen">
-    <div class="flex items-center justify-center">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200" class="fixed inset-0 w-full h-full" style="z-index: -1; opacity: 0.3;">
-        <!-- Network links -->
-        <line class="link" x1="25" y1="50" x2="75" y2="25" stroke-dasharray="5,5">
-            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
-        </line>
-        <line class="link" x1="75" y1="25" x2="125" y2="50" stroke-dasharray="5,5">
-            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
-        </line>
-        <line class="link" x1="25" y1="50" x2="75" y2="75" stroke-dasharray="5,5">
-            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
-        </line>
-        <line class="link" x1="75" y1="75" x2="125" y2="50" stroke-dasharray="5,5">
-            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
-        </line>
-        
-        <line class="link" x1="125" y1="50" x2="175" y2="25" stroke-dasharray="5,5">
-            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
-        </line>
-        <line class="link" x1="175" y1="25" x2="225" y2="50" stroke-dasharray="5,5">
-            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
-        </line>
-        <line class="link" x1="125" y1="50" x2="175" y2="75" stroke-dasharray="5,5">
-            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
-        </line>
-        <line class="link" x1="175" y1="75" x2="225" y2="50" stroke-dasharray="5,5">
-            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
-        </line>
-        
-        <line class="link" x1="25" y1="150" x2="75" y2="125" stroke-dasharray="5,5">
-            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
-        </line>
-        <line class="link" x1="75" y1="125" x2="125" y2="150" stroke-dasharray="5,5">
-            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
-        </line>
-        <line class="link" x1="25" y1="150" x2="75" y2="175" stroke-dasharray="5,5">
-            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
-        </line>
-        <line class="link" x1="75" y1="175" x2="125" y2="150" stroke-dasharray="5,5">
-            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
-        </line>
-        
-        <line class="link" x1="125" y1="150" x2="175" y2="125" stroke-dasharray="5,5">
-            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
-        </line>
-        <line class="link" x1="175" y1="125" x2="225" y2="150" stroke-dasharray="5,5">
-            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
-        </line>
-        <line class="link" x1="125" y1="150" x2="175" y2="175" stroke-dasharray="5,5">
-            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
-        </line>
-        <line class="link" x1="175" y1="175" x2="225" y2="150" stroke-dasharray="5,5">
-            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
-        </line>
-        
-        <!-- Network nodes -->
-        <circle class="node" cx="25" cy="50" r="5">
-            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" />
-        </circle>
-        <circle class="node" cx="75" cy="25" r="5">
-            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="0.25s" />
-        </circle>
-        <circle class="node" cx="125" cy="50" r="5">
-            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="0.5s" />
-        </circle>
-        <circle class="node" cx="75" cy="75" r="5">
-            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="0.75s" />
-        </circle>
-        
-        <circle class="node" cx="175" cy="25" r="5">
-            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="1s" />
-        </circle>
-        <circle class="node" cx="225" cy="50" r="5">
-            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="1.25s" />
-        </circle>
-        <circle class="node" cx="175" cy="75" r="5">
-            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="1.5s" />
-        </circle>
-        
-        <circle class="node" cx="25" cy="150" r="5">
-            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="1.75s" />
-        </circle>
-        <circle class="node" cx="75" cy="125" r="5">
-            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" />
-        </circle>
-        <circle class="node" cx="125" cy="150" r="5">
-            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="0.25s" />
-        </circle>
-        <circle class="node" cx="75" cy="175" r="5">
-            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="0.5s" />
-        </circle>
-        
-        <circle class="node" cx="175" cy="125" r="5">
-            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="0.75s" />
-        </circle>
-        <circle class="node" cx="225" cy="150" r="5">
-            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="1s" />
-        </circle>
-        <circle class="node" cx="175" cy="175" r="5">
-            <animate attributeName="r" values="5; 8; 5" dur="2s" repeatCount="indefinite" begin="1.25s" />
-        </circle>
-
-        <!-- Moving dots -->
-        <circle class="dot" r="3" fill="#ff0000">
-            <animateMotion dur="4s" repeatCount="indefinite" path="M25,50 L75,25 L125,50 L175,25 L225,50" />
-        </circle>
-        <circle class="dot" r="3" fill="#00ff00">
-            <animateMotion dur="4s" repeatCount="indefinite" path="M25,50 L75,75 L125,50 L175,75 L225,50" />
-        </circle>
-        <circle class="dot" r="3" fill="#0000ff">
-            <animateMotion dur="4s" repeatCount="indefinite" path="M25,150 L75,125 L125,150 L175,125 L225,150" />
-        </circle>
-        <circle class="dot" r="3" fill="#ffff00">
-            <animateMotion dur="4s" repeatCount="indefinite" path="M25,150 L75,175 L125,150 L175,175 L225,150" />
-        </circle>
-    </svg>
-    </div>
     <nav class="sticky top-0 z-50 bg-blue-600 dark:bg-blue-800 flex justify-center items-center">
         <div class="w-full max-w-screen-md flex justify-between items-center">
             <ul id="navbar" class="flex space-x-4"></ul>
@@ -201,7 +65,7 @@
                 <button id="group_by_type" class="bg-blue-500 hover:bg-blue-700 text-white py-1 pl-4 pr-2 rounded-l-full border-r-0">By type</button>
                 <button id="group_by_year" class="bg-blue-500 hover:bg-blue-700 text-white py-1 pr-4 pl-2 rounded-r-full">By year</button>
             </div>
-            <ul id="publications_list" class="mt-4 list-disc list-inside"></ul>
+            <div id="publications_list" class="mt-4 list-disc list-inside"></div>
         </section>
         <section id="talks" class="my-8">
             <h2 class="text-2xl font-semibold">Talks</h2>

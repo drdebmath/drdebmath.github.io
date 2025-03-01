@@ -1,170 +1,173 @@
-let commonAuthors = {};
-let publications = [];
-let darkMode = false;
-
 document.addEventListener("DOMContentLoaded", () => {
+  // Initialize dark mode preference from local storage or default to light mode
+  const savedDarkMode = localStorage.getItem('darkMode');
+  const darkMode = savedDarkMode === 'true';
+  document.documentElement.classList.toggle('dark', darkMode);
+
   fetch("data.json")
-    .then((response) => response.json())
-    .then((data) => {
-      darkMode = false; // Set default to light mode
-      setupHeader(data.about_me);
-      commonAuthors = data.common_authors;
-      publications = data.publications;
-      urls = data.urls;
-      setupNavbar(Object.keys(data));
-      displayAboutMe(data.about_me);
-      displayNewsAndArchive(data.news);
-      displayResearchInterests(data.research);
-      displayCurrentResearch(data.current_research);
-      displayAllPublications(publications, "year"); 
-      displayTalks(data.talks);
-      displayAwards(data.awards);
-      displaySkills(data.skills);
-      displayTeaching(data.teaching);
-      displayCommunityServices(data.community_services);
-      setupGroupingButtons();
-      setupDarkMode();
-      setupGoToTopButton();
-    });
+    .then(response => response.json())
+    .then(data => {
+      initializeWebsite(data, darkMode);
+    })
+    .catch(error => console.error("Error fetching data:", error));
 });
 
+function initializeWebsite(data, initialDarkMode) {
+  commonAuthors = data.common_authors || {};
+  publications = data.publications || [];
 
-function setupDarkMode() {
+  setupHeader(data.about_me);
+  setupNavbar(Object.keys(data));
+  setupContentDisplay(data);
+  setupGroupingButtons();
+  setupDarkMode(initialDarkMode);
+  setupGoToTopButton();
+}
+
+function setupContentDisplay(data) {
+  displaySectionContent("about_me_content", displayAboutMe, data.about_me);
+  displaySectionContent("news_content", displayNewsAndArchive, data.news);
+  displaySectionContent("research_interests_content", displayResearchInterests, data.research);
+  displaySectionContent("current_research_content", displayCurrentResearch, data.current_research);
+  displaySectionContent("publications_list", displayAllPublications, data.publications, "year"); // Default grouping by year
+  displaySectionContent("talks_list", displayTalks, data.talks);
+  displaySectionContent("awards_content", displayAwards, data.awards);
+  displaySectionContent("skills_content", displaySkills, data.skills);
+  displaySectionContent("teaching_list", displayTeaching, data.teaching);
+  displaySectionContent("community_services_list", displayCommunityServices, data.community_services);
+  displaySectionContent("archive_list", displayArchive, data.news); // Assuming archive is part of news data
+}
+
+function displaySectionContent(elementId, displayFunction, data, ...args) {
+  if (data) { // Check if data exists before trying to display
+    displayFunction(data, ...args);
+  } else {
+    console.warn(`Data for section "${elementId}" is missing in data.json.`);
+    const container = document.getElementById(elementId);
+    if (container) {
+        container.innerHTML = '<p class="dark:text-gray-400 text-gray-600 italic">Content not available.</p>';
+    }
+  }
+}
+
+
+function setupDarkMode(initialDarkMode) {
   const darkModeToggle = document.getElementById('darkModeToggle');
   const htmlElement = document.documentElement;
-  
-  // Check for saved dark mode preference
-  const savedDarkMode = localStorage.getItem('darkMode');
-  if (savedDarkMode === 'true') {
-    htmlElement.classList.add('dark');
-    darkMode = true;
-  } else {
-    htmlElement.classList.remove('dark');
-    darkMode = false;
-  }
+  let darkMode = initialDarkMode; // Start with the initial value
 
   darkModeToggle.addEventListener('click', () => {
-    htmlElement.classList.toggle('dark');
     darkMode = !darkMode;
+    htmlElement.classList.toggle('dark', darkMode);
     localStorage.setItem('darkMode', darkMode.toString());
   });
 }
 
 function setupGoToTopButton() {
   const goToTopButton = document.getElementById('goToTop');
-  
+
   window.addEventListener('scroll', () => {
-    if (window.pageYOffset > window.innerHeight) {
-      goToTopButton.style.display = 'block';
-    } else {
-      goToTopButton.style.display = 'none';
-    }
+    goToTopButton.classList.toggle('hidden', window.pageYOffset <= window.innerHeight);
   });
 
   goToTopButton.addEventListener('click', () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 }
 
 function setupHeader(aboutMe) {
-  document.getElementById("name").textContent = aboutMe.name;
-  document.getElementById("position").textContent = aboutMe.position;
-  document.getElementById(
-    "links"
-  ).innerHTML = `<div class="flex items-center mt-4">
-      <a href="${aboutMe.dblp}" class="mr-4" title="DBLP Profile">
-          <img src="https://dblp.org/img/dblp.icon.192x192.png" alt="DBLP Logo" class="h-8">
-      </a>
-      <a href="${aboutMe.google_scholar}" class="mr-4" title="Google Scholar Profile">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/c/c7/Google_Scholar_logo.svg" alt="Google Scholar Logo" class="h-8">
-      </a>
-      <a href="${aboutMe.orcid}" class="mr-4" title="ORCID Profile">
-          <img src="https://orcid.org/sites/default/files/images/orcid_24x24.png" alt="ORCID Logo" class="h-8">
-      </a>
-      <a href="https://twitter.com/drdebmath?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow @drdebmath</a>
-  </div>`;
+  const nameElement = document.getElementById("name");
+  const positionElement = document.getElementById("position");
+  const linksElement = document.getElementById("links");
+
+  if (!aboutMe) {
+    console.warn("About me data is missing.");
+    return;
+  }
+
+  nameElement.textContent = aboutMe.name || "";
+  positionElement.textContent = (aboutMe.position || "") + " at " + (aboutMe.current_institution.name || "");
+
+  const linkIcons = [
+    { href: aboutMe.dblp, src: "https://dblp.org/img/dblp.icon.192x192.png", alt: "DBLP Logo", title: "DBLP Profile" },
+    { href: aboutMe.google_scholar, src: "https://upload.wikimedia.org/wikipedia/commons/c/c7/Google_Scholar_logo.svg", alt: "Google Scholar Logo", title: "Google Scholar Profile" },
+    { href: aboutMe.orcid, src: "https://orcid.org/sites/default/files/images/orcid_24x24.png", alt: "ORCID Logo", title: "ORCID Profile" },
+    { href: aboutMe.x, src: "https://x.com/favicon.ico", alt: "X Logo", title: "X Profile"},
+    { href: aboutMe.github, src: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png", alt: "GitHub Logo", title: "GitHub Profile"},
+    { href: aboutMe.linkedin, src: "https://cdn-icons-png.flaticon.com/512/174/174857.png", alt: "LinkedIn Logo", title: "LinkedIn Profile"},
+  ];
+
+  const linksHTML = `
+    <div class="flex items-center mt-4 justify-center">
+      ${linkIcons.map(icon => icon.href ? `
+        <a href="${icon.href}" class="p-4" title="${icon.title}">
+          <img src="${icon.src}" alt="${icon.alt}" class="h-8 opacity-80 hover:opacity-100 transition-opacity duration-200 bg-white dark:bg-gray-800 rounded-full overflow-hidden" style="object-fit: cover;">
+        </a>
+      ` : '').join('')}
+    </div>
+  `;
+
+  linksElement.innerHTML = linksHTML;
 }
+
 
 function setupNavbar(sections) {
   const navbarContainer = document.getElementById("navbar");
   const navbarList = document.createElement("ul");
-  navbarList.classList.add(
-    "text-xs",
-    "flex",
-    "flex-wrap",
-    "justify-end",
-    "space-x-2",
-    "p-2"
-  );
+  navbarList.className = "text-xs flex flex-wrap justify-end space-x-2 p-2";
 
-  const highLevelSections = [
-    "research",
-    "publications",
-    "talks",
-    "teaching"
-  ];
+  const highLevelSections = ["research", "publications", "talks", "teaching"];
 
-  highLevelSections.forEach((section) => {
-    if (sections.includes(section)) {
-      const li = document.createElement("li");
-      li.innerHTML = `
-        <a href="#${section}" class="text-gray-100 hover:underline">
+  navbarList.innerHTML = highLevelSections
+    .filter(section => sections.includes(section))
+    .map(section => `
+      <li class="navbar-item">
+        <a href="#${section}" class="text-gray-100 hover:underline px-2 py-1 rounded transition-colors duration-200 hover:bg-blue-700 dark:hover:bg-blue-900">
           ${section.replace("_", " ").charAt(0).toUpperCase() + section.replace("_", " ").slice(1)}
-        </a>`;
-      navbarList.appendChild(li);
-    }
-  });
+        </a>
+      </li>
+    `).join('');
+
   navbarContainer.appendChild(navbarList);
 }
 
-function convertToLinks(bioData) {
-  const { urls, short_bio } = bioData;
-  let bioText = short_bio[0];
 
-  for (const [name, url] of Object.entries(urls)) {
-    const link = `<a class="text-blue-600 dark:text-blue-400 hover:underline" href="${url}" target="_blank" rel="noopener noreferrer">${name}</a>`;
+function convertToLinks(bioData) {
+  if (!bioData || !bioData.urls || !bioData.short_bio || !bioData.short_bio[0]) {
+    return "";
+  }
+  let bioText = bioData.short_bio[0];
+
+  for (const [name, url] of Object.entries(bioData.urls)) {
+    const link = `<a class="text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200" href="${url}" target="_blank" rel="noopener noreferrer">${name}</a>`;
     bioText = bioText.replace(new RegExp(name, "g"), link);
   }
-
   return bioText;
 }
 
 function displayAboutMe(aboutMe) {
   const container = document.getElementById("about_me_content");
-  container.classList.add("text-justify", "dark:text-white", "bg-white", "p-4", "rounded-lg", "shadow-md", "dark:bg-gray-800");
+  container.className = "text-justify dark:text-white bg-white p-4 rounded-lg shadow-md dark:bg-gray-800 transition-colors duration-200";
 
-  container.innerHTML = `
-        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-    `;
-
-  // Add short bio content
   const bioContainer = document.createElement("div");
-  const bioWithLinks = convertToLinks(aboutMe.biodata);
-  bioContainer.innerHTML = bioWithLinks;
+  bioContainer.innerHTML = convertToLinks(aboutMe.biodata);
   container.appendChild(bioContainer);
 }
 
 function displayNewsAndArchive(news) {
   const container = document.getElementById("news_content");
-  const dateContainer = document.createElement("div");
-  const newsContainer = document.createElement("div");
-  const archiveContainer = document.getElementById("archive_list");
+  container.innerHTML = '';
+  if (!news || news.length === 0) {
+    container.innerHTML = '<p class="dark:text-white">No news available.</p>';
+    return;
+  }
 
-  dateContainer.classList.add("flex", "flex-wrap", "mb-4");
-  newsContainer.classList.add(
-    "news-item",
-    "bg-white",
-    "dark:bg-gray-800",
-    "p-4",
-    "shadow",
-    "rounded",
-    "border-l-4",
-    "border-green-600",
-    "dark:text-white"
-  );
+  const dateContainer = document.createElement("div");
+  dateContainer.className = "flex flex-wrap mb-4 justify-center";
+  const newsContainer = document.createElement("div");
+  newsContainer.className = "news-item bg-white dark:bg-gray-800 p-4 shadow rounded border-l-4 border-green-600 dark:text-white transition-colors duration-200";
+  const archiveContainer = document.getElementById("archive_list");
+  archiveContainer.innerHTML = '';
 
   let currentIndex = 0;
   let dateElements = [];
@@ -172,34 +175,22 @@ function displayNewsAndArchive(news) {
 
   function showNews(index) {
     dateElements.forEach((dateElement, i) => {
-      if (i === index) {
-        dateElement.classList.add("bg-green-600");
-        dateElement.classList.remove("bg-blue-600");
-      } else {
-        dateElement.classList.remove("bg-green-600");
-        dateElement.classList.add("bg-blue-600");
-      }
+      dateElement.classList.toggle("bg-green-600", i === index);
+      dateElement.classList.toggle("bg-blue-600", i !== index);
     });
 
     const item = news[index];
     newsContainer.innerHTML = `
         <p>${item.title}
-          ${
-            item.urls
-              ? Object.keys(item.urls)
-                  .map(
-                    (key) =>
-                      `<a href="${item.urls[key]}" class="text-blue-600 dark:text-blue-400 hover:underline">${key}</a>`
-                  )
-                  .join(" ")
-              : ""
-          }
+          ${item.urls ? Object.entries(item.urls)
+            .map(([key, url]) => `<a href="${url}" class="text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200">${key}</a>`)
+            .join(" ") : ""}
         </p>
       `;
   }
 
   function startInterval() {
-    clearInterval(interval); // Clear existing interval
+    clearInterval(interval);
     interval = setInterval(() => {
       currentIndex = (currentIndex + 1) % Math.min(5, news.length);
       showNews(currentIndex);
@@ -209,21 +200,7 @@ function displayNewsAndArchive(news) {
   news.slice(0, 5).forEach((item, index) => {
     const [day, month, year] = item.date.split(" ");
     const dateElement = document.createElement("div");
-
-    dateElement.classList.add(
-      "flex-shrink-0",
-      "w-12",
-      "h-12",
-      "flex",
-      "flex-col",
-      "items-center",
-      "justify-center",
-      "bg-blue-600",
-      "text-white",
-      "rounded",
-      "m-1",
-      "cursor-pointer"
-    );
+    dateElement.className = "flex-shrink-0 w-12 h-12 flex flex-col items-center justify-center bg-blue-600 text-white rounded m-1 cursor-pointer transition-colors duration-200 hover:bg-green-600";
     dateElement.innerHTML = `
         <span class="text-xs">${day}</span>
         <span class="text-xs font-bold">${month}</span>
@@ -235,9 +212,7 @@ function displayNewsAndArchive(news) {
       currentIndex = index;
       showNews(index);
     });
-
     dateElement.addEventListener("mouseleave", startInterval);
-
     dateElement.addEventListener("click", () => {
       currentIndex = (index + 1) % Math.min(5, news.length);
       showNews(currentIndex);
@@ -254,42 +229,38 @@ function displayNewsAndArchive(news) {
   showNews(currentIndex);
   startInterval();
 
-  const archiveItems = news.slice(5);
-  archiveContainer.innerHTML = archiveItems
-    .map(
-      (item) => `
-          <div class="news-item bg-white dark:bg-gray-800 p-4 shadow mb-4 rounded dark:text-white">
-            <p>${item.date}: ${item.title}
-              ${
-                item.urls
-                  ? Object.keys(item.urls)
-                      .map(
-                        (key) =>
-                          `<a href="${item.urls[key]}" class="text-blue-600 dark:text-blue-400 hover:underline">${key}</a>`
-                      )
-                      .join(" ")
-                  : ""
-              }
-            </p>
-          </div>
-        `
-    )
-    .join("");
+  displayArchive(news.slice(5)); // Display archive here
 }
 
+function displayArchive(archiveItems) {
+    const archiveContainer = document.getElementById("archive_list");
+    if (!archiveContainer) return; // Exit if archive_list element is not found
+
+    archiveContainer.innerHTML = archiveItems
+        .map(item => `
+            <div class="news-item bg-white dark:bg-gray-800 p-4 shadow mb-4 rounded dark:text-white transition-colors duration-200">
+                <p>${item.date}: ${item.title}
+                    ${item.urls ? Object.entries(item.urls)
+                        .map(([key, url]) => `<a href="${url}" class="text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200">${key}</a>`)
+                        .join(" ") : ""}
+                </p>
+            </div>
+        `).join("");
+}
+
+
 function displayResearchInterests(interests) {
-  document.getElementById(
-    "research_interests_content"
-  ).innerHTML = `<p class="bg-white dark:bg-gray-800 p-4 shadow rounded dark:text-white">${interests.join(
-    ", "
-  )}</p>`;
+  document.getElementById("research_interests_content").innerHTML = `
+    <p class="bg-white dark:bg-gray-800 p-4 shadow rounded dark:text-white transition-colors duration-200">${interests ? interests.join(", ") : 'No research interests listed.'}</p>
+  `;
 }
 
 function displayCurrentResearch(currentResearch) {
-  document.getElementById(
-    "current_research_content"
-  ).innerHTML = `<p class="bg-white dark:bg-gray-800 p-4 shadow rounded dark:text-white">${currentResearch}</p>`;
+  document.getElementById("current_research_content").innerHTML = `
+    <p class="bg-white dark:bg-gray-800 p-4 shadow rounded dark:text-white transition-colors duration-200">${currentResearch || 'No current research information available.'}</p>
+  `;
 }
+
 
 function setupGroupingButtons() {
   const groupByTypeBtn = document.getElementById("group_by_type");
@@ -304,106 +275,64 @@ function setupGroupingButtons() {
     displayAllPublications(publications, "year");
     setActiveButton(groupByYearBtn, groupByTypeBtn);
   });
-  
-  // Set the initial active button (optional)
+
   setActiveButton(groupByYearBtn, groupByTypeBtn);
 }
 
 function setActiveButton(activeBtn, inactiveBtn) {
   activeBtn.classList.add('bg-blue-700', 'text-white');
-  activeBtn.classList.remove('bg-blue-500');
+  activeBtn.classList.remove('bg-blue-500', 'hover:bg-blue-700');
+  inactiveBtn.classList.add('bg-blue-500', 'hover:bg-blue-700', 'text-white');
   inactiveBtn.classList.remove('bg-blue-700');
-  inactiveBtn.classList.add('bg-blue-500', 'text-white');
 }
 
-// Call the function to setup the buttons
-setupGroupingButtons();
 
 function groupPublicationsByType(publications) {
+  const typeOrder = ["journal", "conference", "poster", "preprint"];
   const groupedPublications = {};
-  const typeOrder = ["journal", "conference", "poster", "preprint"]; // Define custom order
 
-  // Group publications by type
-  publications.forEach((pub) => {
+  publications.forEach(pub => {
     const type = pub.type;
-    if (!groupedPublications[type]) {
-      groupedPublications[type] = [];
-    }
+    groupedPublications[type] = groupedPublications[type] || [];
     groupedPublications[type].push(pub);
   });
 
-  // Convert the object into an array for sorting
-  const groupedPublicationsArray = Object.keys(groupedPublications).map(
-    (type) => ({
-      type: type,
-      publications: groupedPublications[type],
-    })
-  );
-
-  // Sort the array by custom type order
-  groupedPublicationsArray.sort(
-    (a, b) => typeOrder.indexOf(a.type) - typeOrder.indexOf(b.type)
-  );
-
-  return groupedPublicationsArray;
+  return typeOrder.map(type => ({
+    type: type,
+    publications: groupedPublications[type] || []
+  }));
 }
 
 function groupPublicationsByYear(publications) {
   const groupedPublications = {};
 
-  // Group publications by year
-  publications.forEach((pub) => {
+  publications.forEach(pub => {
     const year = pub.year;
-    if (!groupedPublications[year]) {
-      groupedPublications[year] = [];
-    }
+    groupedPublications[year] = groupedPublications[year] || [];
     groupedPublications[year].push(pub);
   });
 
-  // Convert the object into an array for sorting
-  const groupedPublicationsArray = Object.keys(groupedPublications).map(
-    (year) => ({
-      year: year,
-      publications: groupedPublications[year],
-    })
-  );
-
-  // Sort the array by year in descending order
-  groupedPublicationsArray.sort((a, b) => b.year - a.year);
-
-  return groupedPublicationsArray;
+  return Object.entries(groupedPublications)
+    .sort(([yearA], [yearB]) => yearB - yearA)
+    .map(([year, pubs]) => ({ year: year, publications: pubs }));
 }
+
+
 function displayAsCard(item, groupBy, colors) {
-  let marginClass = "";
-  if (item.title.length <= 50) {
-    marginClass = "mb-20";
-  } else if (item.title.length <= 75) {
-    marginClass = "mb-14";
-  } else if (item.title.length <= 100) {
-    marginClass = "mb-8";
-  } else if (item.title.length > 100) {
-    marginClass = "mb-2";
-  }
-
-  let journalOrConference = "";
-  if (item.type === "preprint") {
-    journalOrConference = "arXiv";
-  } else {
-    journalOrConference = item.conference?.short || item.journal?.short || "";
-  }
-
+  const marginClass = item.title.length <= 50 ? 'mb-20' : item.title.length <= 75 ? 'mb-14' : item.title.length <= 100 ? 'mb-8' : 'mb-2';
+  const journalOrConference = item.type === "preprint" ? "arXiv" : item.conference?.short || item.journal?.short || "";
   const toAppearBanner = !item.doi ? `<div class="absolute top-0 right-0 bg-yellow-500 text-white px-1 py-0 origin-top-right text-xs rounded-l">To appear</div>` : '';
-  const titleContent = item.doi ? `<a href="${item.doi}" target="_blank" class="hover:underline">${item.title}</a>` : item.title;
-  const arxivBottomBanner = item.arxiv ? `<div class="absolute bottom-0 right-0 bg-green-500 text-white px-2 py-0.5 text-xs rounded-l"><a href="${item.arxiv}" target="_blank" class="hover:underline">arXiv</a></div>` : '';
+  const titleContent = item.doi ? `<a href="${item.doi}" target="_blank" class="hover:underline transition-colors duration-200">${item.title}</a>` : item.title;
+  const arxivBottomBanner = item.arxiv ? `<div class="absolute bottom-0 right-0 bg-green-500 text-white px-2 py-0.5 text-xs rounded-l"><a href="${item.arxiv}" target="_blank" class="hover:underline transition-colors duration-200">arXiv</a></div>` : '';
+  const cardColorClass = colors[item.type] || 'bg-gray-100 dark:bg-gray-900 border-gray-600'; // Default color if type is not found
 
   return `
-    <div class="p-4 shadow-lg rounded-lg border-l-4 w-full sm:w-56 ${colors[item.type]} flex flex-col justify-between relative overflow-hidden">
+    <div class="publication-card p-4 shadow-lg rounded-lg border-l-4 w-full sm:w-56 ${cardColorClass} flex flex-col justify-between relative overflow-hidden transition-colors duration-200">
       ${toAppearBanner}
-      <p class="text-md font-bold text-black dark:text-white ${marginClass}">${titleContent}</p>
-      <p class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">${formatAuthors(item.authors)}</p>
-      <p class="text-sm text-gray-700 dark:text-gray-300 mb-2">
-        ${journalOrConference}
-        ${groupBy === "type" ? ` (${item.year})` : ""}
+      <p class="card-title text-md font-bold text-black dark:text-white ${marginClass}">${titleContent}</p>
+      <p class="card-authors text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">${formatAuthors(item.authors)}</p>
+      <p class="card-details text-sm text-gray-700 dark:text-gray-300 mb-2">
+        ${journalOrConference} ${groupBy === "type" ? `(${item.year})` : ""}
       </p>
       ${arxivBottomBanner}
     </div>
@@ -411,10 +340,9 @@ function displayAsCard(item, groupBy, colors) {
 }
 
 
-function displayAllPublications(publications, groupBy = "type") {
+function displayAllPublications(publications, groupBy = "year") {
   const container = document.getElementById("publications_list");
-  container.className = "flex flex-wrap gap-4 justify-center items-stretch";
-
+  container.className = "publications-container flex flex-wrap gap-4 items-stretch mt-4";
   const colors = {
     journal: "bg-red-100 dark:bg-red-900 border-red-600",
     conference: "bg-blue-100 dark:bg-blue-900 border-blue-600",
@@ -422,37 +350,34 @@ function displayAllPublications(publications, groupBy = "type") {
     preprint: "bg-gray-100 dark:bg-gray-900 border-gray-600",
   };
 
-  const groupFunction =
-    groupBy === "type" ? groupPublicationsByType : groupPublicationsByYear;
+  const groupFunction = groupBy === "type" ? groupPublicationsByType : groupPublicationsByYear;
   const groupedPublications = groupFunction(publications);
 
   container.innerHTML = groupedPublications
-    .map(
-      (group) => `
-      <div class="w-full">
-        <h3 class="text-xl font-bold mb-4 dark:text-white">${
-          groupBy === "type" ? group.type.charAt(0).toUpperCase() + group.type.slice(1).toLowerCase() + "s" : group.year
-        }</h3>
-        <div class="flex flex-wrap gap-2">
-          ${group.publications
-            .map((item) => displayAsCard(item, groupBy, colors))
-            .join("")}
+    .map(group => `
+      <div class="publication-group w-full">
+        <h3 class="group-title text-xl font-bold mb-4 dark:text-white transition-colors duration-200">${groupBy === "type" ? group.type.charAt(0).toUpperCase() + group.type.slice(1).toLowerCase() + "s" : group.year}</h3>
+        <div class="publication-cards flex flex-wrap gap-2">  
+          ${group.publications.map(item => displayAsCard(item, groupBy, colors)).join("")}
         </div>
       </div>
-    `
-    )
-    .join("");
+    `).join("");
 }
 
+
+let commonAuthors = {};
+let publications = [];
+
 function formatAuthors(authors) {
-  const linkHoverStyles = "hover:text-blue-600 dark:hover:text-blue-400";
+  const linkHoverClass = "text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200";
   return authors
-    .map((author) => {
+    .map(author => {
       if (author === "Debasish Pattanayak") {
-        return `<strong><a href="${commonAuthors[author].url}" class="highlighted ${linkHoverStyles}">${author}</a></strong>`;
+        return `<strong><a href="${commonAuthors[author]?.url || '#'}" class="highlighted ${linkHoverClass}">${author}</a></strong>`;
       }
-      return commonAuthors[author] && commonAuthors[author].url !== "#"
-        ? `<a href="${commonAuthors[author].url}" class="${linkHoverStyles}">${author}</a>`
+      const authorData = commonAuthors[author];
+      return authorData && authorData.url !== "#"
+        ? `<a href="${authorData.url}" class="${linkHoverClass}">${author}</a>`
         : author;
     })
     .join(", ");
@@ -460,120 +385,90 @@ function formatAuthors(authors) {
 
 function displayTalks(talks) {
   const list = document.getElementById("talks_list");
-  list.classList.add("list-none", "p-0"); // Add these classes to remove bullet points and padding
-  list.innerHTML = talks
-    .map(
-      (talk) => `
-        <li class="mb-4">
-            <div class="bg-white dark:bg-gray-800 p-4 shadow rounded">
-                <p class="dark:text-white"><strong>Title:</strong> ${talk.title}</p>
-                <p class="dark:text-white"><strong>Event:</strong> ${talk.event}</p>
-                ${
-                  talk.links
-                    ? Object.keys(talk.links)
-                        .map(
-                          (key) =>
-                            `<a href="${
-                              talk.links[key]
-                            }" class="text-blue-600 dark:text-blue-400 hover:underline">${
-                              key.charAt(0).toUpperCase() + key.slice(1)
-                            }</a>`
-                        )
-                        .join(" ")
-                    : ""
-                }
-                ${
-                  talk.tweet
-                    ? `<a href="${talk.tweet}" class="text-blue-600 dark:text-blue-400 hover:underline">Tweet</a> `
-                    : ""
-                }
-                ${
-                  talk.author
-                    ? `<strong class="dark:text-white">Author:</strong> <a href="${talk.author.url}" class="text-blue-600 dark:text-blue-400 hover:underline">${talk.author.name}</a> `
-                    : ""
-                }
-                ${talk.Place ? `<strong class="dark:text-white">Place:</strong> <span class="dark:text-white">${talk.Place}</span> ` : ""}
+  list.className = "talks-list list-none p-0 mt-4";
+  list.innerHTML = talks.map(talk => `
+    <li class="talk-item mb-4">
+        <div class="bg-white dark:bg-gray-800 p-4 shadow rounded transition-colors duration-200">
+            <p class="talk-title dark:text-white"><strong>Title:</strong> ${talk.title}</p>
+            <p class="talk-event dark:text-white"><strong>Event:</strong> ${talk.event}</p>
+            <div class="talk-links mt-2">
+              ${talk.links ? Object.entries(talk.links)
+                .map(([key, url]) => `<a href="${url}" class="text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200 mr-2">${key.charAt(0).toUpperCase() + key.slice(1)}</a>`)
+                .join(" ") : ""}
+              ${talk.tweet ? `<a href="${talk.tweet}" class="text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200 mr-2">Tweet</a>` : ""}
+              ${talk.author ? `<strong class="talk-author-label dark:text-white">Author:</strong> <a href="${talk.author.url}" class="text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200">${talk.author.name}</a>` : ""}
+              ${talk.Place ? `<strong class="talk-place-label dark:text-white">Place:</strong> <span class="talk-place dark:text-white">${talk.Place}</span>` : ""}
             </div>
-        </li>
-    `
-    )
-    .join("");
+        </div>
+    </li>
+  `).join("");
 }
+
 
 function displayAwards(awards) {
   const container = document.getElementById("awards_content");
-  container.innerHTML = awards
-    .map(
-      (award) => `
-        <div class="awards-item bg-white dark:bg-gray-800 p-4 shadow mb-4 rounded">
-            <p class="dark:text-white">${award}</p>
-        </div>
-    `
-    )
-    .join("");
+  container.innerHTML = awards.map(award => `
+    <div class="awards-item bg-white dark:bg-gray-800 p-4 shadow mb-4 rounded transition-colors duration-200">
+      <p class="dark:text-white">${award}</p>
+    </div>
+  `).join("");
 }
 
 function displaySkills(skills) {
   const container = document.getElementById("skills_content");
-  container.innerHTML = `<div class="bg-white dark:bg-gray-800 p-4 shadow rounded">
-                               <p class="dark:text-white"><strong>Programming:</strong> ${skills.programming.join(
-                                 ", "
-                               )}</p>
-                               <p class="dark:text-white"><strong>Python Libraries:</strong> ${skills.python_libraries.join(
-                                 ", "
-                               )}</p>
-                           </div>`;
+  container.innerHTML = `
+    <div class="skills-content bg-white dark:bg-gray-800 p-4 shadow rounded transition-colors duration-200">
+      <p class="dark:text-white"><strong class="skills-label dark:text-white">Programming:</strong> ${skills.programming ? skills.programming.join(", ") : 'Not listed'}</p>
+      <p class="dark:text-white"><strong class="skills-label dark:text-white">Python Libraries:</strong> ${skills.python_libraries ? skills.python_libraries.join(", ") : 'Not listed'}</p>
+    </div>
+  `;
 }
 
 function displayTeaching(teaching) {
   const list = document.getElementById("teaching_list");
-  list.classList.add("list-none", "p-0");
-  list.innerHTML = teaching
-    .map(
-      (course) => `
-        <li class="mb-4">
-            <div class="bg-white dark:bg-gray-800 p-4 shadow rounded">
-                <p class="dark:text-white"><strong>Course:</strong> ${course.course}</p>
-                <p class="dark:text-white"><strong>Duration:</strong> ${course.duration}</p>
-                <p class="dark:text-white"><strong>Institution:</strong> ${course.institution}</p>
-            </div>
-        </li>
-    `
-    )
-    .join("");
+  list.className = "teaching-list list-none p-0 mt-4";
+  list.innerHTML = teaching.map(course => `
+    <li class="teaching-item mb-4">
+      <div class="bg-white dark:bg-gray-800 p-4 shadow rounded transition-colors duration-200">
+        <p class="teaching-course dark:text-white"><strong>Course:</strong> ${course.course}</p>
+        <p class="teaching-duration dark:text-white"><strong>Duration:</strong> ${course.duration}</p>
+        <p class="teaching-institution dark:text-white"><strong>Institution:</strong> ${course.institution}</p>
+      </div>
+    </li>
+  `).join("");
 }
 
+
 function displayCommunityServices(services) {
-  const list = document.getElementById("community_services_list");
-  list.classList.add("bg-white", "dark:bg-gray-800", "p-4", "shadow", "rounded");
-  list.innerHTML = `
-    <ul class="list-disc pl-5">
-      <li class="mb-2 dark:text-white">
-        <strong>Reviewer:</strong>
-        <ul class="ml-4 list-disc">
+  const container = document.getElementById("community_services_list");
+  container.className = "community-services bg-white dark:bg-gray-800 p-4 shadow rounded transition-colors duration-200 mt-4";
+  container.innerHTML = `
+    <ul class="community-services-list list-disc pl-5">
+      <li class="community-services-item mb-2 dark:text-white">
+        <strong class="community-services-label dark:text-white">Reviewer:</strong>
+        <ul class="community-services-sublist ml-4 list-disc">
           <li>
-            <strong>Conferences:</strong>
-            <ul class="ml-4 list-disc">
-              ${services.reviewer_for.conferences.map(conf => `${conf}`).join(', ')}
+            <strong class="community-services-sublabel dark:text-white">Conferences:</strong>
+            <ul class="community-services-sublist-inner ml-4 list-disc">
+              ${services.reviewer_for?.conferences?.map(conf => `<li>${conf}</li>`).join('') || '<li>Not listed</li>'}
             </ul>
           </li>
           <li>
-            <strong>Journals:</strong>
-            <ul class="ml-4 list-disc">
-              ${services.reviewer_for.journals.map(journal => `${journal}`).join(', ')}
+            <strong class="community-services-sublabel dark:text-white">Journals:</strong>
+            <ul class="community-services-sublist-inner ml-4 list-disc">
+              ${services.reviewer_for?.journals?.map(journal => `<li>${journal}</li>`).join('') || '<li>Not listed</li>'}
             </ul>
           </li>
         </ul>
       </li>
-      <li class="mb-2 dark:text-white">
-        <strong>PC member:</strong>
-        <p class="ml-4">${services.pc_member_for.join(", ")}</p>
+      <li class="community-services-item mb-2 dark:text-white">
+        <strong class="community-services-label dark:text-white">PC member:</strong>
+        <p class="community-services-text ml-4">${services.pc_member_for?.join(", ") || 'Not listed'}</p>
       </li>
-      <li class="mb-2 dark:text-white">
-        <strong>Organizing committee:</strong>
-        <p class="ml-4">${services.organizing_committee.join(", ")}</p>
+      <li class="community-services-item mb-2 dark:text-white">
+        <strong class="community-services-label dark:text-white">Organizing committee:</strong>
+        <p class="community-services-text ml-4">${services.organizing_committee?.join(", ") || 'Not listed'}</p>
       </li>
     </ul>
   `;
 }
-

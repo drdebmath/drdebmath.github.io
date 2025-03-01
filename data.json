@@ -1,9 +1,13 @@
 {
   "about_me": {
     "name": "Debasish Pattanayak",
+    "name_odia": "",
     "dblp": "https://dblp.uni-trier.de/pers/hd/p/Pattanayak:Debasish",
     "google_scholar": "https://scholar.google.com/citations?user=E-jjx9gAAAAJ&hl=en&oi=ao",
     "orcid": "https://orcid.org/0000-0003-2862-2795",
+    "x": "https://twitter.com/drdebmath?ref_src=twsrc%5Etfw",
+    "github": "https://github.com/drdebmath",
+    "linkedin": "https://www.linkedin.com/in/debasish-pattanayak-3750a530/",
     "position": "Postdoctoral Research Fellow",
     "current_institution": {
       "name": "University of Ottawa",
@@ -167,7 +171,7 @@
   },
   "news": [
     {
-      "date": "20 February 2025",
+      "date": "20 Feb 2025",
       "title": "SSS 2025 announcement is out. I am part of PC in Track C: Moving and Computing.",
       "url": "https://sss2025.conf.lip6.fr/"
     },
