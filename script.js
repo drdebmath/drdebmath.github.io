@@ -3,13 +3,31 @@ document.addEventListener("DOMContentLoaded", () => {
   const savedDarkMode = localStorage.getItem('darkMode');
   const darkMode = savedDarkMode === 'true';
   document.documentElement.classList.toggle('dark', darkMode);
-
-  fetch("data.json")
-    .then(response => response.json())
-    .then(data => {
-      initializeWebsite(data, darkMode);
-    })
-    .catch(error => console.error("Error fetching data:", error));
+  
+  // Set up dark mode toggle for all pages
+  setupDarkMode(darkMode);
+  
+  // Set up go to top button if it exists
+  if (document.getElementById('goToTop')) {
+    setupGoToTopButton();
+  }
+  
+  // Check which page we're on
+  const isIndexPage = window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('/');
+  const isVizPage = window.location.pathname.includes('viz.html');
+  
+  if (isIndexPage) {
+    // Only fetch data.json for the main index page
+    fetch("data.json")
+      .then(response => response.json())
+      .then(data => {
+        initializeWebsite(data, darkMode);
+      })
+      .catch(error => console.error("Error fetching data:", error));
+  } else if (isVizPage) {
+    // For the viz page, just set up a simple navbar with a link back to home
+    setupVizNavbar();
+  }
 });
 
 function initializeWebsite(data, initialDarkMode) {
@@ -20,8 +38,6 @@ function initializeWebsite(data, initialDarkMode) {
   setupNavbar(Object.keys(data));
   setupContentDisplay(data);
   setupGroupingButtons();
-  setupDarkMode(initialDarkMode);
-  setupGoToTopButton();
 }
 
 function setupContentDisplay(data) {
@@ -113,12 +129,27 @@ function setupHeader(aboutMe) {
 
 function setupNavbar(sections) {
   const navbarContainer = document.getElementById("navbar");
+  if (!navbarContainer) return; // Safety check
+  
+  // Clear any existing content
+  navbarContainer.innerHTML = '';
+  
   const navbarList = document.createElement("ul");
   navbarList.className = "text-xs flex flex-wrap justify-end space-x-2 p-2";
 
   const highLevelSections = ["research", "publications", "talks", "teaching"];
 
-  navbarList.innerHTML = highLevelSections
+  // Add viz link first if we're on the index page
+  navbarList.innerHTML = `
+    <li class="navbar-item">
+      <a href="viz.html" class="text-gray-100 hover:underline px-2 py-1 rounded transition-colors duration-200 hover:bg-blue-700 dark:hover:bg-blue-900">
+        Graph Viz
+      </a>
+    </li>
+  `;
+
+  // Add section links
+  navbarList.innerHTML += highLevelSections
     .filter(section => sections.includes(section))
     .map(section => `
       <li class="navbar-item">
@@ -127,6 +158,28 @@ function setupNavbar(sections) {
         </a>
       </li>
     `).join('');
+
+  navbarContainer.appendChild(navbarList);
+}
+
+// Setup navbar for viz page
+function setupVizNavbar() {
+  const navbarContainer = document.getElementById("navbar");
+  if (!navbarContainer) return; // Safety check
+  
+  // Clear any existing content
+  navbarContainer.innerHTML = '';
+  
+  const navbarList = document.createElement("ul");
+  navbarList.className = "text-xs flex flex-wrap justify-end space-x-2 p-2";
+
+  navbarList.innerHTML = `
+    <li class="navbar-item">
+      <a href="index.html" class="text-gray-100 hover:underline px-2 py-1 rounded transition-colors duration-200 hover:bg-blue-700 dark:hover:bg-blue-900">
+        Home
+      </a>
+    </li>
+  `;
 
   navbarContainer.appendChild(navbarList);
 }

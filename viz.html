@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graph Visualization Tool - Debasish Pattanayak</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            bg: '#1a202c',
+                            text: '#e2e8f0',
+                        },
+                    },
+                },
+            },
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.23.0/cytoscape.min.js"></script>
+    <script src="script.js"></script>
+</head>
+
+<body class="bg-gray-100 text-gray-900 dark:bg-dark-bg dark:text-dark-text transition-colors duration-200 items-center justify-center min-h-screen">
+    <nav class="sticky top-0 z-50 bg-blue-600 dark:bg-blue-800 flex justify-center items-center">
+        <div class="w-full max-w-screen-md flex justify-between items-center">
+            <ul id="navbar" class="flex space-x-4">
+                <li class="navbar-item">
+                    <a href="index.html" class="text-gray-100 hover:underline px-2 py-1 rounded transition-colors duration-200 hover:bg-blue-700 dark:hover:bg-blue-900 text-xs">
+                        Home
+                    </a>
+                </li>
+            </ul>
+            <button id="darkModeToggle" class="text-xs p-1 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center focus:outline-none ml-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-yellow-500 dark:text-white" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z" />
+                </svg>
+            </button>
+        </div>
+    </nav>
+    <header class="bg-blue-600 dark:bg-blue-800 text-white p-4">
+        <div class="container mx-auto max-w-screen-md">
+            <h1 class="text-3xl font-bold">Graph Visualization Tool</h1>
+            <p class="text-md">Interactive tool for exploring different graph structures and algorithms</p>
+        </div>
+    </header>
+    
+    <main class="container mx-auto p-6 max-w-screen-md">
+        <div class="w-full">
+            <div class="my-3 flex flex-col gap-2 p-3 border border-gray-300 rounded-md bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+                <!-- Row 1: Graph Type -->
+                <div class="flex items-center gap-2 w-full">
+                    <label for="graph-type" class="whitespace-nowrap">Graph Type:</label>
+                    <select id="graph-type" class="p-1 rounded-md border border-gray-300 flex-grow dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600">
+                        <option value="random">Random Graph</option>
+                        <option value="tree">Tree</option>
+                        <option value="rectangular">Rectangular Grid</option>
+                        <option value="triangular">Triangular Grid</option>
+                        <option value="hexagonal">Hexagonal Grid (Max Degree 3)</option>
+                        <option value="ring">Ring</option>
+                        <option value="butterfly">Butterfly</option>
+                        <option value="hypergraph">Hypercube Graph</option>
+                        <option value="bipartite">Bipartite Graph</option>
+                    </select>
+                    <button id="randomize-ports" class="bg-blue-500 text-white border border-blue-600 rounded-md py-1 px-2 cursor-pointer text-xs transition-all duration-200 shadow-sm hover:bg-blue-600 hover:shadow hover:-translate-y-0.5 active:bg-blue-700 active:translate-y-0.5 dark:bg-blue-600 dark:border-blue-700 dark:hover:bg-blue-700 whitespace-nowrap">Randomize Ports</button>
+                </div>
+                
+                <!-- Row 2: Number of Nodes -->
+                <div class="flex items-center gap-2 w-full">
+                    <label for="node-slider" class="whitespace-nowrap">Number of Nodes: <span id="node-count">10</span></label>
+                    <input type="range" id="node-slider" min="2" max="50" value="10" class="flex-grow">
+                </div>
+                
+                <!-- Row 3: Traversal Algorithm -->
+                <div class="flex items-center gap-2 w-full">
+                    <label for="traversal-algorithm" class="whitespace-nowrap">Traversal Algorithm:</label>
+                    <select id="traversal-algorithm" class="p-1 rounded-md border border-gray-300 flex-grow dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600">
+                        <option value="dfs">Depth-First Search (DFS)</option>
+                        <option value="bfs">Breadth-First Search (BFS)</option>
+                    </select>
+                </div>
+                
+                <!-- Row 4: Traversal Controls -->
+                <div class="flex items-center gap-1 w-full justify-between">
+                    <button id="prev-step" class="bg-blue-500 text-white border border-blue-600 rounded-md py-1 px-2 cursor-pointer text-xs transition-all duration-200 shadow-sm hover:bg-blue-600 hover:shadow hover:-translate-y-0.5 active:bg-blue-700 active:translate-y-0.5 dark:bg-blue-600 dark:border-blue-700 dark:hover:bg-blue-700 flex-1">Previous Step</button>
+                    <button id="play-animation" class="bg-blue-500 text-white border border-blue-600 rounded-md py-1 px-2 cursor-pointer text-xs transition-all duration-200 shadow-sm hover:bg-blue-600 hover:shadow hover:-translate-y-0.5 active:bg-blue-700 active:translate-y-0.5 dark:bg-blue-600 dark:border-blue-700 dark:hover:bg-blue-700 flex-1">Start Traversal</button>
+                    <button id="next-step" class="bg-blue-500 text-white border border-blue-600 rounded-md py-1 px-2 cursor-pointer text-xs transition-all duration-200 shadow-sm hover:bg-blue-600 hover:shadow hover:-translate-y-0.5 active:bg-blue-700 active:translate-y-0.5 dark:bg-blue-600 dark:border-blue-700 dark:hover:bg-blue-700 flex-1">Next Step</button>
+                </div>
+                
+                <!-- Row 5: Manual Mode & Undo -->
+                <div class="flex items-center gap-1 w-full">
+                    <button id="manual-mode" class="bg-blue-500 text-white border border-blue-600 rounded-md py-1 px-2 cursor-pointer text-xs transition-all duration-200 shadow-sm hover:bg-blue-600 hover:shadow hover:-translate-y-0.5 active:bg-blue-700 active:translate-y-0.5 dark:bg-blue-600 dark:border-blue-700 dark:hover:bg-blue-700 flex-1">Manual Mode</button>
+                    <button id="undo" class="bg-blue-500 text-white border border-blue-600 rounded-md py-1 px-2 cursor-pointer text-xs transition-all duration-200 shadow-sm hover:bg-blue-600 hover:shadow hover:-translate-y-0.5 active:bg-blue-700 active:translate-y-0.5 dark:bg-blue-600 dark:border-blue-700 dark:hover:bg-blue-700 flex-1">Undo</button>
+    </div>
+    </div>
+            <div id="cy" class="w-full h-[700px] border border-gray-300 mt-5 mb-3"></div>
+            
+            <!-- Documentation Section -->
+            <div class="p-4 border border-gray-300 rounded-md bg-gray-50 mb-5 dark:bg-gray-700 dark:border-gray-600">
+                <h3 class="font-semibold text-lg mb-3">Documentation</h3>
+                <p class="text-sm leading-relaxed dark:text-gray-300">
+                    This visualization tool allows you to explore different graph structures and algorithms with interactive controls. 
+                    You can select from various graph types including Random Graph, Tree, Rectangular Grid, Triangular Grid, Hexagonal Grid, 
+                    Ring, Butterfly, Hypercube Graph, and Bipartite Graph. Each type creates a different network topology for visualization.
+                    <br><br>
+                    The tool visualizes graph traversal using Depth-First Search (DFS) and shows port numbers at each node. 
+                    Port numbers are used to determine which edge a node should follow next, which is common in distributed algorithms.
+                    The current traversal edge is highlighted in orange, while visited edges are colored green and back edges are colored red.
+                    <br><br>
+                    <strong>Controls:</strong> Use the Graph Type dropdown to select different structures. Adjust the Number of Nodes slider to change graph size.
+                    Select either Depth-First Search (DFS) or Breadth-First Search (BFS) from the Traversal Algorithm dropdown.
+                    Click Start Traversal to automatically animate the traversal, or use Next/Previous Step buttons to navigate manually. 
+                    Toggle Manual Mode to click on edges directly, and use Undo to revert actions.
+                </p>
+            </div>
+        </div>
+
+    <script>
+
+        let cy;              // Cytoscape instance
+        let actions = [];    // Stores the sequence of traversal actions
+        let currentStep = -1;// Current step in actions
+        let nodeCount = 10;  // Initial number of nodes
+        let graphType = 'random'; // Initial graph type
+        let manualMode = false; // Track manual mode state
+        let manualActions = []; // Track manual mode actions
+        let traversalAlgorithm = 'dfs'; // Default traversal algorithm
+
+        // Generate graph based on selected type
+        function generateGraph(type, n) {
+            switch (type) {
+                case 'random': return generateRandomGraph(n);
+                case 'tree': return generateTree(n);
+                case 'rectangular': return generateRectangularGrid(Math.ceil(Math.sqrt(n)), Math.floor(Math.sqrt(n)));
+                case 'triangular': return generateTriangularGrid(Math.ceil(Math.sqrt(n)));
+                case 'hexagonal': return generateHexagonalGrid(n);
+                case 'ring': return generateRing(n);
+                case 'butterfly': return generateButterfly(n);
+                case 'hypergraph': return generateHypercubeGraph(n);
+                case 'bipartite': return generateBipartiteGraph(n);
+                default: return generateTree(n);
+            }
+        }
+
+        // Graph generation functions
+        function generateTree(n) {
+            const nodes = Array.from({ length: n }, (_, i) => ({ data: { id: `n${i}` } }));
+            const edges = [];
+            for (let i = 1; i < n; i++) {
+                const parent = Math.floor(Math.random() * i);
+                edges.push({ data: { id: `e${parent}-${i}`, source: `n${parent}`, target: `n${i}` } });
+            }
+            return { nodes, edges };
+        }
+
+        function generateRectangularGrid(rows, cols) {
+            const nodes = [];
+            const edges = [];
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    const id = `n${i}-${j}`;
+                    nodes.push({ data: { id } });
+                    if (i > 0) edges.push({ data: { id: `e${i - 1}-${j}-${i}-${j}`, source: `n${i - 1}-${j}`, target: id } });
+                    if (j > 0) edges.push({ data: { id: `e${i}-${j - 1}-${i}-${j}`, source: `n${i}-${j - 1}`, target: id } });
+                }
+            }
+            return { nodes, edges };
+        }
+
+        function generateTriangularGrid(size) {
+            const nodes = [];
+            const edges = [];
+            for (let i = 0; i < size; i++) {
+                for (let j = 0; j <= i; j++) {
+                    const id = `n${i}-${j}`;
+                    nodes.push({ data: { id } });
+                    // Connect to left neighbor in the same row
+                    if (j > 0) edges.push({ data: { id: `e${i}-${j - 1}-${i}-${j}`, source: `n${i}-${j - 1}`, target: id } });
+                    // Connect to node directly above
+                    if (i > 0 && j < i) edges.push({ data: { id: `e${i - 1}-${j}-${i}-${j}`, source: `n${i - 1}-${j}`, target: id } });
+                    // Connect to diagonal node (above-left)
+                    if (i > 0 && j > 0) edges.push({ data: { id: `e${i - 1}-${j - 1}-${i}-${j}`, source: `n${i - 1}-${j - 1}`, target: id } });
+                }
+            }
+            return { nodes, edges };
+        }
+
+        function generateHexagonalGrid(n) {
+            const nodes = [];
+            const edges = [];
+            const radius = Math.ceil((Math.sqrt(n) - 1) / 2);
+            const seen = new Set();
+
+            // Generate nodes in hexagonal pattern
+            for (let q = -radius; q <= radius; q++) {
+                for (let r = -radius; r <= radius; r++) {
+                    const s = -q - r;
+                    if (Math.abs(q) <= radius && Math.abs(r) <= radius && Math.abs(s) <= radius) {
+                        if (nodes.length >= n) break;
+                        const id = `n${q},${r}`;
+                        nodes.push({ data: { id } });
+                        seen.add(`${q},${r}`);
+                    }
+                }
+            }
+
+            // Connect each node to its six possible neighbors
+            nodes.forEach(node => {
+                const [q, r] = node.data.id.replace('n', '').split(',').map(Number);
+                const directions = [
+                    [1, 0], [1, -1], [0, -1],
+                    [-1, 0], [-1, 1], [0, 1]
+                ];
+                directions.forEach(([dq, dr]) => {
+                    const nq = q + dq, nr = r + dr;
+                    if (seen.has(`${nq},${nr}`)) {
+                        const neighborId = `n${nq},${nr}`;
+                        const existingEdge = edges.find(e =>
+                            (e.data.source === node.data.id && e.data.target === neighborId) ||
+                            (e.data.source === neighborId && e.data.target === node.data.id));
+                        if (!existingEdge) {
+                            edges.push({ data: { id: `e${node.data.id}-${neighborId}`, source: node.data.id, target: neighborId } });
+                        }
+                    }
+                });
+            });
+
+            return { nodes, edges: edges.slice(0, 3 * n) }; // Limit edges for visualization
+        }
+
+        function generateRing(n) {
+            const nodes = Array.from({ length: n }, (_, i) => ({ data: { id: `n${i}` } }));
+            const edges = [];
+            for (let i = 0; i < n; i++) {
+                edges.push({ data: { id: `e${i}-${(i + 1) % n}`, source: `n${i}`, target: `n${(i + 1) % n}` } });
+            }
+            return { nodes, edges };
+        }
+
+        function generateButterfly(n) {
+            // Ensure n is a power of 2 for the butterfly network.
+            if ((n & (n - 1)) !== 0) {
+                alert("For butterfly network, number of nodes must be a power of 2. Rounding down to nearest power of 2.");
+                n = Math.pow(2, Math.floor(Math.log2(n)));
+            }
+            const levels = Math.log2(n);
+            const nodes = [];
+            const edges = [];
+
+            // Create nodes for each level (0 to levels)
+            for (let l = 0; l <= levels; l++) {
+                for (let i = 0; i < n; i++) {
+                    const id = `n${l}-${i}`;
+                    nodes.push({ data: { id } });
+                }
+            }
+
+            // Create edges between consecutive levels.
+            // Each node (l, i) connects to two nodes in level l+1:
+            // one straight (same index) and one crossing (bit flipped).
+            for (let l = 0; l < levels; l++) {
+                for (let i = 0; i < n; i++) {
+                    // Straight edge from (l, i) to (l+1, i)
+                    edges.push({ data: { id: `e${l}-${i}-straight`, source: `n${l}-${i}`, target: `n${l + 1}-${i}` } });
+
+                    // Cross edge: flip bit at position (levels - l - 1)
+                    const bitToFlip = 1 << (levels - l - 1);
+                    const targetIndex = i ^ bitToFlip;
+                    edges.push({ data: { id: `e${l}-${i}-cross`, source: `n${l}-${i}`, target: `n${l + 1}-${targetIndex}` } });
+                }
+            }
+
+            return { nodes, edges };
+        }
+
+        function generateHypercubeGraph(n) {
+            const nodes = [];
+            const edges = [];
+            // Calculate the smallest power of 2 greater than or equal to n
+            const dimensions = Math.ceil(Math.log2(n));
+            const totalNodes = Math.pow(2, dimensions);
+
+            // Generate nodes for the hypercube (2^dimensions nodes)
+            for (let i = 0; i < totalNodes; i++) {
+                const binary = i.toString(2).padStart(dimensions, '0');
+                nodes.push({ data: { id: `n${i}`, label: binary } });
+            }
+
+            // Generate edges connecting nodes that differ by exactly one bit.
+            for (let i = 0; i < totalNodes; i++) {
+                const binary = i.toString(2).padStart(dimensions, '0').split('').map(Number);
+                for (let j = 0; j < dimensions; j++) {
+                    const neighbor = [...binary];
+                    neighbor[j] = neighbor[j] === 0 ? 1 : 0;
+                    const neighborId = parseInt(neighbor.join(''), 2);
+                    if (neighborId > i) { // Prevent duplicate edges
+                        edges.push({ data: { id: `e${i}-${neighborId}`, source: `n${i}`, target: `n${neighborId}` } });
+                    }
+                }
+            }
+
+            return { nodes, edges };
+        }
+
+
+
+        function generateBipartiteGraph(n) {
+            const nodes = Array.from({ length: n }, (_, i) => ({ data: { id: `n${i}` } }));
+            const edges = [];
+            const partitionSize = Math.floor(n / 2);
+            for (let i = 0; i < partitionSize; i++) {
+                for (let j = partitionSize; j < n; j++) {
+                    if (Math.random() > 0.5) {
+                        edges.push({ data: { id: `e${i}-${j}`, source: `n${i}`, target: `n${j}` } });
+                    }
+                }
+            }
+            return { nodes, edges };
+        }
+
+        // Generate a completely random graph
+        function generateRandomGraph(n) {
+            const nodes = Array.from({ length: n }, (_, i) => ({ data: { id: `n${i}` } }));
+            const edges = [];
+            const edgeSet = new Set();
+
+            const createEdgeId = (s, t) => `e${[parseInt(s), parseInt(t)].sort().join('-')}`;
+            const edgeExists = (s, t) => edgeSet.has(createEdgeId(s, t));
+            const addEdge = (s, t) => {
+                if (s === t || edgeExists(s, t)) return false;
+                const id = createEdgeId(s, t);
+                edges.push({ data: { id, source: `n${s}`, target: `n${t}` } });
+                edgeSet.add(id);
+                return true;
+            };
+
+            // Create a connected spanning tree
+            const connected = new Set([0]);
+            const unconnected = new Set(Array.from({ length: n - 1 }, (_, i) => i + 1));
+            while (unconnected.size > 0) {
+                const s = Array.from(connected)[Math.floor(Math.random() * connected.size)];
+                const t = Array.from(unconnected)[Math.floor(Math.random() * unconnected.size)];
+                addEdge(s, t);
+                connected.add(t);
+                unconnected.delete(t);
+            }
+
+            // Add extra random edges
+            const maxExtra = Math.min(Math.floor(n * Math.log(n)), (n * (n - 1) / 2) - (n - 1));
+            const extraCount = Math.floor(Math.random() * maxExtra) + 1;
+            for (let i = 0, added = 0; added < extraCount && i < extraCount * 3; i++) {
+                if (addEdge(Math.floor(Math.random() * n), Math.floor(Math.random() * n))) added++;
+            }
+
+            return { nodes, edges };
+        }
+
+        // Reset edge colors
+        function resetEdgeColors() {
+            cy.edges().style('line-color', '#ccc');
+            processActions(currentStep); // Reapply the current step highlighting
+        }
+
+        // Assign or reassign port numbers
+        function assignPortNumbers() {
+            cy.nodes().forEach(node => {
+                const degree = node.degree(false);
+                const ports = Array.from({ length: degree }, (_, i) => i + 1);
+                for (let i = ports.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [ports[i], ports[j]] = [ports[j], ports[i]];
+                }
+                const incidentEdges = node.connectedEdges();
+                incidentEdges.forEach((edge, idx) => {
+                    if (edge.source().id() === node.id()) {
+                        edge.data('sourcePort', ports[idx]);
+                    } else {
+                        edge.data('targetPort', ports[idx]);
+                    }
+                });
+            });
+            resetEdgeColors(); // Reset edge colors after randomizing ports
+            cy.style().update();
+        }
+
+        // Compute traversal actions based on selected algorithm
+        function computeTraversalActions() {
+            const algorithm = document.getElementById('traversal-algorithm').value;
+            traversalAlgorithm = algorithm;
+            
+            if (algorithm === 'dfs') {
+                return computeDFSActions();
+            } else if (algorithm === 'bfs') {
+                return computeBFSActions();
+            }
+            return [];
+        }
+
+        // Compute DFS actions
+        function computeDFSActions() {
+            const visited = new Set();
+            const actions = [];
+            const startNode = cy.nodes()[0];
+            runDFS(startNode, null, null, visited, actions);
+            return actions;
+        }
+        
+        // DFS implementation
+        function runDFS(node, parent, edgeToParent, visited, actions) {
+            visited.add(node.id());
+            if (parent) {
+                actions.push({ type: 'move', from: parent, to: node.id(), edge: edgeToParent });
+            }
+            
+            // Get all neighbors
+            const neighbors = [];
+            node.connectedEdges().forEach(edge => {
+                if (edge.id() !== edgeToParent) {
+                    const neighbor = edge.target().id() === node.id() ? edge.source() : edge.target();
+                    neighbors.push({neighbor, edge});
+                }
+            });
+            
+            // Process neighbors with DFS (depth-first)
+            for (const {neighbor, edge} of neighbors) {
+                if (!visited.has(neighbor.id())) {
+                    runDFS(neighbor, node.id(), edge.id(), visited, actions);
+                } else if (neighbor.id() !== parent) {
+                    actions.push({ type: 'backEdge', edge: edge.id(), from: node.id(), to: neighbor.id() });
+                }
+            }
+            
+            if (parent) {
+                actions.push({ type: 'backtrack', from: node.id(), to: parent, edge: edgeToParent });
+            }
+        }
+        
+        // Compute BFS actions
+        function computeBFSActions() {
+            const visited = new Set();
+            const actions = [];
+            const startNode = cy.nodes()[0];
+            const bfsTree = buildBFSTree(startNode);
+            runBFSWithAgent(startNode, bfsTree, actions);
+            return actions;
+        }
+        
+        // Build BFS tree with level information
+        function buildBFSTree(startNode) {
+            const tree = new Map();
+            const queue = [];
+            const visited = new Set();
+            
+            // Initialize with root node at level 0
+            tree.set(startNode.id(), { 
+                parent: null, 
+                edgeToParent: null, 
+                level: 0,
+                children: []
+            });
+            visited.add(startNode.id());
+            queue.push({ node: startNode, level: 0 });
+            
+            while (queue.length > 0) {
+                const { node: currentNode, level } = queue.shift();
+                const currentNodeId = currentNode.id();
+                
+                currentNode.connectedEdges().forEach(edge => {
+                    const neighbor = edge.target().id() === currentNodeId ? edge.source() : edge.target();
+                    const neighborId = neighbor.id();
+                    
+                    if (!visited.has(neighborId)) {
+                        visited.add(neighborId);
+                        
+                        // Add to tree with level information
+                        tree.set(neighborId, { 
+                            parent: currentNodeId, 
+                            edgeToParent: edge.id(), 
+                            level: level + 1,
+                            children: []
+                        });
+                        
+                        // Add as child to parent
+                        tree.get(currentNodeId).children.push(neighborId);
+                        
+                        // Add to queue for next level processing
+                        queue.push({ node: neighbor, level: level + 1 });
+                    }
+                });
+            }
+            return tree;
+        }
+        
+        // Find path from source to target through BFS tree
+        function findPathInTree(source, target, tree) {
+            if (source === target) return [];
+            
+            // Path to root from source
+            const pathFromSource = [];
+            let current = source;
+            while (current !== null) {
+                pathFromSource.push(current);
+                current = tree.get(current).parent;
+            }
+            
+            // Path to root from target
+            const pathFromTarget = [];
+            current = target;
+            while (current !== null) {
+                pathFromTarget.push(current);
+                current = tree.get(current).parent;
+            }
+            
+            // Find lowest common ancestor
+            let lca = null;
+            for (let i = pathFromSource.length - 1, j = pathFromTarget.length - 1; i >= 0 && j >= 0; i--, j--) {
+                if (pathFromSource[i] === pathFromTarget[j]) {
+                    lca = pathFromSource[i];
+                } else {
+                    break;
+                }
+            }
+            
+            // Construct path: source → LCA → target
+            const fullPath = [];
+            
+            // Add path from source to LCA (reversed because we want from source to LCA)
+            for (let i = 0; i < pathFromSource.length; i++) {
+                if (pathFromSource[i] === lca) break;
+                fullPath.push(pathFromSource[i]);
+            }
+            
+            // Add LCA
+            fullPath.push(lca);
+            
+            // Add path from LCA to target (excluding LCA)
+            for (let i = pathFromTarget.length - 2; i >= 0; i--) {
+                if (pathFromTarget[i] === lca) continue;
+                fullPath.push(pathFromTarget[i]);
+            }
+            
+            return fullPath;
+        }
+        
+        // Get edge ID connecting two adjacent nodes
+        function getEdgeId(node1, node2) {
+            const node1Obj = cy.getElementById(node1);
+            const node2Obj = cy.getElementById(node2);
+            
+            const edge = node1Obj.edgesWith(node2Obj);
+            return edge.length > 0 ? edge[0].id() : null;
+        }
+        
+        // BFS implementation with agent movement
+        function runBFSWithAgent(startNode, bfsTree, actions) {
+            const rootId = startNode.id();
+            const visited = new Set([rootId]);
+            const processedEdges = new Set();
+            const discoveredNodes = new Set([rootId]);
+            let currentAgentPos = rootId;
+            
+            // Organize nodes by levels
+            const nodesByLevel = new Map();
+            nodesByLevel.set(0, [rootId]);
+            
+            // Preprocessing - assign all nodes to their levels
+            for (const [nodeId, info] of bfsTree.entries()) {
+                const level = info.level;
+                if (level > 0) { // Skip root node
+                    if (!nodesByLevel.has(level)) {
+                        nodesByLevel.set(level, []);
+                    }
+                    nodesByLevel.get(level).push(nodeId);
+                }
+            }
+            
+            // Process level by level - this is the traditional BFS
+            const maxLevel = Math.max(...nodesByLevel.keys());
+            
+            for (let level = 0; level <= maxLevel; level++) {
+                if (!nodesByLevel.has(level)) continue;
+                
+                const nodesAtLevel = nodesByLevel.get(level);
+                
+                for (const nodeId of nodesAtLevel) {
+                    if (level === 0) {
+                        // Root node - discover its neighbors
+                        discoverNeighbors(nodeId);
+                    } else {
+                        // First move agent to this node (if needed)
+                        if (currentAgentPos !== nodeId) {
+                            // Since we want to follow traditional BFS, first go back to parent
+                            const parentId = bfsTree.get(nodeId).parent;
+                            const edgeToParent = bfsTree.get(nodeId).edgeToParent;
+                            
+                            // If we're not already at the parent, go there first
+                            if (currentAgentPos !== parentId) {
+                                // Move agent back to root/appropriate ancestor first
+                                moveAgentToNode(currentAgentPos, parentId, bfsTree);
+                            }
+                            
+                            // Now move from parent to current node
+                            if (!processedEdges.has(edgeToParent)) {
+                                actions.push({
+                                    type: 'move',
+                                    from: parentId,
+                                    to: nodeId,
+                                    edge: edgeToParent,
+                                    level: level
+                                });
+                                processedEdges.add(edgeToParent);
+                            } else {
+                                actions.push({
+                                    type: 'traverse',
+                                    from: parentId,
+                                    to: nodeId,
+                                    edge: edgeToParent
+                                });
+                            }
+                            currentAgentPos = nodeId;
+                        }
+                        
+                        // Now discover this node's neighbors
+                        discoverNeighbors(nodeId);
+                        
+                        // Move agent back to root/parent after processing the node
+                        const parentId = bfsTree.get(nodeId).parent;
+                        const edgeToParent = bfsTree.get(nodeId).edgeToParent;
+                        
+                        // Move back to parent
+                        if (!processedEdges.has(edgeToParent)) {
+                            actions.push({
+                                type: 'move',
+                                from: nodeId,
+                                to: parentId,
+                                edge: edgeToParent,
+                                level: level
+                            });
+                            processedEdges.add(edgeToParent);
+                        } else {
+                            actions.push({
+                                type: 'traverse',
+                                from: nodeId,
+                                to: parentId,
+                                edge: edgeToParent
+                            });
+                        }
+                        currentAgentPos = parentId;
+                    }
+                }
+            }
+            
+            // Helper function to discover neighbors of a node
+            function discoverNeighbors(nodeId) {
+                const node = cy.getElementById(nodeId);
+                node.connectedEdges().forEach(edge => {
+                    const neighbor = edge.target().id() === nodeId ? edge.source() : edge.target();
+                    const neighborId = neighbor.id();
+                    
+                    // Handle back edges (already discovered nodes)
+                    if (discoveredNodes.has(neighborId) && 
+                        !(bfsTree.get(neighborId).parent === nodeId || bfsTree.get(nodeId).parent === neighborId)) {
+                        // This is a back edge
+                        if (!processedEdges.has(edge.id())) {
+                            actions.push({
+                                type: 'backEdge',
+                                edge: edge.id(),
+                                from: nodeId,
+                                to: neighborId,
+                                level: Math.max(bfsTree.get(nodeId).level, bfsTree.get(neighborId).level)
+                            });
+                            processedEdges.add(edge.id());
+                        }
+                    }
+                    
+                    // Mark neighbor as discovered if not already
+                    if (!discoveredNodes.has(neighborId)) {
+                        discoveredNodes.add(neighborId);
+                    }
+                });
+            }
+            
+            // Helper function to move agent to a node using BFS tree paths
+            function moveAgentToNode(from, to, tree) {
+                const path = findPathInTree(from, to, tree);
+                
+                for (let i = 0; i < path.length - 1; i++) {
+                    const edgeId = getEdgeId(path[i], path[i+1]);
+                    
+                    if (!processedEdges.has(edgeId)) {
+                        actions.push({
+                            type: 'move',
+                            from: path[i],
+                            to: path[i+1],
+                            edge: edgeId,
+                            level: Math.max(tree.get(path[i]).level, tree.get(path[i+1]).level)
+                        });
+                        processedEdges.add(edgeId);
+                    } else {
+                        actions.push({
+                            type: 'traverse',
+                            from: path[i],
+                            to: path[i+1],
+                            edge: edgeId
+                        });
+                    }
+                }
+                
+                return path[path.length - 1]; // Return the last node in the path
+            }
+        }
+
+        // Update graph visualization
+        function updateGraph() {
+            const graph = generateGraph(graphType, nodeCount);
+            let layoutOptions;
+            if (graphType === 'rectangular') {
+                const rows = Math.ceil(Math.sqrt(nodeCount));
+                layoutOptions = { name: 'grid', rows: rows };
+            } else {
+                layoutOptions = { name: 'cose', idealEdgeLength: 100, nodeRepulsion: 10000000 };
+            }
+            cy = cytoscape({
+                container: document.getElementById('cy'),
+                elements: [...graph.nodes, ...graph.edges],
+                style: [
+                    {
+                        selector: 'node',
+                        style: {
+                            'background-color': 'gray',
+                            'label': 'data(id)',
+                            'text-valign': 'center',
+                            'text-halign': 'center',
+                            'width': 40,
+                            'height': 40
+                        }
+                    },
+                    {
+                        selector: 'edge',
+                        style: {
+                            'width': 2,
+                            'line-color': '#ccc',
+                            'source-label': 'data(sourcePort)',
+                            'target-label': 'data(targetPort)',
+                            'source-text-offset': 40,
+                            'target-text-offset': 40,
+                            'text-background-color': '#fff',
+                            'text-background-opacity': 1,
+                            'text-background-shape': 'roundrectangle',
+                            'text-background-padding': 3,
+                            'text-border-opacity': 1,
+                            'text-border-width': 1,
+                            'text-border-color': '#ddd',
+                            'z-index': 1,
+                            'text-background-height': 16,
+                            'text-background-width': 16
+                        }
+                    },
+                    {
+                        selector: 'edge.highlighted',
+                        style: {
+                            'width': 4,
+                            'line-color': '#ffA500',
+                            'mid-target-arrow-color': '#ffA500',
+                            'line-style': 'dashed'
+                        }
+                    }
+                ],
+                layout: layoutOptions
+            });
+
+            cy.on('tap', 'edge', function (event) {
+                if (manualMode) {
+                    const edge = event.target;
+                    edge.style('line-color', 'red');
+                    manualActions.push({ type: 'edgeTap', edge: edge.id() });
+                }
+            });
+            assignPortNumbers();
+            actions = computeTraversalActions();
+            currentStep = -1;
+            processActions(-1); // Initialize with agent at start
+        }
+
+        // Process actions up to a certain step
+        function processActions(upToStep) {
+            // Reset all styles
+            cy.edges().style('line-color', '#ccc').removeClass('highlighted');
+            cy.nodes().style('background-color', 'gray');
+            
+            const startNode = cy.nodes()[0];
+            let agentPosition = startNode.id();
+            let levelOrdered = new Map(); // Store edges by level
+            
+            if (upToStep >= 0) {
+                // First pass: Organize edges by level for BFS tree
+                for (let i = 0; i <= upToStep; i++) {
+                    const action = actions[i];
+                    if (action.type === 'move' && action.level !== undefined) {
+                        if (!levelOrdered.has(action.level)) {
+                            levelOrdered.set(action.level, []);
+                        }
+                        levelOrdered.get(action.level).push(action);
+                    }
+                }
+                
+                // Process all actions up to the current step
+                for (let i = 0; i <= upToStep; i++) {
+                    const action = actions[i];
+                    if (action.type === 'move') {
+                        const edge = cy.getElementById(action.edge);
+                        edge.style('line-color', 'green');
+                        agentPosition = action.to;
+                    } else if (action.type === 'traverse') {
+                        // Just move agent without changing edge color
+                        agentPosition = action.to;
+                    } else if (action.type === 'backEdge') {
+                        const edge = cy.getElementById(action.edge);
+                        edge.style('line-color', 'red');
+                    } else if (action.type === 'backtrack') {
+                        const edge = cy.getElementById(action.edge);
+                        edge.style('line-color', 'green');
+                        agentPosition = action.to;
+                    }
+                }
+                
+                // Highlight current edge being processed
+                const currentAction = actions[upToStep];
+                if (currentAction && currentAction.edge) {
+                    const currentEdge = cy.getElementById(currentAction.edge);
+                    currentEdge.addClass('highlighted');
+                    
+                    // Also highlight the current node to make it clearer
+                    if (currentAction.to) {
+                        cy.getElementById(currentAction.to).style('background-color', 'orange');
+                    }
+                }
+                
+                // Mark agent position
+                cy.getElementById(agentPosition).style('background-color', 'red');
+            } else {
+                startNode.style('background-color', 'red');
+            }
+        }
+
+        // Undo last manual action
+        function undoLastAction() {
+            if (manualActions.length > 0) {
+                const lastAction = manualActions.pop();
+                if (lastAction.type === 'edgeTap') {
+                    const edge = cy.getElementById(lastAction.edge);
+                    edge.style('line-color', '#ccc');
+                }
+            }
+        }
+
+        // Event Listeners
+        document.getElementById('graph-type').addEventListener('change', function () {
+            graphType = this.value;
+            updateGraph();
+        });
+
+        document.getElementById('node-slider').addEventListener('input', function () {
+            nodeCount = parseInt(this.value);
+            document.getElementById('node-count').textContent = nodeCount;
+            updateGraph();
+        });
+        
+        document.getElementById('traversal-algorithm').addEventListener('change', function() {
+            traversalAlgorithm = this.value;
+            updateGraph();
+        });
+
+        document.getElementById('randomize-ports').addEventListener('click', assignPortNumbers);
+
+        document.getElementById('next-step').addEventListener('click', function () {
+            if (currentStep < actions.length - 1) {
+                currentStep++;
+                processActions(currentStep);
+            }
+        });
+
+        document.getElementById('prev-step').addEventListener('click', function () {
+            if (currentStep > -1) {
+                currentStep--;
+                processActions(currentStep);
+            }
+        });
+
+        document.getElementById('play-animation').addEventListener('click', function () {
+            let i = -1;
+            const interval = setInterval(() => {
+                if (i < actions.length - 1) {
+                    i++;
+                    processActions(i);
+                    currentStep = i; // Update currentStep to match animation
+                } else {
+                    clearInterval(interval);
+                }
+            }, 700); // Slightly slower animation for better visibility
+        });
+
+        document.getElementById('manual-mode').addEventListener('click', function () {
+            manualMode = !manualMode;
+            this.textContent = manualMode ? 'Exit Manual Mode' : 'Manual Mode';
+
+            // Reset edge colors when exiting manual mode
+            if (!manualMode) {
+                resetEdgeColors();
+            }
+        });
+
+        document.getElementById('undo').addEventListener('click', undoLastAction);
+
+        // Initialize the graph
+        updateGraph();
+    </script>
+    
+    <!-- Add dark mode toggle and readme functionality -->
+    <script>
+        // Dark mode toggle functionality
+        document.getElementById('darkModeToggle').addEventListener('click', function() {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            localStorage.setItem('darkMode', isDark ? 'dark' : 'light');
+        });
+        
+        // Check for saved preference
+        if (localStorage.getItem('darkMode') === 'dark' || 
+            (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+        
+        // Documentation is now static, no toggle functionality needed
+        
+        // Documentation is now static, no need to check saved state
+    </script>
+</body>
+
+</html>
