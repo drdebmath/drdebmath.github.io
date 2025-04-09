@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Grid Agent Simulation</title>
+    <style>
+        body {
+            margin: 20px;
+            font-family: Arial, sans-serif;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .controls {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+
+        .agent-controls {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .agent-controls input[type="range"] {
+            width: 200px;
+        }
+
+        .agent-controls input[type="number"] {
+            width: 60px;
+            padding: 4px;
+        }
+
+        .distribution-controls {
+            margin-bottom: 15px;
+        }
+
+        .distribution-controls label {
+            margin-right: 20px;
+            cursor: pointer;
+        }
+
+        button {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .grid-container {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .node-circle {
+            fill: white;
+            stroke: #333;
+            stroke-width: 2;
+        }
+
+        .node-circle:hover {
+            fill: #f0f0f0;
+        }
+
+        .edge {
+            stroke: #ccc;
+            stroke-width: 1;
+        }
+
+        .node-text {
+            text-anchor: middle;
+            dominant-baseline: central;
+            font-size: 12px;
+            pointer-events: none;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            pointer-events: none;
+            z-index: 100;
+            display: none;
+        }
+
+        .round-display {
+            margin-left: 15px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Grid Agent Simulation</h1>
+        
+        <div class="controls">
+            <div class="agent-controls">
+                <label>
+                    Number of Agents:
+                    <input type="range" id="agentSlider" min="1" max="50" value="10">
+                </label>
+                <input type="number" id="agentInput" min="1" max="50" value="10">
+                <span id="agentCount">10</span>
+            </div>
+
+            <div class="distribution-controls">
+                <label>
+                    <input type="radio" name="distribution" value="random" checked>
+                    Random Distribution
+                </label>
+                <label>
+                    <input type="radio" name="distribution" value="single">
+                    Single Node
+                </label>
+            </div>
+
+            <div class="simulation-controls">
+                <button id="resetButton">Reset</button>
+                <button id="stepButton">Step Simulation</button>
+                <span class="round-display">Round: <span id="roundCount">0</span></span>
+            </div>
+        </div>
+
+        <div class="grid-container">
+            <svg id="gridSvg"></svg>
+            <div id="tooltip" class="tooltip"></div>
+        </div>
+    </div>
+
+    <script>
+        // Constants
+        const GRID_SIZE = 10;
+        const NODE_RADIUS = 15;
+        const NODE_SPACING = 50;
+        const MARGIN = 30;
+        
+        // Classes
+        class Agent {
+            constructor(id) {
+                this.id = id;
+                this.history = [];
+                this.isSettled = false;
+            }
+        }
+
+        class GridNode {
+            constructor(row, col) {
+                this.row = row;
+                this.col = col;
+                this.agents = [];
+                this.settledAgent = null;
+                this.portStats = {
+                    1: 0, // North
+                    2: 0, // East
+                    3: 0, // South
+                    4: 0  // West
+                };
+                this.totalAgentsSeen = 0;
+            }
+        }
+
+        // Global state
+        let grid = [];
+        let round = 0;
+        let agentCount = 10;
+
+        // UI Elements
+        const elements = {
+            agentSlider: document.getElementById('agentSlider'),
+            agentInput: document.getElementById('agentInput'),
+            agentCountDisplay: document.getElementById('agentCount'),
+            resetButton: document.getElementById('resetButton'),
+            stepButton: document.getElementById('stepButton'),
+            roundDisplay: document.getElementById('roundCount'),
+            svg: document.getElementById('gridSvg'),
+            tooltip: document.getElementById('tooltip')
+        };
+
+        // Initialize SVG
+        function setupSVG() {
+            const width = NODE_SPACING * (GRID_SIZE - 1) + MARGIN * 2;
+            const height = NODE_SPACING * (GRID_SIZE - 1) + MARGIN * 2;
+            
+            elements.svg.innerHTML = '';
+            elements.svg.setAttribute('width', width);
+            elements.svg.setAttribute('height', height);
+
+            // Draw edges
+            for (let row = 0; row < GRID_SIZE; row++) {
+                for (let col = 0; col < GRID_SIZE; col++) {
+                    // Horizontal edges
+                    if (col < GRID_SIZE - 1) {
+                        drawLine(
+                            MARGIN + col * NODE_SPACING,
+                            MARGIN + row * NODE_SPACING,
+                            MARGIN + (col + 1) * NODE_SPACING,
+                            MARGIN + row * NODE_SPACING
+                        );
+                    }
+                    // Vertical edges
+                    if (row < GRID_SIZE - 1) {
+                        drawLine(
+                            MARGIN + col * NODE_SPACING,
+                            MARGIN + row * NODE_SPACING,
+                            MARGIN + col * NODE_SPACING,
+                            MARGIN + (row + 1) * NODE_SPACING
+                        );
+                    }
+                }
+            }
+        }
+
+        function drawLine(x1, y1, x2, y2) {
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('class', 'edge');
+            line.setAttribute('x1', x1);
+            line.setAttribute('y1', y1);
+            line.setAttribute('x2', x2);
+            line.setAttribute('y2', y2);
+            elements.svg.appendChild(line);
+        }
+
+        // Grid initialization
+        function initializeGrid() {
+            round = 0;
+            elements.roundDisplay.textContent = round;
+            
+            // Create empty grid
+            grid = Array(GRID_SIZE).fill().map((_, row) => 
+                Array(GRID_SIZE).fill().map((_, col) => new GridNode(row, col))
+            );
+
+            // Create agents
+            const agents = Array(agentCount).fill().map((_, i) => new Agent(i + 1));
+            
+            // Distribute agents
+            const distribution = document.querySelector('input[name="distribution"]:checked').value;
+            if (distribution === 'single') {
+                const centerRow = Math.floor(GRID_SIZE / 2);
+                const centerCol = Math.floor(GRID_SIZE / 2);
+                agents.forEach(agent => {
+                    grid[centerRow][centerCol].agents.push(agent);
+                    grid[centerRow][centerCol].totalAgentsSeen++;
+                    agent.history.push([centerRow, centerCol]);
+                });
+            } else {
+                agents.forEach(agent => {
+                    const row = Math.floor(Math.random() * GRID_SIZE);
+                    const col = Math.floor(Math.random() * GRID_SIZE);
+                    grid[row][col].agents.push(agent);
+                    grid[row][col].totalAgentsSeen++;
+                    agent.history.push([row, col]);
+                });
+            }
+        }
+
+        // Render grid state
+        function renderGrid() {
+            // Remove existing nodes and texts
+            const oldNodes = elements.svg.querySelectorAll('.node-circle, .node-text');
+            oldNodes.forEach(node => node.remove());
+
+            // Draw nodes and agent counts
+            for (let row = 0; row < GRID_SIZE; row++) {
+                for (let col = 0; col < GRID_SIZE; col++) {
+                    const x = MARGIN + col * NODE_SPACING;
+                    const y = MARGIN + row * NODE_SPACING;
+                    const node = grid[row][col];
+
+                    // Draw node
+                    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                    circle.setAttribute('class', 'node-circle');
+                    circle.setAttribute('cx', x);
+                    circle.setAttribute('cy', y);
+                    circle.setAttribute('r', NODE_RADIUS);
+                    circle.addEventListener('mouseover', (e) => showTooltip(e, node));
+                    circle.addEventListener('mouseout', hideTooltip);
+                    elements.svg.appendChild(circle);
+
+                    // Add agent count if there are agents
+                    if (node.agents.length > 0) {
+                        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                        text.setAttribute('class', 'node-text');
+                        text.setAttribute('x', x);
+                        text.setAttribute('y', y);
+                        text.textContent = node.agents.length;
+                        elements.svg.appendChild(text);
+                    }
+                }
+            }
+        }
+
+        // Tooltip handlers
+        function showTooltip(event, node) {
+            const content = [
+                `Position: (${node.row}, ${node.col})`,
+                node.settledAgent ? `Settled Agent: ${node.settledAgent.id}` : '',
+                `Agents: ${node.agents.map(a => a.id).join(', ') || 'None'}`,
+                '',
+                'Port Statistics:',
+                ...Object.entries(node.portStats).map(([port, count]) => `Port ${port}: ${count}`)
+            ].filter(Boolean).join('<br>');
+
+            elements.tooltip.innerHTML = content;
+            elements.tooltip.style.display = 'block';
+
+            const rect = event.target.getBoundingClientRect();
+            elements.tooltip.style.left = `${rect.right + 10}px`;
+            elements.tooltip.style.top = `${rect.top}px`;
+        }
+
+        function hideTooltip() {
+            elements.tooltip.style.display = 'none';
+        }
+
+        // Simulation step
+        function simulateStep() {
+            const newGrid = grid.map(row => row.map(node => {
+                const newNode = new GridNode(node.row, node.col);
+                newNode.agents = [...node.agents];
+                newNode.settledAgent = node.settledAgent;
+                newNode.portStats = {...node.portStats};
+                newNode.totalAgentsSeen = node.totalAgentsSeen;
+                return newNode;
+            }));
+
+            // Process each node
+            for (let row = 0; row < GRID_SIZE; row++) {
+                for (let col = 0; col < GRID_SIZE; col++) {
+                    const node = newGrid[row][col];
+                    
+                    if (node.agents.length === 0) continue;
+                    
+                    // Sort agents by ID
+                    node.agents.sort((a, b) => a.id - b.id);
+                    
+                    // Settle lowest ID agent if no settled agent yet
+                    if (!node.settledAgent) {
+                        node.settledAgent = node.agents[0];
+                        node.agents[0].isSettled = true;
+                        continue;
+                    }
+
+                    // Move other agents
+                    const movingAgents = node.agents.filter(a => !a.isSettled);
+                    movingAgents.forEach(agent => {
+                        const moves = getValidMoves(row, col);
+                        if (moves.length > 0) {
+                            const move = moves[Math.floor(Math.random() * moves.length)];
+                            node.portStats[move.port]++;
+                            node.agents = node.agents.filter(a => a.id !== agent.id);
+                            newGrid[move.row][move.col].agents.push(agent);
+                            newGrid[move.row][move.col].totalAgentsSeen++;
+                            agent.history.push([move.row, move.col]);
+                        }
+                    });
+                }
+            }
+
+            grid = newGrid;
+            round++;
+            elements.roundDisplay.textContent = round;
+            renderGrid();
+        }
+
+        function getValidMoves(row, col) {
+            const moves = [];
+            const directions = [
+                [-1, 0, 1], // North
+                [0, 1, 2],  // East
+                [1, 0, 3],  // South
+                [0, -1, 4]  // West
+            ];
+
+            directions.forEach(([dr, dc, port]) => {
+                const newRow = row + dr;
+                const newCol = col + dc;
+                if (newRow >= 0 && newRow < GRID_SIZE && 
+                    newCol >= 0 && newCol < GRID_SIZE) {
+                    moves.push({ row: newRow, col: newCol, port });
+                }
+            });
+
+            return moves;
+        }
+
+        // Event handlers
+        function handleAgentCountChange(value) {
+            value = Math.max(1, Math.min(50, parseInt(value) || 10));
+            elements.agentSlider.value = value;
+            elements.agentInput.value = value;
+            elements.agentCountDisplay.textContent = value;
+            agentCount = value;
+        }
+
+        // Initialize simulation
+        function initialize() {
+            // Set up event listeners
+            elements.agentSlider.addEventListener('input', e => handleAgentCountChange(e.target.value));
+            elements.agentInput.addEventListener('change', e => handleAgentCountChange(e.target.value));
+            elements.resetButton.addEventListener('click', () => {
+                initializeGrid();
+                renderGrid();
+            });
+            elements.stepButton.addEventListener('click', simulateStep);
+
+            // Initial setup
+            setupSVG();
+            initializeGrid();
+            renderGrid();
+        }
+
+        // Start simulation when page loads
+        document.addEventListener('DOMContentLoaded', initialize);
+    </script>
+</body>
+</html>
