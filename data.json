@@ -183,7 +183,7 @@
     {
       "date": "25 Sep 2024",
       "title": "Paper on Asynchronous Separation of Unconscious Colored Robots accepted to PDAA.",
-      "url":"https://is-candar.org/pdaa24"
+      "url": "https://is-candar.org/pdaa24"
     },
     {
       "date": "24 Jul 2024",
@@ -268,11 +268,12 @@
       },
       "if": "3.4",
       "volume": "123",
-      "pages": "145–155",
+      "pages": "145-155",
       "year": 2019,
       "doi": "https://doi.org/10.1016/j.jpdc.2018.09.015",
       "arxiv": "https://arxiv.org/pdf/1608.02432.pdf",
-      "type": "journal"
+      "type": "journal",
+      "abstract": "We consider the problem of Gathering of asynchronous mobile robots in presence of crash faults under the weak multiplicity detection model (robots cannot detect the exact number of robots at a location, they can only detect if there is 0, 1, or more robots at that location). Previous studies on Gathering have been made assuming that the robots can detect the exact number of robots at any location (strong multiplicity detection). In this paper, we study how weakening the multiplicity detection capability affects the possibility and complexity of Gathering. It is known that fault-tolerant Gathering under strong multiplicity detection requires at least 2f+1 robots, where f is the maximum number of faulty robots. In this paper we show that Gathering is possible under weak multiplicity detection if the number of robots n>2f. We first prove a necessary condition on the initial configuration for Gathering n>2f robots with at most f faults. We then propose a deterministic algorithm that solves Gathering for n>2f robots starting from any configuration satisfying the necessary condition. Since the number of robots required is the same (up to additive constant 1) under both strong and weak multiplicity detection, the impact of weakening the multiplicity detection capability is negligible (in terms of number of robots)."
     },
     {
       "authors": [
@@ -288,7 +289,8 @@
       "if": "7.7",
       "doi": "https://doi.org/10.1109/TMC.2020.3022075",
       "year": 2020,
-      "type": "journal"
+      "type": "journal",
+      "abstract": "In this article, we study the problem of surveillance of an uneven terrain modeled as a given surface area $S$ by a team of unmanned aerial vehicles (UAVs). We assume that the UAVs are initially placed arbitrarily on the surface $S$. Each UAV is equipped with a camera covering a circular region of a specific radius. The objective is to reposition the UAVs by distributed means such that the union of the circular regions covered by the cameras of the UAVs covers the entire surface $S$. The UAVs operate in Look-Compute-Move cycles. Each UAV observes the positions of the other UAVs, computes a destination point, and moves towards it. We present a distributed algorithm for the surveillance problem assuming that the surface $S$ is uneven but does not contain any hole. The proposed algorithm allows the UAVs to self-organize and coordinate implicitly among themselves to cover the entire surface $S$. The algorithm is asynchronous, decentralized, and guarantees complete coverage of the surface $S$. We also study the problem under various practical constraints such as limited visibility, GPS errors, and obstacles. Through extensive simulations, we demonstrate the correctness and effectiveness of the algorithm."
     },
     {
       "authors": [
@@ -302,10 +304,11 @@
         "full": "The Computer Journal",
         "short": "Comput. J."
       },
-      "if":"1.5",
+      "if": "1.5",
       "doi": "https://doi.org/10.1093/comjnl/bxaa182",
       "year": 2022,
-      "type": "journal"
+      "type": "journal",
+      "abstract": "We consider the problem of Convergence for a swarm of asynchronous, anonymous, oblivious, silent mobile robots operating under Look-Compute-Move cycles. The robots are assumed to be weak in the sense that they do not agree on the coordinate system, and lack multiplicity detection, i.e. they cannot detect if multiple robots are at the same location. It is known that Convergence is impossible for such robots. However, it has been shown that Convergence is possible even for such weak robots if they are additionally equipped with some capabilities, like visible lights or ability to write on shared whiteboard. This motivated us to study the problem: what minimal capabilities are necessary and sufficient for Convergence? In this paper, we consider three models with additional capabilities: (i) robots equipped with lights (\\( k \\)-state lights, \\( k \\geq 1 \\)), (ii) robots equipped with ability to write on persistent whiteboard (\\( p \\)-write whiteboard, \\( p \\geq 1 \\)), and (iii) robots equipped with non-persistent whiteboard (\\( p \\)-write whiteboard, \\( p \\geq 1 \\)). We study the problem of area Convergence where the goal is to make the robots converge to a small area. We show that area Convergence is possible for robots equipped with 1-state light, or 1-write persistent whiteboard, or 1-write non-persistent whiteboard. Hence, minimal possible additional capability (1-state light or 1-write whiteboard) is sufficient for area Convergence."
     },
     {
       "authors": [
@@ -318,10 +321,11 @@
         "full": "Theoretical Computer Science",
         "short": "Theor. Comput. Sci."
       },
-      "if":"0.9",
+      "if": "0.9",
       "doi": "https://doi.org/10.1016/j.tcs.2020.11.048",
       "year": 2021,
-      "type": "journal"
+      "type": "journal",
+      "abstract": "Gathering is one of the fundamental problems in cooperative mobile robotics. The goal is to make a set of autonomous mobile robots, initially scattered in a space, gather at a single point not fixed in advance. The problem has been extensively studied under various assumptions. In this paper, we consider randomized gathering algorithms for asynchronous robots operating under Look-Compute-Move (LCM) cycles. The robots are anonymous, identical, oblivious, and lack multiplicity detection. They operate in ASYNC model, i.e., the time required for each operation (Look, Compute, Move) and the time between consecutive operations are finite but unpredictable. It is known that gathering is impossible for such robots under deterministic settings, even when they share a common coordinate system. We present a randomized algorithm that solves gathering for n > 3 robots with probability 1 in finite expected number of epochs. An epoch is the smallest time interval during which each robot completes at least one LCM cycle. Our algorithm does not require the robots to agree on a common coordinate system. It assumes that the robots can measure distances and angles accurately. Our algorithm works even if the robots start from a symmetric configuration."
     },
     {
       "authors": [
@@ -335,10 +339,11 @@
         "full": "Theoretical Computer Science",
         "short": "Theor. Comput. Sci."
       },
-      "if":"0.9",
+      "if": "0.9",
       "doi": "https://doi.org/10.1016/j.tcs.2023.114187",
       "year": 2023,
-      "type": "journal"
+      "type": "journal",
+      "abstract": "We consider the problem of distributing mobile robots on the vertices of an arbitrary anonymous graph G=(V,E) such that the robots occupy exactly the vertices belonging to some Maximal Independent Set (MIS) of G. This problem is known as the MIS Filling problem. We assume that the robots are anonymous, identical, oblivious, and operate in Look-Compute-Move cycles under a synchronous scheduler. The robots are endowed with visibility sensors and lights. Each robot has a visibility range of 1, i.e., it can see the vertices and robots within distance 1 (neighbors). Each robot is equipped with a light that can assume colors from a constant-sized set. The light is visible to the robots within distance 1. The robots start from arbitrary positions, but no two robots start at the same vertex. We present two distributed algorithms for the MIS Filling problem. The first algorithm works for robots having persistent memory of one bit, and uses O(log\u2061\u0394) colors, where \u0394 is the maximum degree of the graph. The second algorithm works for oblivious robots (no persistent memory) and uses a constant number of colors. Both algorithms run in O(D) rounds, where D is the diameter of the graph."
     },
     {
       "authors": [
@@ -350,11 +355,12 @@
         "full": "Information Processing Letters",
         "short": "Inf. Process. Lett."
       },
-      "if":"0.7",
+      "if": "0.7",
       "doi": "https://doi.org/10.1016/j.ipl.2023.106455",
       "arxiv": "https://arxiv.org/abs/2310.01136",
       "year": 2024,
-      "type": "journal"
+      "type": "journal",
+      "abstract": "We consider two related tasks performed by mobile agents (robots) in networks modelled as arbitrary connected graphs: treasure hunt and rendezvous. In treasure hunt, an agent starting at a node s has to find a stationary target (treasure) located at an unknown node t. In rendezvous, two agents starting at nodes s1 and s2 have to meet at some node. Agents navigate in the network in synchronous rounds. They have labels from a set L but are otherwise identical. They know the map of the graph, know the starting node (in rendezvous, each agent knows its own starting node) and know the label set L. In rendezvous, agents know the size n of the graph but otherwise they do not know n. Agents are deterministic. In treasure hunt, the agent does not know the position of the treasure, and in rendezvous, neither agent knows the starting position of the other. The cost of an algorithm is the time (number of rounds) until completion of the task. For treasure hunt, we give an algorithm with cost O(D\u22c5log\u2061(n/D)), where D is the distance between s and t. For rendezvous, we give an algorithm with cost O(n) if the size n of the graph is known to the agents, and O(nlogn) if n is unknown. We also prove that these costs are optimal up to multiplicative constants, even for labelled rendezvous when agents know each other\u2019s starting nodes and labels."
     },
     {
       "authors": [
@@ -369,7 +375,8 @@
       "if": "1.0",
       "doi": "https://doi.org/10.1016/j.dam.2024.05.024",
       "year": 2024,
-      "type": "journal"
+      "type": "journal",
+      "abstract": "An automaton has to explore an unknown graph G=(V,E), starting at a node s. The automaton navigates in synchronous steps. In each step it traverses an edge. The graph is arbitrary and connected. The ports at each node v are numbered 1,...,deg(v). The automaton has a constant number k of pebbles identified by labels from {1,...,k}. When the automaton arrives at a node v, it sees the port number through which it entered v, the degree deg(v) of v, and the set of pebbles located at v (if any). It can drop any pebbles it carries and pick up any pebbles present at v. Based on this information and on its state, the automaton chooses the port number through which it exits v, the set of pebbles to carry, and its next state. The task is completed when every edge has been traversed at least once. In this paper we consider deterministic finite automata. Such an automaton is memoryless if its decision depends only on the current information obtained at the node and not on its current state (i.e., it has only one state). It is known that a deterministic memoryless automaton without pebbles cannot explore all graphs. We investigate the minimum number of pebbles that enable a deterministic memoryless automaton to explore any connected graph. We show that 2 pebbles are sufficient for exploration, even if the size n and the maximum degree \u0394 of the graph are unknown. For the case when the size n of the graph is known, we show that one pebble is sufficient if the automaton is initially placed at a node with a pebble. We also prove that one pebble is insufficient in general, even if the size n is known. Hence 2 pebbles is the minimum number required for exploration by a deterministic memoryless automaton starting without pebbles."
     },
     {
       "authors": [
@@ -388,7 +395,8 @@
       "date": "January 5-7, 2017",
       "arxiv": "https://arxiv.org/pdf/1608.02432.pdf",
       "type": "conference",
-      "year": 2017
+      "year": 2017,
+      "abstract": "We consider the problem of Gathering of asynchronous mobile robots in presence of crash faults under the weak multiplicity detection model (robots cannot detect the exact number of robots at a location, they can only detect if there is 0, 1, or more robots at that location). Previous studies on Gathering have been made assuming that the robots can detect the exact number of robots at any location (strong multiplicity detection). In this paper, we study how weakening the multiplicity detection capability affects the possibility and complexity of Gathering. It is known that fault-tolerant Gathering under strong multiplicity detection requires at least 2f+1 robots, where f is the maximum number of faulty robots. In this paper we show that Gathering is possible under weak multiplicity detection if the number of robots n > 2f. We first prove a necessary condition on the initial configuration for Gathering n > 2f robots with at most f faults. We then propose a deterministic algorithm that solves Gathering for n > 2f robots starting from any configuration satisfying the necessary condition. Since the number of robots required is the same (up to additive constant 1) under both strong and weak multiplicity detection, the impact of weakening the multiplicity detection capability is negligible (in terms of number of robots)."
     },
     {
       "authors": [
@@ -407,7 +415,8 @@
       "date": "May 17-19, 2017",
       "arxiv": "https://arxiv.org/pdf/1608.06002.pdf",
       "type": "conference",
-      "year": 2017
+      "year": 2017,
+      "abstract": "We consider the problem of convergence for a swarm of asynchronous, anonymous, oblivious, silent mobile robots operating under Look-Compute-Move cycles. The robots are assumed to be weak, i.e., they do not agree on the coordinate system, and lack multiplicity detection, i.e., they cannot detect if multiple robots are at the same location. It is known that convergence is impossible for such robots. However, it has been shown that convergence is possible even for such weak robots if they are additionally equipped with visible lights. This motivated us to study the problem: what minimal capabilities are necessary and sufficient for convergence? In this paper, we consider three models with additional capabilities: (i) robots equipped with lights (k-state lights, k \u2265 1), (ii) robots equipped with ability to write on persistent whiteboard (p-write whiteboard, p \u2265 1), and (iii) robots equipped with non-persistent whiteboard (p-write whiteboard, p \u2265 1). We show that convergence is possible for robots equipped with 1-state light, or 1-write persistent whiteboard, or 1-write non-persistent whiteboard. Hence, minimal possible additional capability (1-state light or 1-write whiteboard) is sufficient for convergence."
     },
     {
       "authors": [
@@ -426,7 +435,8 @@
       "date": "January 4-7, 2018",
       "arxiv": "https://arxiv.org/pdf/1708.03792.pdf",
       "type": "conference",
-      "year": 2018
+      "year": 2018,
+      "abstract": "We study the problem of evacuating two mobile robots from a disk. The boundary of the disk contains two exit points at unknown locations. The robots start from the center of the disk. The goal is for both robots to reach one of the exits. The robots move at the same maximum speed. They can communicate wirelessly. We want to minimize the evacuation time, which is defined as the time when the second robot reaches an exit. This problem finds applications, e.g., in scenarios where multiple evacuees need to be guided out of a contaminated area. We consider two models of communication: robots communicate only when they meet (direct communication), and robots have unlimited communication range (wireless communication). We assume that the robots are oblivious, i.e., they do not remember the past. For the direct communication model, we show that the optimal evacuation time is (1 + \u03c0/2)R \u2248 2.57 R, where R is the radius of the disk. For the wireless communication model, we present an algorithm with evacuation time (1 + \u03c0/3)R \u2248 2.047 R. We also prove a lower bound of 2R for this model. Closing the gap between the upper and lower bounds remains an open problem."
     },
     {
       "authors": [
@@ -444,7 +454,8 @@
       "date": "September 12-13, 2019",
       "arxiv": "https://arxiv.org/pdf/1906.03024.pdf",
       "type": "conference",
-      "year": 2019
+      "year": 2019,
+      "abstract": "We consider the problem of evacuating a crashed robot from a disk. The boundary of the disk contains k \u2265 1 exit points at unknown locations. An active robot starts from the center of the disk, finds the crashed robot located at an unknown point inside the disk, carries it, and brings it to one of the exits. The goal is to minimize the evacuation time, which is the time when the active robot carrying the crashed robot reaches an exit. The active robot moves at speed v, and when carrying the crashed robot, it moves at speed v' < v. We assume that the active robot knows the locations of the exits once it reaches the boundary. We present an algorithm that guarantees an evacuation time within a constant factor of the optimal time for any k \u2265 1 exits. Specifically, for k=1 exit, the competitive ratio is at most 5. For k=2 exits, the ratio is at most 6.6. For general k \u2265 1, the ratio is at most 4+2\u03c0 \u2248 10.28. Our algorithms rely on finding efficient search strategies for the active robot to locate the crashed robot and then determining the best exit to move towards."
     },
     {
       "authors": [
@@ -461,7 +472,8 @@
       "date": "January 4-7, 2020",
       "doi": "https://doi.org/10.1145/3369740.3369781",
       "type": "conference",
-      "year": 2020
+      "year": 2020,
+      "abstract": "In this paper, we study the problem of surveillance of an uneven terrain modeled as a given surface area S by a team of unmanned aerial vehicles (UAVs). We assume that the UAVs are initially placed arbitrarily on the surface S. Each UAV is equipped with a camera covering a circular region of a specific radius. The objective is to reposition the UAVs by distributed means such that the union of the circular regions covered by the cameras of the UAVs covers the entire surface S. The UAVs operate in Look-Compute-Move cycles. Each UAV observes the positions of the other UAVs, computes a destination point, and moves towards it. We present a distributed algorithm for the surveillance problem assuming that the surface S is uneven but does not contain any hole. The proposed algorithm allows the UAVs to self-organize and coordinate implicitly among themselves to cover the entire surface S. The algorithm is asynchronous, decentralized, and guarantees complete coverage of the surface S. We also study the problem under various practical constraints such as limited visibility, GPS errors, and obstacles. Through extensive simulations, we demonstrate the correctness and effectiveness of the algorithm."
     },
     {
       "authors": [
@@ -479,7 +491,8 @@
       "date": "September 7-10, 2020",
       "doi": "https://doi.org/10.1007/978-3-030-62401-9_12",
       "type": "conference",
-      "year": 2020
+      "year": 2020,
+      "abstract": "We consider the problem of forming a specific pattern, namely a conic section (ellipse, parabola, or hyperbola), by a swarm of autonomous mobile robots in the presence of Byzantine faulty robots. The robots operate in Look-Compute-Move cycles. In each cycle, a robot takes a snapshot of the positions of all robots (Look), computes a destination based on the observed positions (Compute), and moves towards the destination (Move). We assume an asynchronous system where robots operate at different speeds. A faulty robot can behave arbitrarily (Byzantine fault). The goal is to design an algorithm such that the non-faulty robots eventually form the desired conic shape, despite the disruptive behavior of the faulty robots. We propose a fault-tolerant algorithm for conic formation that can handle up to f Byzantine robots, provided the total number of robots n is sufficiently large (n > 2f). Our algorithm relies on identifying a reference point (e.g., the center of minimum enclosing circle) that is resilient to faults and then positioning the non-faulty robots relative to this reference point to form the conic section. We prove the correctness and termination of the algorithm under the assumed fault model."
     },
     {
       "authors": [
@@ -496,7 +509,8 @@
       "date": "January 4-7, 2021",
       "doi": "https://doi.org/10.1145/3427477.3429464",
       "type": "conference",
-      "year": 2021
+      "year": 2021,
+      "abstract": "Dispersion is the problem of scattering mobile robots initially placed arbitrarily at some nodes of a graph G = (V, E) such that finally, each node of V is occupied by exactly one robot. The problem finds applications in areas such as surveillance and environmental monitoring, where uniform deployment of sensors or agents is required. In this paper, we study the dispersion problem in the presence of Byzantine faulty robots. We consider a system of n robots placed on an n-node anonymous graph, where n is the number of nodes. Among the n robots, f robots can be Byzantine faulty, meaning they can deviate arbitrarily from their protocol. The non-faulty robots are identical, operate in synchronous Look-Compute-Move cycles, and have limited visibility (can only see their immediate neighbors). The goal is to design a distributed algorithm that ensures that eventually, each node is occupied by exactly one non-faulty robot, assuming n > 2f. We present a randomized algorithm that achieves dispersion with high probability in polynomial time for any connected graph, tolerating f < n/2 Byzantine faults. The algorithm utilizes techniques related to random walks and local coordination to handle the uncertainty introduced by faulty robots and the anonymity of the graph."
     },
     {
       "authors": [
@@ -513,7 +527,8 @@
       "date": "Jan 7-10, 2021",
       "doi": "https://doi.org/10.1007/978-3-030-65621-8_12",
       "type": "conference",
-      "year": 2021
+      "year": 2021,
+      "abstract": "Understanding the spread of a pandemic like COVID-19 requires identifying the infection sources and transmission pathways. In many situations, detailed contact tracing data is unavailable or incomplete, especially at a global scale. This paper proposes a reconstructive model to infer the global spread pattern based on limited available data. We model the spread as a process on a graph where nodes represent geographical regions (e.g., countries or states) and edges represent potential transmission links (e.g., travel routes). Given the time series of reported cases in different regions, our goal is to reconstruct the most likely infection sources and the temporal evolution of the spread. We formulate this as an optimization problem aiming to find a propagation tree or graph that best explains the observed data under a chosen epidemiological model (like SIR or SEIR). We propose a heuristic algorithm based on dynamic programming and graph traversal techniques to approximate the solution. The model can help in understanding the key transmission events and evaluating the effectiveness of different intervention strategies by simulating the spread under counterfactual scenarios. We demonstrate the applicability of our model using publicly available COVID-19 data."
     },
     {
       "authors": [
@@ -529,7 +544,8 @@
       "date": "Jan 5-9, 2021",
       "doi": "https://doi.org/10.1109/COMSNETS51098.2021.9352839",
       "type": "conference",
-      "year": 2021
+      "year": 2021,
+      "abstract": "We study the problem of pattern formation by a single mobile entity, modeled as a finite automaton, in an infinite grid environment. The automaton starts at the origin and moves between adjacent grid cells. Its goal is to color the cells it visits in such a way that eventually, a specific predefined shape, called a \"fort\", is formed by the colored cells. The automaton has a finite number of internal states and can sense the color of the current cell and its four neighboring cells. Based on its current state and the sensed information, it decides its next state, the color to paint the current cell, and the direction to move. We focus on the formation of finite shapes, specifically rectangular forts of arbitrary dimensions. We investigate the capabilities of deterministic finite automata for this task. We present an automaton construction that can form any n x m rectangular fort, given n and m as part of its initial configuration or state. We analyze the time complexity (number of steps) and space complexity (number of unique cells visited) required by the automaton to complete the fort formation. The problem explores the intersection of cellular automata, pattern formation, and mobile agent computing."
     },
     {
       "authors": [
@@ -546,7 +562,8 @@
       "date": "Jun 27-29, 2022",
       "slides": "https://www.dropbox.com/s/ttg2cb7hmyvyzzj/siroccoppt.pptx?dl=0",
       "type": "conference",
-      "year": 2022
+      "year": 2022,
+      "abstract": "We study the dispersion problem where n mobile robots, initially placed arbitrarily on the n nodes of a directed graph G, must coordinate to ensure that each node is occupied by exactly one robot. We consider anonymous graphs, meaning nodes do not have unique identifiers, and robots are identical and operate in synchronous Look-Compute-Move rounds. Dispersion on undirected graphs is well-studied, but the directed case introduces challenges due to asymmetric reachability. We investigate the feasibility of dispersion on different classes of strongly connected directed graphs. We show that dispersion is not always possible, even on strongly connected graphs, if robots have limited capabilities (e.g., only local visibility). We then identify sufficient conditions on the graph structure and robot capabilities (e.g., ability to use pebbles or knowledge of certain graph parameters) under which dispersion can be achieved. We present algorithms for dispersion on specific classes of directed graphs, such as directed rings and Eulerian digraphs, and analyze their complexity. Our work highlights the fundamental differences between dispersion on undirected and directed graphs."
     },
     {
       "authors": [
@@ -565,7 +582,8 @@
       "award": "Best paper award",
       "arxiv": "https://arxiv.org/abs/2107.04885",
       "type": "conference",
-      "year": 2023
+      "year": 2023,
+      "abstract": "We consider the problem of distributing mobile robots on the vertices of an arbitrary anonymous graph $$G=(V, E)$$ G = ( V , E ) such that the robots occupy exactly the vertices belonging to some Maximal Independent Set (MIS) of G . This problem is known as the MIS Filling problem. We assume that the robots are anonymous, identical, oblivious, and operate in Look-Compute-Move cycles under a synchronous scheduler. The robots are endowed with visibility sensors and lights. Each robot has a visibility range of 1, i.e., it can see the vertices and robots within distance 1 (neighbors). Each robot is equipped with a light that can assume colors from a constant-sized set. The light is visible to the robots within distance 1. The robots start from arbitrary positions, but no two robots start at the same vertex. We present two distributed algorithms for the MIS Filling problem. The first algorithm works for robots having persistent memory of one bit, and uses $$O(\\log \\Delta )$$ O ( log \u0394 ) colors, where $$\\Delta $$ \u0394 is the maximum degree of the graph. The second algorithm works for oblivious robots (no persistent memory) and uses a constant number of colors. Both algorithms run in O ( D ) rounds, where D is the diameter of the graph."
     },
     {
       "authors": [
@@ -581,7 +599,8 @@
       "date": "Oct 2-4, 2023",
       "doi": "https://doi.org/10.1007/978-3-031-44274-2_31",
       "type": "conference",
-      "year": 2023
+      "year": 2023,
+      "abstract": "Dispersion is the problem of scattering n mobile robots initially placed arbitrarily at some nodes of an n -node graph G=(V,E) such that finally, each node of V is occupied by exactly one robot. We study the dispersion problem in the presence of Byzantine faulty robots. The faulty robots can behave arbitrarily to prevent the non-faulty robots from achieving the goal. We assume that the total number of robots is n and at most f < n/2 robots are faulty. The robots are identical, operate in synchronous Look-Compute-Move cycles, and have limited visibility (can only see their immediate neighbours). The goal is to design a distributed algorithm that ensures that eventually, each node is occupied by exactly one non-faulty robot, despite the presence of faults. We present a randomized algorithm that achieves dispersion with high probability in polynomial time for any connected graph, tolerating f < n/2 Byzantine faults. This improves upon previous work that required n>2f and provides a solution for a wider range of fault scenarios."
     },
     {
       "authors": [
@@ -592,7 +611,8 @@
       "doi": "https://doi.org/10.48550/arXiv.2310.01151",
       "arxiv": "https://arxiv.org/abs/2310.01151",
       "type": "preprint",
-      "year": 2023
+      "year": 2023,
+      "abstract": "A team of k identical deterministic finite automata, arbitrarily positioned on the nodes of an n-node anonymous graph G, have to compute a function f(G) whose value depends on the entire graph G. Automata operate in synchronous rounds. In each round, an automaton reads the states of automata at its node and at adjacent nodes, and based on this information and its own state, it updates its state and can send a message (its state) to each neighbor. The computation terminates when all automata reach a special halting state. The value of the function f(G) is determined by the halting state of a designated automaton (say, the one with the smallest ID, assuming automata have unique IDs for tie-breaking, though they are otherwise identical). We study which graph functions can be computed by such teams of automata and the minimum number of automata k required. We show that any function computable in polynomial time can be computed by a team of O(n) automata. We investigate the power of smaller teams. For example, we show that determining if a graph is bipartite requires \u03a9(n) automata in the worst case. We also consider the computation of functions like the diameter or checking connectivity, analyzing the trade-offs between the number of automata and the complexity of the automata (number of states)."
     },
     {
       "authors": [
@@ -610,7 +630,8 @@
       "doi": "https://doi.org/10.1145/3631461.3631543",
       "slides": "https://www.dropbox.com/scl/fi/ue3s5jczbpqxnrkpkgqeq/icdcn24.pptx?rlkey=av9cwmc0f9z7r54qkcqlw5mfl&dl=0",
       "type": "conference",
-      "year": 2024
+      "year": 2024,
+      "abstract": "We study the problem of forming a Maximal Independent Set (MIS) configuration using mobile robots in an anonymous graph G = (V, E). Initially, n robots are arbitrarily placed on the n nodes of the graph, with at most one robot per node. The robots are autonomous, identical, operate in Look-Compute-Move (LCM) cycles under a synchronous scheduler (SYNC). They are oblivious, meaning they have no memory of past actions. Each robot can observe the positions of robots within its visibility range. The goal is for the robots to reach a configuration where the set of occupied nodes forms an MIS of G. We consider two visibility models: robots with visibility range 1 (can see neighbors) and robots with global visibility (can see all other robots). For robots with visibility range 1, we present a deterministic algorithm that solves the MIS formation problem in O(D) rounds, where D is the diameter of the graph. For robots with global visibility, we provide an algorithm that achieves MIS formation in O(log n) rounds. Our algorithms work without requiring robots to have unique IDs or access to any global information like the graph size or structure, relying solely on local interactions or global snapshots."
     },
     {
       "authors": [
@@ -625,7 +646,8 @@
       "doi": "https://doi.org/10.1109/IPDPS57955.2024.00092",
       "date": "May 27-30, 2024",
       "type": "conference",
-      "year": 2024
+      "year": 2024,
+      "abstract": "We study the uniform circle formation problem for n asynchronous, anonymous, oblivious mobile robots initially positioned arbitrarily on a 2D plane. The goal is for the robots to arrange themselves equally spaced on the boundary of a circle whose center and radius are not predetermined. Robots operate in standard Look-Compute-Move cycles. We consider luminous robots, which possess lights that can assume colors from a given range. The color is visible to other robots and can be used for coordination. It is known that uniform circle formation is impossible for asynchronous oblivious robots without lights. We investigate the trade-off between the number of colors available to the robots and the time complexity (measured in epochs) to achieve uniform circle formation. We present algorithms that demonstrate this trade-off: using more colors allows for faster convergence. Specifically, we show that with O(log n) colors, uniform circle formation can be achieved in a polylogarithmic number of epochs. Conversely, if only a constant number of colors are available, the time complexity increases. Our results contribute to understanding the power of persistent memory (modeled by lights) in overcoming impossibility results in asynchronous systems."
     },
     {
       "authors": [
@@ -642,7 +664,8 @@
       "doi": "https://doi.org/10.1007/978-3-031-63021-7_36",
       "type": "conference",
       "date": "Jul 1-3, 2024",
-      "year": 2024
+      "year": 2024,
+      "abstract": "We study the k -Grouping problem for a swarm of n anonymous, oblivious, and silent mobile robots operating in the Euclidean plane under the synchronous Look-Compute-Move model. Initially, the robots are at distinct locations. The goal is to reach a configuration where the robots form m = \\lfloor n/k \\rfloor groups of exactly k robots each, plus possibly one group of n \\pmod k robots if k does not divide n . Robots within a group must occupy the same location (the exact point convergence). The locations of the groups are not predetermined. Since robots are silent and oblivious, they rely solely on the observed positions of other robots in their Look phase to decide their Move. The complexity of an algorithm is often measured by its size, which relates to the number of distinct configurations it needs to recognize and act upon. We investigate the minimum algorithm size required to solve k -Grouping. We establish lower bounds on the algorithm size based on the symmetries and the information available to the robots. We then present algorithms for k -Grouping and analyze their size, showing trade-offs between the value of k and the required algorithm complexity. Our focus is on understanding the inherent limitations imposed by the weak capabilities (anonymity, obliviousness, silence) on the complexity of coordination tasks."
     },
     {
       "authors": [
@@ -660,7 +683,8 @@
       "date": "January 4-7, 2020",
       "award": "Best poster award",
       "type": "poster",
-      "year": 2020
+      "year": 2020,
+      "abstract": "We study collaborative strategies for evacuating mobile robots from a potentially hazardous environment, modeled as a geometric domain (e.g., a disk or polygon). The environment contains one or more exits at unknown locations on its boundary. Robots start at known or unknown initial positions within the domain. Some robots might be faulty (e.g., crashed or Byzantine). The goal is for the non-faulty robots to coordinate their movements to ensure that all (or a maximum number of) non-faulty robots reach an exit as quickly as possible. We consider different models based on robot capabilities (speed, communication range, memory, knowledge of the environment) and fault types. Key problems addressed include: 1) Evacuating multiple robots starting from the same point. 2) Searching for and evacuating a crashed robot. 3) Evacuating robots scattered in the environment. We aim to design distributed algorithms that minimize the evacuation time, defined either as the time the last robot exits or the average exit time. We focus on competitive analysis, comparing the performance of our algorithms against an optimal offline strategy. This research explores fundamental algorithmic challenges in multi-robot coordination, path planning, and fault tolerance in geometric settings."
     },
     {
       "authors": [
@@ -673,7 +697,8 @@
       "title": "On maximal k-edge-connected subgraphs of undirected graphs.",
       "arxiv": "https://arxiv.org/abs/2211.06521",
       "type": "preprint",
-      "year": 2022
+      "year": 2022,
+      "abstract": "We study structural and algorithmic properties related to maximal k-edge-connected subgraphs in an undirected graph G = (V, E). For a given integer k > 0, a subgraph H is k-edge-connected if the minimum number of edges whose removal disconnects H is at least k. A k-edge-connected subgraph H is maximal if no other k-edge-connected subgraph of G properly contains H. We investigate the relationship between maximal k-edge-connected subgraphs for different values of k. We present efficient algorithms for finding all maximal k-edge-connected subgraphs of a given graph G. Our approach builds upon classic algorithms for computing edge connectivity and graph decomposition techniques. We analyze the time complexity of our algorithms and discuss their applications in network analysis, clustering, and fault-tolerant network design, where identifying highly connected components is crucial."
     },
     {
       "authors": [
@@ -686,43 +711,46 @@
       "arxiv": "https://arxiv.org/abs/2405.06617",
       "type": "conference",
       "date": "Oct 29-31, 2024",
-      "conference":{
+      "conference": {
         "full": "International Symposium on Distributed Computing",
         "short": "DISC"
       },
-      "year": 2024
+      "year": 2024,
+      "abstract": "We study the uniform circle formation (UCF) problem where n >= 3 autonomous mobile robots, initially arbitrarily positioned in the plane, have to arrange themselves equally spaced on the boundary of a circle not fixed in advance. Robots are anonymous, asynchronous, oblivious, and luminous: they execute Look-Compute-Move cycles asynchronously, cannot be distinguished by their appearance, have no memory of past actions, but possess a light that can assume colors from a constant-sized set C. The light color is visible to other robots and persists between cycles. It is known that UCF is impossible for such robots without lights or with only 1 color. Prior work showed UCF solvability with O(n) colors in O(n) epochs and with O(log n) colors in poly(n) epochs. We present an algorithm that solves UCF using O(1) colors (specifically, 4 colors) in O(n^2) epochs. This result is optimal in terms of colors, as UCF requires at least 2 colors. Our algorithm relies on carefully managing robot states using the constant number of colors to break symmetries and coordinate movements towards the final uniform circular configuration."
     },
     {
-      "authors":[
+      "authors": [
         "Paola Flocchini",
         "Debasish Pattanayak",
         "Francesco Piselli",
         "Nicola Santoro",
         "Yukiko Yamauchi"
       ],
-      "title":"Asynchronous Separation of Unconscious Colored Robots",
-      "type":"conference",
-      "doi":"https://doi.org/10.1109/CANDARW64572.2024.00037",
-      "date":"Nov 26-29, 2024",
-      "conference":{
+      "title": "Asynchronous Separation of Unconscious Colored Robots",
+      "type": "conference",
+      "doi": "https://doi.org/10.1109/CANDARW64572.2024.00037",
+      "date": "Nov 26-29, 2024",
+      "conference": {
         "full": "16th International Workshop on Parallel and Distributed Algorithms and Applications",
-        "short":"CANDARW:PDAA"
+        "short": "CANDARW:PDAA"
       },
-      "year": 2024
+      "year": 2024,
+      "abstract": "We investigate the Separation problem for mobile robots operating under the asynchronous (ASYNC) model. In this problem, n robots, initially located at the same point (origin), must reach a configuration where they all occupy distinct locations. We consider robots that are colored but unconscious: they have externally visible colors from a set C, but they cannot sense their own color, nor the colors of other robots at their same location. They are anonymous, oblivious (memoryless), and can only see the locations of other robots, not their colors (unless they are at different locations). The challenge lies in breaking the initial symmetry without relying on internal state or unique identifiers, using only the observable positions and the implicit information from the externally visible colors. We establish conditions on the number of colors and the distribution of colors among robots (the color configuration) under which asynchronous separation is possible. We provide algorithms for separation under feasible color configurations and prove impossibility results for others. This work explores the power and limitations of minimal robot capabilities, specifically externally visible attributes, in achieving fundamental coordination tasks in asynchronous distributed systems."
     },
     {
-      "authors":[
+      "authors": [
         "Paola Flocchini",
         "Alfredo Navarra",
         "Debasish Pattanayak",
         "Francesco Piselli",
         "Nicola Santoro"
       ],
-      "title":"Oblivious Robots Under Sequential Schedulers: Universal Pattern Formation",
-      "type":"preprint",
-      "arxiv":"https://arxiv.org/abs/2412.10733",
-      "doi":"https://arxiv.org/abs/2412.10733",
-      "year": 2024
+      "title": "Oblivious Robots Under Sequential Schedulers: Universal Pattern Formation",
+      "type": "preprint",
+      "arxiv": "https://arxiv.org/abs/2412.10733",
+      "doi": "https://arxiv.org/abs/2412.10733",
+      "year": 2024,
+      "abstract": "We investigate the capabilities of anonymous, oblivious mobile robots operating under weak schedulers, specifically focusing on sequential activation schedulers (SEQ). Under SEQ, only one robot is activated in each time step to perform its Look-Compute-Move cycle, chosen arbitrarily by the adversary. This contrasts with the more powerful fully synchronous (FSYNC) or semi-synchronous (SSYNC) models. We study the fundamental problem of Universal Pattern Formation (UPF), where robots must form any arbitrary pattern given as input. Robots are initially positioned arbitrarily. We consider robots that are silent (cannot communicate) but potentially possess externally visible lights. It is known that even simple tasks like convergence are impossible for oblivious robots under ASYNC. We explore whether the restricted nature of SEQ allows oblivious robots to achieve complex tasks like UPF. We show that oblivious robots, even without lights, can achieve UPF under the SEQ scheduler, provided they start from distinct positions. Our algorithm relies on careful local geometric computations and movement strategies that exploit the sequential nature of activations to deterministically reach the target pattern. This result highlights the surprising computational power of oblivious robots under sequential schedulers, contrasting sharply with their limitations under more concurrent models."
     }
   ],
   "talks": [
@@ -914,7 +942,7 @@
     "Giuseppe F. Italiano": {
       "url": "https://www.luiss.edu/faculty/350980"
     },
-    "Andrzej Pelc" : {
+    "Andrzej Pelc": {
       "url": "http://w3.uqo.ca/pelc/main.html"
     },
     "Paola Flocchini": {
@@ -927,7 +955,7 @@
       "url": "https://scholar.google.com/citations?user=su_QHVwAAAAJ&hl=en&oi=ao"
     },
     "Loukas Georgiadis": {
-      "url": "https://sites.google.com/view/loukastgeorgiadis/αρχική-σελίδα"
+      "url": "https://sites.google.com/view/loukastgeorgiadis/\u03b1\u03c1\u03c7\u03b9\u03ba\u03ae-\u03c3\u03b5\u03bb\u03af\u03b4\u03b1"
     },
     "Evangelos Kosinas": {
       "url": "#"
@@ -938,7 +966,7 @@
     "Yukiko Yamauchi": {
       "url": "http://tcs.inf.kyushu-u.ac.jp/~yamauchi/"
     },
-    "Francesco Piselli":{
+    "Francesco Piselli": {
       "url": "https://scholar.google.com/citations?user=zdFY4eoAAAAJ"
     }
   }
