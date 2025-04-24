@@ -178,8 +178,7 @@ function setupHeader(aboutMe) {
         <a href="${icon.href}" class="p-4" title="${icon.title}">
           <img src="${icon.src}" alt="${icon.alt}" class="h-8 opacity-80 hover:opacity-100 transition-opacity duration-200 bg-white dark:bg-gray-800 rounded-full overflow-hidden" style="object-fit: cover;">
         </a>
-      `
-            : ""
+      `: ""
         )
         .join("")}
     </div>
@@ -189,50 +188,30 @@ function setupHeader(aboutMe) {
 }
 
 function setupNavbar(sections) {
-  const navbarContainer = document.getElementById("navbar");
-  if (!navbarContainer) return; // Safety check
+  const navbar = document.getElementById("navbar");
+  navbar.innerHTML = "";                 // clear any previous items
 
-  // Clear any existing content
-  navbarContainer.innerHTML = "";
+  const highLevel = ["research","publications","talks","teaching"];
 
-  const navbarList = document.createElement("ul");
-  navbarList.className = "text-xs flex flex-wrap justify-end space-x-2 p-2";
-
-  const highLevelSections = ["research", "publications", "talks", "teaching"];
-
-  // Add viz link first if we're on the index page
-  navbarList.innerHTML = `
-    <li class="navbar-item">
-                    <a href="viz.html" class="text-gray-100 hover:underline px-2 py-1 rounded transition-colors duration-200 hover:bg-blue-700 dark:hover:bg-blue-900 text-xs flex flex-wrap justify-end space-x-2 p-2">
-                        Graph Viz
-                    </a>
-                </li> 
-                <li class="navbar-item">
-                    <a href="LCMmodel/" class="text-gray-100 hover:underline px-2 py-1 rounded transition-colors duration-200 hover:bg-blue-700 dark:hover:bg-blue-900 text-xs flex flex-wrap justify-end space-x-2 p-2">
-                        LCMmodel
-                    </a>
-                </li>
-  `;
-
-  // Add section links
-  navbarList.innerHTML += highLevelSections
-    .filter((section) => sections.includes(section))
-    .map(
-      (section) => `
-      <li class="navbar-item">
-        <a href="#${section}" class="text-gray-100 hover:underline px-2 py-1 rounded transition-colors duration-200 hover:bg-blue-700 dark:hover:bg-blue-900">
-          ${
-            section.replace("_", " ").charAt(0).toUpperCase() +
-            section.replace("_", " ").slice(1)
-          }
-        </a>
-      </li>
-    `
-    )
-    .join("");
-
-  navbarContainer.appendChild(navbarList);
+  // Add the fixed links first
+  const fixed = [
+    {href:"viz.html",     label:"CCMmodel"},
+    {href:"LCMmodel/",    label:"LCMmodel"},
+  ];
+  [...fixed,
+   ...highLevel.filter(s => sections.includes(s))
+               .map(s => ({href:"#"+s, label: s.replace("_"," ").replace(/^\w/,c=>c.toUpperCase())}))
+  ].forEach(link => {
+      const li = document.createElement("li");
+      li.className = "flex items-center";
+      li.innerHTML =
+        `<a href="${link.href}"
+            class="px-2 py-1 rounded hover:bg-blue-700 dark:hover:bg-blue-900
+                   text-gray-100 transition-colors duration-200">${link.label}</a>`;
+      navbar.appendChild(li);
+  });
 }
+
 
 // Setup navbar for viz page
 function setupVizNavbar() {
@@ -467,7 +446,7 @@ function groupPublicationsByYear(publications) {
     .map(([year, pubs]) => ({ year: year, publications: pubs }));
 }
 
-function displayAsCard(item, groupBy, colors) {
+function displayAsCard(item, groupBy, colors, cardIndex, groupIndex) {
   const marginClass =
     item.title.length <= 50
       ? "mb-20"
@@ -492,8 +471,10 @@ function displayAsCard(item, groupBy, colors) {
   const cardColorClass =
     colors[item.type] || "bg-gray-100 dark:bg-gray-900 border-gray-600"; // Default color if type is not found
 
+  // Add a data attribute for identifying the card
   return `
-    <div class="publication-card p-4 shadow-lg rounded-lg border-l-4 w-full sm:w-56 ${cardColorClass} flex flex-col justify-between relative overflow-hidden transition-colors duration-200">
+    <div class="publication-card p-4 shadow-lg rounded-lg border-l-4 w-full sm:w-56 ${cardColorClass} flex flex-col justify-between relative overflow-hidden transition-colors duration-200 cursor-pointer"
+         data-card-index="${cardIndex}" data-group-index="${groupIndex}">
       ${toAppearBanner}
       <p class="card-title text-md font-bold text-black dark:text-white ${marginClass}">${titleContent}</p>
       <p class="card-authors text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">${formatAuthors(
@@ -503,6 +484,20 @@ function displayAsCard(item, groupBy, colors) {
         ${journalOrConference} ${groupBy === "type" ? `(${item.year})` : ""}
       </p>
       ${arxivBottomBanner}
+    </div>
+  `;
+}
+
+// Helper to render the abstract popout
+function renderAbstractPopout(item) {
+  if (!item.abstract) return "";
+  return `
+    <div class="publication-abstract-popout w-full bg-white dark:bg-gray-900 border-t-4 border-blue-600 p-6 my-2 shadow-lg rounded-lg z-20 transition-colors duration-200">
+      <div class="flex justify-between items-center mb-2">
+        <span class="font-bold text-lg text-black dark:text-white">Abstract</span>
+        <button class="close-abstract-popout text-gray-600 dark:text-gray-300 hover:text-red-600 text-xl font-bold px-2">&times;</button>
+      </div>
+      <div class="text-gray-800 dark:text-gray-200 text-justify">${item.abstract}</div>
     </div>
   `;
 }
@@ -522,10 +517,11 @@ function displayAllPublications(publications, groupBy = "year") {
     groupBy === "type" ? groupPublicationsByType : groupPublicationsByYear;
   const groupedPublications = groupFunction(publications);
 
+  // Render cards with data attributes for event delegation
   container.innerHTML = groupedPublications
     .map(
-      (group) => `
-      <div class="publication-group w-full">
+      (group, groupIndex) => `
+      <div class="publication-group w-full" data-group-index="${groupIndex}">
         <h3 class="group-title text-xl font-bold mb-4 dark:text-white transition-colors duration-200">${
           groupBy === "type"
             ? group.type.charAt(0).toUpperCase() +
@@ -535,13 +531,82 @@ function displayAllPublications(publications, groupBy = "year") {
         }</h3>
         <div class="publication-cards flex flex-wrap gap-2">  
           ${group.publications
-            .map((item) => displayAsCard(item, groupBy, colors))
+            .map((item, cardIndex) => displayAsCard(item, groupBy, colors, cardIndex, groupIndex))
             .join("")}
         </div>
       </div>
     `
     )
     .join("");
+
+  // Remove any existing abstract popout
+  function removeAbstractPopout() {
+    const existing = container.querySelector(".publication-abstract-popout");
+    if (existing) existing.remove();
+    openAbstract = { groupIndex: null, cardIndex: null }; // <-- Reset tracker here
+  }
+
+  // Track which abstract is open
+  let openAbstract = { groupIndex: null, cardIndex: null };
+
+  container.onclick = function (e) {
+    // If close button clicked, remove popout and stop
+    if (e.target.classList.contains("close-abstract-popout")) {
+      removeAbstractPopout();
+      return;
+    }
+
+    // Find the card element
+    let card = e.target;
+    while (card && !card.classList.contains("publication-card")) {
+      card = card.parentElement;
+    }
+    if (!card) return;
+
+    // Get indices
+    const cardIndex = parseInt(card.getAttribute("data-card-index"));
+    const groupIndex = parseInt(card.getAttribute("data-group-index"));
+
+    // Find the group and publication
+    const group = groupedPublications[groupIndex];
+    if (!group) return;
+    const pub = group.publications[cardIndex];
+    if (!pub || !pub.abstract) return;
+
+    // If the same card is clicked again, close the abstract
+    if (
+      openAbstract.groupIndex === groupIndex &&
+      openAbstract.cardIndex === cardIndex
+    ) {
+      removeAbstractPopout();
+      return;
+    }
+
+    // Remove any existing popout
+    removeAbstractPopout();
+
+    // Insert abstract popout after the card
+    const cardsContainer = card.parentElement;
+    // Find all cards in this group
+    const cards = Array.from(cardsContainer.getElementsByClassName("publication-card"));
+    // Insert after the clicked card
+    const abstractDiv = document.createElement("div");
+    abstractDiv.innerHTML = renderAbstractPopout(pub);
+    // Make sure it spans the full width
+    abstractDiv.firstElementChild.style.gridColumn = "1 / -1";
+    // Insert after the card
+    if (card.nextSibling) {
+      cardsContainer.insertBefore(abstractDiv.firstElementChild, card.nextSibling);
+    } else {
+      cardsContainer.appendChild(abstractDiv.firstElementChild);
+    }
+
+    // Close button handler
+    abstractDiv.firstElementChild.querySelector(".close-abstract-popout").onclick = removeAbstractPopout;
+
+    // Update openAbstract tracker
+    openAbstract = { groupIndex, cardIndex };
+  };
 }
 
 let commonAuthors = {};
