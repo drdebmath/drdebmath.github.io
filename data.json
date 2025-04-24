@@ -755,6 +755,18 @@
   ],
   "talks": [
     {
+      "title": "Pattern Formation of Robot Swarms: Points, Lines and Circles",
+      "event": "Online Workshop on Distributed Algorithms For Swarm Robots, Jadavpur University",
+      "date": "April 24 2025",
+      "links": {
+        "slides": "https://www.dropbox.com/scl/fi/j4en9zgb1rqqmecv25zsj/Jadavpur.pptx?rlkey=98018mfzhqqk534jexmolibvi&dl=0"
+      },
+      "Organizer": {
+        "name": "Dr. Sruti Gan Choudhuri",
+        "url": "https://scholar.google.ca/citations?user=8aJWdl0AAAAJ&hl=en"
+      }
+    },
+    {
       "title": "A Demo of GPT-3",
       "event": "LUISS School of Journalism",
       "links": {
