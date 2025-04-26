@@ -195,7 +195,7 @@ function setupNavbar(sections) {
 
   // Add the fixed links first
   const fixed = [
-    {href:"viz.html",     label:"CCMmodel"},
+    {href:"CCMModel/",     label:"CCMmodel"},
     {href:"LCMmodel/",    label:"LCMmodel"},
   ];
   [...fixed,
