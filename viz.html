@@ -1,98 +1,403 @@
 <!DOCTYPE html>
-<html lang="en" class="light">
-
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Graph Visualization Tool - Debasish Pattanayak</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        dark: {
-                            bg: '#1a202c',
-                            text: '#e2e8f0',
-                        },
-                    },
-                },
-            },
-        }
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.23.0/cytoscape.min.js"></script>
-    <script src="script.js"></script>
+<title>Cytoscape.js Interactive Graph Editor</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/cytoscape/dist/cytoscape.min.js"></script>
+<style>
+  /* Custom styles for better visual appeal and to ensure canvas responsiveness */
+  body {
+    font-family: 'Inter', sans-serif; /* Using Inter font as per guidelines */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #f7fafc; /* Light gray background */
+  }
+  #cy {
+    width: 100%;
+    /* Calculate height to fill remaining space after controls */
+    height: calc(100vh - 160px); /* Adjusted based on increased controls height */
+    border: 1px solid #cbd5e0; /* Tailwind gray-300 */
+    display: block; /* Ensure it behaves as a block element */
+  }
+  .controls {
+    padding: 1rem; /* Tailwind p-4 */
+    background: #ffffff; /* White background for controls */
+    border-bottom: 1px solid #e2e8f0; /* Tailwind gray-200 */
+    display: flex;
+    flex-wrap: wrap; /* Allow controls to wrap on smaller screens */
+    gap: 0.75rem; /* Tailwind gap-3 */
+    align-items: center;
+  }
+  /* Styling for buttons and inputs using Tailwind-like principles */
+  .controls button, .controls select, .controls input[type="color"], .controls label {
+    padding: 0.5rem 0.75rem; /* Tailwind px-3 py-2 */
+    border-radius: 0.375rem; /* Tailwind rounded-md */
+    border: 1px solid #cbd5e0; /* Tailwind border-gray-300 */
+    cursor: pointer;
+    font-size: 0.875rem; /* Tailwind text-sm */
+    transition: all 0.2s ease-in-out;
+  }
+  .controls button:hover, .controls select:hover, .controls input[type="color"]:hover {
+    border-color: #a0aec0; /* Tailwind border-gray-400 */
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); /* Subtle focus ring */
+  }
+  .controls .active-mode {
+    background-color: #3b82f6; /* Tailwind bg-blue-500 */
+    color: white;
+    border-color: #3b82f6; /* Tailwind border-blue-500 */
+  }
+  .controls .active-mode.delete { /* Specific style for active delete button */
+    background-color: #ef4444; /* Tailwind bg-red-500 */
+    border-color: #ef4444; /* Tailwind border-red-500 */
+  }
+  .controls .active-mode.delete:hover {
+    background-color: #dc2626; /* Tailwind bg-red-600 */
+  }
+  .controls .active-mode:hover {
+    background-color: #2563eb; /* Tailwind bg-blue-600 for non-delete active buttons */
+  }
+  .info-bar {
+    padding: 0.5rem 1rem; /* Tailwind px-4 py-2 */
+    font-size: 0.875rem; /* Tailwind text-sm */
+    color: #4a5568; /* Tailwind text-gray-700 */
+    background-color: #f0f4f8; /* Lighter info bar background */
+    border-bottom: 1px solid #e2e8f0; /* Tailwind gray-200 */
+  }
+  /* Ensure color picker has a decent size */
+  .controls input[type="color"] {
+      min-width: 40px;
+      height: 38px; /* Match button height */
+      padding: 2px; /* Minimal padding for color swatch */
+  }
+  /* Grouping controls for better organization */
+  .control-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; /* Tailwind gap-2 */
+    padding: 0.5rem;
+    border: 1px solid #e2e8f0; /* Tailwind gray-200 */
+    border-radius: 0.375rem; /* Tailwind rounded-md */
+    background-color: #f9fafb; /* Slightly off-white background for groups */
+  }
+  .control-group strong {
+    font-weight: 600; /* Tailwind font-semibold */
+    margin-right: 0.5rem; /* Tailwind mr-2 */
+    font-size: 0.875rem; /* Tailwind text-sm */
+  }
+</style>
 </head>
 
-<body class="bg-gray-100 text-gray-900 dark:bg-dark-bg dark:text-dark-text transition-colors duration-200 items-center justify-center min-h-screen">
-    <nav class="sticky top-0 z-50 bg-blue-600 dark:bg-blue-800 flex justify-center items-center">
-        <div class="w-full max-w-screen-md flex justify-between items-center">
-            <ul id="navbar" class="flex space-x-4">
-                <li class="navbar-item">
-                    <a href="index.html" class="text-gray-100 hover:underline px-2 py-1 rounded transition-colors duration-200 hover:bg-blue-700 dark:hover:bg-blue-900 text-xs">
-                        Home
-                    </a>
-                </li>
-            </ul>
-            <button id="darkModeToggle" class="text-xs p-1 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center focus:outline-none ml-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-yellow-500 dark:text-white" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z" />
-                </svg>
-            </button>
-        </div>
-    </nav>
-    <header class="bg-blue-600 dark:bg-blue-800 text-white p-4">
-        <div class="container mx-auto max-w-screen-md">
-            <h1 class="text-3xl font-bold">Graph Visualization Tool</h1>
-            <p class="text-md">Interactive tool for exploring different graph structures and algorithms</p>
-        </div>
-    </header>
+<body class="bg-gray-100">
 
-    <main class="container mx-auto p-6 max-w-screen-md">
-        <div class="w-full">
-            <!-- Placeholder for the control panel -->
-            <div id="control-panel"></div>
-            <div id="cy" class="w-full h-[700px] border border-gray-300 mt-5 mb-3"></div>
-    
-            <!-- Documentation Section -->
-            <div class="p-4 border border-gray-300 rounded-md bg-gray-50 mb-5 dark:bg-gray-700 dark:border-gray-600">
-                <h3 class="font-semibold text-lg mb-3">Documentation</h3>
-                <p class="text-sm leading-relaxed dark:text-gray-300">
-                    This visualization tool allows you to explore different graph structures and algorithms with interactive controls.
-                    You can select from various graph types including Random Graph, Tree, Rectangular Grid, Triangular Grid, Hexagonal Grid,
-                    Ring, Butterfly, Hypercube Graph, and Bipartite Graph. Each type creates a different network topology for visualization.
-                    <br><br>
-                    The tool visualizes graph traversal using Depth-First Search (DFS) and shows port numbers at each node.
-                    Port numbers are used to determine which edge a node should follow next, which is common in distributed algorithms.
-                    The current traversal edge is highlighted in orange, while visited edges are colored green and back edges are colored red.
-                    <br><br>
-                    <strong>Controls:</strong> Use the Graph Type dropdown to select different structures. Adjust the Number of Nodes slider to change graph size.
-                    Select either Depth-First Search (DFS) or Breadth-First Search (BFS) from the Traversal Algorithm dropdown.
-                    Click Start Traversal to automatically animate the traversal, or use Next/Previous Step buttons to navigate manually.
-                    Toggle Manual Mode to click on edges directly, and use Undo to revert actions.
-                </p>
-            </div>
-        </div>
-    </main>
-<!-- <script src="controlPanel.js"></script> -->
-<script src="vizscript.js"></script>
+<div class="controls">
+  <div class="control-group">
+    <strong>Mode:</strong>
+    <button id="nodeModeBtn">Create Node</button>
+    <button id="edgeModeBtn">Create Edge</button>
+    <button id="colorModeBtn">Color Element</button>
+    <button id="deleteModeBtn">Delete Element</button> </div>
+  <div class="control-group">
+    <label for="colorPicker" class="font-medium">Color:</label>
+    <input type="color" id="colorPicker" value="#60a5fa"> </div>
+  <div class="control-group">
+    <strong>Port Numbers:</strong>
+    <button id="assignPortsBtn">Assign Port #</button>
+    <button id="randomizePortsBtn">Randomize Port #</button>
+  </div>
+   <div class="control-group">
+    <strong>Edge Style:</strong>
+    <button id="thickEdgeBtn">Thick</button>
+    <button id="dashedEdgeBtn">Dashed</button>
+    <button id="dottedEdgeBtn">Dotted</button>
+    <button id="solidEdgeBtn">Solid/Reset</button>
+  </div>
+</div>
+<div class="info-bar">
+  Current Mode: <span id="currentModeInfo" class="font-semibold">Create Node</span> | Selected: <span id="selectedElementInfo" class="font-semibold">None</span>
+</div>
 
-    <!-- Add dark mode toggle and readme functionality -->
-    <script>
-        // Dark mode toggle functionality
-        document.getElementById('darkModeToggle').addEventListener('click', function() {
-            document.documentElement.classList.toggle('dark');
-            const isDark = document.documentElement.classList.contains('dark');
-            localStorage.setItem('darkMode', isDark ? 'dark' : 'light');
+<div id="cy"></div>
+
+<script>
+  // Wait for the DOM to be fully loaded before initializing Cytoscape
+  document.addEventListener('DOMContentLoaded', function() {
+    // --- State Variables ---
+    let currentMode = 'node'; // Possible modes: 'node', 'edge', 'color', 'delete'
+    let firstNodeForEdge = null; // Stores the first node selected when creating an edge
+    let selectedElement = null; // Stores the currently selected graph element (node or edge)
+    let nodeIdCounter = 0; // Counter for generating unique node IDs
+    let edgeIdCounter = 0; // Counter for generating unique edge IDs
+
+    // --- Cytoscape Instance Initialization ---
+    const cy = cytoscape({
+      container: document.getElementById('cy'), // The HTML element to render the graph in
+      // Basic styling for nodes and edges
+      style: [
+        {
+          selector: 'node', // Style for all nodes
+          style: {
+            'background-color': '#60a5fa', // Default node color (Tailwind blue-400)
+            'label': 'data(id)', // Display the node's ID as its label
+            'width': '40px', // Node width
+            'height': '40px', // Node height
+            'font-size': '12px', // Label font size
+            'text-valign': 'center', // Vertical alignment of label
+            'text-halign': 'center', // Horizontal alignment of label
+            'color': 'white', // Label text color
+            'text-outline-width': 2, // Width of the outline around the label text
+            'text-outline-color': '#60a5fa', // Color of the label text outline (matches background)
+            'border-width': 2, // Node border width
+            'border-color': '#3b82f6' // Node border color (Tailwind blue-500)
+          }
+        },
+        {
+          selector: 'edge', // Style for all edges
+          style: {
+            'width': 3, // Edge thickness
+            'line-color': '#9ca3af', // Edge color (Tailwind gray-400)
+            'target-arrow-color': '#9ca3af', // Arrowhead color
+            'target-arrow-shape': 'triangle', // Shape of the arrowhead
+            'curve-style': 'bezier', // Use bezier curves for edges
+            'source-label': 'data(sourceLabel)', // Label at the source end of the edge (for port numbers)
+            'target-label': 'data(targetLabel)', // Label at the target end of the edge (for port numbers)
+            'font-size': '10px', // Font size for edge labels
+            'color': '#1f2937', // Label text color (Tailwind gray-800)
+            'text-rotation': 'autorotate', // Automatically rotate labels to align with edges
+            'source-text-offset': '25px', // Offset for the source label from the node
+            'target-text-offset': '25px', // Offset for the target label from the node
+            'text-background-opacity': 1, // Opacity of the label background
+            'text-background-color': '#ffffff', // Background color for labels (white)
+            'text-background-padding': '3px', // Padding around the label text
+            'text-background-shape': 'roundrectangle' // Shape of the label background
+          }
+        },
+        {
+            selector: '.selected', // Style for selected elements
+            style: {
+                'border-width': 4,
+                'border-color': '#ef4444', // Highlight color (Tailwind red-500) for selection
+                'line-color': '#ef4444', // For selected edges
+                'target-arrow-color': '#ef4444', // For selected edges
+                'source-arrow-color': '#ef4444' // For selected edges (if using source arrows)
+            }
+        },
+        {
+            selector: '.thick', // Class for thick edges
+            style: { 'width': 8 }
+        },
+        {
+            selector: '.dashed', // Class for dashed edges
+            style: { 'line-style': 'dashed' }
+        },
+        {
+            selector: '.dotted', // Class for dotted edges
+            style: { 'line-style': 'dotted' }
+        }
+      ],
+      layout: {
+        name: 'preset'
+      },
+      zoom: 1, minZoom: 0.2, maxZoom: 3,
+      zoomingEnabled: true, userZoomingEnabled: true,
+      panningEnabled: true, userPanningEnabled: true,
+      boxSelectionEnabled: false, autoungrabify: false, autounselectify: false
+    });
+
+    // --- DOM Element References ---
+    const nodeModeBtn = document.getElementById('nodeModeBtn');
+    const edgeModeBtn = document.getElementById('edgeModeBtn');
+    const colorModeBtn = document.getElementById('colorModeBtn');
+    const deleteModeBtn = document.getElementById('deleteModeBtn'); // New delete button
+    const colorPicker = document.getElementById('colorPicker');
+    const assignPortsBtn = document.getElementById('assignPortsBtn');
+    const randomizePortsBtn = document.getElementById('randomizePortsBtn');
+    const thickEdgeBtn = document.getElementById('thickEdgeBtn');
+    const dashedEdgeBtn = document.getElementById('dashedEdgeBtn');
+    const dottedEdgeBtn = document.getElementById('dottedEdgeBtn');
+    const solidEdgeBtn = document.getElementById('solidEdgeBtn');
+    const currentModeInfo = document.getElementById('currentModeInfo');
+    const selectedElementInfo = document.getElementById('selectedElementInfo');
+
+    // --- UI Update Functions ---
+    function updateModeInfo() {
+        currentModeInfo.textContent = currentMode.charAt(0).toUpperCase() + currentMode.slice(1).replace('Mode', ' Mode');
+        // Toggle 'active-mode' class for buttons
+        [nodeModeBtn, edgeModeBtn, colorModeBtn, deleteModeBtn].forEach(btn => {
+            btn.classList.remove('active-mode', 'delete'); // Remove both base and specific active classes
         });
 
-        // Check for saved preference
-        if (localStorage.getItem('darkMode') === 'dark' ||
-            (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
+        if (currentMode === 'node') nodeModeBtn.classList.add('active-mode');
+        else if (currentMode === 'edge') edgeModeBtn.classList.add('active-mode');
+        else if (currentMode === 'color') colorModeBtn.classList.add('active-mode');
+        else if (currentMode === 'delete') {
+            deleteModeBtn.classList.add('active-mode', 'delete'); // Add base and specific class for delete
         }
-    </script>
-</body>
+    }
 
+    function updateSelectedElementInfo() {
+        if (selectedElement) {
+            const type = selectedElement.isNode() ? 'Node' : 'Edge';
+            selectedElementInfo.textContent = `${type} ${selectedElement.id()}`;
+        } else {
+            selectedElementInfo.textContent = 'None';
+        }
+    }
+
+    function manageSelection(newSelection) {
+        if (selectedElement) {
+            selectedElement.removeClass('selected');
+        }
+        selectedElement = newSelection;
+        if (selectedElement) {
+            selectedElement.addClass('selected');
+        }
+        updateSelectedElementInfo();
+    }
+
+    // --- Event Listeners for Mode Buttons ---
+    nodeModeBtn.addEventListener('click', () => { currentMode = 'node'; firstNodeForEdge = null; updateModeInfo(); });
+    edgeModeBtn.addEventListener('click', () => { currentMode = 'edge'; firstNodeForEdge = null; updateModeInfo(); });
+    colorModeBtn.addEventListener('click', () => { currentMode = 'color'; firstNodeForEdge = null; updateModeInfo(); });
+    deleteModeBtn.addEventListener('click', () => { currentMode = 'delete'; firstNodeForEdge = null; updateModeInfo(); });
+
+
+    // --- Cytoscape Event Handlers ---
+    cy.on('tap', function(event) {
+      const tappedOn = event.target;
+
+      if (tappedOn === cy) { // Tap on the canvas background
+        if (currentMode === 'node') {
+          nodeIdCounter++;
+          cy.add({
+            group: 'nodes', data: { id: 'n' + nodeIdCounter }, position: event.position
+          });
+        }
+        firstNodeForEdge = null;
+        manageSelection(null);
+      } else if (tappedOn.isNode() || tappedOn.isEdge()) { // Tap on a node or an edge
+        if (currentMode === 'delete') {
+            // If the element to be deleted is the one stored in firstNodeForEdge, reset it
+            if (firstNodeForEdge && firstNodeForEdge.id() === tappedOn.id()) {
+                firstNodeForEdge = null;
+            }
+            // If the element to be deleted is the currently selected one, clear selection
+            if (selectedElement && selectedElement.id() === tappedOn.id()) {
+                manageSelection(null);
+            }
+            cy.remove(tappedOn); // Remove the tapped element
+            console.log('Element removed:', tappedOn.id());
+        } else if (tappedOn.isNode()) { // Tap on a node (and not in delete mode)
+            if (currentMode === 'edge') {
+              if (!firstNodeForEdge) {
+                firstNodeForEdge = tappedOn;
+                manageSelection(firstNodeForEdge);
+                console.log('Source node selected:', firstNodeForEdge.id());
+              } else if (firstNodeForEdge !== tappedOn) {
+                edgeIdCounter++;
+                cy.add({
+                  group: 'edges',
+                  data: { id: 'e' + edgeIdCounter, source: firstNodeForEdge.id(), target: tappedOn.id(), sourceLabel: '', targetLabel: '' }
+                });
+                console.log('Edge created between', firstNodeForEdge.id(), 'and', tappedOn.id());
+                firstNodeForEdge.removeClass('selected');
+                firstNodeForEdge = null;
+                manageSelection(null);
+              }
+            } else if (currentMode === 'color') {
+              const newColor = colorPicker.value;
+              tappedOn.style('background-color', newColor);
+              tappedOn.style('text-outline-color', newColor);
+              tappedOn.style('border-color', newColor);
+            } else {
+              manageSelection(tappedOn);
+            }
+        } else if (tappedOn.isEdge()) { // Tap on an edge (and not in delete mode)
+             if (currentMode === 'color') {
+                const newColor = colorPicker.value;
+                tappedOn.style('line-color', newColor);
+                tappedOn.style('target-arrow-color', newColor);
+            } else {
+              manageSelection(tappedOn);
+            }
+        }
+      }
+    });
+
+    // --- Port Number Functionality ---
+    assignPortsBtn.addEventListener('click', () => {
+      cy.nodes().forEach(node => {
+        const connectedEdges = node.connectedEdges();
+        let portCounter = 1;
+        connectedEdges.forEach(edge => {
+          if (edge.source().id() === node.id()) edge.data('sourceLabel', portCounter.toString());
+          else if (edge.target().id() === node.id()) edge.data('targetLabel', portCounter.toString());
+          portCounter++;
+        });
+      });
+      console.log('Port numbers assigned sequentially.');
+      cy.style().update();
+    });
+
+    randomizePortsBtn.addEventListener('click', () => {
+        cy.nodes().forEach(node => {
+            const connectedEdges = node.connectedEdges();
+            const degree = connectedEdges.length;
+            if (degree === 0) return;
+            let ports = Array.from({length: degree}, (_, i) => i + 1);
+            for (let i = ports.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [ports[i], ports[j]] = [ports[j], ports[i]];
+            }
+            let portIndex = 0;
+            connectedEdges.forEach(edge => {
+                if (edge.source().id() === node.id()) edge.data('sourceLabel', ports[portIndex].toString());
+                else if (edge.target().id() === node.id()) edge.data('targetLabel', ports[portIndex].toString());
+                portIndex++;
+            });
+        });
+        console.log('Port numbers randomized.');
+        cy.style().update();
+    });
+
+    // --- Edge Style Functionality ---
+    function applyEdgeStyle(styleClass) {
+        if (selectedElement && selectedElement.isEdge()) {
+            selectedElement.removeClass('thick').removeClass('dashed').removeClass('dotted');
+            if (styleClass) selectedElement.addClass(styleClass);
+            if (!styleClass || styleClass === 'solid') {
+                selectedElement.style('width', 3);
+                selectedElement.style('line-style', 'solid');
+            }
+        } else {
+            const tempMsg = document.createElement('div');
+            tempMsg.textContent = "Please select an edge first to change its style.";
+            Object.assign(tempMsg.style, {
+                position: 'fixed', bottom: '20px', left: '50%', transform: 'translateX(-50%)',
+                backgroundColor: '#f87171', color: 'white', padding: '10px 20px',
+                borderRadius: '5px', boxShadow: '0 2px 10px rgba(0,0,0,0.2)', zIndex: '1000'
+            });
+            document.body.appendChild(tempMsg);
+            setTimeout(() => { document.body.removeChild(tempMsg); }, 3000);
+        }
+    }
+
+    thickEdgeBtn.addEventListener('click', () => applyEdgeStyle('thick'));
+    dashedEdgeBtn.addEventListener('click', () => applyEdgeStyle('dashed'));
+    dottedEdgeBtn.addEventListener('click', () => applyEdgeStyle('dotted'));
+    solidEdgeBtn.addEventListener('click', () => applyEdgeStyle('solid'));
+
+    // --- Initial UI Setup ---
+    updateModeInfo();
+    updateSelectedElementInfo();
+
+    window.addEventListener('resize', function() { cy.resize(); cy.fit(); });
+  });
+</script>
+
+</body>
 </html>
