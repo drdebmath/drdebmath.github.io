@@ -171,6 +171,11 @@
   },
   "news": [
     {
+      "date": "2 Apr 2025",
+      "title": "Paper on Exploring Dangerous Graphs with Byzantine Companions accepted to ICDCS 2025.",
+      "url": "https://icdcs2025.icdcs.org/accepted-papers/"
+    },
+    {
       "date": "20 Feb 2025",
       "title": "SSS 2025 announcement is out. I am part of PC in Track C: Moving and Computing.",
       "url": "https://sss2025.conf.lip6.fr/"
