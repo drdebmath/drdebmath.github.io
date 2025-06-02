@@ -1,7 +1,7 @@
 {
   "about_me": {
     "name": "Debasish Pattanayak",
-    "name_odia": "",
+    "name_odia": "ଦେବାଶିଷ ପଟ୍ଟନାୟକ",
     "dblp": "https://dblp.uni-trier.de/pers/hd/p/Pattanayak:Debasish",
     "google_scholar": "https://scholar.google.com/citations?user=E-jjx9gAAAAJ&hl=en&oi=ao",
     "orcid": "https://orcid.org/0000-0003-2862-2795",
@@ -751,10 +751,14 @@
         "Nicola Santoro"
       ],
       "title": "Oblivious Robots Under Sequential Schedulers: Universal Pattern Formation",
-      "type": "preprint",
+      "type": "conference",
       "arxiv": "https://arxiv.org/abs/2412.10733",
-      "doi": "https://arxiv.org/abs/2412.10733",
-      "year": 2024,
+      "doi": "https://doi.org/10.1007/978-3-031-91736-3_18",
+      "year": 2025,
+      "conference": {
+        "full": "International Colloquium on Structural Information and Communication Complexity",
+        "short": "SIROCCO"
+      },
       "abstract": "We investigate the capabilities of anonymous, oblivious mobile robots operating under weak schedulers, specifically focusing on sequential activation schedulers (SEQ). Under SEQ, only one robot is activated in each time step to perform its Look-Compute-Move cycle, chosen arbitrarily by the adversary. This contrasts with the more powerful fully synchronous (FSYNC) or semi-synchronous (SSYNC) models. We study the fundamental problem of Universal Pattern Formation (UPF), where robots must form any arbitrary pattern given as input. Robots are initially positioned arbitrarily. We consider robots that are silent (cannot communicate) but potentially possess externally visible lights. It is known that even simple tasks like convergence are impossible for oblivious robots under ASYNC. We explore whether the restricted nature of SEQ allows oblivious robots to achieve complex tasks like UPF. We show that oblivious robots, even without lights, can achieve UPF under the SEQ scheduler, provided they start from distinct positions. Our algorithm relies on careful local geometric computations and movement strategies that exploit the sequential nature of activations to deterministically reach the target pattern. This result highlights the surprising computational power of oblivious robots under sequential schedulers, contrasting sharply with their limitations under more concurrent models."
     }
   ],
@@ -933,7 +937,7 @@
       "url": "#"
     },
     "Subhajit Pramanick": {
-      "url": "https://sites.google.com/view/subhajitpramanick?usp=sharing"
+      "url": "https://subhajitpk.github.io/webpage/"
     },
     "Gokarna Sharma": {
       "url": "https://www.cs.kent.edu/~sharma/"
@@ -972,7 +976,7 @@
       "url": "https://scholar.google.com/citations?user=su_QHVwAAAAJ&hl=en&oi=ao"
     },
     "Loukas Georgiadis": {
-      "url": "https://sites.google.com/view/loukastgeorgiadis/\u03b1\u03c1\u03c7\u03b9\u03ba\u03ae-\u03c3\u03b5\u03bb\u03af\u03b4\u03b1"
+      "url": "https://sites.google.com/view/loukastgeorgiadis/αρχική-σελίδα"
     },
     "Evangelos Kosinas": {
       "url": "#"
@@ -985,6 +989,9 @@
     },
     "Francesco Piselli": {
       "url": "https://scholar.google.com/citations?user=zdFY4eoAAAAJ"
+    },
+    "Alfredo Navarra": {
+      "url": "https://navarra.sites.dmi.unipg.it"
     }
   }
 }

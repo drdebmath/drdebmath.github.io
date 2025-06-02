@@ -116,6 +116,7 @@ function setupGoToTopButton() {
 
 function setupHeader(aboutMe) {
   const nameElement = document.getElementById("name");
+  const nameElementodia = document.getElementById("name_odia");
   const positionElement = document.getElementById("position");
   const linksElement = document.getElementById("links");
 
@@ -124,7 +125,8 @@ function setupHeader(aboutMe) {
     return;
   }
 
-  nameElement.textContent = aboutMe.name || "";
+  nameElement.textContent = (aboutMe.name || "");
+  nameElementodia.textContent = aboutMe.name_odia || "";
   positionElement.textContent =
     (aboutMe.position || "") +
     " at " +
@@ -189,27 +191,41 @@ function setupHeader(aboutMe) {
 
 function setupNavbar(sections) {
   const navbar = document.getElementById("navbar");
-  navbar.innerHTML = "";                 // clear any previous items
+  navbar.innerHTML = ""; // clear any previous items
 
-  const highLevel = ["research","publications","talks","teaching"];
+  const highLevel = ["research", "publications", "talks", "teaching"];
 
   // Add the fixed links first
   const fixed = [
-    {href:"CCMModel/",     label:"CCM Model"},
-    {href:"LCMmodel/",    label:"LCM Model"},
+    { href: "CCMModel/", label: "CCM Model" },
+    { href: "LCMmodel/", label: "LCM Model" },
   ];
-  [...fixed,
-   ...highLevel.filter(s => sections.includes(s))
-               .map(s => ({href:"#"+s, label: s.replace("_"," ").replace(/^\w/,c=>c.toUpperCase())}))
-  ].forEach(link => {
-      const li = document.createElement("li");
-      li.className = "flex items-center";
-      li.innerHTML =
-        `<a href="${link.href}"
-            class="px-2 py-1 rounded hover:bg-blue-700 dark:hover:bg-blue-900
-                   text-gray-100 transition-colors duration-200">${link.label}</a>`;
-      navbar.appendChild(li);
+
+  // Create a <ul> for the navbar
+  // For small screens: 2 rows, for md+: 1 row
+  const ul = document.createElement("ul");
+  ul.className =
+    "grid grid-cols-2 gap-x-2 gap-y-1 md:flex md:flex-nowrap md:space-x-2 p-2";
+
+  // Helper to add links
+  [
+    ...fixed,
+    ...highLevel
+      .filter((s) => sections.includes(s))
+      .map((s) => ({
+        href: "#" + s,
+        label: s.replace("_", " ").replace(/^\w/, (c) => c.toUpperCase()),
+      })),
+  ].forEach((link) => {
+    const li = document.createElement("li");
+    li.className = "flex items-center w-full md:w-auto";
+    li.innerHTML = `<a href="${link.href}"
+        class="block w-full text-center px-2 py-1 rounded hover:bg-blue-700 dark:hover:bg-blue-900
+               text-gray-100 transition-colors duration-200">${link.label}</a>`;
+    ul.appendChild(li);
   });
+
+  navbar.appendChild(ul);
 }
 
 
