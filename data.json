@@ -8,10 +8,10 @@
     "x": "https://twitter.com/drdebmath?ref_src=twsrc%5Etfw",
     "github": "https://github.com/drdebmath",
     "linkedin": "https://www.linkedin.com/in/debasish-pattanayak-3750a530/",
-    "position": "Postdoctoral Research Fellow",
+    "position": "Assistant Professor",
     "current_institution": {
-      "name": "University of Ottawa",
-      "url": "https://www.uottawa.ca/en"
+      "name": "Indian Institute of Technology, Indore",
+      "url": "https://www.iiti.ac.in/"
     },
     "biodata": {
       "urls": {
@@ -32,7 +32,7 @@
         "Prof. Andrzej Pelc": "http://w3.uqo.ca/pelc/main.html"
       },
       "short_bio": [
-        "I am currently a Postdoctoral Research Fellow at University of Ottawa working with Prof. Paola Flocchini and Prof. Nicola Santoro (at Carleton University, Ottawa). I obtained my B.Tech. in Mathematics and Computing from IIT Guwahati and completed my PhD in the Department of Mathematics at IIT Guwahati under the supervision of Prof. Partha Sarathi Mandal and Dr. H. Ramesh. From July to December 2019, I was a visiting researcher with Prof. Stefan Schmid at the University of Vienna under the SERB Overseas Visiting Doctoral Fellowship. From March to September 2020, I was a visiting scientist at ISI Kolkata working with Dr. Anisur Rahaman Molla. From October 2020 to October 2022, I was a Postdoctoral researcher at LUISS Guido Carli, Rome, working with Prof. Giuseppe F. Italiano. From October 2022 to October 2023, I was a Postdoctoral researcher at UQO, Canada, working with Prof. Andrzej Pelc. From October 2023 to October 2024, I was a Postdoctoral researcher at Carleton University, Canada."
+        "I am currently an Assistant Professor at Indian Institute of Technology, Indore. I obtained my B.Tech. in Mathematics and Computing from IIT Guwahati and completed my PhD in the Department of Mathematics at IIT Guwahati under the supervision of Prof. Partha Sarathi Mandal and Dr. H. Ramesh. From July to December 2019, I was a visiting researcher with Prof. Stefan Schmid at the University of Vienna under the SERB Overseas Visiting Doctoral Fellowship. From March to September 2020, I was a visiting scientist at ISI Kolkata working with Dr. Anisur Rahaman Molla. From October 2020 to October 2022, I was a Postdoctoral researcher at LUISS Guido Carli, Rome, working with Prof. Giuseppe F. Italiano. From October 2022 to October 2023, I was a Postdoctoral researcher at UQO, Canada, working with Prof. Andrzej Pelc. From October 2023 to October 2024, I was a Postdoctoral researcher at Carleton University, Canada, and from October 2024 to June 2025, I was a Postdoctoral researcher at University of Ottawa working with Prof. Paola Flocchini and Prof. Nicola Santoro (at Carleton University, Ottawa)."
       ]
     },
     "current_supervisors": [
@@ -151,7 +151,7 @@
       },
       {
         "title": "Postdoctoral Researcher",
-        "duration": "One year",
+        "duration": "Eight Months",
         "institution": {
           "name": "University of Ottawa",
           "url": "https://www.uottawa.ca/en",
@@ -161,8 +161,18 @@
           }
         },
         "start_date": "2024-10-20",
-        "end_date": "2025-10-20"
+        "end_date": "2025-06-20"
+      },
+      {
+        "title": "Assistant Professor",
+        "duration": "Ongoing",
+        "institution": {
+          "name": "IIT Indore",
+          "url": "https://cse.iiti.ac.in/faculty.php"
+        },
+        "start_date": "2025-06-23"
       }
+
     ],
     "cv": {
       "file": "AcademicCV_github.pdf",
@@ -170,6 +180,16 @@
     }
   },
   "news": [
+    {
+      "date": "23 June 2025",
+      "title": "Joined as Assistant Professor in CSE, IIT Indore.",
+      "url": "https://cse.iiti.ac.in/faculty.php"
+    },
+    {
+      "date": "13 June 2025",
+      "title": "Paper on Directed Dispersion accepted to JPDC.",
+      "url": "https://doi.org/10.1016/j.jpdc.2025.105139"
+    },
     {
       "date": "2 Apr 2025",
       "title": "Paper on Exploring Dangerous Graphs with Byzantine Companions accepted to ICDCS 2025.",
@@ -572,6 +592,22 @@
     },
     {
       "authors": [
+        "Giuseppe F. Italiano",
+        "Debasish Pattanayak",
+        "Gokarna Sharma"
+      ],
+      "title": "Dispersion of Mobile Robots on Directed Anonymous Graphs.",
+      "journal": {
+        "full": "Journal of Parallel and Distributed Computing",
+        "short": "J. Parallel Distrib. Comput."
+      },
+      "doi": "https://doi.org/10.1016/j.jpdc.2025.105139",
+      "type": "journal",
+      "year": 2025,
+      "abstract": "Given any arbitrary initial configuration of k ≤ n robots positioned on the nodes of an n-node anonymous graph, the problem of dispersion is to autonomously reposition the robots such that each node will contain at most one robot. This problem gained significant interest due to its resemblance with several fundamental problems such as exploration, scattering, load balancing, relocation of electric cars to charging stations, etc. The objective is to solve dispersion simultaneously minimizing (or providing trade-off between) time and memory requirement at each robot. The literature mainly dealt with dispersion on undirected anonymous graphs. In this paper, we initiate the study of dispersion on directed anonymous graphs. We first show that it may not always be possible to solve dispersion when the directed graph is not strongly connected. We then establish some lower bounds on both time and memory requirement at each robot for solving dispersion on a strongly connected directed graph. Finally, we provide three deterministic algorithms solving dispersion on any strongly connected directed graph. Let D be the graph diameter, ∆out be its maximum out-degree, and d be the deficiency (the minimum number of edges needed to add to the graph to make it Eulerian). The first algorithm solves dispersion in O(d · k2) time with O(k · log(k + ∆out)) bits at each robot. The second algorithm solves dispersion in O(k2 · ∆out) time with O(log (k + ∆out)) bits at each robot. The third algorithm solves dispersion in O(k · D) time with O(k · log (k + ∆out)) bits at each robot, provided that robots in the 1-hop neighborhood can communicate. All three algorithms extend to handle crash faults."
+    },
+    {
+      "authors": [
         "Subhajit Pramanick",
         "Sai Vamshi Samala",
         "Debasish Pattanayak",
@@ -760,6 +796,57 @@
         "short": "SIROCCO"
       },
       "abstract": "We investigate the capabilities of anonymous, oblivious mobile robots operating under weak schedulers, specifically focusing on sequential activation schedulers (SEQ). Under SEQ, only one robot is activated in each time step to perform its Look-Compute-Move cycle, chosen arbitrarily by the adversary. This contrasts with the more powerful fully synchronous (FSYNC) or semi-synchronous (SSYNC) models. We study the fundamental problem of Universal Pattern Formation (UPF), where robots must form any arbitrary pattern given as input. Robots are initially positioned arbitrarily. We consider robots that are silent (cannot communicate) but potentially possess externally visible lights. It is known that even simple tasks like convergence are impossible for oblivious robots under ASYNC. We explore whether the restricted nature of SEQ allows oblivious robots to achieve complex tasks like UPF. We show that oblivious robots, even without lights, can achieve UPF under the SEQ scheduler, provided they start from distinct positions. Our algorithm relies on careful local geometric computations and movement strategies that exploit the sequential nature of activations to deterministically reach the target pattern. This result highlights the surprising computational power of oblivious robots under sequential schedulers, contrasting sharply with their limitations under more concurrent models."
+    },
+    {
+      "title": "Dispersion is (Almost) Optimal under (A)synchrony",
+      "authors": [
+        "Ajay D. Kshemkalyani",
+        "Manish Kumar",
+        "Anisur Rahaman Molla",
+        "Debasish Pattanayak",
+        "Gokarna Sharma"
+      ],
+      "conference": {
+        "full": "37th ACM Symposium on Parallelism in Algorithms and Architectures",
+        "short": "SPAA"
+      },
+      "year": 2025,
+      "status": "Accepted"
+    },
+    {
+      "title": "Exploring Dangerous Graphs with Byzantine Companions",
+      "authors": [
+        "Giuseppe Antonio Di Luna",
+        "Paola Flocchini",
+        "Debasish Pattanayak",
+        "Francesco Piselli",
+        "Giuseppe Prencipe",
+        "Nicola Santoro"
+      ],
+      "conference": {
+        "full": "45th IEEE International Conference on Distributed Computing Systems",
+        "short": "ICDCS"
+      },
+      "year": 2025,
+      "status": "Accepted"
+    },
+    {
+    
+      "title": "Asynchronous Separation of Unconscious Colored Robots",
+      "authors": [
+        "Paola Flocchini",
+        "Debasish Pattanayak",
+        "Francesco Piselli",
+        "Nicola Santoro",
+        "Yukiko Yamauchi"
+      ],
+      "type": "journal",
+      "journal": {
+        "full": "International Journal of Networking and Computing",
+        "short": "IJNC"
+      },
+      "year": 2025,
+      "status": "Accepted"
     }
   ],
   "talks": [
@@ -992,6 +1079,18 @@
     },
     "Alfredo Navarra": {
       "url": "https://navarra.sites.dmi.unipg.it"
+    },
+    "Giuseppe Antonio Di Luna": {
+      "url": "https://sites.google.com/site/gadiluna/"
+    },
+    "Giuseppe Prencipe": {
+      "url": "https://sbrinz.di.unipi.it"
+    },
+    "Ajay D. Kshemkalyani": {
+      "url": "https://www.cs.uic.edu/~ajayk/"
+    },
+    "Manish Kumar": {
+      "url": "https://sites.google.com/view/saumitr/home"
     }
   }
 }
