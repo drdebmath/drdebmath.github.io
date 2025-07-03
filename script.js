@@ -119,7 +119,8 @@ function setupHeader(aboutMe) {
   const nameElementodia = document.getElementById("name_odia");
   const positionElement = document.getElementById("position");
   const linksElement = document.getElementById("links");
-
+  const pictureElement = document.getElementById("picture");
+  const pictureUrl = aboutMe?.picture || "default_picture.jpg"; // Fallback to a default picture if not provided
   if (!aboutMe) {
     console.warn("About me data is missing.");
     return;
@@ -131,6 +132,13 @@ function setupHeader(aboutMe) {
     (aboutMe.position || "") +
     " at " +
     (aboutMe.current_institution.name || "");
+
+  // Add the picture
+  if (pictureElement) {
+    pictureElement.innerHTML = `
+      <img src="${pictureUrl}" alt="Profile picture" class="rounded-full object-cover mx-auto shadow-lg bg-white dark:bg-gray-800 transition-colors duration-200 w-full h-full"/>
+    `;
+  }
 
   const linkIcons = [
     {

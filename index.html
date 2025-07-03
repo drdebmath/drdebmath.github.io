@@ -56,10 +56,17 @@
 <!-- ───── Hero / Header ─────────────────────────────────────── -->
 <header class="bg-blue-700 dark:bg-blue-900 text-white py-8 shadow">
     <div class="mx-auto max-w-screen-lg px-4">
-        <h1 id="name" class="text-4xl font-extrabold tracking-tight"></h1>
-        <h2 id="name_odia" class="text-xl mt-2 font-semibold"></h2>
-        <h3 id="position" class="text-lg mt-5 font-semibold"></h3>
-        <div id="links" class="mt-4 flex flex-wrap items-center gap-3"></div>
+        <div class="flex flex-col md:flex-col lg:flex-row items-center lg:items-start gap-6">
+            <div id="picture" class="mt-4 lg:mt-0 flex justify-center w-40 h-60 overflow-hidden">
+                <img src="default_picture.jpg" alt="Profile picture" class="rounded-full object-cover w-full h-full" />
+            </div>
+            <div class="flex-1">
+                <h1 id="name" class="text-4xl font-extrabold tracking-tight"></h1>
+                <h2 id="name_odia" class="text-xl mt-2 font-semibold"></h2>
+                <h3 id="position" class="text-lg mt-5 font-semibold"></h3>
+                <div id="links" class="mt-4 flex flex-wrap items-center gap-3"></div>
+            </div>
+        </div>
     </div>
 </header>
 
