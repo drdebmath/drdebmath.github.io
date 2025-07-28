@@ -266,9 +266,11 @@
     "Fault-tolerance",
     "Swarm Robots",
     "Randomized Algorithms",
-    "Graph Algorithms"
+    "Graph Algorithms",
+    "Simulators for Mobile Robots"
   ],
-  "current_research": "Algorithms for mobile robots on graphs and planes.",
+  "current_research": "My research interests lie in the design and analysis of algorithms for mobile agents and mobile robots operating in both discrete (graphs) and continuous spaces. I focus on fundamental problems such as exploration, search, rendezvous, evacuation, and filling under constraints of limited memory, communication, or environmental knowledge. I am particularly interested in distributed coordination, fault-tolerant behavior, and the impact of structure and complexity on algorithmic performance. My work spans deterministic and randomized strategies, with applications in swarm robotics, multi-agent coordination, and autonomous systems. I also work on developing simulators for these systems, a couple of them are linked here, under CCM Model and LCM Model.",
+  "current_teaching":"In July-Nov 2025 session, I am teaching CS103: Introduction to Programming. Visit the course website.",
   "publications": [
     {
       "authors": [
@@ -797,12 +799,15 @@
         "Debasish Pattanayak",
         "Gokarna Sharma"
       ],
+      "type": "conference",
       "conference": {
         "full": "37th ACM Symposium on Parallelism in Algorithms and Architectures",
         "short": "SPAA"
       },
       "year": 2025,
-      "status": "Accepted"
+      "status": "Accepted",
+      "doi": "https://doi.org/10.1145/3694906.3743317",
+      "abstract":"The dispersion problem has received much attention recently in the distributed computing literature. In this problem, k ≤ n agents placed initially arbitrarily on the nodes of an n-node, m-edge anonymous graph of maximum degree Δ have to reposition autonomously to reach a configuration in which each agent is on a distinct node of the graph. Dispersion is interesting as well as important due to its connections to many fundamental coordination problems by mobile agents on graphs, such as exploration, scattering, load balancing, relocation of self-driven electric cars (robots) to recharge stations (nodes), etc. The objective has been to provide a solution that optimizes simultaneously time and memory complexities. There exist graphs for which the lower bound on time complexity is Ω(k). Memory complexity is Ω(log k) per agent independent of graph topology. The state-of-the-art algorithms have (i) time complexity O(k log2 k) and memory complexity O(log(k + Δ)) under the synchronous setting [DISC'24] and (ii) time complexity O(min{m, kΔ}) and memory complexity O(log(k + Δ)) under the asynchronous setting [OPODIS'21]. In this paper, we improve substantially on this state-of-the-art. Under the synchronous setting as in [DISC'24], we present the first optimal O(k) time algorithm keeping memory complexity O(log(k + Δ)). Under the asynchronous setting as in [OPODIS'21], we present the first algorithm with time complexity O(k log k) keeping memory complexity O(log(k + Δ)), which is time-optimal within an O(log k) factor despite asynchrony. Both the results were obtained through novel techniques to quickly find empty nodes to settle agents, which may be of independent interest."
     },
     {
       "title": "Exploring Dangerous Graphs with Byzantine Companions",
@@ -814,12 +819,15 @@
         "Giuseppe Prencipe",
         "Nicola Santoro"
       ],
+      "type":"conference",
       "conference": {
         "full": "45th IEEE International Conference on Distributed Computing Systems",
         "short": "ICDCS"
       },
+      "doi": "#",
       "year": 2025,
-      "status": "Accepted"
+      "status": "Accepted",
+      "abstract":"In networked systems supporting mobile agents, a particularly dangerous security threat facing the agents is the presence of a black hole (BH): a network host that destroys any incoming agent without leaving any trace. The problem, called BLACK HOLE SEARCH (BHS), of efficiently determining the location of such a dangerous host has been extensively studied under a variety of different assumptions. In spite of their differences, the existing results share the same assumption that all the searching agents are reliable. In this paper, we start the investigation of the BHS problem when some of the searching agents are faulty in a malicious way. More precisely, we consider that up to f of the k searching agents are Byzantine: they may behave in an arbitrary manner, actively misleading other agents; furthermore, they are in collusion with the black hole, and immune to its destructive power. We study under what conditions the BHS problem can be solved in a synchronous network of arbitrary topology in spite of the malicious agents, examining the impact on complexity of two factors: the a-priori topological knowledge held by the agents, and the communication mechanism available to them. We prove that, with prior knowledge about the graph topology (i.e., a network map), BHS can be solved by k ≥ 2f + 2 agents in O(n + f ) synchronous rounds both with whiteboards and with just local communication, where n is the number of nodes in the network. Without any knowledge about the topological structure, using whiteboard communication BHS can be solved by k ≥ (f +1)(∆+1) agents in O(m+f ) rounds; instead, using local communication, BHS can be solved by k ≥ (f + 1)(∆ + 1) + 3f + 1 agents in O(m · n + f ) rounds, where m is the number of links of the network and ∆ is the maximum degree of the network. In all cases, as we show, the bound on the total number k of agents is asymptotically optimal."
     },
     {
     

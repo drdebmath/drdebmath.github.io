@@ -56,6 +56,11 @@ function setupContentDisplay(data) {
     data.current_research
   );
   displaySectionContent(
+    "current_teaching_content",
+    displayCurrentTeaching,
+    data.current_teaching
+  );
+  displaySectionContent(
     "publications_list",
     displayAllPublications,
     data.publications,
@@ -412,6 +417,13 @@ function displayCurrentResearch(currentResearch) {
   document.getElementById("current_research_content").innerHTML = `
     <p class="bg-white dark:bg-gray-800 p-4 shadow rounded dark:text-white transition-colors duration-200">${
       currentResearch || "No current research information available."
+    }</p>
+  `;
+}
+function displayCurrentTeaching(currentTeaching) {
+  document.getElementById("current_teaching_content").innerHTML = `
+    <p class="bg-white dark:bg-gray-800 p-4 shadow rounded dark:text-white transition-colors duration-200">${
+      currentTeaching || "No current teaching information available."
     }</p>
   `;
 }
