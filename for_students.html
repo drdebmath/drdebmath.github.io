@@ -222,23 +222,45 @@
         </ul>
     </section>
 
-    <section id="research-problems" class="my-12">
-        <h2 class="text-3xl font-bold scroll-mt-24 mb-4 text-blue-700 dark:text-blue-400">Research Problems for Students</h2>
-        <p class="mb-6 text-lg">I am looking for motivated students to tackle fundamental questions in distributed computing. Here are some examples of the problems we work on:</p>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg border-l-4 border-blue-500">
-                <h3 class="font-bold text-xl mb-2">Swarm Robotics</h3>
-                <p>How can a group of simple robots achieve a complex task? We design algorithms for problems like <strong>Pattern Formation</strong>, <strong>Dispersion</strong>, and <strong>Exploration</strong> of unknown environments.</p>
-            </div>
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg border-l-4 border-red-500">
-                <h3 class="font-bold text-xl mb-2">Fault Tolerance</h3>
-                <p>What happens when robots fail or are malicious? We build resilient systems that can handle <strong>Crash Faults</strong> or even <strong>Byzantine Faults</strong>, ensuring the mission succeeds.</p>
-            </div>
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg border-l-4 border-green-500">
-                <h3 class="font-bold text-xl mb-2">Fundamental Algorithms</h3>
-                <p>We explore the core principles of coordination. This includes tasks like <strong>Rendezvous</strong>, <strong>Treasure Hunt</strong>, and understanding the limits of computation when agents are <strong>anonymous</strong> and have no memory.</p>
-            </div>
-        </div>
+    <section id="look-compute-move-model" class="my-12">
+        <h2 class="text-3xl font-bold scroll-mt-24 mb-4 text-blue-700 dark:text-blue-400">Look-Compute-Move Model</h2>
+        <p class="mb-6 text-lg">The Look-Compute-Move (LCM) model is a foundational framework in distributed computing. It describes how agents can:</p>
+        <ul class="list-disc pl-6 space-y-2 text-lg text-left">
+            <li><strong>Look</strong>: Observe their environment and gather information.</li>
+            <li><strong>Compute</strong>: Process the information to make decisions.</li>
+            <li><strong>Move</strong>: Act based on their computations to achieve goals.</li>
+        </ul>
+        <p class="mb-6 text-lg">This model is essential for understanding how simple agents can work together to solve complex problems.</p>
+    </section>
+
+    <section id="dispersion-problem" class="my-12">
+        <h2 class="text-3xl font-bold scroll-mt-24 mb-4 text-blue-700 dark:text-blue-400">Dispersion Problem</h2>
+        <ul class="list-disc pl-6 space-y-2 text-lg text-left">
+            <li><strong>Goal:</strong> Scatter <i>k</i> mobile robots on an <i>n</i>-node graph to ensure each robot occupies a unique node.</li>
+            <li><strong>Challenges:</strong> Robots are anonymous, operate with limited memory, and in synchronous or asynchronous settings. The graph can be directed or undirected. Faulty (Byzantine) robots can disrupt the process.</li>
+            <li><strong>Key Research:</strong> Designing time and memory-optimal algorithms. Investigating trade-offs between synchrony, memory, and time. Handling Byzantine faults and directed graphs.</li>
+            <li><strong>Recent Results:</strong> We have developed optimal time algorithms for dispersion in both synchronous and asynchronous models, and provided solutions for directed graphs and environments with faulty robots.</li>
+        </ul>
+    </section>
+
+    <section id="circle-formation-problem" class="my-12">
+        <h2 class="text-3xl font-bold scroll-mt-24 mb-4 text-blue-700 dark:text-blue-400">Circle Formation Problem</h2>
+        <ul class="list-disc pl-6 space-y-2 text-lg text-left">
+            <li><strong>Goal:</strong> Arrange <i>n</i> autonomous mobile robots, initially in the plane, to be equally spaced on the circumference of a circle.</li>
+            <li><strong>Challenges:</strong> Robots are anonymous, asynchronous, and oblivious (no memory). The circle's center and radius are not predefined.</li>
+            <li><strong>Key Research:</strong> Achieving faster runtime using minimal capabilities like "luminous" robots (with colored lights). Analyzing time-color trade-offs.</li>
+            <li><strong>Recent Results:</strong> We have developed an optimal algorithm in terms of the number of colors required, and have established key trade-offs between time and the number of colors.</li>
+        </ul>
+    </section>
+
+    <section id="black-hole-search-problem" class="my-12">
+        <h2 class="text-3xl font-bold scroll-mt-24 mb-4 text-blue-700 dark:text-blue-400">Black Hole Search Problem</h2>
+        <ul class="list-disc pl-6 space-y-2 text-lg text-left">
+            <li><strong>Goal:</strong> Locate a "black hole" (a harmful node that destroys incoming agents) in a network.</li>
+            <li><strong>Challenges:</strong> Some of the searching agents can be Byzantine (malicious) and collude with the black hole. Agents may or may not have a map of the network.</li>
+            <li><strong>Key Research:</strong> Determining the minimum number of agents required to find the black hole safely. Analyzing the impact of prior knowledge (maps) and communication models (e.g., whiteboards vs. local communication).</li>
+            <li><strong>Recent Results:</strong> We have established the number of agents needed and the time complexity for solving the problem under various conditions, including the presence of Byzantine agents.</li>
+        </ul>
     </section>
 
     <section id="collaborator-map-section" class="my-12">
