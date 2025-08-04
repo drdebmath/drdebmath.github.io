@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blackhole Search Animation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        #ring-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 20px;
+        }
+
+        .node {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background-color: #87CEEB; /* Sky Blue */
+            border: 2px solid #4682B4; /* Steel Blue */
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: #111;
+            /* Center the origin for rotation */
+            transform: translate(-50%, -50%);
+        }
+
+        .node.blackhole {
+            background-color: #000;
+            border-color: #333;
+            color: #fff;
+        }
+
+        .agent {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            z-index: 10;
+            transition: top 0.7s ease-in-out, left 0.7s ease-in-out;
+            transform: translate(-50%, -50%);
+        }
+
+        #agent1 {
+            background-color: #FF4500; /* OrangeRed */
+            border: 1px solid #8B0000; /* DarkRed */
+        }
+
+        #agent2 {
+            background-color: #32CD32; /* LimeGreen */
+            border: 1px solid #006400; /* DarkGreen */
+        }
+
+        #controls {
+            text-align: center;
+        }
+        
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        
+        #status {
+            margin-top: 15px;
+            font-size: 1.1em;
+            color: #333;
+            height: 40px; /* Reserve space to prevent layout shift */
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Blackhole Search Problem</h1>
+
+    <div id="ring-container">
+        <!-- Nodes and Agents will be generated here by JavaScript -->
+    </div>
+
+    <div id="controls">
+        <button id="start-btn">Start Animation</button>
+        <p id="status">Click Start to begin the search.</p>
+    </div>
+
+    <script>
+        const NUM_NODES = 10;
+        const RING_RADIUS = 150; // pixels
+        const ANIMATION_SPEED = 800; // ms per move
+
+        const ringContainer = document.getElementById('ring-container');
+        const startBtn = document.getElementById('start-btn');
+        const statusEl = document.getElementById('status');
+        
+        let nodes = [];
+        let agent1, agent2;
+        let blackholeIndex;
+        let currentPosition;
+        let animationRunning = false;
+
+        function setup() {
+            // Clear previous elements
+            ringContainer.innerHTML = '';
+            nodes = [];
+            
+            // 1. Choose blackhole and starting position
+            blackholeIndex = Math.floor(Math.random() * NUM_NODES);
+            do {
+                currentPosition = Math.floor(Math.random() * NUM_NODES);
+            } while (currentPosition === blackholeIndex);
+
+            // 2. Create and position nodes
+            const centerX = ringContainer.offsetWidth / 2;
+            const centerY = ringContainer.offsetHeight / 2;
+
+            for (let i = 0; i < NUM_NODES; i++) {
+                const angle = (i / NUM_NODES) * 2 * Math.PI - Math.PI / 2; // Start at top
+                const x = centerX + RING_RADIUS * Math.cos(angle);
+                const y = centerY + RING_RADIUS * Math.sin(angle);
+
+                const nodeEl = document.createElement('div');
+                nodeEl.className = 'node';
+                nodeEl.id = `node-${i}`;
+                nodeEl.textContent = i;
+                nodeEl.style.left = `${x}px`;
+                nodeEl.style.top = `${y}px`;
+
+                if (i === blackholeIndex) {
+                    nodeEl.classList.add('blackhole');
+                }
+
+                ringContainer.appendChild(nodeEl);
+                nodes.push({ el: nodeEl, x, y });
+            }
+
+            // 3. Create agents
+            agent1 = document.createElement('div');
+            agent1.className = 'agent';
+            agent1.id = 'agent1';
+
+            agent2 = document.createElement('div');
+            agent2.className = 'agent';
+            agent2.id = 'agent2';
+
+            ringContainer.appendChild(agent1);
+            ringContainer.appendChild(agent2);
+            
+            // 4. Position agents at the start
+            moveElement(agent1, currentPosition, 10); // Offset to see both
+            moveElement(agent2, currentPosition, -10);
+
+            // 5. Reset UI
+            statusEl.textContent = 'Ready. The blackhole is at a secret location!';
+            startBtn.textContent = 'Start Animation';
+            startBtn.disabled = false;
+            animationRunning = false;
+        }
+
+        // Helper to move an element to a node's position
+        function moveElement(element, nodeIndex, offset = 0) {
+            const node = nodes[nodeIndex];
+            element.style.left = `${node.x + offset}px`;
+            element.style.top = `${node.y}px`;
+        }
+
+        // The main animation loop
+        async function runAnimationStep() {
+            if (!animationRunning) return;
+
+            // Check for end condition at the start of a turn
+            if (currentPosition === blackholeIndex) {
+                statusEl.textContent = `Both agents fell into the blackhole at node ${blackholeIndex}!`;
+                agent1.style.opacity = 0;
+                agent2.style.opacity = 0;
+                startBtn.textContent = 'Reset';
+                startBtn.disabled = false;
+                animationRunning = false;
+                return;
+            }
+            
+            // PHASE 1: Probe a neighbor clockwise
+            const probeNodeIndex = (currentPosition + 1) % NUM_NODES;
+            statusEl.textContent = `Agent 1 probes clockwise to node ${probeNodeIndex}...`;
+            moveElement(agent1, probeNodeIndex, 0);
+
+            await new Promise(resolve => setTimeout(resolve, ANIMATION_SPEED));
+
+            if (!animationRunning) return;
+
+            // PHASE 1 CHECK: Is the probed node the blackhole?
+            if (probeNodeIndex === blackholeIndex) {
+                statusEl.textContent = `Agent 1 was lost in the blackhole at ${probeNodeIndex}!`;
+                agent1.style.opacity = 0;
+                startBtn.textContent = 'Reset';
+                startBtn.disabled = false;
+                animationRunning = false;
+            } else {
+                // PHASE 2: Probed node is safe. Agent 1 returns.
+                statusEl.textContent = `Node ${probeNodeIndex} is safe. Agent 1 returns.`;
+                moveElement(agent1, currentPosition, 10); // Move back to start with offset
+
+                await new Promise(resolve => setTimeout(resolve, ANIMATION_SPEED));
+                if (!animationRunning) return;
+
+                // PHASE 3: Both agents move together to the confirmed safe node.
+                const nextNodeIndex = probeNodeIndex; // This is the clockwise node
+                currentPosition = nextNodeIndex;
+                statusEl.textContent = `Both agents advance clockwise to node ${currentPosition}.`;
+                moveElement(agent1, currentPosition, 10);
+                moveElement(agent2, currentPosition, -10);
+
+                await new Promise(resolve => setTimeout(resolve, ANIMATION_SPEED));
+                if (!animationRunning) return;
+
+                // Continue the loop from the new position
+                runAnimationStep();
+            }
+        }
+
+        startBtn.addEventListener('click', () => {
+            if (animationRunning) {
+                // If clicked while running, it acts as a stop/reset
+                animationRunning = false;
+                setup();
+            } else {
+                // If not running, start the animation
+                animationRunning = true;
+                startBtn.textContent = 'Stop & Reset';
+                startBtn.disabled = true; // Disable until first move is done
+                setTimeout(() => { 
+                    if (animationRunning) startBtn.disabled = false;
+                }, ANIMATION_SPEED);
+                runAnimationStep();
+            }
+        });
+
+        // Initial setup on page load
+        window.onload = setup;
+    </script>
+</body>
+</html>
