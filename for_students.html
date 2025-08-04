@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debasish Pattanayak - Research Profile</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                fontFamily: {
+                    sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+                },
+            },
+        }
+    </script>
+    
+    <!-- Leaflet.js for Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+    
+    <style>
+        /* Ensure map container has a defined height */
+        #map { height: 600px; width:100%; max-width: 90vw; }
+        /* Custom styles for leaflet popups to match dark mode */
+        .leaflet-popup-content-wrapper, .leaflet-popup-tip {
+            background: #ffffff;
+            color: #333;
+        }
+        .dark .leaflet-popup-content-wrapper, .dark .leaflet-popup-tip {
+            background: #2d3748; /* gray-800 */
+            color: #e2e8f0; /* gray-200 */
+        }
+        .dark .leaflet-tile-pane {
+            filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7);
+        }
+        
+        /* Presentation mode styles */
+        .presentation-mode {
+            overflow: hidden;
+            background: linear-gradient(to bottom right, #f0f4f8, #d9e2ec); /* Light gradient background */
+        }
+        .dark .presentation-mode {
+            background: linear-gradient(to bottom right, #1a202c, #2d3748); /* Dark gradient background */
+        }
+
+        /* Hide nav and header in presentation mode */
+        .presentation-mode nav,
+        .presentation-mode header {
+            display: none;
+        }
+
+        .presentation-mode section {
+            display: flex; /* Use flex for all slides for consistency */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 5rem; /* Increased padding */
+            overflow-y: auto;
+            background: transparent; /* Slides have transparent background */
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+            visibility: hidden;
+        }
+
+        .presentation-mode section.active-slide {
+            opacity: 1;
+            transform: translateY(0);
+            visibility: visible;
+            z-index: 10; /* Ensure active slide is on top */
+        }
+
+
+        /* Larger fonts for presentation mode */
+        .presentation-mode section {
+            font-size: 1.75rem; /* Base font size for presentation slides */
+            line-height: 1.8; /* Increased line spacing */
+        }
+        .presentation-mode .text-lg {
+            font-size: 2rem;
+            line-height: 1.8; /* Increased line spacing */
+        }
+        .presentation-mode .text-xl {
+            font-size: 2.5rem;
+            line-height: 1.8; /* Increased line spacing */
+        }
+        .presentation-mode .text-3xl {
+            font-size: 4rem;
+            font-weight: 800; /* Extra bold for titles */
+            letter-spacing: -0.05em;
+            line-height: 1.4; /* Tighter line spacing for large titles */
+        }
+        .presentation-mode .text-blue-700 {
+            color: #2b6cb0;
+        }
+        .dark .presentation-mode .text-blue-400 {
+            color: #63b3ed;
+        }
+
+        /* Progress bar */
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 5px;
+            background-color: #3182ce; /* Blue */
+            width: 0;
+            transition: width 0.3s ease;
+            z-index: 60;
+        }
+
+        /* Improved Controls */
+        #presentation-controls button {
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        #presentation-controls button:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        #prev-slide {
+            left: 20px;
+            bottom: 20px;
+        }
+        #next-slide {
+            right: 20px;
+            bottom: 20px;
+        }
+        #slide-counter {
+            bottom: 28px;
+            right: 90px;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 6px 16px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-200 transition-colors duration-200 font-sans">
+
+<!-- Navbar -->
+<nav class="sticky top-0 z-40 bg-blue-600/95 dark:bg-blue-800/90 backdrop-blur shadow-lg">
+    <div class="mx-auto max-w-screen-lg flex items-center justify-between px-4 py-2">
+        <ul id="navbar" class="flex space-x-4">
+            <!-- Filled by script -->
+        </ul>
+        <button id="darkModeToggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 focus:outline-none focus-visible:ring">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-500 dark:text-white" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z" />
+            </svg>
+        </button>
+    </div>
+</nav>
+
+<!-- Header -->
+<header class="bg-blue-700 dark:bg-blue-900 text-white py-8 shadow-md">
+    <div class="mx-auto max-w-screen-lg px-4">
+        <div class="flex flex-col md:flex-row items-center gap-6">
+            <div id="picture" class="mt-4 lg:mt-0 flex justify-center w-40 h-60 overflow-hidden">
+            </div>
+            <div class="flex-1 text-center md:text-left">
+                <h1 id="name" class="text-4xl font-extrabold tracking-tight"></h1>
+                <h2 id="name_odia" class="text-xl mt-1 font-semibold"></h2>
+                <h3 id="position" class="text-lg mt-4 font-semibold"></h3>
+                <div id="links" class="mt-3 flex flex-wrap justify-center md:justify-start items-center gap-x-4 gap-y-2">
+                    <!-- Filled by script -->
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="mx-auto max-w-screen-lg px-4 py-8">
+
+    <section id="research" class="my-12">
+        <h2 class="text-3xl font-bold scroll-mt-24 mb-4 text-blue-700 dark:text-blue-400">Areas of Research</h2>
+        <div id="research_interests_content" class="flex flex-wrap gap-3 text-lg justify-center">
+            <!-- Filled by script -->
+        </div>
+    </section>
+
+    <section id="Why-Distributed-Algorithms-Are-Important" class="my-12">   
+        <h2 class="text-3xl font-bold scroll-mt-24 mb-4 text-blue-700 dark:text-blue-400">Why Distributed Algorithms?</h2>
+        <p class="mb-6 text-lg">Distributed algorithms are crucial for building scalable, robust, and efficient systems. They allow us to:</p>
+        <ul class="list-disc pl-6 space-y-2 text-lg text-left">
+            <li><strong>Scale</strong> systems by adding or removing components without downtime.</li>
+            <li>Ensure <strong>robustness</strong> against failures, making systems resilient.</li>
+            <li>Leverage <strong>parallelism</strong> to speed up computations.</li>
+            <li>Operate in an <strong>asynchronous</strong> manner, allowing components to work independently.</li>
+        </ul>
+    </section>
+
+    <section id="popular-problems" class="my-12">
+        <h2 class="text-3xl font-bold scroll-mt-24 mb-4 text-blue-700 dark:text-blue-400">Popular Problems in Distributed Computing</h2>
+        <p class="mb-6 text-lg"> Some of the popular problems that provides a taste of what research in distributed algorithms entails include:</p>
+        <ul class="list-disc pl-6 space-y-2 text-lg text-left">
+            <li><strong>Leader Election</strong>: How can a group of robots elect a leader to coordinate tasks?</li>
+            <li><strong>Rendezvous Problem</strong>: Two robots must meet at a common point in an unknown environment.</li>
+            <li><strong>Treasure Hunt</strong>: Robots search for a treasure in a grid, learning to coordinate their movements.</li>
+            <li><strong>Pattern Formation</strong>: Robots arrange themselves in specific geometric shapes.</li>
+        </ul>
+    </section>
+
+    <section id="research-problems" class="my-12">
+        <h2 class="text-3xl font-bold scroll-mt-24 mb-4 text-blue-700 dark:text-blue-400">Research Problems for Students</h2>
+        <p class="mb-6 text-lg">I am looking for motivated students to tackle fundamental questions in distributed computing. Here are some examples of the problems we work on:</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg border-l-4 border-blue-500">
+                <h3 class="font-bold text-xl mb-2">Swarm Robotics</h3>
+                <p>How can a group of simple robots achieve a complex task? We design algorithms for problems like <strong>Pattern Formation</strong>, <strong>Dispersion</strong>, and <strong>Exploration</strong> of unknown environments.</p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg border-l-4 border-red-500">
+                <h3 class="font-bold text-xl mb-2">Fault Tolerance</h3>
+                <p>What happens when robots fail or are malicious? We build resilient systems that can handle <strong>Crash Faults</strong> or even <strong>Byzantine Faults</strong>, ensuring the mission succeeds.</p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg border-l-4 border-green-500">
+                <h3 class="font-bold text-xl mb-2">Fundamental Algorithms</h3>
+                <p>We explore the core principles of coordination. This includes tasks like <strong>Rendezvous</strong>, <strong>Treasure Hunt</strong>, and understanding the limits of computation when agents are <strong>anonymous</strong> and have no memory.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="collaborator-map-section" class="my-12">
+        <h2 class="text-3xl font-bold scroll-mt-24 mb-4 text-blue-700 dark:text-blue-400">Collaborator Network</h2>
+        <p class="mb-6 text-lg">Research is a global endeavor. This map showcases my network of co-authors from institutions around the world.</p>
+        <div id="map" class="rounded-lg shadow-lg z-0"></div>
+    </section>
+    
+    <section id="simulators" class="my-12">
+        <h2 class="text-3xl font-bold scroll-mt-24 mb-4 text-blue-700 dark:text-blue-400">Mobile Robot Simulators</h2>
+        <p class="mb-6 text-lg">Explore some of the concepts we study with these interactive simulators for different mobile robot models.</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <a href="https://drdebmath.github.io/CCMModel/" target="_blank" class="block bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl hover:scale-105 transition-all">
+                <h3 class="font-bold text-xl mb-2 text-blue-600 dark:text-blue-400">CCM Model Simulator</h3>
+                <p>A simulator for the Coordinated Concurrent Movement model.</p>
+            </a>
+            <a href="https://drdebmath.github.io/LCMmodel/" target="_blank" class="block bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl hover:scale-105 transition-all">
+                <h3 class="font-bold text-xl mb-2 text-blue-600 dark:text-blue-400">LCM Model Simulator</h3>
+                <p>A simulator for the Look-Compute-Move model.</p>
+            </a>
+        </div>
+    </section>
+
+</main>
+
+<!-- Presentation Progress Bar -->
+<div id="progress-bar" style="display: none;"></div>
+
+<!-- Presentation Controls -->
+<div id="presentation-controls" class="hidden">
+    <button id="prev-slide" class="fixed bottom-4 left-16 p-2 rounded-full bg-gray-800 text-white z-50"><</button>
+    <button id="next-slide" class="fixed bottom-4 right-4 p-2 rounded-full bg-gray-800 text-white z-50">></button>
+    <div id="slide-counter" class="fixed bottom-4 right-16 text-white bg-gray-800 px-3 py-1 rounded-full z-50"></div>
+</div>
+
+<button id="fullscreen-button" class="fixed bottom-4 left-4 p-2 rounded-full bg-gray-800 text-white z-50">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m0 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5h-4m0 0v-4m0 4l-5-5" />
+    </svg>
+</button>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    // --- EMBEDDED DATA -- -
+    const data = {
+      "about_me": {
+        "name": "Debasish Pattanayak", "name_odia": "ଦେବାଶିଷ ପଟ୍ଟନାୟକ", "picture": "https://drdebmath.github.io/debasish_photo.jpeg",
+        "dblp": "https://dblp.uni-trier.de/pers/hd/p/Pattanayak:Debasish", "google_scholar": "https://scholar.google.com/citations?user=E-jjx9gAAAAJ&hl=en&oi=ao",
+        "orcid": "https://orcid.org/0000-0003-2862-2795", "x": "https://twitter.com/drdebmath?ref_src=twsrc%5Etfw",
+        "github": "https://github.com/drdebmath", "linkedin": "https://www.linkedin.com/in/debasish-pattanayak-3750a530/",
+        "position": "Assistant Professor", "current_institution": {"name": "Indian Institute of Technology, Indore", "url": "https://www.iiti.ac.in/"}
+      },
+      "research": ["Distributed Algorithms", "Fault-tolerance", "Swarm Robots", "Randomized Algorithms", "Graph Algorithms", "Simulators for Mobile Robots"]
+    };
+
+    const collaboratorData = [
+        { name: "John Augustine", uni: "IIT Madras", coords: [12.9915, 80.2337], type: "indian" },
+        { name: "Subhash Bhagat", uni: "IIT Jodhpur", coords: [26.4718, 73.1139], type: "indian" },
+        { name: "Sruti Gan Chaudhuri", uni: "Jadavpur University", coords: [22.4991, 88.3715], type: "indian" },
+        { name: "H. Ramesh", uni: "IIT Guwahati", coords: [26.1844, 91.5629], type: "indian" },
+        { name: "P. S. Mandal", uni: "IIT Guwahati", coords: [26.1844, 91.5629], type: "indian" },
+        { name: "Anisur Rahaman Molla", uni: "ISI Kolkata", coords: [22.5999, 88.3995], type: "indian" },
+        { name: "Kaushik Mondal", uni: "IIT Ropar", coords: [30.9681, 76.4716], type: "indian" },
+        { name: "Caterina Feletti", uni: "University of Milan, Italy", coords: [45.4792, 9.1859], type: "international" },
+        { name: "Paola Flocchini", uni: "University of Ottawa, Canada", coords: [45.4215, -75.6823], type: "international" },
+        { name: "Nicola Santoro", uni: "Carleton University, Canada", coords: [45.3876, -75.6960], type: "international" },
+        { name: "Klaus-Tycho Förster", uni: "TU Dortmund, Germany", coords: [51.4935, 7.4128], type: "international" },
+        { name: "Stefan Schmid", uni: "TU Berlin, Germany", coords: [52.5121, 13.3272], type: "international" },
+        { name: "Loukas Georgiadis", uni: "University of Ioannina, Greece", coords: [39.6167, 20.8431], type: "international" },
+        { name: "Giuseppe F. Italiano", uni: "Luiss University, Rome, Italy", coords: [41.9097, 12.4923], type: "international" },
+        { name: "Giuseppe Antonio Di Luna", uni: "Sapienza University of Rome, Italy", coords: [41.9038, 12.5152], type: "international" },
+        { name: "Francesco Piselli", uni: "University of Perugia, Italy", coords: [43.1122, 12.3888], type: "international" },
+        { name: "Ajay D. Kshemkalyani", uni: "UIC, USA", coords: [41.8722, -87.6481], type: "international" },
+        { name: "Gokarna Sharma", uni: "Kent State University, USA", coords: [41.1492, -81.3439], type: "international" },
+        { name: "Evangelos Kosinas", uni: "University of Ioannina, Greece", coords: [39.6167, 20.8431], type: "international" },
+        { name: "Andrzej Pelc", uni: "UQO, Canada", coords: [45.4339, -75.7335], type: "international" },
+        { name: "Masafumi Yamashita", uni: "Kyushu University, Japan", coords: [33.6217, 130.4283], type: "international" },
+        { name: "Yukiko Yamauchi", uni: "Kyushu University, Japan", coords: [33.6217, 130.4283], type: "international" },
+        { name: "Alfredo Navarra", uni: "University of Perugia, Italy", coords: [43.1122, 12.3888], type: "international" },
+        { name: "Giuseppe Prencipe", uni: "University of Pisa, Italy", coords: [43.7228, 10.4017], type: "international" }
+    ];
+    
+    // --- GLOBAL VARIABLES ---
+    let map;
+
+    // --- INITIALIZATION ---
+    setupDarkMode();
+    setupHeader(data.about_me);
+    setupNavbar();
+    displayResearchInterests(data.research);
+    initializeMap(collaboratorData);
+    setupPresentation();
+
+    // --- FUNCTIONS ---
+    function setupDarkMode() {
+      const darkModeToggle = document.getElementById("darkModeToggle");
+      const htmlElement = document.documentElement;
+      let darkMode = localStorage.getItem("darkMode") === "true";
+      htmlElement.classList.toggle("dark", darkMode);
+
+      darkModeToggle.addEventListener("click", () => {
+        darkMode = !darkMode;
+        htmlElement.classList.toggle("dark", darkMode);
+        localStorage.setItem("darkMode", darkMode.toString());
+      });
+    }
+
+    function setupHeader(aboutMe) {
+        if (!aboutMe) return;
+        document.getElementById("name").textContent = aboutMe.name || "";
+        document.getElementById("name_odia").textContent = aboutMe.name_odia || "";
+        document.getElementById("position").textContent = `${aboutMe.position || ""} at ${aboutMe.current_institution.name || ""}`;
+        document.getElementById("picture").innerHTML = `<img src="${aboutMe.picture || ''}" alt="Profile picture" class="rounded-full object-cover w-full h-full shadow-lg"/>`;
+        const links = [
+            { href: aboutMe.dblp, title: "DBLP" },
+            { href: aboutMe.google_scholar, title: "Google Scholar" },
+            { href: aboutMe.github, title: "GitHub" },
+            { href: aboutMe.linkedin, title: "LinkedIn" }
+        ];
+        document.getElementById("links").innerHTML = links.map(link => 
+            `<a href="${link.href}" target="_blank" class="bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-sm font-semibold hover:bg-blue-200 dark:hover:bg-blue-700 transition-colors">${link.title}</a>`
+        ).join("");
+    }
+
+    function setupNavbar() {
+        const navbar = document.getElementById("navbar");
+        const links = [
+            { href: "#research", label: "Research" },
+            { href: "#template-problems", label: "Student Info" },
+            { href: "#collaborator-map-section", label: "Map" },
+            { href: "#simulators", label: "Simulators" },
+        ];
+        navbar.innerHTML = links.map(link => 
+            `<li><a href="${link.href}" class="block px-3 py-1 rounded text-white hover:bg-blue-700 dark:hover:bg-blue-900 transition-colors">${link.label}</a></li>`
+        ).join("");
+    }
+
+    function displayResearchInterests(interests) {
+        const container = document.getElementById("research_interests_content");
+        if (!interests) return;
+        container.innerHTML = interests.map(interest => 
+            `<span class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-full font-semibold">${interest}</span>`
+        ).join("");
+    }
+
+    function initializeMap(collaborators) {
+        const iitIndore = { name: "IIT Indore", coords: [22.7196, 75.8573] };
+        map = L.map('map').setView([35, 20], 2); // Assign to the global map variable
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '© <a href="https://www.openstreetmap.org/copyright">OSM</a> © <a href="https://carto.com/attributions">CARTO</a>'
+        }).addTo(map);
+
+        const indoreIcon = L.divIcon({
+            html: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ff6600" class="w-8 h-8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z"/></svg>',
+            className: '', iconSize: [32, 32], iconAnchor: [16, 32]
+        });
+        L.marker(iitIndore.coords, { icon: indoreIcon }).addTo(map)
+            .bindPopup(`<b>Debasish Pattanayak</b><br>IIT Indore`).openPopup();
+
+        const markers = L.markerClusterGroup();
+
+        collaborators.forEach(c => {
+            const color = c.type === 'indian' ? '#003366' : '#990000';
+            const collaboratorIcon = L.divIcon({
+                html: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${color}" class="w-6 h-6"><circle cx="12" cy="12" r="10"/></svg>`,
+                className: '', iconSize: [24, 24], iconAnchor: [12, 12]
+            });
+
+            const marker = L.marker(c.coords, { icon: collaboratorIcon })
+                .bindPopup(`<b>${c.name}</b><br>${c.uni}`);
+            
+            markers.addLayer(marker);
+
+            L.polyline([iitIndore.coords, c.coords], { color: 'gray', weight: 1.5, opacity: 0.6, dashArray: c.type === 'indian' ? '' : '5, 5' }).addTo(map);
+        });
+
+        map.addLayer(markers);
+    }
+
+    function setupPresentation() {
+        const fullscreenBtn = document.getElementById('fullscreen-button');
+        const presentationControls = document.getElementById('presentation-controls');
+        const prevBtn = document.getElementById('prev-slide');
+        const nextBtn = document.getElementById('next-slide');
+        const counter = document.getElementById('slide-counter');
+        const slides = Array.from(document.querySelectorAll('main > section'));
+        const progressBar = document.getElementById('progress-bar');
+        let currentSlide = 0;
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.toggle('active-slide', i === index);
+            });
+            counter.textContent = `${index + 1} / ${slides.length}`;
+            
+            // Update progress bar
+            const progress = ((index + 1) / slides.length) * 100;
+            progressBar.style.width = `${progress}%`;
+
+            // If the current slide is the map, invalidate its size to force a redraw.
+            if (slides[index].id === 'collaborator-map-section' && map) {
+                setTimeout(() => {
+                    map.invalidateSize();
+                }, 550); // Delay should be slightly longer than the transition
+            }
+        }
+
+        function startPresentation() {
+            document.documentElement.requestFullscreen().catch(err => {
+                console.error(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+            });
+        }
+
+        function endPresentation() {
+            document.body.classList.remove('presentation-mode');
+            presentationControls.classList.add('hidden');
+            progressBar.style.display = 'none';
+            slides.forEach(slide => slide.classList.remove('active-slide'));
+        }
+        
+        fullscreenBtn.addEventListener('click', startPresentation);
+
+        function goToNextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }
+
+        function goToPrevSlide() {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            showSlide(currentSlide);
+        }
+
+        nextBtn.addEventListener('click', goToNextSlide);
+        prevBtn.addEventListener('click', goToPrevSlide);
+
+        // Add keyboard controls for the slideshow
+        document.addEventListener('keydown', (e) => {
+            if (document.body.classList.contains('presentation-mode')) {
+                if (e.key === 'ArrowRight' || e.key === ' ') { // Add spacebar for next slide
+                    e.preventDefault();
+                    goToNextSlide();
+                } else if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    goToPrevSlide();
+                } else if (e.key === 'Escape') {
+                    if (document.fullscreenElement) {
+                        document.exitFullscreen();
+                    }
+                }
+            }
+        });
+
+        // Listen for changes in fullscreen state
+        document.addEventListener('fullscreenchange', () => {
+            if (document.fullscreenElement) {
+                document.body.classList.add('presentation-mode');
+                presentationControls.classList.remove('hidden');
+                progressBar.style.display = 'block';
+                currentSlide = 0;
+                showSlide(currentSlide);
+            } else {
+                endPresentation();
+            }
+        });
+    }
+});
+</script>
+
+</body>
+</html>
