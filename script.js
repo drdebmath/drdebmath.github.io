@@ -421,11 +421,31 @@ function displayCurrentResearch(currentResearch) {
   `;
 }
 function displayCurrentTeaching(currentTeaching) {
-  document.getElementById("current_teaching_content").innerHTML = `
-    <p class="bg-white dark:bg-gray-800 p-4 shadow rounded dark:text-white transition-colors duration-200">${
-      currentTeaching || "No current teaching information available."
-    }</p>
-  `;
+  const container = document.getElementById("current_teaching_content");
+  if (!Array.isArray(currentTeaching) || currentTeaching.length === 0) {
+    container.innerHTML = `
+      <p class="bg-white dark:bg-gray-800 p-4 shadow rounded dark:text-white transition-colors duration-200">
+        No current teaching information available.
+      </p>
+    `;
+    return;
+  }
+  container.innerHTML = currentTeaching
+    .map(
+      (course) => `
+        <div class="bg-white dark:bg-gray-800 p-4 shadow rounded mb-4 dark:text-white transition-colors duration-200">
+          <p><strong>Course:</strong> ${course.title || ""}</p>
+          <p><strong>Session:</strong> ${course.session || ""}</p>
+          <p><strong>Institution:</strong> ${course.institution || ""}</p>
+          ${
+            course.url
+              ? `<a href="${course.url}" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200">(More details)</a>`
+              : ""
+          }
+        </div>
+      `
+    )
+    .join("");
 }
 
 function setupGroupingButtons() {

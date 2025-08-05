@@ -270,7 +270,14 @@
     "Simulators for Mobile Robots"
   ],
   "current_research": "My research interests lie in the design and analysis of algorithms for mobile agents and mobile robots operating in both discrete (graphs) and continuous spaces. I focus on fundamental problems such as exploration, search, rendezvous, evacuation, and filling under constraints of limited memory, communication, or environmental knowledge. I am particularly interested in distributed coordination, fault-tolerant behavior, and the impact of structure and complexity on algorithmic performance. My work spans deterministic and randomized strategies, with applications in swarm robotics, multi-agent coordination, and autonomous systems. I also work on developing simulators for these systems, a couple of them are linked here, under CCM Model and LCM Model.",
-  "current_teaching":"In July-Nov 2025 session, I am teaching CS103: Introduction to Programming. Visit the course website.",
+  "current_teaching":[
+    {
+      "title": "CS103: Introduction to Programming",
+      "session": "July-Nov 2025",
+      "institution": "IIT Indore",
+      "url": "https://drdebmath.github.io/IITIJul2025CS103"
+    }
+  ],
   "publications": [
     {
       "authors": [
