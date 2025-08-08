@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Dijkstra's Algorithm Visualization</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.26.0/dist/cytoscape.min.js"></script>
+<style>
+  body { font-family: system-ui, sans-serif; background: #f7f7f7; margin: 0; padding: 1.5rem; }
+  .container { max-width: 980px; margin: auto; }
+  h1 { text-align: center; font-weight: 500; margin-bottom: 1rem; }
+  .controls { display:flex; gap:0.5rem; justify-content:center; flex-wrap:wrap; margin-bottom:0.75rem; }
+  button { padding:0.5rem 0.9rem; font-size:14px; border:1px solid #ccc; border-radius:6px; background:#fff; cursor:pointer; }
+  button:disabled { opacity:0.5; cursor:not-allowed; }
+  #cy { height:520px; border:1px solid #ddd; border-radius:6px; margin-bottom:0.75rem; background:#fff; }
+  .logs { background:#fff; border:1px solid #ccc; border-radius:6px; padding:0.9rem; height:140px; overflow:auto; font-size:13px; }
+  .status { display:flex; gap:1rem; justify-content:space-between; font-size:13px; padding:0.6rem 0; flex-wrap: wrap; }
+  .status > div { flex: 1; min-width: 200px; }
+  .legend { display:flex; gap:1rem; justify-content:center; margin-top:0.5rem; font-size:12px; }
+  .legend .dot { width:12px; height:12px; border-radius:50%; display:inline-block; margin-right:6px; vertical-align:middle; }
+  .unseen { background:#aaa } .consider { background:#ff5722 } .visited { background:#4caf50 }
+  .pq-display { font-family: 'Consolas', 'Monaco', monospace; background: #f8f9fa; padding: 4px 8px; border-radius: 4px; border: 1px solid #e9ecef; }
+  .distances-display { font-family: 'Consolas', 'Monaco', monospace; background: #f8f9fa; padding: 4px 8px; border-radius: 4px; border: 1px solid #e9ecef; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Dijkstra's Algorithm Visualization</h1>
+  <div class="controls">
+    <button id="play">▶ Play</button>
+    <button id="pause">⏸ Pause</button>
+    <button id="step">Step</button>
+    <button id="reset">↻ Reset</button>
+    <label>Speed: <input id="speed" type="range" min="150" max="2000" value="700"> <span id="spd">700ms</span></label>
+  </div>
+
+  <div class="status">
+    <div><strong>Current Node:</strong> <span id="current-node">None</span></div>
+    <div><strong>Step:</strong> <span id="step-no">0</span></div>
+  </div>
+  
+  <div class="status">
+    <div><strong>Priority Queue:</strong><br><span id="pq-status" class="pq-display">[]</span></div>
+    <div><strong>Distances:</strong><br><span id="distances" class="distances-display">{}</span></div>
+  </div>
+
+  <div id="cy"></div>
+
+  <div class="legend">
+    <div><span class="dot unseen"></span> Unvisited</div>
+    <div><span class="dot consider"></span> In Priority Queue</div>
+    <div><span class="dot visited"></span> Visited</div>
+  </div>
+
+  <div class="logs" id="logs">🚀 Ready for Dijkstra</div>
+</div>
+
+<script>
+const startNodeId = 'A';
+
+const nodes = [
+  { data: { id: 'A', dist: 0 } }, { data: { id: 'B', dist: Infinity } }, { data: { id: 'C', dist: Infinity } },
+  { data: { id: 'D', dist: Infinity } }, { data: { id: 'E', dist: Infinity } }, { data: { id: 'F', dist: Infinity } }
+];
+
+const edgeTuples = [
+  ['A','B',4], ['A','C',3], ['B','C',1], ['B','D',2],
+  ['C','D',4], ['C','E',2], ['D','E',3], ['D','F',2], ['E','F',3]
+];
+
+const edges = edgeTuples.map(([s,t,w],i) => ({
+  data: { id: `e${i}_${s}${t}`, source: s, target: t, weight: w }
+}));
+
+const cy = cytoscape({
+  container: document.getElementById('cy'),
+  elements: { nodes, edges },
+  style: [
+    {
+      selector: 'node',
+      style: {
+        'background-color': '#aaa',
+        label: ele => ele.data('id') + ' (' + (ele.data('dist') === Infinity ? '∞' : ele.data('dist')) + ')',
+        color: '#fff',
+        'text-valign': 'center',
+        'text-halign': 'center',
+        'font-size': '14px',
+        'font-weight': '700',
+        width: '48px',
+        height: '48px',
+        'border-width': ele => ele.id() === startNodeId ? 4 : 0,
+        'border-color': ele => ele.id() === startNodeId ? '#000' : '#aaa',
+        'border-style': 'double'
+      }
+    },
+    {
+      selector: 'edge',
+      style: {
+        'width': 3,
+        'line-color': '#888',
+        'curve-style': 'bezier',
+        'label': 'data(weight)',
+        'font-size': '12px',
+        'text-background-color': '#ffffff',
+        'text-background-opacity': 1,
+        'text-border-color': '#111',
+        'text-border-opacity': 0.75,
+        'text-border-width': 1,
+        'text-background-padding': '6px',
+        'text-background-shape': 'roundrectangle',
+        'text-rotation': 'autorotate'
+      }
+    },
+    { selector: '.consider', style: { 'background-color': '#ff5722' } },
+    { selector: '.visited', style: { 'background-color': '#4caf50' } },
+    { selector: '.edge-relax', style: { 'line-color': '#ff5722', 'width': 5 } },
+    { selector: '.edge-tree', style: { 'line-color': '#4caf50', 'width': 5 } }
+  ],
+  layout: { name: 'circle' }
+});
+
+class DijkstraViz {
+  constructor(start='A') {
+    this.start = start;
+    this.steps = [];
+    this.current = 0;
+    this.interval = null;
+    this.speed = 700;
+    this.isRunning = false;
+    this.buildSteps();
+  }
+
+  buildSteps() {
+    const dist = {};
+    const prev = {};
+    const visited = {};
+    cy.nodes().forEach(n => { dist[n.id()] = Infinity; prev[n.id()] = null; visited[n.id()] = false; });
+    dist[this.start] = 0;
+
+    const pq = [this.start];
+
+    while (pq.length > 0) {
+      pq.sort((a,b)=>dist[a]-dist[b]);
+      const u = pq.shift();
+      if (visited[u]) continue;
+      visited[u] = true;
+      this.steps.push({ type: 'visit', node: u, distances: {...dist}, prev: {...prev}, pq: [...pq] });
+
+      cy.getElementById(u).connectedEdges().forEach(e => {
+        const v = e.source().id() === u ? e.target().id() : e.source().id();
+        const w = e.data('weight');
+        if (!visited[v] && dist[u] + w < dist[v]) {
+          dist[v] = dist[u] + w;
+          prev[v] = u;
+          pq.push(v);
+          this.steps.push({ type: 'relax', from: u, to: v, weight: w, distances: {...dist}, prev: {...prev}, edgeId: e.id(), pq: [...pq] });
+        }
+      });
+    }
+  }
+
+  updateNodeLabels(distances) {
+    cy.nodes().forEach(n => {
+      n.data('dist', distances[n.id()]);
+      n.style('label', n.id() + ' (' + (distances[n.id()] === Infinity ? '∞' : distances[n.id()]) + ')');
+    });
+  }
+
+  highlightTree(prev) {
+    cy.edges().removeClass('edge-tree');
+    Object.keys(prev).forEach(v => {
+      if (prev[v]) {
+        const edge = cy.edges().filter(e =>
+          (e.source().id() === v && e.target().id() === prev[v]) ||
+          (e.target().id() === v && e.source().id() === prev[v])
+        );
+        edge.addClass('edge-tree');
+      }
+    });
+  }
+
+  formatPriorityQueue(pq, distances) {
+    if (pq.length === 0) return '[]';
+    
+    // Sort the priority queue by distance to show the actual priority order
+    const sortedPq = [...pq].sort((a, b) => distances[a] - distances[b]);
+    
+    // Create dictionary-style display showing node: distance pairs
+    const pqEntries = sortedPq.map(node => {
+      const dist = distances[node] === Infinity ? '∞' : distances[node];
+      return `${node}: ${dist}`;
+    });
+    
+    return `[${pqEntries.join(', ')}]`;
+  }
+
+  formatDistances(distances) {
+    const entries = Object.keys(distances)
+      .sort()
+      .map(node => {
+        const dist = distances[node] === Infinity ? '∞' : distances[node];
+        return `${node}: ${dist}`;
+      });
+    return `{${entries.join(', ')}}`;
+  }
+
+  executeStep() {
+    if (this.current >= this.steps.length) { this.pause(); return; }
+    cy.nodes().removeClass('consider visited');
+    cy.edges().removeClass('edge-relax');
+
+    const step = this.steps[this.current];
+    this.updateNodeLabels(step.distances);
+    this.highlightTree(step.prev);
+
+    // Updated priority queue display with distances
+    document.getElementById('pq-status').textContent = this.formatPriorityQueue(step.pq, step.distances);
+
+    if (step.type === 'visit') {
+      cy.getElementById(step.node).addClass('visited');
+      document.getElementById('current-node').textContent = step.node;
+    }
+    if (step.type === 'relax') {
+      cy.getElementById(step.from).addClass('visited');
+      cy.getElementById(step.to).addClass('consider');
+      cy.getElementById(step.edgeId).addClass('edge-relax');
+      document.getElementById('current-node').textContent = `${step.from} → ${step.to}`;
+    }
+
+    // Updated distances display
+    document.getElementById('distances').textContent = this.formatDistances(step.distances);
+    document.getElementById('step-no').textContent = this.current + 1;
+    this.addLog(step);
+    this.current++;
+  }
+
+  addLog(step) {
+    const logs = document.getElementById('logs');
+    const div = document.createElement('div');
+    if (step.type === 'visit') {
+      const pqDisplay = this.formatPriorityQueue(step.pq, step.distances);
+      div.textContent = `Visit node ${step.node} | PQ: ${pqDisplay}`;
+    }
+    if (step.type === 'relax') {
+      const pqDisplay = this.formatPriorityQueue(step.pq, step.distances);
+      div.textContent = `Relax edge ${step.from}-${step.to}, new dist[${step.to}] = ${step.distances[step.to]} | PQ: ${pqDisplay}`;
+    }
+    logs.appendChild(div);
+    logs.scrollTop = logs.scrollHeight;
+  }
+
+  play() {
+    if (this.current >= this.steps.length) return;
+    this.isRunning = true;
+    this.interval = setInterval(() => {
+      this.executeStep();
+      if (this.current >= this.steps.length) this.pause();
+    }, this.speed);
+  }
+  pause() { this.isRunning = false; clearInterval(this.interval); this.interval = null; }
+  stepOnce() { if (!this.isRunning && this.current < this.steps.length) this.executeStep(); }
+  reset() {
+    this.pause(); this.current = 0;
+    cy.nodes().removeClass('consider visited');
+    cy.edges().removeClass('edge-relax edge-tree');
+    cy.nodes().forEach(n => { n.data('dist', n.id() === startNodeId ? 0 : Infinity); });
+    const initialDistances = Object.fromEntries(cy.nodes().map(n => [n.id(), n.data('dist')]));
+    this.updateNodeLabels(initialDistances);
+    document.getElementById('logs').innerHTML = '🚀 Ready for Dijkstra';
+    document.getElementById('distances').textContent = this.formatDistances(initialDistances);
+    document.getElementById('current-node').textContent = 'None';
+    document.getElementById('pq-status').textContent = '[]';
+    document.getElementById('step-no').textContent = '0';
+  }
+  setSpeed(ms) { this.speed = ms; if (this.isRunning) { this.pause(); this.play(); } document.getElementById('spd').textContent = ms + 'ms'; }
+}
+
+const viz = new DijkstraViz(startNodeId);
+document.getElementById('play').onclick = () => viz.play();
+document.getElementById('pause').onclick = () => viz.pause();
+document.getElementById('step').onclick = () => viz.stepOnce();
+document.getElementById('reset').onclick = () => viz.reset();
+document.getElementById('speed').oninput = (e) => viz.setSpeed(parseInt(e.target.value));
+</script>
+</body>
+</html>

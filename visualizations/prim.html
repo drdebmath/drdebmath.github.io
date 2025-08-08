@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Prim's Algorithm Simulation</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.26.0/dist/cytoscape.min.js"></script>
+<style>
+  body { font-family: system-ui, sans-serif; background: #f7f7f7; margin: 0; padding: 1.5rem; }
+  .container { max-width: 960px; margin: auto; }
+  h1 { text-align: center; font-weight: 500; margin-bottom: 2rem; }
+  .controls { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1rem; }
+  button { padding: 0.5rem 1rem; font-size: 14px; border: 1px solid #ccc; border-radius: 6px; background: #fff; cursor: pointer; }
+  button:hover:not(:disabled) { background: #eee; }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  #cy { height: 480px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 1rem; }
+  .logs-container { background: #fff; border: 1px solid #ccc; border-radius: 6px; padding: 1rem; height: 160px; overflow-y: auto; font-size: 13px; line-height: 1.4; }
+  .log-entry { margin-bottom: 0.4rem; }
+  .status-bar { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; font-size: 13px; margin-top: 1rem; padding: 0.75rem; border: 1px solid #ccc; border-radius: 6px; background: #fafafa; }
+  .legend { display: flex; gap: 1rem; justify-content: center; margin-top: 1rem; font-size: 12px; }
+  .legend-item { display: flex; align-items: center; gap: 0.3rem; }
+  .legend-color { width: 12px; height: 12px; border-radius: 50%; }
+  .unvisited { background: #aaa; }
+  .current { background: #ff5722; }
+  .in-mst { background: #4caf50; }
+  .active-edge { line-color: #ff5722; width: 5px; }
+  .mst-edge { line-color: #4caf50; width: 5px; }
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Prim's Algorithm Visualization</h1>
+<div class="controls">
+  <button id="play">▶ Play</button>
+  <button id="pause">⏸ Pause</button>
+  <button id="reset">↻ Reset</button>
+  <button id="step">Step</button>
+  <label>Speed: <input type="range" id="speed" min="200" max="2000" value="800"/> <span id="speed-display">800ms</span></label>
+</div>
+<div class="status-bar">
+  <div><strong>Current:</strong> <span id="current-node">None</span></div>
+  <div><strong>MST Cost:</strong> <span id="mst-cost">0</span></div>
+  <div><strong>Edges in MST:</strong> <span id="mst-edges">[]</span></div>
+  <div><strong>Step:</strong> <span id="current-step">0</span></div>
+</div>
+<div class="legend">
+  <div class="legend-item"><div class="legend-color unvisited"></div> Unvisited</div>
+  <div class="legend-item"><div class="legend-color current"></div> Current</div>
+  <div class="legend-item"><div class="legend-color in-mst"></div> In MST</div>
+</div>
+<div id="cy"></div>
+<div class="logs-container" id="logs">
+  <div class="log-entry">🚀 Ready to start Prim's Algorithm</div>
+</div>
+</div>
+
+<script>
+const nodes = [
+  { data: { id: 'A' } }, { data: { id: 'B' } }, { data: { id: 'C' } },
+  { data: { id: 'D' } }, { data: { id: 'E' } }, { data: { id: 'F' } }
+];
+
+const edges = [
+  ['A','B',4], ['A','C',3], ['B','C',1], ['B','D',2],
+  ['C','D',4], ['C','E',2], ['D','E',3], ['D','F',2], ['E','F',3]
+].map(([source, target, weight]) => ({ data: { source, target, weight } }));
+
+const cy = cytoscape({
+  container: document.getElementById('cy'),
+  elements: { nodes, edges },
+  style: [
+    { selector: 'node', style: { 'background-color': '#aaa', 'label': 'data(id)', 'color':'#fff', 'text-valign':'center', 'text-halign':'center', 'font-size':'18px', 'font-weight':'bold', 'width':'40px', 'height':'40px' } },
+    { selector: 'edge', style: { 
+        'width': 3,
+        'label': 'data(weight)',
+        'text-rotation': 'autorotate',
+        'font-size':'12px',
+        'text-background-color': '#fff',
+        'text-background-opacity': 1,
+        'text-background-shape': 'ellipse',
+        'text-border-color': '#000',
+        'text-border-width': 1,
+        'text-border-opacity': 1,
+        'text-background-padding': 3,
+        'line-color': '#888',
+        'curve-style': 'bezier'
+      }
+    },
+    { selector: '.current', style: { 'background-color': '#ff5722' } },
+    { selector: '.in-mst', style: { 'background-color': '#4caf50' } },
+    { selector: '.active-edge', style: { 'line-color': '#ff5722', 'width': 5 } },
+    { selector: '.mst-edge', style: { 'line-color': '#4caf50', 'width': 5 } }
+  ],
+  layout: { name: 'circle' }
+});
+
+class PrimsVisualizer {
+  constructor() {
+    this.steps = [];
+    this.currentStep = 0;
+    this.isRunning = false;
+    this.interval = null;
+    this.speed = 800;
+    this.generateSteps();
+  }
+
+  generateSteps() {
+    const visited = new Set();
+    const mstEdges = [];
+    let totalCost = 0;
+    const start = 'A';
+    visited.add(start);
+    this.steps.push({ type: 'start', node: start, visited: new Set(visited), mstEdges: [], totalCost, message: `Start at ${start}` });
+
+    const allEdges = () => {
+      let res = [];
+      visited.forEach(v => {
+        cy.getElementById(v).connectedEdges().forEach(e => {
+          const u = e.source().id(), w = e.target().id();
+          const weight = e.data('weight');
+          if (visited.has(u) && !visited.has(w)) res.push({ edge: e, weight, from: u, to: w });
+          else if (visited.has(w) && !visited.has(u)) res.push({ edge: e, weight, from: w, to: u });
+        });
+      });
+      return res;
+    };
+
+    while (visited.size < cy.nodes().length) {
+      let edgesAvailable = allEdges();
+      edgesAvailable.sort((a,b)=>a.weight-b.weight);
+      const minEdge = edgesAvailable[0];
+      visited.add(minEdge.to);
+      mstEdges.push(minEdge.edge);
+      totalCost += minEdge.weight;
+      this.steps.push({ type: 'add-edge', node: minEdge.to, visited: new Set(visited), mstEdges: mstEdges.slice(), totalCost, message: `Add edge ${minEdge.from}-${minEdge.to} (weight ${minEdge.weight})` });
+    }
+
+    this.steps.push({ type: 'complete', visited: new Set(visited), mstEdges, totalCost, message: 'MST complete' });
+  }
+
+  executeStep() {
+    if (this.currentStep >= this.steps.length) { this.pause(); return; }
+    const step = this.steps[this.currentStep];
+    cy.nodes().removeClass('current in-mst');
+    cy.edges().removeClass('active-edge mst-edge');
+    step.visited.forEach(v => cy.getElementById(v).addClass('in-mst'));
+    if (step.node) cy.getElementById(step.node).addClass('current');
+    step.mstEdges.forEach(e => e.addClass('mst-edge'));
+    this.addLog(step);
+    document.getElementById('current-node').textContent = step.node || 'None';
+    document.getElementById('mst-cost').textContent = step.totalCost;
+    document.getElementById('mst-edges').textContent = '[' + step.mstEdges.map(e => `${e.source().id()}-${e.target().id()}`).join(', ') + ']';
+    document.getElementById('current-step').textContent = this.currentStep + 1;
+    this.currentStep++;
+  }
+
+  addLog(step) {
+    const logs = document.getElementById('logs');
+    const div = document.createElement('div');
+    div.className = 'log-entry';
+    div.textContent = `${this.currentStep+1}. ${step.message}`;
+    logs.appendChild(div);
+    logs.scrollTop = logs.scrollHeight;
+  }
+
+  play() {
+    if (this.currentStep >= this.steps.length) return;
+    this.isRunning = true;
+    this.interval = setInterval(()=>{ this.executeStep(); if (this.currentStep>=this.steps.length) this.pause(); }, this.speed);
+  }
+  pause() { this.isRunning = false; clearInterval(this.interval); this.interval = null; }
+  step() { if (!this.isRunning && this.currentStep < this.steps.length) this.executeStep(); }
+  reset() { this.pause(); this.currentStep=0; cy.nodes().removeClass('current in-mst'); cy.edges().removeClass('active-edge mst-edge'); document.getElementById('logs').innerHTML='<div class="log-entry">🚀 Ready to start Prim\'s Algorithm</div>'; document.getElementById('mst-cost').textContent=0; document.getElementById('mst-edges').textContent='[]'; document.getElementById('current-step').textContent=0; document.getElementById('current-node').textContent='None'; }
+  setSpeed(s) { this.speed = s; if (this.isRunning) { this.pause(); this.play(); } }
+}
+
+const prims = new PrimsVisualizer();
+document.getElementById('play').onclick=()=>prims.play();
+document.getElementById('pause').onclick=()=>prims.pause();
+document.getElementById('step').onclick=()=>prims.step();
+document.getElementById('reset').onclick=()=>prims.reset();
+document.getElementById('speed').oninput=(e)=>{ document.getElementById('speed-display').textContent=`${e.target.value}ms`; prims.setSpeed(parseInt(e.target.value)); };
+</script>
+</body>
+</html>

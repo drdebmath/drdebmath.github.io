@@ -210,8 +210,10 @@ function setupNavbar(sections) {
 
   // Add the fixed links first
   const fixed = [
+    { href: "IITIJul2025CS103/", label: "CS103" },
     { href: "CCMModel/", label: "CCM Model" },
     { href: "LCMmodel/", label: "LCM Model" },
+    { href: "visualizations/", label: "Visualizations" },
   ];
 
   // Create a <ul> for the navbar

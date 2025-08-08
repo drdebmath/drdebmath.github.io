@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>DFS Traversal</title>
+  <script src="https://cdn.jsdelivr.net/npm/cytoscape@3.26.0/dist/cytoscape.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 1.5rem;
+      font-family: system-ui, sans-serif;
+      background: #f7f7f7;
+      color: #111;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: auto;
+    }
+
+    h1 {
+      text-align: center;
+      font-weight: 500;
+      margin-bottom: 2rem;
+    }
+
+    .controls {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    button {
+      padding: 0.5rem 1rem;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: #fff;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover:not(:disabled) {
+      background: #eee;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    #cy {
+      height: 480px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+    }
+
+    .logs-container {
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 1rem;
+      height: 160px;
+      overflow-y: auto;
+      font-size: 13px;
+      line-height: 1.4;
+      color: #333;
+    }
+
+    .log-entry {
+      margin-bottom: 0.4rem;
+    }
+
+    .status-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-top: 1rem;
+      padding: 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: #fafafa;
+    }
+
+    .legend {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 1rem;
+      font-size: 12px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .legend-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .unvisited { background: #aaa; }
+    .current { background: #ff5722; }
+    .visited { background: #4caf50; }
+    .exploring { background: #2196f3; }
+    .backtracking { background: #ff9800; }
+
+    input[type=range] {
+      vertical-align: middle;
+    }
+
+    .algorithm-info {
+      font-size: 13px;
+      margin-top: 2rem;
+      line-height: 1.6;
+      color: #444;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>DFS Traversal</h1>
+    <div class="controls">
+      <button id="play">▶ Play</button>
+      <button id="pause">⏸ Pause</button>
+      <button id="reset">↻ Reset</button>
+      <button id="step">Step</button>
+      <label>
+        Speed:
+        <input type="range" id="speed" min="100" max="2000" value="800" />
+        <span id="speed-display">800ms</span>
+      </label>
+    </div>
+    <div class="status-bar">
+      <div><strong>Current:</strong> <span id="current-node">None</span></div>
+      <div><strong>Stack:</strong> <span id="stack-display">[]</span></div>
+      <div><strong>Visited:</strong> <span id="visited-count">0</span>/<span id="total-nodes">0</span></div>
+      <div><strong>Step:</strong> <span id="current-step">0</span></div>
+    </div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-color unvisited"></div> Unvisited</div>
+      <div class="legend-item"><div class="legend-color current"></div> Current</div>
+      <div class="legend-item"><div class="legend-color exploring"></div> Exploring</div>
+      <div class="legend-item"><div class="legend-color visited"></div> Visited</div>
+      <div class="legend-item"><div class="legend-color backtracking"></div> Backtracking</div>
+    </div>
+    <div id="cy"></div>
+
+    <div class="logs-container" id="logs">
+      <div class="log-entry">🚀 Ready to start DFS traversal</div>
+    </div>
+
+    
+
+    
+
+    <div class="algorithm-info">
+      <strong>About DFS:</strong> Depth-First Search explores as far as possible along a branch before backtracking. It uses a stack and marks nodes visited to avoid cycles.
+    </div>
+  </div>
+<script>
+  // Create a more complex graph structure
+  const nodes = [
+    { data: { id: 'A' } }, { data: { id: 'B' } }, { data: { id: 'C' } },
+    { data: { id: 'D' } }, { data: { id: 'E' } }, { data: { id: 'F' } },
+    { data: { id: 'G' } }, { data: { id: 'H' } }, { data: { id: 'I' } },
+    { data: { id: 'J' } }, { data: { id: 'K' } }, { data: { id: 'L' } }
+  ];
+
+  const edges = [
+    ['A', 'B'], ['A', 'C'], ['A', 'D'],
+    ['B', 'E'], ['B', 'F'],
+    ['C', 'G'], ['C', 'H'],
+    ['D', 'I'],
+    ['E', 'J'],
+    ['F', 'K'],
+    ['G', 'L'],
+    ['H', 'I'],
+    ['J', 'K'],
+    ['K', 'L']
+  ].map(([source, target]) => ({ data: { source, target } }));
+
+  const cy = cytoscape({
+    container: document.getElementById('cy'),
+    elements: { nodes, edges },
+    style: [
+      {
+        selector: 'node',
+        style: {
+          'background-color': '#666',
+          'label': 'data(id)',
+          'color': '#fff',
+          'text-valign': 'center',
+          'text-halign': 'center',
+          'font-size': '18px',
+          'font-weight': 'bold',
+          'width': '40px',
+          'height': '40px',
+          'border-width': '3px',
+          'border-color': '#333',
+          'transition-property': 'background-color, border-color, width, height',
+          'transition-duration': '0.3s'
+        }
+      },
+      {
+        selector: 'edge',
+        style: {
+          'width': 3,
+          'line-color': '#888',
+          'transition-property': 'line-color, width',
+          'transition-duration': '0.3s',
+          'curve-style': 'bezier'
+        }
+      },
+      {
+        selector: '.current',
+        style: {
+          'background-color': '#FF5722',
+          'border-color': '#D84315',
+          'width': '50px',
+          'height': '50px'
+        }
+      },
+      {
+        selector: '.visited',
+        style: {
+          'background-color': '#4CAF50',
+          'border-color': '#2E7D32'
+        }
+      },
+      {
+        selector: '.exploring',
+        style: {
+          'background-color': '#2196F3',
+          'border-color': '#1565C0'
+        }
+      },
+      {
+        selector: '.backtracking',
+        style: {
+          'background-color': '#ff9800',
+          'border-color': '#E65100'
+        }
+      },
+      {
+        selector: '.active-edge',
+        style: {
+          'line-color': '#FF5722',
+          'width': 5
+        }
+      }
+    ],
+    layout: {
+      name: 'breadthfirst',
+      directed: false,
+      roots: '#A',
+      padding: 30,
+      spacingFactor: 1.5
+    }
+  });
+
+  // DFS Algorithm Implementation
+  class DFSVisualizer {
+    constructor() {
+      this.visited = new Set();
+      this.stack = [];
+      this.steps = [];
+      this.currentStep = 0;
+      this.isRunning = false;
+      this.interval = null;
+      this.speed = 800;
+      
+      this.generateDFSSteps();
+      this.updateUI();
+    }
+
+    generateDFSSteps() {
+      this.steps = [];
+      const visited = new Set();
+      const stack = ['A'];
+      const adjList = this.buildAdjacencyList();
+
+      this.steps.push({
+        type: 'start',
+        node: 'A',
+        stack: ['A'],
+        visited: new Set(),
+        message: 'Starting DFS from node A'
+      });
+
+      while (stack.length > 0) {
+        const current = stack[stack.length - 1];
+        
+        if (!visited.has(current)) {
+          visited.add(current);
+          this.steps.push({
+            type: 'visit',
+            node: current,
+            stack: [...stack],
+            visited: new Set(visited),
+            message: `Visiting node ${current}`
+          });
+
+          // Add unvisited neighbors to stack (in reverse order for consistent traversal)
+          const neighbors = adjList[current] || [];
+          const unvisitedNeighbors = neighbors
+            .filter(neighbor => !visited.has(neighbor))
+            .sort()
+            .reverse();
+
+          for (const neighbor of unvisitedNeighbors) {
+            if (!stack.includes(neighbor)) {
+              stack.push(neighbor);
+            }
+          }
+
+          if (unvisitedNeighbors.length > 0) {
+            this.steps.push({
+              type: 'explore',
+              node: current,
+              stack: [...stack],
+              visited: new Set(visited),
+              neighbors: unvisitedNeighbors,
+              message: `Exploring neighbors of ${current}: [${unvisitedNeighbors.join(', ')}]`
+            });
+          }
+        } else {
+          stack.pop();
+          this.steps.push({
+            type: 'backtrack',
+            node: current,
+            stack: [...stack],
+            visited: new Set(visited),
+            message: `Backtracking from ${current}${stack.length > 0 ? ` to ${stack[stack.length - 1]}` : ''}`
+          });
+        }
+      }
+
+      this.steps.push({
+        type: 'complete',
+        stack: [],
+        visited: new Set(visited),
+        message: 'DFS traversal completed! All reachable nodes have been visited.'
+      });
+    }
+
+    buildAdjacencyList() {
+      const adjList = {};
+      
+      // Initialize all nodes
+      cy.nodes().forEach(node => {
+        adjList[node.id()] = [];
+      });
+      
+      // Build adjacency relationships
+      cy.edges().forEach(edge => {
+        const source = edge.source().id();
+        const target = edge.target().id();
+        adjList[source].push(target);
+        adjList[target].push(source);
+      });
+      
+      return adjList;
+    }
+
+    executeStep() {
+      if (this.currentStep >= this.steps.length) {
+        this.pause();
+        return;
+      }
+
+      const step = this.steps[this.currentStep];
+      this.updateVisualization(step);
+      this.addLogEntry(step);
+      this.updateStatusBar(step);
+      
+      this.currentStep++;
+    }
+
+    updateVisualization(step) {
+      // Reset all node classes
+      cy.nodes().removeClass('current visited exploring backtracking');
+      cy.edges().removeClass('active-edge');
+
+      // Apply visited nodes
+      step.visited.forEach(nodeId => {
+        cy.getElementById(nodeId).addClass('visited');
+      });
+
+      // Highlight current node
+      if (step.node) {
+        const currentNode = cy.getElementById(step.node);
+        currentNode.removeClass('visited').addClass('current');
+        
+        // Highlight edges to current node
+        currentNode.connectedEdges().addClass('active-edge');
+      }
+
+      // Show exploring state for neighbors
+      if (step.type === 'explore' && step.neighbors) {
+        step.neighbors.forEach(neighbor => {
+          if (!step.visited.has(neighbor)) {
+            cy.getElementById(neighbor).addClass('exploring');
+          }
+        });
+      }
+
+      // Show backtracking state
+      if (step.type === 'backtrack' && step.node) {
+        cy.getElementById(step.node).addClass('backtracking');
+      }
+    }
+
+    addLogEntry(step) {
+      const logsContainer = document.getElementById('logs');
+      const logEntry = document.createElement('div');
+      
+      let iconAndClass = '';
+      switch (step.type) {
+        case 'start':
+          iconAndClass = { icon: '🚀', class: 'log-start' };
+          break;
+        case 'visit':
+          iconAndClass = { icon: '✅', class: 'log-visit' };
+          break;
+        case 'explore':
+          iconAndClass = { icon: '🔍', class: 'log-explore' };
+          break;
+        case 'backtrack':
+          iconAndClass = { icon: '↩️', class: 'log-backtrack' };
+          break;
+        case 'complete':
+          iconAndClass = { icon: '🎉', class: 'log-complete' };
+          break;
+        default:
+          iconAndClass = { icon: 'ℹ️', class: 'log-visit' };
+      }
+      
+      logEntry.className = `log-entry ${iconAndClass.class}`;
+      logEntry.innerHTML = `${iconAndClass.icon} Step ${this.currentStep + 1}: ${step.message}`;
+      
+      logsContainer.appendChild(logEntry);
+      logsContainer.scrollTop = logsContainer.scrollHeight;
+    }
+
+    updateStatusBar(step) {
+      document.getElementById('current-node').textContent = step.node || 'None';
+      document.getElementById('stack-display').textContent = `[${step.stack.join(', ')}]`;
+      document.getElementById('visited-count').textContent = step.visited.size;
+      document.getElementById('current-step').textContent = this.currentStep + 1;
+    }
+
+    updateUI() {
+      const playBtn = document.getElementById('play');
+      const pauseBtn = document.getElementById('pause');
+      const stepBtn = document.getElementById('step');
+      const resetBtn = document.getElementById('reset');
+
+      playBtn.disabled = this.isRunning || this.currentStep >= this.steps.length;
+      pauseBtn.disabled = !this.isRunning;
+      stepBtn.disabled = this.isRunning || this.currentStep >= this.steps.length;
+      resetBtn.disabled = this.isRunning;
+    }
+
+    play() {
+      if (this.currentStep >= this.steps.length) return;
+      
+      this.isRunning = true;
+      this.interval = setInterval(() => {
+        this.executeStep();
+        this.updateUI();
+        
+        if (this.currentStep >= this.steps.length) {
+          this.pause();
+        }
+      }, this.speed);
+      
+      this.updateUI();
+    }
+
+    pause() {
+      this.isRunning = false;
+      if (this.interval) {
+        clearInterval(this.interval);
+        this.interval = null;
+      }
+      this.updateUI();
+    }
+
+    step() {
+      if (!this.isRunning && this.currentStep < this.steps.length) {
+        this.executeStep();
+        this.updateUI();
+      }
+    }
+
+    reset() {
+      this.pause();
+      this.currentStep = 0;
+      
+      // Clear visualization
+      cy.nodes().removeClass('current visited exploring backtracking');
+      cy.edges().removeClass('active-edge');
+      
+      // Clear logs
+      const logsContainer = document.getElementById('logs');
+      logsContainer.innerHTML = '<div class="log-entry log-start">🚀 Ready to start DFS traversal! Click Play or Step to begin.</div>';
+      
+      // Reset status bar
+      document.getElementById('current-node').textContent = 'None';
+      document.getElementById('stack-display').textContent = '[]';
+      document.getElementById('visited-count').textContent = '0';
+      document.getElementById('current-step').textContent = '0';
+      
+      this.updateUI();
+    }
+
+    setSpeed(newSpeed) {
+      this.speed = newSpeed;
+      if (this.isRunning) {
+        this.pause();
+        this.play();
+      }
+    }
+  }
+
+  // Initialize the visualizer
+  const dfsVisualizer = new DFSVisualizer();
+
+  // Event listeners
+  document.getElementById('play').addEventListener('click', () => dfsVisualizer.play());
+  document.getElementById('pause').addEventListener('click', () => dfsVisualizer.pause());
+  document.getElementById('step').addEventListener('click', () => dfsVisualizer.step());
+  document.getElementById('reset').addEventListener('click', () => dfsVisualizer.reset());
+
+  document.getElementById('speed').addEventListener('input', (e) => {
+    const speed = parseInt(e.target.value);
+    document.getElementById('speed-display').textContent = `${speed}ms`;
+    dfsVisualizer.setSpeed(speed);
+  });
+
+  // Update total nodes count
+  document.getElementById('total-nodes').textContent = cy.nodes().length;
+
+</script>
+
+</body>
+</html>

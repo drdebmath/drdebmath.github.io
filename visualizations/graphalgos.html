@@ -1,0 +1,343 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Graph Algorithms Lecture</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.css">
+  <link id="theme-link" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/theme/dracula.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+</head>
+<body>
+  <button id="theme-toggle" style="position:fixed;top:10px;right:10px;z-index:999;">Change Theme</button>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Introduction to Graphs -->
+      <section data-markdown>
+<textarea data-template>
+# Graph Algorithms
+### A visualization based presentation
+
+---
+
+## What is a Graph?
+
+- **Definition:** $G = (V, E) $, where:
+  - $V$: set of vertices
+  - $E$: set of edges
+- **Directed** / **Undirected**, **Weighted** / **Unweighted**
+
+---
+
+## Representations & Memory
+
+1. **Adjacency Matrix**
+   - 2D array, size $V \times V$
+   - Memory: $O(V^2)$
+     Example: For $V = 1000$, needs 1,000,000 cells
+2. **Adjacency List**
+   - Array/list of size $V$, each entry stores a list of adjacent vertices
+   - Memory: $O(V + E)$
+
+---
+
+## Graph Types
+
+- Undirected, Directed
+- Weighted, Unweighted
+- Dense graphs → adjacency matrix efficient
+- Sparse graphs → adjacency list preferred
+</textarea>
+      </section>
+
+      <!-- DFS -->
+      <section data-markdown>
+<textarea data-template>
+# Depth First Search (DFS)
+
+---
+
+## Concept
+
+- Explores as far as possible along one branch before backtracking
+- Implemented **recursively** or with an explicit **stack**
+
+---
+
+## Data Structures
+
+- **Visited Array**: size $V$ → $O(V)$ memory
+- **Stack** (implicit recursion or explicit list) → up to $O(V)$ space
+- Graph storage:
+  - Adjacency list: $O(V+E)$
+  - Adjacency matrix: $O(V^2)$
+
+---
+
+## Time Complexity
+
+- $O(V + E)$ for adjacency list
+- $O(V^2)$ for adjacency matrix
+
+---
+
+## Analysis
+
+- Efficient for finding connected components
+- Uses less memory with adjacency lists for sparse graphs
+- Recursive version may cause stack overflow for very deep graphs
+
+---
+
+## Applications
+
+- Pathfinding
+- Cycle Detection
+- Topological Sort
+- Connected Components
+</textarea>
+      </section>
+      <section>
+        <iframe src="dfs.html" width="100%" height="700px" frameborder="0"></iframe>
+      </section>
+
+      <!-- BFS -->
+      <section data-markdown>
+<textarea data-template>
+# Breadth First Search (BFS)
+
+---
+
+## Concept
+
+- Explores neighbors level-by-level
+- Uses a **queue** for tracking frontier
+
+---
+
+## Data Structures
+
+- **Visited Array**: $O(V)$ memory
+- **Queue**: holds up to $O(V)$ vertices
+- Graph storage:
+  - Adjacency list: $O(V+E)$
+  - Adjacency matrix: $O(V^2)$
+
+---
+
+## Time Complexity
+
+- $O(V + E)$ for adjacency list
+- $O(V^2)$ for adjacency matrix
+
+---
+
+## Analysis
+
+- Guarantees shortest path in unweighted graphs
+- Queue operations are $O(1)$
+- Higher memory for adjacency matrix in sparse graphs
+
+---
+
+## Applications
+
+- Shortest Path in Unweighted Graph
+- Network Broadcasting
+- Web Crawling
+</textarea>
+      </section>
+      <section>
+        <iframe src="bfs.html" width="100%" height="700px" frameborder="0"></iframe>
+      </section>
+
+      <!-- Prim's Algorithm -->
+      <section data-markdown>
+<textarea data-template>
+# Prim's Algorithm
+
+---
+
+## Concept
+
+- Builds MST by adding smallest edge from tree to outside
+- Greedy approach
+
+---
+
+## Data Structures
+
+- **Key Array**: $O(V)$ stores min edge weights
+- **Parent Array**: $O(V)$ tracks MST structure
+- **Visited Set**: $O(V)$
+- **Priority Queue (Min-Heap)**: $O(V)$ capacity
+- Graph storage:
+  - Adjacency list: $O(V+E)$
+  - Adjacency matrix: $O(V^2)$
+
+---
+
+## Time Complexity
+
+- Adjacency matrix: $O(V^2)$
+- Adjacency list + Min-Heap: $O(E \log V)$
+
+---
+
+## Memory Usage
+
+- Arrays: $3V$ integers
+- Priority queue: $O(V)$
+- Graph: $O(V+E)$ or $O(V^2)$
+
+---
+
+## Applications
+
+- Network Design
+- Electrical Grid Layout
+- Cluster Analysis
+</textarea>
+      </section>
+      <section>
+        <iframe src="prim.html" width="100%" height="700px" frameborder="0"></iframe>
+      </section>
+
+      <!-- Kruskal's Algorithm -->
+      <section data-markdown>
+<textarea data-template>
+# Kruskal's Algorithm
+
+---
+
+## Concept
+
+- Builds MST by selecting smallest edges avoiding cycles
+- Uses Disjoint Set Union (DSU)
+
+---
+
+## Data Structures
+
+- **Edge List**: $O(E)$
+- **DSU parent[] & rank[]**: $O(V)$
+- Sorting edges: requires $O(E)$ memory
+- Graph storage: just list of edges $O(E)$
+
+---
+
+## Time Complexity
+
+- Sort edges: $O(E \log E)$
+- DSU operations: $ \approx O(1)$ amortized
+
+---
+
+## Memory Usage
+
+- Edge list: $O(E)$
+- DSU: $O(V)$
+
+---
+
+## Applications
+
+- Same as Prim’s
+- Best for sparse graphs
+</textarea>
+      </section>
+      <section>
+        <iframe src="kruskal.html" width="100%" height="700px" frameborder="0"></iframe>
+      </section>
+
+      <!-- Dijkstra's Algorithm -->
+      <section data-markdown>
+<textarea data-template>
+# Dijkstra's Algorithm
+
+---
+
+## Concept
+
+- Shortest path from a single source in weighted graphs (non-negative weights)
+- Greedy selection of closest unvisited vertex
+
+---
+
+## Data Structures
+
+- **Distance Array**: $O(V)$
+- **Visited Set**: $O(V)$
+- **Priority Queue (Min-Heap)**: up to $O(V)$
+- Graph storage:
+  - Adjacency list: $O(V+E)$
+  - Adjacency matrix: $O(V^2)$
+
+---
+
+## Time Complexity
+
+- Adjacency matrix: $O(V^2)$
+- Adjacency list + Min-Heap: $O(E \log V)$
+
+---
+
+## Memory Usage
+
+- Arrays: $2V$ integers
+- Priority queue: $O(V)$
+- Graph: $O(V+E)$ or $O(V^2)$
+
+---
+
+## Applications
+
+- GPS Navigation
+- Network Routing
+- Airline Route Optimization
+</textarea>
+      </section>
+      <section>
+        <iframe src="dijkstra.html" width="100%" height="700px" frameborder="0"></iframe>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/plugin/markdown/markdown.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/plugin/math/math.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script>
+  Reveal.initialize({
+    hash: true,
+    plugins: [ RevealMarkdown, RevealMath.KaTeX ],
+    math: {
+      // KaTeX-specific configuration
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "\\(", right: "\\)", display: false },
+        { left: "\\[", right: "\\]", display: true }
+      ]
+    }
+  });
+</script>
+
+  <script>
+  const themes = [
+    'dracula', 'night', 'black', 'white', 'league', 'beige',
+    'serif', 'simple', 'solarized', 'moon', 'sky', 'blood'
+  ];
+  let current = 0;
+
+  document.getElementById('theme-toggle').addEventListener('click', () => {
+    current = (current + 1) % themes.length;
+    document.getElementById('theme-link').href =
+      `https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/theme/${themes[current]}.css`;
+  });
+</script>
+
+</body>
+</html>

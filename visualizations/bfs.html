@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>BFS Traversal</title>
+  <script src="https://cdn.jsdelivr.net/npm/cytoscape@3.26.0/dist/cytoscape.min.js"></script>
+  <style>
+    body { margin: 0; padding: 1.5rem; font-family: system-ui, sans-serif; background: #f7f7f7; color: #111; }
+    .container { max-width: 960px; margin: auto; }
+    h1 { text-align: center; font-weight: 500; margin-bottom: 2rem; }
+    .controls { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1rem; }
+    button { padding: 0.5rem 1rem; font-size: 14px; border: 1px solid #ccc; border-radius: 6px; background: #fff; cursor: pointer; transition: background 0.2s; }
+    button:hover:not(:disabled) { background: #eee; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    #cy { height: 480px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 1rem; }
+    .logs-container { background: #fff; border: 1px solid #ccc; border-radius: 6px; padding: 1rem; height: 160px; overflow-y: auto; font-size: 13px; line-height: 1.4; color: #333; }
+    .log-entry { margin-bottom: 0.4rem; }
+    .status-bar { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; font-size: 13px; margin-top: 1rem; padding: 0.75rem; border: 1px solid #ccc; border-radius: 6px; background: #fafafa; }
+    .legend { display: flex; gap: 1rem; justify-content: center; margin-top: 1rem; font-size: 12px; }
+    .legend-item { display: flex; align-items: center; gap: 0.3rem; }
+    .legend-color { width: 12px; height: 12px; border-radius: 50%; }
+    .unvisited { background: #aaa; }
+    .current { background: #ff5722; }
+    .visited { background: #4caf50; }
+    .exploring { background: #2196f3; }
+    input[type=range] { vertical-align: middle; }
+    .algorithm-info { font-size: 13px; margin-top: 2rem; line-height: 1.6; color: #444; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>BFS Traversal</h1>
+  <div class="controls">
+    <button id="play">▶ Play</button>
+    <button id="pause">⏸ Pause</button>
+    <button id="reset">↻ Reset</button>
+    <button id="step">Step</button>
+    <label>Speed: <input type="range" id="speed" min="100" max="2000" value="800" /> <span id="speed-display">800ms</span></label>
+  </div>
+  <div class="status-bar">
+    <div><strong>Current:</strong> <span id="current-node">None</span></div>
+    <div><strong>Queue:</strong> <span id="queue-display">[]</span></div>
+    <div><strong>Visited:</strong> <span id="visited-count">0</span>/<span id="total-nodes">0</span></div>
+    <div><strong>Step:</strong> <span id="current-step">0</span></div>
+  </div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-color unvisited"></div> Unvisited</div>
+    <div class="legend-item"><div class="legend-color current"></div> Current</div>
+    <div class="legend-item"><div class="legend-color exploring"></div> Exploring</div>
+    <div class="legend-item"><div class="legend-color visited"></div> Visited</div>
+  </div>
+  <div id="cy"></div>
+  <div class="logs-container" id="logs">
+    <div class="log-entry">🚀 Ready to start BFS traversal</div>
+  </div>
+  <div class="algorithm-info">
+    <strong>About BFS:</strong> Breadth-First Search explores neighbors level by level using a queue, ensuring shortest path in unweighted graphs.
+  </div>
+</div>
+<script>
+const nodes = [
+  { data: { id: 'A' } }, { data: { id: 'B' } }, { data: { id: 'C' } },
+  { data: { id: 'D' } }, { data: { id: 'E' } }, { data: { id: 'F' } },
+  { data: { id: 'G' } }, { data: { id: 'H' } }, { data: { id: 'I' } },
+  { data: { id: 'J' } }, { data: { id: 'K' } }, { data: { id: 'L' } }
+];
+const edges = [
+  ['A','B'],['A','C'],['A','D'],
+  ['B','E'],['B','F'],
+  ['C','G'],['C','H'],
+  ['D','I'],
+  ['E','J'],
+  ['F','K'],
+  ['G','L'],
+  ['H','I'],
+  ['J','K'],
+  ['K','L']
+].map(([s,t])=>({data:{source:s,target:t}}));
+const cy = cytoscape({
+  container: document.getElementById('cy'),
+  elements: { nodes, edges },
+  style: [
+    { selector: 'node', style: { 'background-color': '#666', 'label': 'data(id)', 'color': '#fff', 'text-valign': 'center', 'font-size': '18px', 'width': '40px', 'height': '40px', 'border-width': '3px', 'border-color': '#333', 'font-weight': 'bold' } },
+    { selector: 'edge', style: { 'width': 3, 'line-color': '#888', 'curve-style': 'bezier' } },
+    { selector: '.current', style: { 'background-color': '#ff5722', 'border-color': '#d84315', 'width': '50px', 'height': '50px' } },
+    { selector: '.visited', style: { 'background-color': '#4caf50', 'border-color': '#2e7d32' } },
+    { selector: '.exploring', style: { 'background-color': '#2196f3', 'border-color': '#1565c0' } },
+    { selector: '.active-edge', style: { 'line-color': '#ff5722', 'width': 5 } }
+  ],
+  layout: { name: 'breadthfirst', directed: false, roots: '#A', spacingFactor: 1.5 }
+});
+
+class BFSVisualizer {
+  constructor() {
+    this.visited = new Set();
+    this.queue = [];
+    this.steps = [];
+    this.currentStep = 0;
+    this.isRunning = false;
+    this.speed = 800;
+    this.generateBFSSteps();
+    this.updateUI();
+  }
+  buildAdjacencyList() {
+    const adj = {};
+    cy.nodes().forEach(n=>adj[n.id()]=[]);
+    cy.edges().forEach(e=>{
+      adj[e.source().id()].push(e.target().id());
+      adj[e.target().id()].push(e.source().id());
+    });
+    return adj;
+  }
+  generateBFSSteps() {
+    this.steps = [];
+    const visited = new Set();
+    const q = ['A'];
+    visited.add('A');
+    this.steps.push({type:'start',node:'A',queue:[...q],visited:new Set(visited),message:'Starting BFS from node A'});
+    const adj = this.buildAdjacencyList();
+    while(q.length>0){
+      const curr = q.shift();
+      this.steps.push({type:'visit',node:curr,queue:[...q],visited:new Set(visited),message:`Visiting node ${curr}`});
+      const neighbors = adj[curr].sort();
+      const unvisited = neighbors.filter(n=>!visited.has(n));
+      if(unvisited.length>0){
+        unvisited.forEach(n=>{
+          visited.add(n);
+          q.push(n);
+        });
+        this.steps.push({type:'explore',node:curr,neighbors:unvisited,queue:[...q],visited:new Set(visited),message:`Exploring neighbors of ${curr}: [${unvisited.join(', ')}]`});
+      }
+    }
+    this.steps.push({type:'complete',queue:[],visited:new Set(visited),message:'BFS traversal completed!'});
+  }
+  executeStep(){
+    if(this.currentStep>=this.steps.length){this.pause();return;}
+    const step=this.steps[this.currentStep];
+    this.updateVisualization(step);
+    this.addLogEntry(step);
+    this.updateStatusBar(step);
+    this.currentStep++;
+  }
+  updateVisualization(step){
+    cy.nodes().removeClass('current visited exploring');
+    cy.edges().removeClass('active-edge');
+    step.visited.forEach(id=>cy.getElementById(id).addClass('visited'));
+    if(step.node){
+      const cn=cy.getElementById(step.node);
+      cn.removeClass('visited').addClass('current');
+      cn.connectedEdges().addClass('active-edge');
+    }
+    if(step.type==='explore'&&step.neighbors){
+      step.neighbors.forEach(n=>cy.getElementById(n).addClass('exploring'));
+    }
+  }
+  addLogEntry(step){
+    const logs=document.getElementById('logs');
+    const div=document.createElement('div');
+    const icons={start:'🚀',visit:'✅',explore:'🔍',complete:'🎉'};
+    div.className='log-entry';
+    div.innerHTML=`${icons[step.type]||'ℹ️'} Step ${this.currentStep+1}: ${step.message}`;
+    logs.appendChild(div);
+    logs.scrollTop=logs.scrollHeight;
+  }
+  updateStatusBar(step){
+    document.getElementById('current-node').textContent=step.node||'None';
+    document.getElementById('queue-display').textContent=`[${step.queue.join(', ')}]`;
+    document.getElementById('visited-count').textContent=step.visited.size;
+    document.getElementById('current-step').textContent=this.currentStep+1;
+  }
+  updateUI(){
+    document.getElementById('play').disabled=this.isRunning||this.currentStep>=this.steps.length;
+    document.getElementById('pause').disabled=!this.isRunning;
+    document.getElementById('step').disabled=this.isRunning||this.currentStep>=this.steps.length;
+    document.getElementById('reset').disabled=this.isRunning;
+  }
+  play(){
+    if(this.currentStep>=this.steps.length)return;
+    this.isRunning=true;
+    this.interval=setInterval(()=>{this.executeStep();this.updateUI();if(this.currentStep>=this.steps.length)this.pause();},this.speed);
+    this.updateUI();
+  }
+  pause(){this.isRunning=false;clearInterval(this.interval);this.updateUI();}
+  step(){if(!this.isRunning&&this.currentStep<this.steps.length){this.executeStep();this.updateUI();}}
+  reset(){
+    this.pause();this.currentStep=0;
+    cy.nodes().removeClass('current visited exploring');
+    cy.edges().removeClass('active-edge');
+    document.getElementById('logs').innerHTML='<div class="log-entry">🚀 Ready to start BFS traversal</div>';
+    document.getElementById('current-node').textContent='None';
+    document.getElementById('queue-display').textContent='[]';
+    document.getElementById('visited-count').textContent='0';
+    document.getElementById('current-step').textContent='0';
+    this.updateUI();
+  }
+  setSpeed(s){this.speed=s;if(this.isRunning){this.pause();this.play();}}
+}
+const bfsVis=new BFSVisualizer();
+document.getElementById('play').addEventListener('click',()=>bfsVis.play());
+document.getElementById('pause').addEventListener('click',()=>bfsVis.pause());
+document.getElementById('step').addEventListener('click',()=>bfsVis.step());
+document.getElementById('reset').addEventListener('click',()=>bfsVis.reset());
+document.getElementById('speed').addEventListener('input',e=>{
+  const val=parseInt(e.target.value);document.getElementById('speed-display').textContent=`${val}ms`;bfsVis.setSpeed(val);
+});
+document.getElementById('total-nodes').textContent=cy.nodes().length;
+</script>
+</body>
+</html>

@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Kruskal's Algorithm Visualization</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.26.0/dist/cytoscape.min.js"></script>
+<style>
+  body { font-family: system-ui, sans-serif; background: #f7f7f7; margin: 0; padding: 1.5rem; }
+  .container { max-width: 980px; margin: auto; }
+  h1 { text-align: center; font-weight: 500; margin-bottom: 1rem; }
+  .controls { display:flex; gap:0.5rem; justify-content:center; flex-wrap:wrap; margin-bottom:0.75rem; }
+  button { padding:0.5rem 0.9rem; font-size:14px; border:1px solid #ccc; border-radius:6px; background:#fff; cursor:pointer; }
+  button:disabled { opacity:0.5; cursor:not-allowed; }
+  #cy { height:520px; border:1px solid #ddd; border-radius:6px; margin-bottom:0.75rem; background:#fff; }
+  .logs { background:#fff; border:1px solid #ccc; border-radius:6px; padding:0.9rem; height:140px; overflow:auto; font-size:13px; }
+  .status { display:flex; gap:1rem; justify-content:space-between; font-size:13px; padding:0.6rem 0; flex-wrap: wrap; }
+  .legend { display:flex; gap:1rem; justify-content:center; margin-top:0.5rem; font-size:12px; }
+  .legend .dot { width:12px; height:12px; border-radius:50%; display:inline-block; margin-right:6px; vertical-align:middle; }
+  .unseen { background:#aaa } .consider { background:#ff5722 } .mst { background:#4caf50 } .rejected { background:#e91e63 }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Kruskal's Algorithm Visualization</h1>
+  <div class="controls">
+    <button id="play">▶ Play</button>
+    <button id="pause">⏸ Pause</button>
+    <button id="step">Step</button>
+    <button id="reset">↻ Reset</button>
+    <label>Speed: <input id="speed" type="range" min="150" max="2000" value="700"> <span id="spd">700ms</span></label>
+  </div>
+
+  <div class="status">
+    <div><strong>Current edge:</strong> <span id="current-edge">None</span></div>
+    <div><strong>MST cost:</strong> <span id="mst-cost">0</span></div>
+    <div><strong>Edges in MST:</strong> <span id="mst-list">[]</span></div>
+    <div><strong>Step:</strong> <span id="step-no">0</span></div>
+  </div>
+
+  <div id="cy"></div>
+
+  <div class="legend">
+    <div><span class="dot unseen"></span> Unvisited</div>
+    <div><span class="dot consider"></span> Considering</div>
+    <div><span class="dot mst"></span> In MST</div>
+    <div><span class="dot rejected"></span> Rejected</div>
+  </div>
+
+  <div class="logs" id="logs">🚀 Ready for Kruskal</div>
+</div>
+
+<script>
+const nodes = [
+  { data: { id: 'A' } }, { data: { id: 'B' } }, { data: { id: 'C' } },
+  { data: { id: 'D' } }, { data: { id: 'E' } }, { data: { id: 'F' } }
+];
+
+const edgeTuples = [
+  ['A','B',4], ['A','C',3], ['B','C',1], ['B','D',2],
+  ['C','D',4], ['C','E',2], ['D','E',3], ['D','F',2], ['E','F',3]
+];
+
+const edges = edgeTuples.map(([s,t,w],i) => ({
+  data: { id: `e${i}_${s}${t}`, source: s, target: t, weight: w }
+}));
+
+const cy = cytoscape({
+  container: document.getElementById('cy'),
+  elements: { nodes, edges },
+  style: [
+    {
+      selector: 'node',
+      style: {
+        'background-color': '#aaa',
+        label: 'data(id)',
+        color: '#fff',
+        'text-valign': 'center',
+        'text-halign': 'center',
+        'font-size': '16px',
+        'font-weight': '700',
+        width: '44px',
+        height: '44px'
+      }
+    },
+    {
+      selector: 'edge',
+      style: {
+        'width': 3,
+        'line-color': '#888',
+        'curve-style': 'bezier',
+        'label': 'data(weight)',
+        'font-size': '12px',
+        'text-background-color': '#ffffff',
+        'text-background-opacity': 1,
+        'text-border-color': '#111',
+        'text-border-opacity': 0.75,
+        'text-border-width': 1,
+        'text-background-padding': '6px',
+        'text-background-shape': 'roundrectangle',
+        'text-rotation': 'autorotate'
+      }
+    },
+    { selector: '.consider', style: { 'line-color': '#ff5722', 'width': 5 } },
+    { selector: '.in-mst', style: { 'line-color': '#4caf50', 'width': 5 } },
+    { selector: '.rejected', style: { 'line-color': '#e91e63', 'width': 4, 'line-style': 'dashed' } },
+    { selector: '.node-mst', style: { 'background-color': '#4caf50' } },
+    { selector: '.node-consider', style: { 'background-color': '#ff5722' } }
+  ],
+  layout: { name: 'circle' }
+});
+
+class UnionFind {
+  constructor(elements) {
+    this.parent = {};
+    elements.forEach(e => this.parent[e] = e);
+  }
+  find(x) {
+    if (this.parent[x] !== x) this.parent[x] = this.find(this.parent[x]);
+    return this.parent[x];
+  }
+  union(a,b) {
+    const ra = this.find(a), rb = this.find(b);
+    if (ra === rb) return false;
+    this.parent[rb] = ra;
+    return true;
+  }
+}
+
+class KruskalViz {
+  constructor() {
+    this.steps = [];
+    this.current = 0;
+    this.interval = null;
+    this.speed = 700;
+    this.isRunning = false;
+    this.mstEdges = [];
+    this.buildSteps();
+  }
+
+  buildSteps() {
+    const uf = new UnionFind(cy.nodes().map(n => n.id()));
+    const sorted = cy.edges().sort((a,b)=> a.data('weight') - b.data('weight'));
+    sorted.forEach(e => {
+      const s = e.source().id(), t = e.target().id(), w = e.data('weight');
+      this.steps.push({ type: 'consider', edgeId: e.id(), from: s, to: t, weight: w });
+      if (uf.find(s) !== uf.find(t)) {
+        uf.union(s,t);
+        this.mstEdges.push(e.id());
+        this.steps.push({ type: 'accept', edgeId: e.id(), from: s, to: t, weight: w, mstSnapshot: [...this.mstEdges] });
+      } else {
+        this.steps.push({ type: 'reject', edgeId: e.id(), from: s, to: t, weight: w, mstSnapshot: [...this.mstEdges] });
+      }
+    });
+    this.steps.push({ type: 'complete', mstSnapshot: [...this.mstEdges] });
+  }
+
+  executeStep() {
+    if (this.current >= this.steps.length) { this.pause(); return; }
+    const step = this.steps[this.current];
+    cy.edges().removeClass('consider rejected').removeClass('in-mst');
+    cy.nodes().removeClass('node-consider node-mst');
+
+    /* always highlight MST edges from snapshot */
+    if (step.mstSnapshot) {
+      step.mstSnapshot.forEach(id => {
+        cy.getElementById(id).addClass('in-mst');
+        cy.getElementById(cy.getElementById(id).source().id()).addClass('node-mst');
+        cy.getElementById(cy.getElementById(id).target().id()).addClass('node-mst');
+      });
+    }
+
+    if (step.type === 'consider') {
+      cy.getElementById(step.edgeId).addClass('consider');
+      cy.getElementById(step.from).addClass('node-consider');
+      cy.getElementById(step.to).addClass('node-consider');
+      document.getElementById('current-edge').textContent = `${step.from}-${step.to} (${step.weight})`;
+    }
+    else if (step.type === 'accept') {
+      document.getElementById('current-edge').textContent = `${step.from}-${step.to} (${step.weight}) ✓`;
+    }
+    else if (step.type === 'reject') {
+      cy.getElementById(step.edgeId).addClass('rejected');
+      document.getElementById('current-edge').textContent = `${step.from}-${step.to} (${step.weight}) ✗`;
+    }
+    else if (step.type === 'complete') {
+      document.getElementById('current-edge').textContent = 'None';
+    }
+
+    /* update status bar */
+    const inMst = step.mstSnapshot ? step.mstSnapshot.map(eid => {
+      const e = cy.getElementById(eid);
+      return `${e.source().id()}-${e.target().id()}`;
+    }) : [];
+    const cost = step.mstSnapshot ? step.mstSnapshot.reduce((acc,eid) => acc + cy.getElementById(eid).data('weight'), 0) : 0;
+    document.getElementById('mst-list').textContent = `[${inMst.join(', ')}]`;
+    document.getElementById('mst-cost').textContent = cost;
+    document.getElementById('step-no').textContent = this.current + 1;
+
+    this.addLog(step);
+    this.current++;
+  }
+
+  addLog(step) {
+    const logs = document.getElementById('logs');
+    const div = document.createElement('div');
+    if (step.type === 'consider') div.textContent = `Consider edge ${step.from}-${step.to} (${step.weight})`;
+    else if (step.type === 'accept') div.textContent = `Accept edge ${step.from}-${step.to} (${step.weight})`;
+    else if (step.type === 'reject') div.textContent = `Reject edge ${step.from}-${step.to} (${step.weight}) — cycle`;
+    else if (step.type === 'complete') div.textContent = '✅ MST complete';
+    logs.appendChild(div);
+    logs.scrollTop = logs.scrollHeight;
+  }
+
+  play() {
+    if (this.current >= this.steps.length) return;
+    this.isRunning = true;
+    this.interval = setInterval(() => {
+      this.executeStep();
+      if (this.current >= this.steps.length) this.pause();
+    }, this.speed);
+  }
+  pause() { this.isRunning = false; clearInterval(this.interval); this.interval = null; }
+  stepOnce() { if (!this.isRunning && this.current < this.steps.length) this.executeStep(); }
+  reset() {
+    this.pause(); this.current = 0;
+    cy.edges().removeClass('consider rejected in-mst');
+    cy.nodes().removeClass('node-consider node-mst');
+    document.getElementById('logs').innerHTML = '🚀 Ready for Kruskal';
+    document.getElementById('mst-list').textContent = '[]';
+    document.getElementById('mst-cost').textContent = '0';
+    document.getElementById('current-edge').textContent = 'None';
+    document.getElementById('step-no').textContent = '0';
+  }
+  setSpeed(ms) { this.speed = ms; if (this.isRunning) { this.pause(); this.play(); } document.getElementById('spd').textContent = ms + 'ms'; }
+}
+
+const viz = new KruskalViz();
+document.getElementById('play').onclick = () => viz.play();
+document.getElementById('pause').onclick = () => viz.pause();
+document.getElementById('step').onclick = () => viz.stepOnce();
+document.getElementById('reset').onclick = () => viz.reset();
+document.getElementById('speed').oninput = (e) => viz.setSpeed(parseInt(e.target.value));
+</script>
+</body>
+</html>

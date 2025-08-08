@@ -161,6 +161,42 @@
       "url": "/AcademicCV_github.pdf"
     }
   },
+  "visualizations": {
+    "simulators": [
+      {
+        "name": "CCM Model",
+        "url": "https://github.com/drdebmath/CCM"
+      },
+      {
+        "name": "LCM Model",
+        "url": "https://github.com/drdebmath/LCM"
+      },
+      {
+        "name": "Graph Algorithm Visualizations",
+        "url": "/visualizations/graphalgos.html"
+      },
+      {
+        "name": "DFS",
+        "url": "/visualizations/dfs.html"
+      },
+      {
+        "name": "BFS",
+        "url": "/visualizations/bfs.html"
+      },
+      {
+        "name": "Dijkstra",
+        "url": "/visualizations/dijkstra.html"
+      },
+      {
+        "name": "Prim's Algorithm",
+        "url": "/visualizations/prim.html"
+      },
+      {
+        "name": "Kruskal's Algorithm",
+        "url": "/visualizations/kruskal.html"
+      }
+    ]
+  },
   "news": [
     {
       "date": "3 July 2025",

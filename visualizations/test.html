@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Graph Algorithms Lecture</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Reveal core CSS then theme (theme has id for swapping) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.css">
+  <link id="theme-link" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/theme/dracula.css">
+
+  <!-- KaTeX CSS (required for proper rendering) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+</head>
+<body>
+  <!-- Theme toggle -->
+  <button id="theme-toggle" aria-label="Change theme"
+          style="position:fixed;top:10px;right:10px;z-index:999;padding:.4rem .6rem;">
+    Change Theme
+  </button>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Example slide with inline and display math -->
+      <section data-markdown>
+        <textarea data-template>
+# Graph Algorithms
+### A visualization based presentation
+
+---
+
+## What is a Graph?
+
+- **Definition:** $ G = (V, E) $, where:
+  - $V$: set of vertices
+  - $E$: set of edges
+
+---
+
+## Example formula
+
+$$
+\sum_{i=1}^{n} i = \frac{n(n+1)}{2}
+$$
+        </textarea>
+      </section>
+
+      <!-- (keep your other slides here, same structure) -->
+
+    </div>
+  </div>
+
+  <!-- Load KaTeX JS first (so the math plugin can use it), then Reveal + plugins -->
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/plugin/markdown/markdown.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/plugin/math/math.js"></script>
+
+  <script>
+    // Minimal theme cycler
+    (function(){
+      const themes = ['dracula','night','black','white','league','beige','serif','simple','solarized','moon','sky','blood'];
+      let current = themes.indexOf('dracula');
+      document.getElementById('theme-toggle').addEventListener('click', () => {
+        current = (current + 1) % themes.length;
+        document.getElementById('theme-link').href =
+          `https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/theme/${themes[current]}.css`;
+      });
+    })();
+
+    // Initialize Reveal with KaTeX math plugin and explicit delimiters
+    Reveal.initialize({
+      hash: true,
+      plugins: [ RevealMarkdown, RevealMath.KaTeX ],
+      math: {
+        katex: { throwOnError: false },
+        delimiters: [
+          { left: "$$", right: "$$", display: true },
+          { left: "\\[", right: "\\]", display: true },
+          { left: "\\(", right: "\\)", display: false }
+        ]
+      }
+    });
+  </script>
+</body>
+</html>
