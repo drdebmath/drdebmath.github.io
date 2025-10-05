@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedulers Galore: Research Proposal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/theme/white.min.css">
+    <style>
+        .reveal { font-size: 30px; }
+        .reveal h1 { color: #3498db; font-size: 2em; margin-bottom: 0.2em; }
+        .reveal h2 { color: #3498db; font-size: 1.5em; margin-bottom: 0.2em; }
+        .reveal h3 { color: #3498db; font-size: 1.2em; margin-bottom: 0.15em; }
+        .reveal ul, .reveal ol { line-height: 1.3; margin: 8px 0; }
+        .reveal li { margin: 4px 0; }
+        .reveal p { margin: 8px 0; }
+        .reveal section { padding: 0 15px; }
+        .gradient-text { background: linear-gradient(45deg, #3498db, #2980b9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .box { border: 2px solid #3498db; border-radius: 6px; padding: 10px; margin: 10px 0; font-size: 0.85em; }
+        .box h3 { margin: 0 0 5px 0; font-size: 1.05em; }
+        .box ul { margin: 5px 0; padding-left: 15px; }
+        .box li { margin: 3px 0; line-height: 1.2; }
+        .flow { display: flex; justify-content: space-around; margin: 15px 0; }
+        .flow-item { background: #34495e; color: white; padding: 8px; border-radius: 5px; text-align: center; font-size: 0.85em; min-width: 90px; }
+        .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 15px 0; }
+        .timeline { margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 8px; }
+        .timeline h3 { text-align: center; margin-bottom: 15px; font-size: 1.1em; }
+        .tl-table { width: 100%; border-collapse: collapse; font-size: 0.65em; }
+        .tl-table td:first-child { padding: 1px 5px 1px 0; font-weight: bold; color: #333; border-right: 2px solid #ddd; width: 80px; }
+        .tl-table td:last-child { padding: 1px; }
+        .tl-row { display: flex; gap: 1px; }
+        .tl-cell { width: 10px; height: 10px; border-radius: 1px; }
+        .tl-active { background: var(--color); }
+        .tl-empty { background: transparent; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides" id="slides"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/reveal.min.js"></script>
+    <script>
+        // Utility Functions
+        const h = (tag, attrs, ...children) => {
+            const el = document.createElement(tag);
+            if (attrs) Object.entries(attrs).forEach(([k, v]) => k === 'html' ? el.innerHTML = v : el.setAttribute(k, v));
+            children.flat().forEach(c => el.appendChild(typeof c === 'string' ? document.createTextNode(c) : c));
+            return el;
+        };
+
+        const section = (content) => h('section', { html: content });
+        const box = (title, items) => `<div class="box"><h3>${title}</h3><ul>${items.map(i => `<li>${i}</li>`).join('')}</ul></div>`;
+        const flow = (items) => `<div class="flow">${items.map(i => `<div class="flow-item"><strong>${i.title}</strong><br/>${i.desc}</div>`).join('')}</div>`;
+        
+        const tlRow = (label, color, start, duration) => {
+            const cells = Array(24).fill(0).map((_, i) => 
+                i >= start && i < start + duration ? 
+                `<div class="tl-cell tl-active" style="--color: ${color}"></div>` : 
+                `<div class="tl-cell tl-empty"></div>`
+            ).join('');
+            return `<tr><td>${label}</td><td><div class="tl-row">${cells}</div></td></tr>`;
+        };
+
+        // Slide Content
+        const slides = [
+            `<h1>Schedulers Galore</h1>
+             <h2>Asynchronous, Synchronous and Sequential</h2>
+             <p>Dr. Debasish Pattanayak</p>
+             <p>Assistant Professor, CSE, IIT Indore</p>
+             <p><small>debasish@iiti.ac.in</small></p>`,
+
+            `<h2>Project Overview</h2>
+             <h1 class="gradient-text">Schedulers Galore</h1>
+             <p><strong>Asynchronous, Synchronous and Sequential</strong></p>
+             <p class="fragment">Investigating mobile robot coordination under different scheduler models</p>`,
+
+            `<h2>Mobile Robot Model</h2>${flow([
+                {title: 'Look', desc: 'Take snapshot'},
+                {title: 'Compute', desc: 'Process information'},
+                {title: 'Move', desc: 'Execute action'}
+            ])}`,
+
+            `<h2>Scheduler Classes</h2>
+             <div class="grid2">
+                 ${box('Traditional Schedulers', ['<strong>FSYNC:</strong> Fully Synchronous', '<strong>SSYNC:</strong> Semi-Synchronous', '<strong>ASYNC:</strong> Asynchronous'])}
+                 ${box('Novel Scheduler', ['<strong>SEQ:</strong> Sequential', 'One robot at a time', 'Introduces beneficial asymmetry'])}
+             </div>`,
+
+            `<h2>Key Research Contributions</h2>
+             <p><strong>Gathering Problem:</strong></p>
+             <ul>
+                 <li class="fragment">✓ Solvable under FSYNC</li>
+                 <li class="fragment">✗ Not solvable under SEQ</li>
+             </ul>`,
+
+            `<h2>Universal Algorithms</h2>
+             <p><strong>Universal Pattern Formation:</strong></p>
+             <ul>
+                 <li class="fragment">Achievable from any starting configuration</li>
+                 <li class="fragment">No restrictions on initial/terminal conditions</li>
+                 <li class="fragment">✓ Possible under SEQ schedulers</li>
+             </ul>`,
+
+            `<h2>Advanced Capabilities</h2>
+             <p><strong>Dancing with Colored Lights:</strong></p>
+             <ul>
+                 <li class="fragment">Persistent memory for oblivious robots</li>
+                 <li class="fragment">Universal dancing algorithms</li>
+                 <li class="fragment">Colored lights enable complex coordination</li>
+             </ul>`,
+
+            `<h2>Research Challenges</h2>
+             <div class="grid2">
+                 ${box('Primary Goals', ['Design scheduler-agnostic algorithms', 'Investigate SEQ scheduler properties', 'Explore separation problems'])}
+                 ${box('Key Problems', ['Invisible feature separation', 'Agreement in distributed systems', 'Minimal assumption requirements'])}
+             </div>`,
+
+            `<h2>Research Methodology</h2>
+             <ol>
+                 <li class="fragment"><strong>Algorithm Design:</strong> Formal distributed algorithms for robot coordination</li>
+                 <li class="fragment"><strong>Impossibility Results:</strong> Prove limits under restricted conditions</li>
+                 <li class="fragment"><strong>Minimal Assumptions:</strong> Incrementally add capabilities for solvability</li>
+                 <li class="fragment"><strong>Formal Proofs:</strong> Safety, liveness, and complexity analysis</li>
+                 <li class="fragment"><strong>Simulation:</strong> Validate and visualize algorithm behavior</li>
+             </ol>`,
+
+            `<h2>Project Objectives</h2>
+             <ul>
+                 <li class="fragment">Design algorithms for SEQ schedulers with cross-scheduler adaptability</li>
+                 <li class="fragment">Identify minimal solvability assumptions through systematic analysis</li>
+                 <li class="fragment">Develop enhanced simulation framework for multi-scheduler modeling</li>
+                 <li class="fragment">Establish rigorous mathematical foundations and complexity bounds</li>
+                 <li class="fragment">Create comprehensive taxonomy linking problems, assumptions, and schedulers</li>
+             </ul>`,
+
+            `<h2>Research Novelty</h2>
+             <p><strong>Key Innovations:</strong></p>
+             <ul>
+                 <li class="fragment">Systematic framework for SEQ scheduler investigation</li>
+                 <li class="fragment">Assumption minimization methodology</li>
+                 <li class="fragment">Scheduler-agnostic design philosophy</li>
+                 <li class="fragment">Integration of simulation-based validation</li>
+             </ul>`,
+
+            `<h2>Project Deliverables</h2>
+             <div class="grid2">
+                 ${box('Technical Outputs', ['Algorithmic framework for robot coordination', 'Formal impossibility and solvability results', 'Enhanced simulation platform', 'Scheduler-agnostic design templates'])}
+                 ${box('Research Contributions', ['Comprehensive problem-assumption taxonomy', 'Peer-reviewed publications', 'Performance evaluation metrics', 'Research community engagement'])}
+             </div>`,
+
+            `<h2>Project Timeline</h2>
+             <p style="text-align: center; margin: 15px 0; font-size: 1.1em;"><strong>2-Year Research Program</strong></p>
+             <div class="timeline">
+                 <h3>📊 Research Timeline (24 Months)</h3>
+                 <table class="tl-table">
+                     ${tlRow('Survey', '#3498db', 0, 3)}
+                     ${tlRow('Algorithm', '#e74c3c', 3, 5)}
+                     ${tlRow('Framework', '#2ecc71', 4, 5)}
+                     ${tlRow('Simulation', '#f39c12', 6, 4)}
+                     ${tlRow('Proofs', '#9b59b6', 6, 6)}
+                     ${tlRow('Evaluation', '#34495e', 12, 4)}
+                     ${tlRow('Report', '#e67e22', 16, 8)}
+                 </table>
+             </div>`,
+
+            `<h2>Key Publications</h2>
+             <ol style="font-size: 0.9em;">
+                 <li><strong>SIROCCO 2024:</strong> "Oblivious Robots Under Sequential Schedulers: Universal Pattern Formation"</li>
+                 <li><strong>DISC 2025:</strong> "Luminous Robots under Sequential Schedulers: Universal Dancing"</li>
+                 <li><strong>CANDAR 2024:</strong> "Asynchronous Separation of Unconscious Colored Robots"</li>
+             </ol>`,
+
+            `<h2>Contact Information</h2>
+             <div style="text-align: center; margin-top: 30px;">
+                 <h3>Dr. Debasish Pattanayak</h3>
+                 <p>Assistant Professor</p>
+                 <p>Department of Computer Science and Engineering</p>
+                 <p>IIT Indore</p>
+                 <p><strong>Email:</strong> debasish@iiti.ac.in</p>
+             </div>`
+        ];
+
+        // Render slides
+        const container = document.getElementById('slides');
+        slides.forEach(content => container.appendChild(section(content)));
+
+        // Initialize Reveal.js
+        Reveal.initialize({
+            hash: true,
+            center: true,
+            transition: 'slide',
+            backgroundTransition: 'fade'
+        });
+    </script>
+</body>
+</html>
