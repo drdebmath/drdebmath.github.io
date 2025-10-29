@@ -199,6 +199,16 @@
   },
   "news": [
     {
+      "date": "29 October 2025",
+      "title": "Two BAs in DISC 2025. One on Universal Dancing and another on Optimal Dispersion under asynchrony.",
+      "url": "https://www.disc-conference.org/wp/disc2025/detailed-program/"
+    },
+    {
+      "date": "16 October 2025",
+      "title": "Paper on Leader election is accepted to TCS.",
+      "url": "https://www.sciencedirect.com/science/article/pii/S030439752500516X"
+    },
+    { 
       "date": "3 July 2025",
       "title": "New preprint on Optimal Dispersion under asynchrony in ArXiV.",
       "url": "http://arxiv.org/abs/2507.01298"
@@ -551,6 +561,7 @@
       "location": "Pisa, Italy",
       "date": "September 7-10, 2020",
       "doi": "https://doi.org/10.1007/978-3-030-62401-9_12",
+      "arxiv":"https://arxiv.org/abs/2003.01914",
       "type": "conference",
       "year": 2020,
       "abstract": "We consider the problem of forming a specific pattern, namely a conic section (ellipse, parabola, or hyperbola), by a swarm of autonomous mobile robots in the presence of Byzantine faulty robots. The robots operate in Look-Compute-Move cycles. In each cycle, a robot takes a snapshot of the positions of all robots (Look), computes a destination based on the observed positions (Compute), and moves towards the destination (Move). We assume an asynchronous system where robots operate at different speeds. A faulty robot can behave arbitrarily (Byzantine fault). The goal is to design an algorithm such that the non-faulty robots eventually form the desired conic shape, despite the disruptive behavior of the faulty robots. We propose a fault-tolerant algorithm for conic formation that can handle up to f Byzantine robots, provided the total number of robots n is sufficiently large (n > 2f). Our algorithm relies on identifying a reference point (e.g., the center of minimum enclosing circle) that is resilient to faults and then positioning the non-faulty robots relative to this reference point to form the conic section. We prove the correctness and termination of the algorithm under the assumed fault model."
@@ -867,7 +878,7 @@
         "full": "45th IEEE International Conference on Distributed Computing Systems",
         "short": "ICDCS"
       },
-      "doi": "#",
+      "doi": "https://doi.org/10.1109/ICDCS63083.2025.00042",
       "year": 2025,
       "status": "Accepted",
       "abstract":"In networked systems supporting mobile agents, a particularly dangerous security threat facing the agents is the presence of a black hole (BH): a network host that destroys any incoming agent without leaving any trace. The problem, called BLACK HOLE SEARCH (BHS), of efficiently determining the location of such a dangerous host has been extensively studied under a variety of different assumptions. In spite of their differences, the existing results share the same assumption that all the searching agents are reliable. In this paper, we start the investigation of the BHS problem when some of the searching agents are faulty in a malicious way. More precisely, we consider that up to f of the k searching agents are Byzantine: they may behave in an arbitrary manner, actively misleading other agents; furthermore, they are in collusion with the black hole, and immune to its destructive power. We study under what conditions the BHS problem can be solved in a synchronous network of arbitrary topology in spite of the malicious agents, examining the impact on complexity of two factors: the a-priori topological knowledge held by the agents, and the communication mechanism available to them. We prove that, with prior knowledge about the graph topology (i.e., a network map), BHS can be solved by k ≥ 2f + 2 agents in O(n + f ) synchronous rounds both with whiteboards and with just local communication, where n is the number of nodes in the network. Without any knowledge about the topological structure, using whiteboard communication BHS can be solved by k ≥ (f +1)(∆+1) agents in O(m+f ) rounds; instead, using local communication, BHS can be solved by k ≥ (f + 1)(∆ + 1) + 3f + 1 agents in O(m · n + f ) rounds, where m is the number of links of the network and ∆ is the maximum degree of the network. In all cases, as we show, the bound on the total number k of agents is asymptotically optimal."
@@ -885,13 +896,15 @@
       "type": "journal",
       "journal": {
         "full": "International Journal of Networking and Computing",
-        "short": "Intl. J. Networking Comput."
+        "short": "Intern. J. Netw. Comput."
       },
       "year": 2025,
-      "status": "Accepted"
+      "status": "Accepted",
+      "doi": "http://www.ijnc.org/index.php/ijnc/article/view/338",
+      "abstract": "We consider the recently introduced model of autonomous computational mobile entities called unconscious colored robots. The entities are the traditional oblivious silent mobile robots operating in the Euclidean plane in Look-Compute-Move cycles. However, each robot has a permanent external mark (or color) from a finite set, visible by the other robots, but not by the robot itself. The basic problem for these robots is separation, requiring all the robots with the same color to separate from the other robots, each group forming a recognizable geometric shape (e.g., circle, point, line); this task must be performed in finite time, in spite of the robots being unconscious of their own color, unable to communicate, and oblivious. This problem has been studied and solved in the synchronous setting (SSS 2023). In this paper we show that the problem is solvable also under the more difficult asynchronous adversary, provided the robots agree on the orientation of one axis, and no robot is uniquely colored. The proof is constructive: we present a distributed algorithm that allows unconscious colored robots with one-axis agreement to separate into parallel lines under the asynchronous scheduler."
     },
     {
-      "title": "Optimal Dispersion under Asynchrony",
+      "title": "Brief Announcement: Optimal Dispersion under Asynchrony",
       "authors": [
         "Debasish Pattanayak",
         "Ajay D. Kshemkalyani",
@@ -899,11 +912,52 @@
         "Anisur Rahaman Molla",
         "Gokarna Sharma"
       ],
-      "type": "preprint",
+      "type": "conference",
+      "conference": {
+        "full": "39th International Symposium on Distributed Computing",
+        "short": "DISC"
+      },
+      "date": "October 27-11, 2025",
       "arxiv": "http://arxiv.org/abs/2507.01298",
-      "doi": "http://arxiv.org/abs/2507.01298",
+      "doi": "https://doi.org/10.4230/LIPIcs.DISC.2025.63",
       "year": 2025,
       "abstract": "We study the dispersion problem in anonymous port-labeled graphs: k≤n mobile agents, each with a unique ID and initially located arbitrarily on the nodes of an n-node graph with maximum degree Δ, must autonomously relocate so that no node hosts more than one agent. Dispersion serves as a fundamental task in distributed computing of mobile agents, and its complexity stems from key challenges in local coordination under anonymity and limited memory. The goal is to minimize both the time to achieve dispersion and the memory required per agent. It is known that any algorithm requires Ω(k) time in the worst case, and Ω(logk) bits of memory per agent. A recent result [SPAA'25] gives an optimal O(k)-time algorithm in the synchronous setting and an O(klogk)-time algorithm in the asynchronous setting, both using O(log(k+Δ)) bits. In this paper, we close the complexity gap in the asynchronous setting by presenting the first dispersion algorithm that runs in optimal O(k) time using O(log(k+Δ)) bits of memory per agent. Our solution is based on a novel technique we develop in this paper that constructs a port-one tree in anonymous graphs, which may be of independent interest."
+    },
+    {
+      "authors": [
+        "Caterina Feletti",
+        "Paola Flocchini",
+        "Debasish Pattanayak",
+        "Giuseppe Prencipe",
+        "Nicola Santoro"
+      ],
+      "title": "Brief Announcement: Universal Dancing by Luminous Robots Under Sequential Schedulers",
+      "event": "DISC 2025",
+      "pages": "56:1-56:7",
+      "year": 2025,
+      "doi": "https://doi.org/10.4230/LIPIcs.DISC.2025.56",
+      "type": "conference",
+      "abstract": "The Dancing problem requires a swarm of n autonomous mobile robots to form a sequence of patterns, aka perform a choreography. Existing work has proven that some crucial restrictions on choreographies and initial configurations (e.g., on repetitions of patterns, periodicity, symmetries, contractions/expansions) must hold so that the Dancing problem can be solved under certain robot models. Here, we prove that these necessary constraints can be dropped by considering the LUMI model (i.e., where robots are endowed with a light whose color can be chosen from a constant-size palette) under the quite unexplored sequential scheduler. We formalize the class of Universal Dancing problems which require a swarm of n robots starting from any initial configuration to perform a (periodic or finite) sequence of arbitrary patterns, only provided that each pattern consists of n vertices (including multiplicities). However, we prove that, to be solvable under LUMI, the length of the feasible choreographies is bounded by the compositions of n into the number of colors available to the robots. We provide an algorithm solving the Universal Dancing problem by exploiting the peculiar capability of sequential robots to implement a distributed counter mechanism. Even assuming non-rigid movements, our algorithm ensures spatial homogeneity of the performed choreography.",
+      "arxiv": "https://doi.org/10.48550/arXiv.2508.15484"
+    },
+    {
+      "title": "Faster Leader Election via Mobile Agents and its Applications",
+      "authors": [
+        "Ajay D. Kshemkalyani",
+        "Manish Kumar",
+        "Anisur Rahaman Molla",
+        "Debasish Pattanayak",
+        "Gokarna Sharma"
+      ],
+      "type": "journal",
+      "journal": {
+        "full": "Theoretical Computer Science",
+        "short": "Theor. Comput. Sci."
+      },
+      "year": 2025,
+      "status": "Accepted",
+      "doi": "https://doi.org/10.1016/j.tcs.2025.115578",
+      "abstract": "Leader election is a critical and extensively studied problem in distributed computing. This paper introduces the study of leader election using mobile agents. Consider agents initially placed arbitrarily on the nodes of an arbitrary, n-node, m-edge graph G. These agents move autonomously across the nodes of G and elect one agent as the leader such that the leader is aware of its status as the leader, and the other agents know they are not the leader. The goal is to minimize both time and memory usage. We study the leader election problem in a synchronous setting where each agent performs operations simultaneously with the others, allowing us to measure time complexity in terms of rounds. We assume that the agents have prior knowledge of the number of nodes n and the maximum degree of the graph Δ. We first elect a leader deterministically in O(n log^2 n+DΔ) rounds with each agent using O(log n) bits of memory, where D is the diameter of the graph. Leveraging this leader election result, we then present a deterministic algorithm for constructing a minimum spanning tree of G in O(m + n log n) rounds, with each agent using O(Δ log n) bits of memory. Furthermore, using the same leader election result, we improve time and memory bounds for other key distributed graph problems, including gathering, maximal independent set, and minimal dominating set. For all the aforementioned problems, our algorithm remains memory optimal.Finally, we also perform simulations to validate our theoretical results and show the performance trends of our algorithm under different graph topologies."
     }
   ],
   "talks": [
@@ -1025,11 +1079,12 @@
     },
     "pc_member_for": [
       "Doctoral Symposium, ICDCN 2022",
-      "Distributed Computing Track of ICDCIT'23",
-      "Distributed Computing Track of ICDCIT'24",
+      "Distributed Computing Track of ICDCIT 2023",
+      "Distributed Computing Track of ICDCIT 2024",
       "SIROCCO 2024",
       "IEEE ANTS Early Researchers' Forum 2024",
-      "SSS 2025"
+      "Moving and Computing Track of SSS 2025",
+      "Distributed Computing Track of ICDCIT 2026"
     ],
     "organizing_committee": [
       "13th International Conference and Workshop on Algorithms and Computation (WALCOM), 2019"
