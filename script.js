@@ -210,7 +210,7 @@ function setupNavbar(sections) {
 
   // Add the fixed links first
   const fixed = [
-    { href: "IITIJul2025CS103/", label: "CS103" },
+    { href: "IITIJan2026CS637/", label: "CS637" },
     { href: "CCMModel/", label: "CCM Model" },
     { href: "LCMmodel/", label: "LCM Model" },
     { href: "visualizations/", label: "Visualizations" },
@@ -778,6 +778,11 @@ function displayTeaching(teaching) {
         <p class="teaching-course dark:text-white"><strong>Course:</strong> ${course.course}</p>
         <p class="teaching-duration dark:text-white"><strong>Duration:</strong> ${course.duration}</p>
         <p class="teaching-institution dark:text-white"><strong>Institution:</strong> ${course.institution}</p>
+        ${
+          course.url
+            ? `<p class="teaching-url mt-2"><a href="${course.url}" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200">(More details)</a></p>`
+            : ""
+        }
       </div>
     </li>
   `
