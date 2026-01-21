@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,8 +28,10 @@
             position: absolute;
             width: 40px;
             height: 40px;
-            background-color: #87CEEB; /* Sky Blue */
-            border: 2px solid #4682B4; /* Steel Blue */
+            background-color: #87CEEB;
+            /* Sky Blue */
+            border: 2px solid #4682B4;
+            /* Steel Blue */
             border-radius: 50%;
             display: flex;
             justify-content: center;
@@ -56,19 +59,23 @@
         }
 
         #agent1 {
-            background-color: #FF4500; /* OrangeRed */
-            border: 1px solid #8B0000; /* DarkRed */
+            background-color: #FF4500;
+            /* OrangeRed */
+            border: 1px solid #8B0000;
+            /* DarkRed */
         }
 
         #agent2 {
-            background-color: #32CD32; /* LimeGreen */
-            border: 1px solid #006400; /* DarkGreen */
+            background-color: #32CD32;
+            /* LimeGreen */
+            border: 1px solid #006400;
+            /* DarkGreen */
         }
 
         #controls {
             text-align: center;
         }
-        
+
         button {
             padding: 10px 20px;
             font-size: 16px;
@@ -76,16 +83,18 @@
             border-radius: 5px;
             border: 1px solid #ccc;
         }
-        
+
         #status {
             margin-top: 15px;
             font-size: 1.1em;
             color: #333;
-            height: 40px; /* Reserve space to prevent layout shift */
+            height: 40px;
+            /* Reserve space to prevent layout shift */
             font-style: italic;
         }
     </style>
 </head>
+
 <body>
 
     <h1>Blackhole Search Problem</h1>
@@ -107,7 +116,7 @@
         const ringContainer = document.getElementById('ring-container');
         const startBtn = document.getElementById('start-btn');
         const statusEl = document.getElementById('status');
-        
+
         let nodes = [];
         let agent1, agent2;
         let blackholeIndex;
@@ -118,7 +127,7 @@
             // Clear previous elements
             ringContainer.innerHTML = '';
             nodes = [];
-            
+
             // 1. Choose blackhole and starting position
             blackholeIndex = Math.floor(Math.random() * NUM_NODES);
             do {
@@ -149,6 +158,33 @@
                 nodes.push({ el: nodeEl, x, y });
             }
 
+            // 2.5. Draw edges (lines) between nodes
+            // We create an SVG layer behind the nodes
+            const svgNS = "http://www.w3.org/2000/svg";
+            const svg = document.createElementNS(svgNS, "svg");
+            svg.setAttribute("width", "100%");
+            svg.setAttribute("height", "100%");
+            svg.style.position = "absolute";
+            svg.style.top = "0";
+            svg.style.left = "0";
+            svg.style.zIndex = "0"; // Behind nodes
+
+            for (let i = 0; i < NUM_NODES; i++) {
+                const startNode = nodes[i];
+                const endNode = nodes[(i + 1) % NUM_NODES];
+
+                const line = document.createElementNS(svgNS, "line");
+                line.setAttribute("x1", startNode.x);
+                line.setAttribute("y1", startNode.y);
+                line.setAttribute("x2", endNode.x);
+                line.setAttribute("y2", endNode.y);
+                line.setAttribute("stroke", "#999");
+                line.setAttribute("stroke-width", "2");
+
+                svg.appendChild(line);
+            }
+            ringContainer.insertBefore(svg, ringContainer.firstChild);
+
             // 3. Create agents
             agent1 = document.createElement('div');
             agent1.className = 'agent';
@@ -160,7 +196,7 @@
 
             ringContainer.appendChild(agent1);
             ringContainer.appendChild(agent2);
-            
+
             // 4. Position agents at the start
             moveElement(agent1, currentPosition, 10); // Offset to see both
             moveElement(agent2, currentPosition, -10);
@@ -193,7 +229,7 @@
                 animationRunning = false;
                 return;
             }
-            
+
             // PHASE 1: Probe a neighbor clockwise
             const probeNodeIndex = (currentPosition + 1) % NUM_NODES;
             statusEl.textContent = `Agent 1 probes clockwise to node ${probeNodeIndex}...`;
@@ -243,7 +279,7 @@
                 animationRunning = true;
                 startBtn.textContent = 'Stop & Reset';
                 startBtn.disabled = true; // Disable until first move is done
-                setTimeout(() => { 
+                setTimeout(() => {
                     if (animationRunning) startBtn.disabled = false;
                 }, ANIMATION_SPEED);
                 runAnimationStep();
@@ -254,4 +290,5 @@
         window.onload = setup;
     </script>
 </body>
+
 </html>

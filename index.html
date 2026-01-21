@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="light">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,120 +34,163 @@
     <!-- 3rd‑party scripts (async) -->
     <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
     <script async src="https://unpkg.com/cytoscape@3.31.1/dist/cytoscape.min.js" charset="utf-8"></script>
-</head>
+
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        crossorigin="anonymous"></script>
+
 <body class="bg-gray-100 text-gray-900 dark:bg-dark-bg dark:text-dark-text transition-colors duration-200 font-sans">
 
-<!-- Skip‑to‑content link for keyboard / screen‑reader users -->
-<a href="#about_me" class="sr-only focus:not-sr-only fixed top-2 left-2 z-50 bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-300 px-3 py-1 rounded shadow">Skip to content</a>
+    <!-- Skip‑to‑content link for keyboard / screen‑reader users -->
+    <a href="#about_me"
+        class="sr-only focus:not-sr-only fixed top-2 left-2 z-50 bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-300 px-3 py-1 rounded shadow">Skip
+        to content</a>
 
-<!-- ───── Navbar ────────────────────────────────────────────── -->
-<nav class="sticky top-0 z-40 bg-blue-600/95 dark:bg-blue-800/90 backdrop-blur shadow-lg">
-    <div class="mx-auto max-w-screen-lg flex items-center justify-between px-4 py-2">
-        <ul id="navbar" class="flex space-x-4">
-            <!-- filled by script.js -->
-        </ul>
-        <button id="darkModeToggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 focus:outline-none focus-visible:ring">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-500 dark:text-white" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z" />
-            </svg>
-        </button>
-    </div>
-</nav>
+    <!-- ───── Navbar ────────────────────────────────────────────── -->
+    <nav class="sticky top-0 z-40 bg-blue-600/95 dark:bg-blue-800/90 backdrop-blur shadow-lg">
+        <div class="mx-auto max-w-screen-lg flex items-center justify-between px-4 py-2">
+            <ul id="navbar" class="flex space-x-4">
+                <!-- filled by script.js -->
+            </ul>
+            <button id="darkModeToggle"
+                class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 focus:outline-none focus-visible:ring">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-500 dark:text-white"
+                    viewBox="0 0 20 20" fill="currentColor">
+                    <path
+                        d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z" />
+                </svg>
+            </button>
+        </div>
+    </nav>
 
-<!-- ───── Hero / Header ─────────────────────────────────────── -->
-<header class="bg-blue-700 dark:bg-blue-900 text-white py-8 shadow">
-    <div class="mx-auto max-w-screen-lg px-4">
-        <div class="flex flex-col md:flex-col lg:flex-row items-center lg:items-start gap-6">
-            <div id="picture" class="mt-4 lg:mt-0 flex justify-center w-40 h-60 overflow-hidden">
-                <img src="default_picture.jpg" alt="Profile picture" class="rounded-full object-cover w-full h-full" />
+    <!-- ───── Hero / Header ─────────────────────────────────────── -->
+    <header class="bg-blue-700 dark:bg-blue-900 text-white py-8 shadow">
+        <div class="mx-auto max-w-screen-2xl px-4">
+            <div class="flex flex-col md:flex-col lg:flex-row items-center lg:items-start gap-6">
+                <div id="picture" class="mt-4 lg:mt-0 flex justify-center w-40 h-60 overflow-hidden shrink-0">
+                    <img src="default_picture.jpg" alt="Profile picture"
+                        class="rounded-full object-cover w-full h-full" />
+                </div>
+                <div class="flex-1">
+                    <h1 id="name" class="text-4xl font-extrabold tracking-tight"></h1>
+                    <h2 id="name_odia" class="text-xl mt-2 font-semibold"></h2>
+                    <h3 id="position" class="text-lg mt-5 font-semibold"></h3>
+                    <div id="links" class="mt-4 flex flex-wrap items-center gap-3"></div>
+                </div>
+                <div id="header_address_container"
+                    class="hidden lg:block text-right self-center lg:self-start mt-4 lg:mt-0 bg-blue-800/50 p-4 rounded-lg backdrop-blur-sm border border-blue-600/50 shadow-sm max-w-xs">
+                </div>
             </div>
-            <div class="flex-1">
-                <h1 id="name" class="text-4xl font-extrabold tracking-tight"></h1>
-                <h2 id="name_odia" class="text-xl mt-2 font-semibold"></h2>
-                <h3 id="position" class="text-lg mt-5 font-semibold"></h3>
-                <div id="links" class="mt-4 flex flex-wrap items-center gap-3"></div>
-            </div>
         </div>
-    </div>
-</header>
+    </header>
 
-<!-- ───── Main content ──────────────────────────────────────── -->
-<main class="mx-auto max-w-screen-lg px-4">
+    <!-- ───── Main content ──────────────────────────────────────── -->
+    <main id="main_container" class="mx-auto max-w-screen-2xl px-4 my-12 flex flex-col xl:flex-row gap-8 items-start">
 
-    <!-- Use utility scroll‑mt so in‑page links aren’t hidden under sticky nav -->
-    <section id="about_me" class="my-12">
-        <h2 class="text-2xl font-semibold scroll-mt-24">About Me</h2>
-        <div id="about_me_content" class="mt-4"></div>
-    </section>
+        <!-- ───── Left Column (Main Content) ────────────────────────── -->
+        <div id="left-content" class="w-full xl:flex-1 space-y-12">
+            <!-- Use utility scroll‑mt so in‑page links aren’t hidden under sticky nav -->
+            <section id="about_me">
+                <h2 class="text-2xl font-semibold scroll-mt-24">About Me</h2>
+                <div id="about_me_content" class="mt-4"></div>
+            </section>
 
-    <section id="news" class="my-12">
-        <h2 class="text-2xl font-semibold scroll-mt-24">News</h2>
-        <div id="news_content" class="mt-4"></div>
-        <blockquote class="twitter-tweet"><p lang="en" dir="ltr">Life update!<br>I joined IIT Indore as an Assistant Professor in Computer Science. <a href="https://t.co/VtpZxt84Nr">pic.twitter.com/VtpZxt84Nr</a></p>&mdash; Debasish Pattanayak (@drdebmath) <a href="https://twitter.com/drdebmath/status/1937441433893396992?ref_src=twsrc%5Etfw">June 24, 2025</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-    </section>
+            <!-- News will be here on mobile -->
+            <section id="news">
+                <h2 class="text-2xl font-semibold scroll-mt-24">News</h2>
+                <div id="news_content" class="mt-4"></div>
+                <blockquote class="twitter-tweet">
+                    <p lang="en" dir="ltr">Life update!<br>I joined IIT Indore as an Assistant Professor in Computer
+                        Science. <a href="https://t.co/VtpZxt84Nr">pic.twitter.com/VtpZxt84Nr</a></p>&mdash; Debasish
+                    Pattanayak (@drdebmath) <a
+                        href="https://twitter.com/drdebmath/status/1937441433893396992?ref_src=twsrc%5Etfw">June 24,
+                        2025</a>
+                </blockquote>
+                <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+            </section>
 
-    <section id="research" class="my-12">
-        <h2 class="text-2xl font-semibold scroll-mt-24">Research Interests</h2>
-        <div id="research_interests_content" class="mt-4"></div>
-    </section>
+            <section id="research" class="xl:col-start-1">
+                <h2 class="text-2xl font-semibold scroll-mt-24">Research Interests</h2>
+                <div id="research_interests_content" class="mt-4"></div>
+                <div id="current_research_graph" class="mt-6">
+                    <p class="text-2xl font-bold text-blue-700 dark:text-blue-300"><a href="/for_students.html">For
+                            students
+                            interested in working with me, click here.</a></p>
+                </div>
+            </section>
 
-    <section id="current_research" class="my-12">
-        <h2 class="text-2xl font-semibold scroll-mt-24">Current Research</h2>
-        <div id="current_research_content" class="mt-4"></div>
-        <div id="current_research_graph" class="mt-6">
-            <p class="text-2xl font-bold text-blue-700 dark:text-blue-300"><a href="/for_students.html">For students interested in working with me, click here.</a></p>
+            <section id="current_research" class="xl:col-start-1">
+                <h2 class="text-2xl font-semibold scroll-mt-24">Current Research</h2>
+                <div id="current_research_content" class="mt-4"></div>
+            </section>
+            <section id="current_teaching" class="xl:col-start-1">
+                <h2 class="text-2xl font-semibold scroll-mt-24">Currently Teaching</h2>
+                <div id="current_teaching_content" class="mt-4"></div>
+            </section>
+
+            <section id="publications" class="xl:col-start-1">
+                <h2 class="text-2xl font-semibold scroll-mt-24 mb-6">Publications</h2>
+                <div class="mb-6 flex">
+                    <button id="group_by_type"
+                        class="bg-blue-500 hover:bg-blue-700 text-white py-1 px-4 rounded-l-full border-r-0 transition-colors">By
+                        type</button>
+                    <button id="group_by_year"
+                        class="bg-blue-500 hover:bg-blue-700 text-white py-1 px-4 border-r-0 transition-colors">By
+                        year</button>
+                    <button id="group_by_topic"
+                        class="bg-blue-700 text-white py-1 px-4 rounded-r-full transition-colors">By
+                        topic</button>
+                </div>
+                <div id="publications_list" class="mt-6"></div>
+            </section>
+
+            <section id="talks" class="xl:col-start-1">
+                <h2 class="text-2xl font-semibold scroll-mt-24">Talks</h2>
+                <div id="talks_list" class="mt-4 flex flex-wrap gap-4 items-stretch"></div>
+            </section>
+
+            <section id="teaching" class="xl:col-start-1">
+                <h2 class="text-2xl font-semibold scroll-mt-24">Teaching</h2>
+                <div id="teaching_list" class="mt-4 flex flex-wrap gap-4 items-stretch"></div>
+            </section>
+
+            <section id="awards" class="xl:col-start-1">
+                <h2 class="text-2xl font-semibold scroll-mt-24">Awards</h2>
+                <div id="awards_content" class="mt-4"></div>
+            </section>
+
+            <section id="skills" class="xl:col-start-1">
+                <h2 class="text-2xl font-semibold scroll-mt-24">Skills</h2>
+                <div id="skills_content" class="mt-4"></div>
+            </section>
+
+            <section id="community_services" class="xl:col-start-1">
+                <h2 class="text-2xl font-semibold scroll-mt-24">Community Services</h2>
+                <ul id="community_services_list" class="mt-4"></ul>
+            </section>
+
+            <section id="archive" class="xl:col-start-1">
+                <h2 class="text-2xl font-semibold scroll-mt-24">Archive</h2>
+                <ul id="archive_list" class="mt-4"></ul>
+            </section>
         </div>
-    </section>
-    <section id="current_teaching" class="my-12">
-        <h2 class="text-2xl font-semibold scroll-mt-24">Currently Teaching</h2>
-        <div id="current_teaching_content" class="mt-4"></div>
-    </section>
 
-    <section id="publications" class="my-12">
-        <h2 class="text-2xl font-semibold scroll-mt-24">Publications</h2>
-        <div class="mb-6 flex">
-            <button id="group_by_type" class="bg-blue-500 hover:bg-blue-700 text-white py-1 px-4 rounded-l-full border-r-0 transition-colors">By type</button>
-            <button id="group_by_year" class="bg-blue-700 text-white py-1 px-4 rounded-r-full transition-colors">By year</button>
-        </div>
-        <div id="publications_list" class="mt-6"></div>
-    </section>
+        <!-- ───── Right Column (Sidebar) ────────────────────────────── -->
+        <aside id="right-sidebar" class="w-full xl:w-[300px] shrink-0 sticky top-24 space-y-8 hidden xl:block">
+            <!-- News will be moved here on desktop by script.js -->
+        </aside>
 
-    <section id="talks" class="my-12">
-        <h2 class="text-2xl font-semibold scroll-mt-24">Talks</h2>
-        <ul id="talks_list" class="mt-4"></ul>
-    </section>
+    </main>
 
-    <section id="awards" class="my-12">
-        <h2 class="text-2xl font-semibold scroll-mt-24">Awards</h2>
-        <div id="awards_content" class="mt-4"></div>
-    </section>
+    <!-- Go‑to‑top Floating Action Button -->
+    <button id="goToTop" aria-label="Scroll to top"
+        class="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white font-bold p-3 rounded-full shadow-lg hidden focus-visible:ring">
+        ↑
+    </button>
 
-    <section id="skills" class="my-12">
-        <h2 class="text-2xl font-semibold scroll-mt-24">Skills</h2>
-        <div id="skills_content" class="mt-4"></div>
-    </section>
-
-    <section id="teaching" class="my-12">
-        <h2 class="text-2xl font-semibold scroll-mt-24">Teaching</h2>
-        <ul id="teaching_list" class="mt-4"></ul>
-    </section>
-
-    <section id="community_services" class="my-12">
-        <h2 class="text-2xl font-semibold scroll-mt-24">Community Services</h2>
-        <ul id="community_services_list" class="mt-4"></ul>
-    </section>
-
-    <section id="archive" class="my-12">
-        <h2 class="text-2xl font-semibold scroll-mt-24">Archive</h2>
-        <ul id="archive_list" class="mt-4"></ul>
-    </section>
-</main>
-
-<!-- Go‑to‑top Floating Action Button -->
-<button id="goToTop" aria-label="Scroll to top" class="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white font-bold p-3 rounded-full shadow-lg hidden focus-visible:ring">
-    ↑
-</button>
-
-<script type="module" src="script.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
+
 </html>
