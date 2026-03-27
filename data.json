@@ -41,7 +41,7 @@
         "CV": "cv.html"
       },
       "short_bio": [
-        "I am an Assistant Professor in Computer Science and Engineering at the Indian Institute of Technology, Indore. My research focuses on distributed algorithms for mobile agents and mobile robots in graphs and geometric spaces, with interests in exploration, rendezvous, dispersion, pattern formation, and fault tolerance. I also develop interactive simulators for these systems. Before joining IIT Indore, I completed my PhD in Mathematics at IIT Guwahati under the supervision of Prof. Partha Sarathi Mandal and Dr. H. Ramesh, and held visiting and postdoctoral research positions in Europe and Canada. See my CV for a fuller academic profile."
+        "I am an Assistant Professor in Computer Science and Engineering at the Indian Institute of Technology, Indore. My research focuses on distributed algorithms for mobile agents and mobile robots in graphs and geometric spaces, with interests in exploration, rendezvous, dispersion, pattern formation, and fault tolerance. I also develop interactive simulators for these systems. Before joining IIT Indore, I completed my PhD in Theoretical Computer Science from the Department of Mathematics at IIT Guwahati under the supervision of Prof. Partha Sarathi Mandal and Dr. H. Ramesh, and held visiting and postdoctoral research positions in Europe and Canada. See my CV for a fuller academic profile."
       ]
     },
     "education": [
@@ -53,7 +53,7 @@
         }
       },
       {
-        "degree": "PhD in Mathematics",
+        "degree": "PhD in Theoretical Computer Science from the Department of Mathematics",
         "institution": {
           "name": "IIT Guwahati",
           "url": "https://www.iitg.ac.in/"
