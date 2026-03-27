@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Information for prospective students interested in working with Debasish Pattanayak on distributed algorithms, swarm robotics, mobile agents, and related research areas.">
     <title>For Prospective Students - Debasish Pattanayak</title>
 
     <!-- Font & Tailwind setup -->
@@ -117,7 +119,7 @@
             <ul id="navbar" class="flex space-x-4">
                 <!-- filled by script -->
             </ul>
-            <button id="darkModeToggle"
+            <button id="darkModeToggle" aria-label="Toggle dark mode"
                 class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 focus:outline-none focus-visible:ring">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-500 dark:text-white"
                     viewBox="0 0 20 20" fill="currentColor">
@@ -133,7 +135,7 @@
         <div class="mx-auto max-w-screen-lg px-4">
             <div class="flex flex-col md:flex-row items-center gap-8">
                 <div id="picture" class="flex-shrink-0 w-40 h-60 overflow-hidden">
-                    <img src="default_picture.jpg" alt="Profile picture"
+                    <img src="debasish_photo.jpeg" alt="Profile picture"
                         class="rounded-full object-cover w-full h-full shadow-lg bg-white dark:bg-gray-800 transition-colors duration-200" />
                 </div>
                 <div class="flex-1 text-center md:text-left">
@@ -403,7 +405,8 @@
                 agents search for the black hole.
             </p>
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
-                <iframe src="visualizations/blackhole.html" width="100%" height="550px" class="border-0"></iframe>
+                <iframe src="visualizations/blackhole.html" title="Black hole search simulator" width="100%"
+                    height="550px" class="border-0"></iframe>
             </div>
         </section>
 
@@ -418,7 +421,7 @@
                 models.
             </p>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <a href="https://drdebmath.github.io/CCMModel/" target="_blank"
+                <a href="https://drdebmath.github.io/CCMModel/" target="_blank" rel="noopener noreferrer"
                     class="feature-card block bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg group">
                     <div
                         class="w-14 h-14 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
@@ -433,7 +436,7 @@
                     <p class="text-gray-600 dark:text-gray-300">Interactive simulator for the Coordinated Concurrent
                         Movement model.</p>
                 </a>
-                <a href="https://drdebmath.github.io/LCMmodel/" target="_blank"
+                <a href="https://drdebmath.github.io/LCMmodel/" target="_blank" rel="noopener noreferrer"
                     class="feature-card block bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg group">
                     <div
                         class="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
@@ -491,178 +494,7 @@
         ↑
     </button>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-
-            // --- COLLABORATOR DATA ---
-            const collaboratorData = [
-                { name: "John Augustine", uni: "IIT Madras", coords: [12.9915, 80.2337], type: "indian" },
-                { name: "Subhash Bhagat", uni: "IIT Jodhpur", coords: [26.4718, 73.1139], type: "indian" },
-                { name: "Sruti Gan Chaudhuri", uni: "Jadavpur University", coords: [22.4991, 88.3715], type: "indian" },
-                { name: "H. Ramesh", uni: "IIT Guwahati", coords: [26.1844, 91.5629], type: "indian" },
-                { name: "P. S. Mandal", uni: "IIT Guwahati", coords: [26.1844, 91.5629], type: "indian" },
-                { name: "Anisur Rahaman Molla", uni: "ISI Kolkata", coords: [22.5999, 88.3995], type: "indian" },
-                { name: "Kaushik Mondal", uni: "IIT Ropar", coords: [30.9681, 76.4716], type: "indian" },
-                { name: "Caterina Feletti", uni: "University of Milan, Italy", coords: [45.4792, 9.1859], type: "international" },
-                { name: "Paola Flocchini", uni: "University of Ottawa, Canada", coords: [45.4215, -75.6823], type: "international" },
-                { name: "Nicola Santoro", uni: "Carleton University, Canada", coords: [45.3876, -75.6960], type: "international" },
-                { name: "Klaus-Tycho Förster", uni: "TU Dortmund, Germany", coords: [51.4935, 7.4128], type: "international" },
-                { name: "Stefan Schmid", uni: "TU Berlin, Germany", coords: [52.5121, 13.3272], type: "international" },
-                { name: "Loukas Georgiadis", uni: "University of Ioannina, Greece", coords: [39.6167, 20.8431], type: "international" },
-                { name: "Giuseppe F. Italiano", uni: "Luiss University, Rome, Italy", coords: [41.9097, 12.4923], type: "international" },
-                { name: "Giuseppe Antonio Di Luna", uni: "Sapienza University of Rome, Italy", coords: [41.9038, 12.5152], type: "international" },
-                { name: "Francesco Piselli", uni: "University of Perugia, Italy", coords: [43.1122, 12.3888], type: "international" },
-                { name: "Ajay D. Kshemkalyani", uni: "UIC, USA", coords: [41.8722, -87.6481], type: "international" },
-                { name: "Gokarna Sharma", uni: "Kent State University, USA", coords: [41.1492, -81.3439], type: "international" },
-                { name: "Evangelos Kosinas", uni: "University of Ioannina, Greece", coords: [39.6167, 20.8431], type: "international" },
-                { name: "Andrzej Pelc", uni: "UQO, Canada", coords: [45.4339, -75.7335], type: "international" },
-                { name: "Masafumi Yamashita", uni: "Kyushu University, Japan", coords: [33.6217, 130.4283], type: "international" },
-                { name: "Yukiko Yamauchi", uni: "Kyushu University, Japan", coords: [33.6217, 130.4283], type: "international" },
-                { name: "Alfredo Navarra", uni: "University of Perugia, Italy", coords: [43.1122, 12.3888], type: "international" },
-                { name: "Giuseppe Prencipe", uni: "University of Pisa, Italy", coords: [43.7228, 10.4017], type: "international" }
-            ];
-
-            // --- GLOBAL VARIABLES ---
-            let map;
-
-            // --- INITIALIZATION ---
-            setupDarkMode();
-            setupGoToTopButton();
-
-            // Fetch data from data.json like index.html does
-            fetch("data.json")
-                .then((response) => response.json())
-                .then((data) => {
-                    setupHeader(data.about_me, data.department);
-                    setupNavbar();
-                    displayResearchInterests(data.research);
-                    initializeMap(collaboratorData);
-                })
-                .catch((error) => {
-                    console.error("Error fetching data:", error);
-                    // Fallback: still initialize the map
-                    initializeMap(collaboratorData);
-                });
-
-            // --- FUNCTIONS ---
-            function setupDarkMode() {
-                const darkModeToggle = document.getElementById("darkModeToggle");
-                const htmlElement = document.documentElement;
-                let darkMode = localStorage.getItem("darkMode") === "true";
-                htmlElement.classList.toggle("dark", darkMode);
-
-                darkModeToggle.addEventListener("click", () => {
-                    darkMode = !darkMode;
-                    htmlElement.classList.toggle("dark", darkMode);
-                    localStorage.setItem("darkMode", darkMode.toString());
-                });
-            }
-
-            function setupGoToTopButton() {
-                const goToTopButton = document.getElementById("goToTop");
-
-                window.addEventListener("scroll", () => {
-                    goToTopButton.classList.toggle("hidden", window.pageYOffset <= window.innerHeight);
-                });
-
-                goToTopButton.addEventListener("click", () => {
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                });
-            }
-
-            function setupHeader(aboutMe, department) {
-                if (!aboutMe) return;
-
-                const pictureUrl = aboutMe.picture || "default_picture.jpg";
-
-                document.getElementById("name").textContent = aboutMe.name || "";
-                document.getElementById("name_odia").textContent = aboutMe.name_odia || "";
-
-                const institutionName = aboutMe.current_institution?.name || "";
-                const positionElement = document.getElementById("position");
-
-                if (department && department.name && department.url) {
-                    positionElement.innerHTML = `${aboutMe.position || ""} at <a href="${department.url}" target="_blank" class="hover:underline decoration-blue-100 decoration-2 underline-offset-2 text-blue-100 hover:text-white transition-colors">${department.name}</a>, ${institutionName}`;
-                } else {
-                    positionElement.textContent = `${aboutMe.position || ""} at ${institutionName}`;
-                }
-
-                document.getElementById("picture").innerHTML = `<img src="${pictureUrl}" alt="Profile picture" class="rounded-full object-cover mx-auto shadow-lg bg-white dark:bg-gray-800 transition-colors duration-200 w-full h-full"/>`;
-
-                const linkIcons = [
-                    { href: aboutMe.dblp, src: "https://dblp.org/img/dblp.icon.192x192.png", alt: "DBLP", title: "DBLP Profile" },
-                    { href: aboutMe.google_scholar, src: "https://upload.wikimedia.org/wikipedia/commons/c/c7/Google_Scholar_logo.svg", alt: "Google Scholar", title: "Google Scholar" },
-                    { href: aboutMe.github, src: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png", alt: "GitHub", title: "GitHub" },
-                    { href: aboutMe.linkedin, src: "https://cdn-icons-png.flaticon.com/512/174/174857.png", alt: "LinkedIn", title: "LinkedIn" }
-                ];
-
-                document.getElementById("links").innerHTML = linkIcons
-                    .filter(icon => icon.href)
-                    .map(icon => `
-                <a href="${icon.href}" target="_blank" title="${icon.title}" class="p-2 bg-white/20 backdrop-blur rounded-full hover:bg-white/30 transition-colors">
-                    <img src="${icon.src}" alt="${icon.alt}" class="h-6 w-6 rounded-full">
-                </a>
-            `).join("");
-            }
-
-            function setupNavbar() {
-                const navbar = document.getElementById("navbar");
-                const links = [
-                    { href: "index.html", label: "Home" },
-                    { href: "#research", label: "Research" },
-                    { href: "#research-topics", label: "Topics" },
-                    { href: "#collaborator-map", label: "Map" },
-                    { href: "#simulators", label: "Simulators" },
-                ];
-                navbar.innerHTML = links.map(link =>
-                    `<li><a href="${link.href}" class="block px-3 py-1 rounded text-white hover:bg-blue-700 dark:hover:bg-blue-900 transition-colors">${link.label}</a></li>`
-                ).join("");
-            }
-
-            function displayResearchInterests(interests) {
-                const container = document.getElementById("research_interests_content");
-                if (!interests) return;
-                container.innerHTML = interests.map(interest =>
-                    `<span class="bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-5 py-2 rounded-full font-semibold shadow-md hover:shadow-lg transition-shadow">${interest}</span>`
-                ).join("");
-            }
-
-            function initializeMap(collaborators) {
-                const iitIndore = { name: "IIT Indore", coords: [22.7196, 75.8573] };
-                map = L.map('map').setView([30, 20], 2);
-
-                L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                    attribution: '© <a href="https://www.openstreetmap.org/copyright">OSM</a> © <a href="https://carto.com/attributions">CARTO</a>'
-                }).addTo(map);
-
-                const indoreIcon = L.divIcon({
-                    html: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ff6600" class="w-8 h-8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z"/></svg>',
-                    className: '', iconSize: [32, 32], iconAnchor: [16, 32]
-                });
-                L.marker(iitIndore.coords, { icon: indoreIcon }).addTo(map)
-                    .bindPopup(`<b>Debasish Pattanayak</b><br>IIT Indore`).openPopup();
-
-                const markers = L.markerClusterGroup();
-
-                collaborators.forEach(c => {
-                    const color = c.type === 'indian' ? '#003366' : '#990000';
-                    const collaboratorIcon = L.divIcon({
-                        html: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${color}" class="w-6 h-6"><circle cx="12" cy="12" r="10"/></svg>`,
-                        className: '', iconSize: [24, 24], iconAnchor: [12, 12]
-                    });
-
-                    const marker = L.marker(c.coords, { icon: collaboratorIcon })
-                        .bindPopup(`<b>${c.name}</b><br>${c.uni}`);
-
-                    markers.addLayer(marker);
-
-                    L.polyline([iitIndore.coords, c.coords], { color: 'gray', weight: 1.5, opacity: 0.6, dashArray: c.type === 'indian' ? '' : '5, 5' }).addTo(map);
-                });
-
-                map.addLayer(markers);
-            }
-        });
-    </script>
+    <script type="module" src="for_students.js"></script>
 
 </body>
 

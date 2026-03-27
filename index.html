@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Academic homepage of Debasish Pattanayak, Assistant Professor of Computer Science and Engineering at IIT Indore, featuring research, publications, teaching, talks, and visualizations.">
     <title>Debasish Pattanayak</title>
 
     <!-- Font & Tailwind setup -->
@@ -31,15 +33,15 @@
         }
     </script>
 
-    <!-- 3rd‑party scripts (async) -->
+    <!-- 3rd-party scripts (async) -->
     <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-    <script async src="https://unpkg.com/cytoscape@3.31.1/dist/cytoscape.min.js" charset="utf-8"></script>
 
     <!-- KaTeX -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
         crossorigin="anonymous"></script>
+</head>
 
 <body class="bg-gray-100 text-gray-900 dark:bg-dark-bg dark:text-dark-text transition-colors duration-200 font-sans">
 
@@ -54,7 +56,7 @@
             <ul id="navbar" class="flex space-x-4">
                 <!-- filled by script.js -->
             </ul>
-            <button id="darkModeToggle"
+            <button id="darkModeToggle" aria-label="Toggle dark mode"
                 class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 focus:outline-none focus-visible:ring">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-500 dark:text-white"
                     viewBox="0 0 20 20" fill="currentColor">
@@ -70,7 +72,7 @@
         <div class="mx-auto max-w-screen-2xl px-4">
             <div class="flex flex-col md:flex-col lg:flex-row items-center lg:items-start gap-6">
                 <div id="picture" class="mt-4 lg:mt-0 flex justify-center w-40 h-60 overflow-hidden shrink-0">
-                    <img src="default_picture.jpg" alt="Profile picture"
+                    <img src="debasish_photo.jpeg" alt="Profile picture"
                         class="rounded-full object-cover w-full h-full" />
                 </div>
                 <div class="flex-1">
@@ -108,26 +110,17 @@
                         href="https://twitter.com/drdebmath/status/1937441433893396992?ref_src=twsrc%5Etfw">June 24,
                         2025</a>
                 </blockquote>
-                <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
             </section>
 
             <section id="research" class="xl:col-start-1">
-                <h2 class="text-2xl font-semibold scroll-mt-24">Research Interests</h2>
+                <h2 class="text-2xl font-semibold scroll-mt-24">Research</h2>
+                <div id="current_research_content" class="mt-4"></div>
                 <div id="research_interests_content" class="mt-4"></div>
                 <div id="current_research_graph" class="mt-6">
-                    <p class="text-2xl font-bold text-blue-700 dark:text-blue-300"><a href="/for_students.html">For
+                    <p class="text-2xl font-bold text-blue-700 dark:text-blue-300"><a href="for_students.html">For
                             students
                             interested in working with me, click here.</a></p>
                 </div>
-            </section>
-
-            <section id="current_research" class="xl:col-start-1">
-                <h2 class="text-2xl font-semibold scroll-mt-24">Current Research</h2>
-                <div id="current_research_content" class="mt-4"></div>
-            </section>
-            <section id="current_teaching" class="xl:col-start-1">
-                <h2 class="text-2xl font-semibold scroll-mt-24">Currently Teaching</h2>
-                <div id="current_teaching_content" class="mt-4"></div>
             </section>
 
             <section id="publications" class="xl:col-start-1">
@@ -146,14 +139,14 @@
                 <div id="publications_list" class="mt-6"></div>
             </section>
 
+            <section id="teaching" class="xl:col-start-1">
+                <h2 class="text-2xl font-semibold scroll-mt-24">Teaching</h2>
+                <div id="teaching_content" class="mt-4"></div>
+            </section>
+
             <section id="talks" class="xl:col-start-1">
                 <h2 class="text-2xl font-semibold scroll-mt-24">Talks</h2>
                 <div id="talks_list" class="mt-4 flex flex-wrap gap-4 items-stretch"></div>
-            </section>
-
-            <section id="teaching" class="xl:col-start-1">
-                <h2 class="text-2xl font-semibold scroll-mt-24">Teaching</h2>
-                <div id="teaching_list" class="mt-4 flex flex-wrap gap-4 items-stretch"></div>
             </section>
 
             <section id="awards" class="xl:col-start-1">
@@ -161,19 +154,38 @@
                 <div id="awards_content" class="mt-4"></div>
             </section>
 
-            <section id="skills" class="xl:col-start-1">
-                <h2 class="text-2xl font-semibold scroll-mt-24">Skills</h2>
-                <div id="skills_content" class="mt-4"></div>
+            <section id="service" class="xl:col-start-1">
+                <h2 class="text-2xl font-semibold scroll-mt-24">Service</h2>
+                <div class="mt-4 space-y-8">
+                    <div>
+                        <h3 class="text-lg font-semibold">Administrative Responsibilities</h3>
+                        <div id="administrative_responsibilities_content" class="mt-3"></div>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold">Community Services</h3>
+                        <div id="community_services_list" class="mt-3"></div>
+                    </div>
+                </div>
             </section>
 
-            <section id="community_services" class="xl:col-start-1">
-                <h2 class="text-2xl font-semibold scroll-mt-24">Community Services</h2>
-                <ul id="community_services_list" class="mt-4"></ul>
+            <section id="education">
+                <h2 class="text-2xl font-semibold scroll-mt-24">Education</h2>
+                <div id="education_content" class="mt-4"></div>
+            </section>
+
+            <section id="positions">
+                <h2 class="text-2xl font-semibold scroll-mt-24">Academic Positions</h2>
+                <div id="positions_content" class="mt-4"></div>
+            </section>
+
+            <section id="visualizations" class="xl:col-start-1">
+                <h2 class="text-2xl font-semibold scroll-mt-24">Visualizations & Simulators</h2>
+                <div id="visualizations_content" class="mt-4"></div>
             </section>
 
             <section id="archive" class="xl:col-start-1">
                 <h2 class="text-2xl font-semibold scroll-mt-24">Archive</h2>
-                <ul id="archive_list" class="mt-4"></ul>
+                <div id="archive_list" class="mt-4"></div>
             </section>
         </div>
 

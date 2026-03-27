@@ -1,0 +1,8 @@
+{
+  "name": "drdebmath-github-io",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "validate": "node validate-site.mjs"
+  }
+}

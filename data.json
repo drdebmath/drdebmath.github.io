@@ -37,10 +37,11 @@
         "LUISS Guido Carli": "https://www.luiss.it",
         "Prof. Giuseppe F. Italiano": "https://www.luiss.edu/faculty/350980",
         "UQO": "https://www.uqo.ca/",
-        "Prof. Andrzej Pelc": "http://w3.uqo.ca/pelc/main.html"
+        "Prof. Andrzej Pelc": "http://w3.uqo.ca/pelc/main.html",
+        "CV": "cv.html"
       },
       "short_bio": [
-        "I am currently an Assistant Professor of Computer Science and Engineering at the Indian Institute of Technology, Indore. I obtained my B.Tech. in Mathematics and Computing from IIT Guwahati and completed my PhD in the Department of Mathematics at IIT Guwahati under the supervision of Prof. Partha Sarathi Mandal and Dr. H. Ramesh. From July to December 2019, I was a visiting researcher with Prof. Stefan Schmid at the University of Vienna under the SERB Overseas Visiting Doctoral Fellowship. From March to September 2020, I was a visiting scientist at ISI Kolkata working with Dr. Anisur Rahaman Molla. From October 2020 to October 2022, I was a Postdoctoral researcher at LUISS Guido Carli, Rome, working with Prof. Giuseppe F. Italiano. From October 2022 to October 2023, I was a Postdoctoral researcher at UQO, Canada, working with Prof. Andrzej Pelc. From October 2023 to October 2024, I was a Postdoctoral researcher at Carleton University, Canada, and from October 2024 to June 2025, I was a Postdoctoral researcher at University of Ottawa working with Prof. Paola Flocchini and Prof. Nicola Santoro (at Carleton University, Ottawa)."
+        "I am an Assistant Professor in Computer Science and Engineering at the Indian Institute of Technology, Indore. My research focuses on distributed algorithms for mobile agents and mobile robots in graphs and geometric spaces, with interests in exploration, rendezvous, dispersion, pattern formation, and fault tolerance. I also develop interactive simulators for these systems. Before joining IIT Indore, I completed my PhD in Mathematics at IIT Guwahati under the supervision of Prof. Partha Sarathi Mandal and Dr. H. Ramesh, and held visiting and postdoctoral research positions in Europe and Canada. See my CV for a fuller academic profile."
       ]
     },
     "education": [
@@ -112,7 +113,7 @@
         "end_date": "2022-10-15"
       },
       {
-        "tile": "Postdoctoral Researcher",
+        "title": "Postdoctoral Researcher",
         "duration": "One year",
         "institution": {
           "name": "UQO",
@@ -164,50 +165,70 @@
       }
     ],
     "cv": {
-      "file": "AcademicCV_github.pdf",
-      "url": "/AcademicCV_github.pdf"
+      "label": "View detailed CV",
+      "url": "cv.html"
     }
   },
   "visualizations": {
     "simulators": [
       {
         "name": "CCM Model",
-        "url": "https://github.com/drdebmath/CCM"
+        "description": "Interactive simulator for the coordinated concurrent movement model.",
+        "url": "https://drdebmath.github.io/CCMModel/",
+        "source_url": "https://github.com/drdebmath/CCM"
       },
       {
         "name": "LCM Model",
-        "url": "https://github.com/drdebmath/LCM"
+        "description": "Interactive simulator for the classic Look-Compute-Move model.",
+        "url": "https://drdebmath.github.io/LCMmodel/",
+        "source_url": "https://github.com/drdebmath/LCM"
       },
       {
         "name": "Graph Algorithm Visualizations",
-        "url": "/visualizations/graphalgos.html"
+        "description": "Slides and interactive demos for basic graph algorithms.",
+        "url": "visualizations/"
       },
       {
         "name": "DFS",
-        "url": "/visualizations/dfs.html"
+        "description": "Depth-first search traversal walkthrough.",
+        "url": "visualizations/dfs.html",
+        "featured_on_homepage": false
       },
       {
         "name": "BFS",
-        "url": "/visualizations/bfs.html"
+        "description": "Breadth-first search traversal walkthrough.",
+        "url": "visualizations/bfs.html",
+        "featured_on_homepage": false
       },
       {
         "name": "Dijkstra",
-        "url": "/visualizations/dijkstra.html"
+        "description": "Shortest path visualization for weighted graphs.",
+        "url": "visualizations/dijkstra.html",
+        "featured_on_homepage": false
       },
       {
         "name": "Prim's Algorithm",
-        "url": "/visualizations/prim.html"
+        "description": "Minimum spanning tree construction with Prim's algorithm.",
+        "url": "visualizations/prim.html",
+        "featured_on_homepage": false
       },
       {
         "name": "Kruskal's Algorithm",
-        "url": "/visualizations/kruskal.html"
+        "description": "Minimum spanning tree construction with Kruskal's algorithm.",
+        "url": "visualizations/kruskal.html",
+        "featured_on_homepage": false
       }
     ]
   },
   "news": [
     {
+      "date": "25 March 2026",
+      "title": "Paper on Universal Pattern Formation accepted in Distributed Computing Journal.",
+      "url": "https://doi.org/10.1007/s00446-026-00504-3"
+    },
+    {
       "date": "21 January 2026",
-      "title": "Paper on Universal Dancing accepted to Sirocco 2026.",
+      "title": "Paper on Universal Dancing accepted in Sirocco 2026.",
       "url": "https://sirocco2026.webspace.durham.ac.uk/"
     },
     {
@@ -1165,9 +1186,42 @@
       "status": "Accepted",
       "doi": "https://doi.org/10.1016/j.tcs.2025.115578",
       "abstract": "Leader election is a critical and extensively studied problem in distributed computing. This paper introduces the study of leader election using mobile agents. Consider agents initially placed arbitrarily on the nodes of an arbitrary, $n$-node, $m$-edge graph $G$. These agents move autonomously across the nodes of $G$ and elect one agent as the leader such that the leader is aware of its status as the leader, and the other agents know they are not the leader. The goal is to minimize both time and memory usage. We study the leader election problem in a synchronous setting where each agent performs operations simultaneously with the others, allowing us to measure time complexity in terms of rounds. We assume that the agents have prior knowledge of the number of nodes $n$ and the maximum degree of the graph $\\Delta$. We first elect a leader deterministically in $O(n \\log^2 n+D\\Delta)$ rounds with each agent using $O(\\log n)$ bits of memory, where $D$ is the diameter of the graph. Leveraging this leader election result, we then present a deterministic algorithm for constructing a minimum spanning tree of $G$ in $O(m + n \\log n)$ rounds, with each agent using $O(\\Delta \\log n)$ bits of memory. Furthermore, using the same leader election result, we improve time and memory bounds for other key distributed graph problems, including gathering, maximal independent set, and minimal dominating set. For all the aforementioned problems, our algorithm remains memory optimal.Finally, we also perform simulations to validate our theoretical results and show the performance trends of our algorithm under different graph topologies."
+    },
+    {
+      "authors": [
+        "Paola Flocchini",
+        "Alfredo Navarra",
+        "Debasish Pattanayak",
+        "Francesco Piselli",
+        "Nicola Santoro"
+      ],
+      "keywords": [
+        "mobile robots",
+        "euclidean plane",
+        "pattern formation"
+      ],
+      "title": "Universal pattern formation by oblivious robots under sequential schedulers",
+      "type": "journal",
+      "arxiv": "https://arxiv.org/abs/2412.10733",
+      "doi": "https://doi.org/10.1007/s00446-026-00504-3",
+      "year": 2026,
+      "journal": {
+        "full": "Distributed Computing",
+        "short": "Distributed Computing"
+      },
+      "abstract": "We study the computational power that oblivious robots operating in the plane have under sequential schedulers. We show that this power is much stronger than the obvious capacity these schedulers offer of breaking symmetry, and thus to create a leader. In fact, we prove that under any sequential scheduler, robots are capable of solving problems that are unsolvable even with a leader under the fully synchronous scheduler \\(\\mathcal {FSYNC}\\). More precisely, we consider the class of pattern formation problems, and focus on the most general problem in this class, Universal Pattern Formation (UPF), which requires the robots to form every pattern given in input, starting from any initial configuration (where some robots may occupy the same point, hence forming a multiplicity). We first show that UPF is unsolvable under \\(\\mathcal {FSYNC}\\), even if the robots are endowed with additional strong capabilities (multiplicity detection, rigid movement, agreement on coordinate systems, presence of a unique leader). On the other hand, we prove that, except for point formation (Gathering), UPF is solvable under any sequential scheduler without any additional assumptions. We then turn our attention to the Gathering problem, and prove that weak multiplicity detection (the ability to detect a multiplicity but not the exact number of robots forming it) is necessary and sufficient for solvability under sequential schedulers. The results obtained show that the computational power of the robots under \\(\\mathcal {FSYNC}\\) (where Gathering is solvable without any multiplicity detection) and that under sequential schedulers are orthogonal."
     }
   ],
   "talks": [
+    {
+      "title": "AI AGENTS ON THE FRONTIER: HYPE VS REALITY",
+      "event": "Symposium 4.0",
+      "date": "Feb 13 2026",
+      "Place": "IIT Indore",
+      "links": {
+        "talk": "https://drdebmath.github.io/Talks/aiagents.html"
+      }
+    },
     {
       "title": "Pattern Formation of Robot Swarms: Points, Lines and Circles",
       "event": "Online Workshop on Distributed Algorithms For Swarm Robots, Jadavpur University",
@@ -1305,6 +1359,9 @@
       "13th International Conference and Workshop on Algorithms and Computation (WALCOM), 2019"
     ]
   },
+  "administrative_responsibilities": [
+    "Convener, DUGC, Department of CSE (Feb 1, 2026 - Present)"
+  ],
   "skills": {
     "programming": [
       "C",

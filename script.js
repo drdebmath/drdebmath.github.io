@@ -1,43 +1,37 @@
+import {
+  createLinkHtml,
+  escapeHtml,
+  formatDateRange,
+  linkifyBiographyHtml,
+  renderProfileHeader,
+  setupDarkMode,
+  setupGoToTopButton,
+} from "./shared.js";
+
 document.addEventListener("DOMContentLoaded", () => {
-  // Initialize dark mode preference from local storage or default to light mode
-  const savedDarkMode = localStorage.getItem("darkMode");
-  const darkMode = savedDarkMode === "true";
-  document.documentElement.classList.toggle("dark", darkMode);
+  setupDarkMode();
+  setupGoToTopButton();
 
-  // Set up dark mode toggle for all pages
-  setupDarkMode(darkMode);
-
-  // Set up go to top button if it exists
-  if (document.getElementById("goToTop")) {
-    setupGoToTopButton();
+  if (!document.getElementById("publications_list")) {
+    return;
   }
 
-  // Check which page we're on
-  const isIndexPage =
-    window.location.pathname.endsWith("index.html") ||
-    window.location.pathname.endsWith("/");
-  const isVizPage = window.location.pathname.includes("viz.html");
-
-  if (isIndexPage) {
-    // Only fetch data.json for the main index page
-    fetch("data.json")
-      .then((response) => response.json())
-      .then((data) => {
-        initializeWebsite(data, darkMode);
-      })
-      .catch((error) => console.error("Error fetching data:", error));
-  } else if (isVizPage) {
-    // For the viz page, just set up a simple navbar with a link back to home
-    setupVizNavbar();
-  }
+  fetch("data.json")
+    .then((response) => response.json())
+    .then((data) => {
+      initializeWebsite(data);
+    })
+    .catch((error) => console.error("Error fetching data:", error));
 });
 
-function initializeWebsite(data, initialDarkMode) {
+function initializeWebsite(data) {
   commonAuthors = data.common_authors || {};
   publications = data.publications || [];
 
-  setupHeader(data.about_me, data.about_me.department);
-  setupNavbar(Object.keys(data));
+  renderProfileHeader(data.about_me, {
+    department: data.about_me?.department,
+  });
+  setupNavbar(data);
   setupContentDisplay(data);
   setupGroupingButtons();
   setupResponsiveLayout();
@@ -67,7 +61,7 @@ function setupResponsiveLayout() {
       // Move back to main content flow (after About Me)
       if (newsSection.parentElement === rightSidebar) {
         aboutMeSection.insertAdjacentElement("afterend", newsSection);
-        // Sidebar can be hidden or left empty
+        rightSidebar.classList.add("hidden");
       }
     }
   };
@@ -93,26 +87,34 @@ function setupContentDisplay(data) {
     data.current_research
   );
   displaySectionContent(
-    "current_teaching_content",
-    displayCurrentTeaching,
-    data.current_teaching
-  );
-  displaySectionContent(
     "publications_list",
     displayAllPublications,
     data.publications,
     "year"
   ); // Default grouping by year
+  displaySectionContent(
+    "teaching_content",
+    displayTeachingSection,
+    {
+      currentTeaching: data.current_teaching || [],
+      teaching: data.teaching || [],
+    }
+  );
   displaySectionContent("talks_list", displayTalks, data.talks);
   displaySectionContent("awards_content", displayAwards, data.awards);
-  displaySectionContent("skills_content", displaySkills, data.skills);
-  displaySectionContent("teaching_list", displayTeaching, data.teaching);
   displaySectionContent(
     "community_services_list",
     displayCommunityServices,
     data.community_services
   );
-  displaySectionContent("archive_list", displayArchive, data.news); // Assuming archive is part of news data
+  displaySectionContent(
+    "administrative_responsibilities_content",
+    displayAdministrativeResponsibilities,
+    data.administrative_responsibilities
+  );
+  displaySectionContent("education_content", displayEducation, data.about_me?.education);
+  displaySectionContent("positions_content", displayPositions, data.about_me?.positions);
+  displaySectionContent("visualizations_content", displayVisualizations, data.visualizations);
 }
 
 function displaySectionContent(elementId, displayFunction, data, ...args) {
@@ -129,240 +131,245 @@ function displaySectionContent(elementId, displayFunction, data, ...args) {
   }
 }
 
-function setupDarkMode(initialDarkMode) {
-  const darkModeToggle = document.getElementById("darkModeToggle");
-  const htmlElement = document.documentElement;
-  let darkMode = initialDarkMode; // Start with the initial value
-
-  darkModeToggle.addEventListener("click", () => {
-    darkMode = !darkMode;
-    htmlElement.classList.toggle("dark", darkMode);
-    localStorage.setItem("darkMode", darkMode.toString());
-  });
-}
-
-function setupGoToTopButton() {
-  const goToTopButton = document.getElementById("goToTop");
-
-  window.addEventListener("scroll", () => {
-    goToTopButton.classList.toggle(
-      "hidden",
-      window.pageYOffset <= window.innerHeight
-    );
-  });
-
-  goToTopButton.addEventListener("click", () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  });
-}
-
-function setupHeader(aboutMe, department) {
-  const nameElement = document.getElementById("name");
-  const nameElementodia = document.getElementById("name_odia");
-  const positionElement = document.getElementById("position");
-  const linksElement = document.getElementById("links");
-  const pictureElement = document.getElementById("picture");
-  const pictureUrl = aboutMe?.picture || "default_picture.jpg"; // Fallback to a default picture if not provided
-  if (!aboutMe) {
-    console.warn("About me data is missing.");
-    return;
-  }
-
-  nameElement.textContent = (aboutMe.name || "");
-  nameElementodia.textContent = aboutMe.name_odia || "";
-
-  const institutionName = aboutMe.current_institution?.name || "";
-  const institutionUrl = aboutMe.current_institution?.url || "#";
-  const linkedInstitution = institutionName ? `<a href="${institutionUrl}" target="_blank" class="hover:underline decoration-blue-300 decoration-2 underline-offset-2">${institutionName}</a>` : "";
-
-  if (department && department.name && department.url) {
-    positionElement.innerHTML = `${aboutMe.position || ""} at <a href="${department.url}" target="_blank" class="hover:underline decoration-blue-300 decoration-2 underline-offset-2">${department.name}</a>, ${linkedInstitution}`;
-  } else {
-    positionElement.innerHTML = `${aboutMe.position || ""} at ${linkedInstitution}`;
-  }
-
-  // Add office address if available
-  if (department && department.office) {
-    const formattedOffice = department.office.replace(/,/g, ',<br>');
-    // Mobile/Tablet view (hidden on large screens)
-    let officeElement = document.getElementById("office");
-    if (!officeElement) {
-      officeElement = document.createElement("p");
-      officeElement.id = "office";
-      officeElement.className = "text-md mt-1 font-medium opacity-90 lg:hidden";
-      positionElement.parentNode.insertBefore(officeElement, linksElement);
-    }
-    officeElement.innerHTML = formattedOffice;
-
-    // Desktop view (right side of header)
-    const headerAddressContainer = document.getElementById("header_address_container");
-    if (headerAddressContainer) {
-      headerAddressContainer.innerHTML = `
-            <p class="text-xs uppercase tracking-wider opacity-75 mb-1">Office</p>
-            <p class="font-bold text-lg leading-tight text-white shadow-sm">${formattedOffice}</p>
-        `;
-    }
-  }
-
-  // Add the picture
-  if (pictureElement) {
-    pictureElement.innerHTML = `
-      <img src="${pictureUrl}" alt="Profile picture" class="rounded-full object-cover mx-auto shadow-lg bg-white dark:bg-gray-800 transition-colors duration-200 w-full h-full"/>
-    `;
-  }
-
-  const linkIcons = [
-    {
-      href: aboutMe.dblp,
-      src: "https://dblp.org/img/dblp.icon.192x192.png",
-      alt: "DBLP Logo",
-      title: "DBLP Profile",
-    },
-    {
-      href: aboutMe.google_scholar,
-      src: "https://upload.wikimedia.org/wikipedia/commons/c/c7/Google_Scholar_logo.svg",
-      alt: "Google Scholar Logo",
-      title: "Google Scholar Profile",
-    },
-    {
-      href: aboutMe.orcid,
-      src: "https://orcid.org/sites/default/files/images/orcid_24x24.png",
-      alt: "ORCID Logo",
-      title: "ORCID Profile",
-    },
-    {
-      href: aboutMe.x,
-      src: "https://x.com/favicon.ico",
-      alt: "X Logo",
-      title: "X Profile",
-    },
-    {
-      href: aboutMe.github,
-      src: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
-      alt: "GitHub Logo",
-      title: "GitHub Profile",
-    },
-    {
-      href: aboutMe.linkedin,
-      src: "https://cdn-icons-png.flaticon.com/512/174/174857.png",
-      alt: "LinkedIn Logo",
-      title: "LinkedIn Profile",
-    },
-  ];
-
-  const linksHTML = `
-    <div class="flex items-center mt-4 justify-center">
-      ${linkIcons
-      .map((icon) =>
-        icon.href
-          ? `
-        <a href="${icon.href}" class="p-4" title="${icon.title}">
-          <img src="${icon.src}" alt="${icon.alt}" class="h-8 opacity-80 hover:opacity-100 transition-opacity duration-200 bg-white dark:bg-gray-800 rounded-full overflow-hidden" style="object-fit: cover;">
-        </a>
-      `: ""
-      )
-      .join("")}
-    </div>
-  `;
-
-  linksElement.innerHTML = linksHTML;
-}
-
-function setupNavbar(sections) {
+function setupNavbar(data) {
   const navbar = document.getElementById("navbar");
-  navbar.innerHTML = ""; // clear any previous items
+  if (!navbar) return;
 
-  const highLevel = ["research", "publications", "talks", "teaching"];
+  navbar.innerHTML = "";
+  navbar.className =
+    "grid grid-cols-2 gap-x-2 gap-y-1 md:flex md:flex-wrap md:gap-2 p-2";
 
-  // Add the fixed links first
-  const fixed = [
-    { href: "IITIJan2026CS637/", label: "CS637" },
-    { href: "CCMModel/", label: "CCM Model" },
-    { href: "LCMmodel/", label: "LCM Model" },
-    { href: "visualizations/", label: "Visualizations" },
-  ];
+  const featuredLinks = [];
 
-  // Create a <ul> for the navbar
-  // For small screens: 2 rows, for md+: 1 row
-  const ul = document.createElement("ul");
-  ul.className =
-    "grid grid-cols-2 gap-x-2 gap-y-1 md:flex md:flex-nowrap md:space-x-2 p-2";
+  if (data.about_me?.cv?.url) {
+    featuredLinks.push({ href: data.about_me.cv.url, label: "CV" });
+  }
 
-  // Helper to add links
-  [
-    ...fixed,
-    ...highLevel
-      .filter((s) => sections.includes(s))
-      .map((s) => ({
-        href: "#" + s,
-        label: s.replace("_", " ").replace(/^\w/, (c) => c.toUpperCase()),
-      })),
-  ].forEach((link) => {
+  const currentCourse = data.current_teaching?.[0];
+  if (currentCourse?.url) {
+    featuredLinks.push({
+      href: currentCourse.url,
+      label: (currentCourse.title || "Current Course").split(":")[0].trim(),
+    });
+  }
+
+  const sectionLinks = [
+    { id: "research", label: "Research" },
+    { id: "publications", label: "Publications" },
+    { id: "teaching", label: "Teaching" },
+    { id: "talks", label: "Talks" },
+    { id: "awards", label: "Awards" },
+    { id: "service", label: "Service" },
+    { id: "visualizations", label: "Visualizations" },
+  ].filter((section) => document.getElementById(section.id));
+
+  [...featuredLinks, ...sectionLinks.map((section) => ({
+    href: `#${section.id}`,
+    label: section.label,
+  }))].forEach((link) => {
     const li = document.createElement("li");
     li.className = "flex items-center w-full md:w-auto";
-    li.innerHTML = `<a href="${link.href}"
-        class="block w-full text-center px-2 py-1 rounded hover:bg-blue-700 dark:hover:bg-blue-900
-               text-gray-100 transition-colors duration-200">${link.label}</a>`;
-    ul.appendChild(li);
+    li.innerHTML = createLinkHtml({
+      url: link.href,
+      label: link.label,
+      className:
+        "block w-full text-center px-2 py-1 rounded hover:bg-blue-700 dark:hover:bg-blue-900 text-gray-100 transition-colors duration-200",
+    });
+    navbar.appendChild(li);
   });
-
-  navbar.appendChild(ul);
-}
-
-
-// Setup navbar for viz page
-function setupVizNavbar() {
-  const navbarContainer = document.getElementById("navbar");
-  if (!navbarContainer) return; // Safety check
-
-  // Clear any existing content
-  navbarContainer.innerHTML = "";
-
-  const navbarList = document.createElement("ul");
-  navbarList.className = "text-xs flex flex-wrap justify-end space-x-2 p-2";
-
-  navbarList.innerHTML = `
-    <li class="navbar-item">
-      <a href="index.html" class="text-gray-100 hover:underline px-2 py-1 rounded transition-colors duration-200 hover:bg-blue-700 dark:hover:bg-blue-900">
-        Home
-      </a>
-    </li>
-  `;
-
-  navbarContainer.appendChild(navbarList);
-}
-
-function convertToLinks(bioData) {
-  if (
-    !bioData ||
-    !bioData.urls ||
-    !bioData.short_bio ||
-    !bioData.short_bio[0]
-  ) {
-    return "";
-  }
-  let bioText = bioData.short_bio[0];
-
-  for (const [name, url] of Object.entries(bioData.urls)) {
-    const link = `<a class="text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200" href="${url}" target="_blank" rel="noopener noreferrer">${name}</a>`;
-    bioText = bioText.replace(new RegExp(name, "g"), link);
-  }
-  return bioText;
 }
 
 function displayAboutMe(aboutMe) {
   const container = document.getElementById("about_me_content");
   container.className =
     "text-justify dark:text-white bg-white p-4 rounded-lg shadow-md dark:bg-gray-800 transition-colors duration-200";
+  container.innerHTML = "";
 
   const bioContainer = document.createElement("div");
-  bioContainer.innerHTML = convertToLinks(aboutMe.biodata);
+  bioContainer.innerHTML = linkifyBiographyHtml(aboutMe.biodata);
   container.appendChild(bioContainer);
+}
+
+function displayEducation(education) {
+  const container = document.getElementById("education_content");
+  if (!container) return;
+
+  container.className = "space-y-4";
+  container.innerHTML = education
+    .map((entry) => {
+      const institution = entry.institution?.url
+        ? createLinkHtml({
+            url: entry.institution.url,
+            label: entry.institution.name,
+            className:
+              "text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200",
+          })
+        : escapeHtml(entry.institution?.name || "");
+
+      const supervisors =
+        entry.supervisors && entry.supervisors.length
+          ? `<p class="mt-2 text-sm text-gray-600 dark:text-gray-300">Supervisors: ${entry.supervisors
+              .map((supervisor) =>
+                supervisor.url
+                  ? createLinkHtml({
+                      url: supervisor.url,
+                      label: supervisor.name,
+                      className:
+                        "text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200",
+                    })
+                  : escapeHtml(supervisor.name)
+              )
+              .join(", ")}</p>`
+          : "";
+
+      return `
+        <article class="bg-white dark:bg-gray-800 p-4 shadow rounded transition-colors duration-200">
+          <p class="text-lg font-semibold text-gray-900 dark:text-white">${escapeHtml(
+            entry.degree || ""
+          )}</p>
+          <p class="mt-1 text-gray-700 dark:text-gray-200">${institution}</p>
+          ${supervisors}
+        </article>
+      `;
+    })
+    .join("");
+}
+
+function displayPositions(positions) {
+  const container = document.getElementById("positions_content");
+  if (!container) return;
+
+  container.className = "space-y-4";
+  container.innerHTML = [...positions]
+    .sort((left, right) => (right.start_date || "").localeCompare(left.start_date || ""))
+    .map((entry) => {
+      const institution = entry.institution?.url
+        ? createLinkHtml({
+            url: entry.institution.url,
+            label: entry.institution.name,
+            className:
+              "text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200",
+          })
+        : escapeHtml(entry.institution?.name || "");
+
+      const supervisor = entry.institution?.supervisor
+        ? `<p class="mt-2 text-sm text-gray-600 dark:text-gray-300">With ${
+            entry.institution.supervisor.url
+              ? createLinkHtml({
+                  url: entry.institution.supervisor.url,
+                  label: entry.institution.supervisor.name,
+                  className:
+                    "text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200",
+                })
+              : escapeHtml(entry.institution.supervisor.name)
+          }</p>`
+        : "";
+
+      const fellowship = entry.fellowship
+        ? `<p class="mt-2 text-sm text-gray-600 dark:text-gray-300">${escapeHtml(
+            entry.fellowship
+          )}</p>`
+        : "";
+
+      return `
+        <article class="bg-white dark:bg-gray-800 p-4 shadow rounded transition-colors duration-200">
+          <div class="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+            <div>
+              <p class="text-lg font-semibold text-gray-900 dark:text-white">${escapeHtml(
+                entry.title || entry.tile || ""
+              )}</p>
+              <p class="text-gray-700 dark:text-gray-200">${institution}</p>
+            </div>
+            <p class="text-sm uppercase tracking-wide text-gray-500 dark:text-gray-400">${escapeHtml(
+              formatDateRange(entry.start_date, entry.end_date) || entry.duration || ""
+            )}</p>
+          </div>
+          ${supervisor}
+          ${fellowship}
+        </article>
+      `;
+    })
+    .join("");
+}
+
+function extractResourceLinks(item, { includePrimary = true } = {}) {
+  const links = [];
+
+  if (includePrimary && item.url) {
+    links.push({ label: "Link", url: item.url });
+  }
+
+  if (item.urls) {
+    Object.entries(item.urls).forEach(([label, url]) => {
+      links.push({ label, url });
+    });
+  }
+
+  if (item.slides) {
+    links.push({ label: "Slides", url: item.slides });
+  }
+
+  return links;
+}
+
+function renderSupplementaryLinks(item, { includePrimary = true } = {}) {
+  const links = extractResourceLinks(item, { includePrimary });
+  if (links.length === 0) return "";
+
+  return `
+    <div class="mt-2 flex flex-wrap gap-3 text-sm">
+      ${links
+        .map((link) =>
+          createLinkHtml({
+            url: link.url,
+            label: link.label.charAt(0).toUpperCase() + link.label.slice(1),
+            className:
+              "text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200",
+          })
+        )
+        .join("")}
+    </div>
+  `;
+}
+
+function formatNewsDateParts(dateString) {
+  const parts = String(dateString || "").trim().split(/\s+/);
+  return {
+    day: parts[0] || "",
+    month: (parts[1] || "").slice(0, 3),
+    year: parts[parts.length - 1] || "",
+  };
+}
+
+function renderNewsBody(item, { linkTitle = false } = {}) {
+  const title = linkTitle && item.url
+    ? createLinkHtml({
+        url: item.url,
+        label: item.title,
+        className:
+          "font-semibold text-blue-700 dark:text-blue-300 hover:underline transition-colors duration-200",
+      })
+    : `<span class="${linkTitle ? "font-semibold" : ""}">${escapeHtml(
+        item.title || ""
+      )}</span>`;
+
+  return `
+    <div>
+      <p>${title}</p>
+      ${renderSupplementaryLinks(item, { includePrimary: !linkTitle })}
+    </div>
+  `;
 }
 
 function displayNewsAndArchive(news) {
   const container = document.getElementById("news_content");
+  const archiveContainer = document.getElementById("archive_list");
+
+  if (!container || !archiveContainer) return;
+
   container.innerHTML = "";
+  archiveContainer.innerHTML = "";
+
   if (!news || news.length === 0) {
     container.innerHTML = '<p class="dark:text-white">No news available.</p>';
     return;
@@ -373,33 +380,18 @@ function displayNewsAndArchive(news) {
   const newsContainer = document.createElement("div");
   newsContainer.className =
     "news-item bg-white dark:bg-gray-800 p-4 shadow rounded border-l-4 border-green-600 dark:text-white transition-colors duration-200";
-  const archiveContainer = document.getElementById("archive_list");
-  archiveContainer.innerHTML = "";
 
   let currentIndex = 0;
-  let dateElements = [];
   let interval;
+  const dateElements = [];
 
   function showNews(index) {
-    dateElements.forEach((dateElement, i) => {
-      dateElement.classList.toggle("bg-green-600", i === index);
-      dateElement.classList.toggle("bg-blue-600", i !== index);
+    dateElements.forEach((dateElement, itemIndex) => {
+      dateElement.classList.toggle("bg-green-600", itemIndex === index);
+      dateElement.classList.toggle("bg-blue-600", itemIndex !== index);
     });
 
-    const item = news[index];
-    newsContainer.innerHTML = `
-        <p>${item.title}
-          ${item.urls
-        ? Object.entries(item.urls)
-          .map(
-            ([key, url]) =>
-              `<a href="${url}" class="text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200">${key}</a>`
-          )
-          .join(" ")
-        : ""
-      }
-        </p>
-      `;
+    newsContainer.innerHTML = renderNewsBody(news[index], { linkTitle: true });
   }
 
   function startInterval() {
@@ -411,15 +403,16 @@ function displayNewsAndArchive(news) {
   }
 
   news.slice(0, 5).forEach((item, index) => {
-    const [day, month, year] = item.date.split(" ");
-    const dateElement = document.createElement("div");
+    const { day, month, year } = formatNewsDateParts(item.date);
+    const dateElement = document.createElement("button");
+    dateElement.type = "button";
     dateElement.className =
       "flex-shrink-0 w-12 h-12 flex flex-col items-center justify-center bg-blue-600 text-white rounded m-1 cursor-pointer transition-colors duration-200 hover:bg-green-600";
     dateElement.innerHTML = `
-        <span class="text-xs">${day}</span>
-        <span class="text-xs font-bold">${month}</span>
-        <span class="text-xs font-bold">${year}</span>
-      `;
+      <span class="text-xs">${escapeHtml(day)}</span>
+      <span class="text-xs font-bold">${escapeHtml(month)}</span>
+      <span class="text-xs font-bold">${escapeHtml(year)}</span>
+    `;
 
     dateElement.addEventListener("mouseenter", () => {
       clearInterval(interval);
@@ -428,7 +421,7 @@ function displayNewsAndArchive(news) {
     });
     dateElement.addEventListener("mouseleave", startInterval);
     dateElement.addEventListener("click", () => {
-      currentIndex = (index + 1) % Math.min(5, news.length);
+      currentIndex = index;
       showNews(currentIndex);
       startInterval();
     });
@@ -443,110 +436,237 @@ function displayNewsAndArchive(news) {
   showNews(currentIndex);
   startInterval();
 
-  displayArchive(news.slice(5)); // Display archive here
+  displayArchive(news.slice(5));
 }
 
 function displayArchive(archiveItems) {
   const archiveContainer = document.getElementById("archive_list");
   if (!archiveContainer) return;
 
-  // Group items by year
-  const groupedByYear = archiveItems.reduce((acc, item) => {
-    const yearMatch = item.date.match(/\d{4}$/);
+  if (!archiveItems || archiveItems.length === 0) {
+    archiveContainer.innerHTML =
+      '<p class="text-gray-600 dark:text-gray-400 italic">No archived news yet.</p>';
+    return;
+  }
+
+  const groupedByYear = archiveItems.reduce((accumulator, item) => {
+    const yearMatch = item.date?.match(/\d{4}$/);
     const year = yearMatch ? yearMatch[0] : "Other";
-    if (!acc[year]) acc[year] = [];
-    acc[year].push(item);
-    return acc;
+    if (!accumulator[year]) accumulator[year] = [];
+    accumulator[year].push(item);
+    return accumulator;
   }, {});
 
-  const years = Object.keys(groupedByYear).sort((a, b) => {
-    if (a === "Other") return 1;
-    if (b === "Other") return -1;
-    return b - a;
+  const years = Object.keys(groupedByYear).sort((left, right) => {
+    if (left === "Other") return 1;
+    if (right === "Other") return -1;
+    return Number(right) - Number(left);
   });
 
-  const renderItem = (item) => `
-    <div class="news-item bg-white dark:bg-gray-800 p-4 shadow mb-4 rounded dark:text-white transition-colors duration-200">
-      <p>${item.date}: ${item.title}
-        ${item.urls
-      ? Object.entries(item.urls)
-        .map(
-          ([key, url]) =>
-            `<a href="${url}" class="text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200">${key}</a>`
-        )
-        .join(" ")
-      : ""
-    }
-      </p>
-    </div>
-  `;
+  archiveContainer.innerHTML = years
+    .map(
+      (year) => `
+        <div class="mt-8 mb-4">
+          <button id="toggle-${year}" type="button" aria-expanded="false" aria-controls="archive-${year}-content"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-lg transition-colors duration-200 flex items-center gap-2">
+            <span>Show ${year} Archive</span>
+            <svg id="toggle-icon-${year}" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <div id="archive-${year}-content" class="hidden mt-4 space-y-4">
+            ${groupedByYear[year]
+              .map(
+                (item) => `
+                  <article class="news-item bg-white dark:bg-gray-800 p-4 shadow rounded dark:text-white transition-colors duration-200">
+                    <p class="text-sm font-semibold text-gray-500 dark:text-gray-400">${escapeHtml(
+                      item.date || ""
+                    )}</p>
+                    <div class="mt-2">${renderNewsBody(item)}</div>
+                  </article>
+                `
+              )
+              .join("")}
+          </div>
+        </div>
+      `
+    )
+    .join("");
 
-  archiveContainer.innerHTML = years.map(year => `
-    <div class="mt-8 mb-4">
-      <button id="toggle-${year}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-lg transition-colors duration-200 flex items-center gap-2">
-        <span>Show ${year} Archive</span>
-        <svg id="toggle-icon-${year}" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-        </svg>
-      </button>
-      <div id="archive-${year}-content" class="hidden mt-4 space-y-4">
-        ${groupedByYear[year].map(renderItem).join("")}
-      </div>
-    </div>
-  `).join("");
-
-  years.forEach(year => {
-    const toggleBtn = document.getElementById(`toggle-${year}`);
+  years.forEach((year) => {
+    const toggleButton = document.getElementById(`toggle-${year}`);
     const content = document.getElementById(`archive-${year}-content`);
     const icon = document.getElementById(`toggle-icon-${year}`);
 
-    toggleBtn.addEventListener("click", () => {
+    toggleButton.addEventListener("click", () => {
       const isHidden = content.classList.contains("hidden");
       content.classList.toggle("hidden");
+      toggleButton.setAttribute("aria-expanded", String(isHidden));
       icon.style.transform = isHidden ? "rotate(180deg)" : "rotate(0deg)";
-      toggleBtn.querySelector("span").textContent = isHidden ? `Hide ${year} Archive` : `Show ${year} Archive`;
+      toggleButton.querySelector("span").textContent = isHidden
+        ? `Hide ${year} Archive`
+        : `Show ${year} Archive`;
     });
   });
 }
 
 function displayResearchInterests(interests) {
-  document.getElementById("research_interests_content").innerHTML = `
-    <p class="bg-white dark:bg-gray-800 p-4 shadow rounded dark:text-white transition-colors duration-200">${interests ? interests.join(", ") : "No research interests listed."
-    }</p>
-  `;
+  const container = document.getElementById("research_interests_content");
+  if (!container) return;
+
+  container.className =
+    "bg-white dark:bg-gray-800 p-4 shadow rounded transition-colors duration-200";
+  container.innerHTML = (interests || [])
+    .map(
+      (interest) => `
+        <span class="inline-block bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 px-3 py-1 rounded-full text-sm font-semibold mr-2 mb-2 border border-blue-200 dark:border-blue-800/50">
+          ${escapeHtml(interest)}
+        </span>
+      `
+    )
+    .join("");
 }
 
 function displayCurrentResearch(currentResearch) {
   document.getElementById("current_research_content").innerHTML = `
-    <p class="bg-white dark:bg-gray-800 p-4 shadow rounded dark:text-white transition-colors duration-200">${currentResearch || "No current research information available."
-    }</p>
+    <p class="bg-white dark:bg-gray-800 p-4 shadow rounded dark:text-white transition-colors duration-200">${escapeHtml(
+      currentResearch || "No current research information available."
+    )}</p>
   `;
 }
-function displayCurrentTeaching(currentTeaching) {
-  const container = document.getElementById("current_teaching_content");
-  if (!Array.isArray(currentTeaching) || currentTeaching.length === 0) {
-    container.innerHTML = `
-      <p class="bg-white dark:bg-gray-800 p-4 shadow rounded dark:text-white transition-colors duration-200">
-        No current teaching information available.
-      </p>
+
+function renderTeachingCards(
+  courses,
+  colorClass,
+  sectionLabel,
+  emptyMessage,
+  flagClass = "bg-teal-700 before:border-t-teal-900"
+) {
+  const sectionFlag = `
+    <div class="absolute -top-7 left-0 ${flagClass} text-white text-xs px-3 py-1 font-bold rounded-t-lg shadow-sm whitespace-nowrap z-10 before:content-[''] before:absolute before:top-full before:left-0 before:border-t-4 before:border-r-4 before:border-r-transparent">
+      ${escapeHtml(sectionLabel)}
+    </div>
+  `;
+
+  if (!Array.isArray(courses) || courses.length === 0) {
+    return `
+      <div class="teaching-card p-4 shadow-lg rounded-lg border-l-4 w-full sm:w-64 mt-8 ${colorClass} flex flex-col justify-between relative transition-colors duration-200">
+        ${sectionFlag}
+        <p class="text-black dark:text-white font-medium">${escapeHtml(emptyMessage)}</p>
+      </div>
     `;
-    return;
   }
-  container.innerHTML = currentTeaching
-    .map(
-      (course) => `
-        <div class="bg-white dark:bg-gray-800 p-4 shadow rounded mb-4 dark:text-white transition-colors duration-200">
-          <p><strong>Course:</strong> ${course.title || ""}</p>
-          <p><strong>Session:</strong> ${course.session || ""}</p>
-          <p><strong>Institution:</strong> ${course.institution || ""}</p>
-          ${course.url
-          ? `<a href="${course.url}" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200">(More details)</a>`
-          : ""
-        }
-        </div>
-      `
+
+  return courses
+    .map((course, index) =>
+      displayAsTeachingCard(
+        {
+          course: course.title || course.course || "",
+          duration: course.session || course.duration || (course.year ? String(course.year) : ""),
+          institution: course.institution || "",
+          url: course.url,
+        },
+        colorClass,
+        index === 0 ? sectionLabel : null,
+        flagClass
+      )
     )
     .join("");
+}
+
+function displayTeachingSection(teachingData) {
+  const container = document.getElementById("teaching_content");
+  if (!container) return;
+
+  const currentTeaching = teachingData?.currentTeaching || [];
+  const teaching = teachingData?.teaching || [];
+  const currentStyle = {
+    cardClass: "bg-teal-100 dark:bg-teal-900 border-teal-600",
+    flagClass: "bg-teal-700 before:border-t-teal-900",
+  };
+  const pastStyle = {
+    cardClass: "bg-emerald-100 dark:bg-emerald-900 border-emerald-600",
+    flagClass: "bg-emerald-700 before:border-t-emerald-900",
+  };
+
+  container.className = "teaching-container mt-4 flex flex-wrap gap-4 items-stretch";
+  container.innerHTML = `
+    ${renderTeachingCards(
+      currentTeaching,
+      currentStyle.cardClass,
+      "Current",
+      "No current teaching information available.",
+      currentStyle.flagClass
+    )}
+    ${renderTeachingCards(
+      teaching,
+      pastStyle.cardClass,
+      "Past",
+      "No past teaching information available.",
+      pastStyle.flagClass
+    )}
+  `;
+}
+
+function displayVisualizations(visualizations) {
+  const container = document.getElementById("visualizations_content");
+  if (!container) return;
+
+  const simulators = (visualizations?.simulators || []).filter(
+    (item) => item.featured_on_homepage !== false
+  );
+  container.className = "grid gap-4 md:grid-cols-2 xl:grid-cols-3";
+  container.innerHTML = simulators
+    .map((item) => {
+      const primaryLink = createLinkHtml({
+        url: item.url,
+        label: item.name,
+        className:
+          "text-lg font-semibold text-blue-700 dark:text-blue-300 hover:underline transition-colors duration-200",
+      });
+      const sourceLink = item.source_url
+        ? createLinkHtml({
+            url: item.source_url,
+            label: "Source code",
+            className:
+              "text-sm text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200",
+          })
+        : "";
+
+      return `
+        <article class="bg-white dark:bg-gray-800 p-4 shadow rounded transition-colors duration-200">
+          <p>${primaryLink}</p>
+          <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">${escapeHtml(
+            item.description || "Interactive resource"
+          )}</p>
+          ${sourceLink ? `<p class="mt-3">${sourceLink}</p>` : ""}
+        </article>
+      `;
+    })
+    .join("");
+}
+
+function displayCV(cv) {
+  const container = document.getElementById("cv_content");
+  if (!container) return;
+
+  const action = cv?.url
+    ? createLinkHtml({
+        url: cv.url,
+        label: cv.label || "View CV",
+        className:
+          "inline-block mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded transition-colors duration-200",
+      })
+    : "";
+
+  container.innerHTML = `
+    <div class="bg-white dark:bg-gray-800 p-4 shadow rounded transition-colors duration-200">
+      <p class="text-gray-700 dark:text-gray-200">
+        A dedicated CV page is available with education, academic positions, awards, teaching, and talks in one place.
+      </p>
+      ${action}
+    </div>
+  `;
 }
 
 function setupGroupingButtons() {
@@ -652,16 +772,24 @@ function displayAsCard(item, groupBy, colors, cardIndex, groupIndex, yearLabel =
     ? `<div class="absolute top-0 right-0 bg-yellow-500 text-white px-1 py-0 origin-top-right text-xs rounded-l">To appear</div>`
     : "";
   const titleContent = item.doi
-    ? `<a href="${item.doi}" target="_blank" class="hover:underline transition-colors duration-200">${item.title}</a>`
-    : item.title;
+    ? createLinkHtml({
+        url: item.doi,
+        label: item.title,
+        className: "hover:underline transition-colors duration-200",
+      })
+    : escapeHtml(item.title);
   const arxivBottomBanner = item.arxiv
-    ? `<div class="absolute bottom-0 right-0 bg-green-500 text-white px-2 py-0.5 text-xs rounded-l"><a href="${item.arxiv}" target="_blank" class="hover:underline transition-colors duration-200">arXiv</a></div>`
+    ? `<div class="absolute bottom-0 right-0 bg-green-500 text-white px-2 py-0.5 text-xs rounded-l">${createLinkHtml({
+        url: item.arxiv,
+        label: "arXiv",
+        className: "text-white hover:underline transition-colors duration-200",
+      })}</div>`
     : "";
   const cardColorClass =
     colors[item.type] || "bg-gray-100 dark:bg-gray-900 border-gray-600"; // Default color if type is not found
 
   const keywordBubbles = (item.keywords || [])
-    .map(k => `<span class="inline-block bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 px-2 py-0.5 rounded-full text-[9px] font-bold mr-1 mb-1 border border-blue-200 dark:border-blue-800/50">${k}</span>`)
+    .map(k => `<span class="inline-block bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 px-2 py-0.5 rounded-full text-[9px] font-bold mr-1 mb-1 border border-blue-200 dark:border-blue-800/50">${escapeHtml(k)}</span>`)
     .join("");
 
   // Add a data attribute for identifying the card
@@ -836,6 +964,10 @@ function setupPublicationClickHandlers(container, allPublications, groupBy) {
       return;
     }
 
+    if (e.target.closest("a")) {
+      return;
+    }
+
     let card = e.target;
     while (card && !card.classList.contains("publication-card")) {
       card = card.parentElement;
@@ -929,13 +1061,23 @@ function formatAuthors(authors) {
   return authors
     .map((author) => {
       if (author === "Debasish Pattanayak") {
-        return `<strong><a href="${commonAuthors[author]?.url || "#"
-          }" class="highlighted ${linkHoverClass}">${author}</a></strong>`;
+        const debasishUrl = commonAuthors[author]?.url;
+        return debasishUrl && debasishUrl !== "#"
+          ? `<strong>${createLinkHtml({
+              url: debasishUrl,
+              label: author,
+              className: `highlighted ${linkHoverClass}`,
+            })}</strong>`
+          : `<strong>${escapeHtml(author)}</strong>`;
       }
       const authorData = commonAuthors[author];
       return authorData && authorData.url !== "#"
-        ? `<a href="${authorData.url}" class="${linkHoverClass}">${author}</a>`
-        : author;
+        ? createLinkHtml({
+            url: authorData.url,
+            label: author,
+            className: linkHoverClass,
+          })
+        : escapeHtml(author);
     })
     .join(", ");
 }
@@ -954,38 +1096,64 @@ function displayAsTalkCard(talk, colorClass) {
     ? Object.entries(talk.links)
       .map(
         ([key, url]) =>
-          `<a href="${url}" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200 mr-2">${key.charAt(0).toUpperCase() + key.slice(1)}</a>`
+          createLinkHtml({
+            url,
+            label: key.charAt(0).toUpperCase() + key.slice(1),
+            className:
+              "text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200 mr-2",
+          })
       )
       .join("")
     : "";
 
   const tweetHTML = talk.tweet
-    ? `<a href="${talk.tweet}" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200 mr-2">Tweet</a>`
+    ? createLinkHtml({
+        url: talk.tweet,
+        label: "Tweet",
+        className:
+          "text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200 mr-2",
+      })
     : "";
 
   const authorHTML = talk.author
-    ? `<div class="text-xs mt-1 text-gray-700 dark:text-gray-300">By <a href="${talk.author.url}" target="_blank" class="hover:underline">${talk.author.name}</a></div>`
+    ? `<div class="text-xs mt-1 text-gray-700 dark:text-gray-300">By ${createLinkHtml({
+        url: talk.author.url,
+        label: talk.author.name,
+        className: "hover:underline",
+      })}</div>`
     : "";
 
   const placeHTML = talk.Place
-    ? `<div class="text-xs text-gray-600 dark:text-gray-400">${talk.Place}</div>`
+    ? `<div class="text-xs text-gray-600 dark:text-gray-400">${escapeHtml(
+        talk.Place
+      )}</div>`
     : "";
 
   const organizerHTML = talk.Organizer
-    ? `<div class="text-xs text-gray-600 dark:text-gray-400">Org: <a href="${talk.Organizer.url}" target="_blank" class="hover:underline">${talk.Organizer.name}</a></div>`
+    ? `<div class="text-xs text-gray-600 dark:text-gray-400">Org: ${createLinkHtml({
+        url: talk.Organizer.url,
+        label: talk.Organizer.name,
+        className: "hover:underline",
+      })}</div>`
     : "";
 
   return `
     <div class="talk-card p-4 shadow-lg rounded-lg border-l-4 w-full sm:w-64 ${colorClass} flex flex-col justify-between relative overflow-hidden transition-colors duration-200">
       <div>
-        <p class="card-title text-md font-bold text-black dark:text-white ${marginClass}">${talk.title}</p>
-        <p class="card-event text-sm font-semibold text-gray-800 dark:text-gray-200 mb-1">${talk.event}</p>
+        <p class="card-title text-md font-bold text-black dark:text-white ${marginClass}">${escapeHtml(
+          talk.title
+        )}</p>
+        ${talk.event
+          ? `<p class="card-event text-sm font-semibold text-gray-800 dark:text-gray-200 mb-1">${escapeHtml(
+              talk.event
+            )}</p>`
+          : ""}
         ${placeHTML}
         ${organizerHTML}
         ${authorHTML}
       </div>
       <div class="card-footer mt-2 flex flex-wrap gap-2 text-sm">
-        ${talk.date ? `<span class="text-gray-600 dark:text-gray-400 italic">${talk.date}</span>` : ""}
+        ${talk.date ? `<span class="text-gray-600 dark:text-gray-400 italic">${escapeHtml(talk.date)}</span>` : ""}
         <div class="flex gap-2">
           ${linksHTML}
           ${tweetHTML}
@@ -1011,7 +1179,7 @@ function displayAwards(awards) {
     .map(
       (award) => `
     <div class="awards-item bg-white dark:bg-gray-800 p-4 shadow mb-4 rounded transition-colors duration-200">
-      <p class="dark:text-white">${award}</p>
+      <p class="dark:text-white">${escapeHtml(award)}</p>
     </div>
   `
     )
@@ -1022,51 +1190,64 @@ function displaySkills(skills) {
   const container = document.getElementById("skills_content");
   container.innerHTML = `
     <div class="skills-content bg-white dark:bg-gray-800 p-4 shadow rounded transition-colors duration-200">
-      <p class="dark:text-white"><strong class="skills-label dark:text-white">Programming:</strong> ${skills.programming ? skills.programming.join(", ") : "Not listed"
+      <p class="dark:text-white"><strong class="skills-label dark:text-white">Programming:</strong> ${skills.programming ? skills.programming.map(escapeHtml).join(", ") : "Not listed"
     }</p>
       <p class="dark:text-white"><strong class="skills-label dark:text-white">Python Libraries:</strong> ${skills.python_libraries
-      ? skills.python_libraries.join(", ")
+      ? skills.python_libraries.map(escapeHtml).join(", ")
       : "Not listed"
     }</p>
     </div>
   `;
 }
 
-function displayAsTeachingCard(course, colorClass) {
+function displayAsTeachingCard(
+  course,
+  colorClass,
+  sectionLabel = null,
+  flagClass = "bg-teal-700 before:border-t-teal-900"
+) {
+  const courseTitle = course.course || "";
+  const sectionFlag = sectionLabel
+    ? `<div class="absolute -top-7 left-0 ${flagClass} text-white text-xs px-3 py-1 font-bold rounded-t-lg shadow-sm whitespace-nowrap z-10 before:content-[''] before:absolute before:top-full before:left-0 before:border-t-4 before:border-r-4 before:border-r-transparent">
+         ${escapeHtml(sectionLabel)}
+       </div>`
+    : "";
   const marginClass =
-    course.course.length <= 50
+    courseTitle.length <= 50
       ? "mb-20"
-      : course.course.length <= 75
+      : courseTitle.length <= 75
         ? "mb-14"
-        : course.course.length <= 100
+        : courseTitle.length <= 100
           ? "mb-8"
           : "mb-2";
 
   return `
-    <div class="teaching-card p-4 shadow-lg rounded-lg border-l-4 w-full sm:w-64 ${colorClass} flex flex-col justify-between relative overflow-hidden transition-colors duration-200">
+    <div class="teaching-card p-4 shadow-lg rounded-lg border-l-4 w-full sm:w-64 mt-8 ${colorClass} flex flex-col justify-between relative transition-colors duration-200">
+      ${sectionFlag}
       <div>
-        <p class="card-title text-md font-bold text-black dark:text-white ${marginClass}">${course.course}</p>
-        <p class="card-institution text-sm font-semibold text-gray-800 dark:text-gray-200 mb-1">${course.institution}</p>
-        <p class="card-duration text-xs text-gray-600 dark:text-gray-400">${course.duration ? course.duration : (course.year ? course.year : "")}</p>
+        <p class="card-title text-md font-bold text-black dark:text-white ${marginClass}">${escapeHtml(
+          courseTitle
+        )}</p>
+        <p class="card-institution text-sm font-semibold text-gray-800 dark:text-gray-200 mb-1">${escapeHtml(
+          course.institution
+        )}</p>
+        <p class="card-duration text-xs text-gray-600 dark:text-gray-400">${escapeHtml(
+          course.duration ? course.duration : (course.year ? String(course.year) : "")
+        )}</p>
       </div>
       <div class="card-footer mt-2 text-sm">
         ${course.url
-      ? `<a href="${course.url}" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200 font-medium">Course Website &rarr;</a>`
+      ? createLinkHtml({
+          url: course.url,
+          label: "Course Website →",
+          className:
+            "text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200 font-medium",
+        })
       : ""
     }
       </div>
     </div>
   `;
-}
-
-function displayTeaching(teaching) {
-  const container = document.getElementById("teaching_list");
-  container.className = "teaching-container flex flex-wrap gap-4 items-stretch mt-4";
-  const colorClass = "bg-teal-100 dark:bg-teal-900 border-teal-600";
-
-  container.innerHTML = teaching
-    .map((course) => displayAsTeachingCard(course, colorClass))
-    .join("");
 }
 
 function displayCommunityServices(services) {
@@ -1079,7 +1260,7 @@ function displayCommunityServices(services) {
         <strong class="community-services-label dark:text-white">PC member:</strong>
         <ul class="community-services-sublist ml-4 list-disc">
           ${services.pc_member_for
-      ?.map((item) => `<li>${item}</li>`)
+      ?.map((item) => `<li>${escapeHtml(item)}</li>`)
       .join("") || "<li>Not listed</li>"
     }
         </ul>
@@ -1091,7 +1272,7 @@ function displayCommunityServices(services) {
             <strong class="community-services-sublabel dark:text-white">Journals:</strong>
             <ul class="community-services-sublist-inner ml-4 list-disc">
               ${services.reviewer_for?.journals
-      ?.map((journal) => `<li>${journal}</li>`)
+      ?.map((journal) => `<li>${escapeHtml(journal)}</li>`)
       .join("") || "<li>Not listed</li>"
     }
             </ul>
@@ -1100,7 +1281,7 @@ function displayCommunityServices(services) {
             <strong class="community-services-sublabel dark:text-white">Conferences:</strong>
             <ul class="community-services-sublist-inner ml-4 list-disc">
               ${services.reviewer_for?.conferences
-      ?.map((conf) => `<li>${conf}</li>`)
+      ?.map((conf) => `<li>${escapeHtml(conf)}</li>`)
       .join("") || "<li>Not listed</li>"
     }
             </ul>
@@ -1109,9 +1290,29 @@ function displayCommunityServices(services) {
       </li>
       <li class="community-services-item mb-2 dark:text-white">
         <strong class="community-services-label dark:text-white">Organizing committee:</strong>
-        <p class="community-services-text ml-4">${services.organizing_committee?.join(", ") || "Not listed"
+        <p class="community-services-text ml-4">${services.organizing_committee?.map(escapeHtml).join(", ") || "Not listed"
     }</p>
       </li>
     </ul>
   `;
+}
+
+function displayAdministrativeResponsibilities(responsibilities) {
+  const container = document.getElementById(
+    "administrative_responsibilities_content"
+  );
+  if (!container) return;
+
+  container.className = "space-y-4";
+  container.innerHTML = responsibilities
+    .map(
+      (responsibility) => `
+        <div class="bg-white dark:bg-gray-800 p-4 shadow rounded transition-colors duration-200">
+          <p class="text-gray-900 dark:text-white font-medium">${escapeHtml(
+            responsibility
+          )}</p>
+        </div>
+      `
+    )
+    .join("");
 }
