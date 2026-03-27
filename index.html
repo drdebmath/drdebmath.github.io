@@ -52,7 +52,7 @@
 
     <!-- ───── Navbar ────────────────────────────────────────────── -->
     <nav class="sticky top-0 z-40 bg-blue-600/95 dark:bg-blue-800/90 backdrop-blur shadow-lg">
-        <div class="mx-auto max-w-screen-lg flex items-center justify-between px-4 py-2">
+        <div class="mx-auto max-w-screen-lg flex items-center justify-between px-4 py-2 xl:pl-6 2xl:pl-10">
             <ul id="navbar" class="flex space-x-4">
                 <!-- filled by script.js -->
             </ul>
@@ -69,8 +69,9 @@
 
     <!-- ───── Hero / Header ─────────────────────────────────────── -->
     <header class="bg-blue-700 dark:bg-blue-900 text-white py-8 shadow">
-        <div class="mx-auto max-w-screen-2xl px-4">
-            <div class="flex flex-col md:flex-col lg:flex-row items-center lg:items-start gap-6">
+        <div class="mx-auto max-w-screen-2xl px-4 xl:pl-6 2xl:pl-10">
+            <div class="flex flex-col md:flex-col lg:flex-row items-center lg:items-start gap-6"
+                style="margin-left: min(16rem, max(0px, calc((100vw - 1024px) / 2)));">
                 <div id="picture" class="mt-4 lg:mt-0 flex justify-center w-40 h-60 overflow-hidden shrink-0">
                     <img src="debasish_photo.jpeg" alt="Profile picture"
                         class="rounded-full object-cover w-full h-full" />
@@ -89,7 +90,7 @@
     </header>
 
     <!-- ───── Main content ──────────────────────────────────────── -->
-    <main id="main_container" class="mx-auto max-w-screen-2xl px-4 my-12 flex flex-col xl:flex-row gap-8 items-start">
+    <main id="main_container" class="mx-auto max-w-screen-2xl pr-4 pl-6 my-12 flex flex-col xl:flex-row gap-8 items-start sm:pl-8 lg:pl-10 xl:pl-14 2xl:pl-20">
 
         <!-- ───── Left Column (Main Content) ────────────────────────── -->
         <div id="left-content" class="w-full xl:flex-1 space-y-12">
@@ -126,14 +127,14 @@
             <section id="publications" class="xl:col-start-1">
                 <h2 class="text-2xl font-semibold scroll-mt-24 mb-6">Publications</h2>
                 <div class="mb-6 flex">
-                    <button id="group_by_type"
-                        class="bg-blue-500 hover:bg-blue-700 text-white py-1 px-4 rounded-l-full border-r-0 transition-colors">By
-                        type</button>
                     <button id="group_by_year"
-                        class="bg-blue-500 hover:bg-blue-700 text-white py-1 px-4 border-r-0 transition-colors">By
+                        class="bg-blue-700 text-white py-1 px-4 rounded-l-full border-r-0 transition-colors">By
                         year</button>
+                    <button id="group_by_type"
+                        class="bg-blue-500 hover:bg-blue-700 text-white py-1 px-4 border-r-0 transition-colors">By
+                        type</button>
                     <button id="group_by_topic"
-                        class="bg-blue-700 text-white py-1 px-4 rounded-r-full transition-colors">By
+                        class="bg-blue-500 hover:bg-blue-700 text-white py-1 px-4 rounded-r-full transition-colors">By
                         topic</button>
                 </div>
                 <div id="publications_list" class="mt-6"></div>

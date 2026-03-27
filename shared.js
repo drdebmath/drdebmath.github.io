@@ -163,6 +163,7 @@ export function renderProfileHeader(aboutMe, options = {}) {
     iconImageClass = "h-8 opacity-80 hover:opacity-100 transition-opacity duration-200 bg-white dark:bg-gray-800 rounded-full overflow-hidden",
     pictureClass = "rounded-full object-cover mx-auto shadow-lg bg-white dark:bg-gray-800 transition-colors duration-200 w-full h-full",
     positionLinkClass = "hover:underline decoration-blue-300 decoration-2 underline-offset-2",
+    stackedPosition = false,
     officeTextClass = "text-md mt-1 font-medium opacity-90 lg:hidden",
   } = options;
 
@@ -204,7 +205,21 @@ export function renderProfileHeader(aboutMe, options = {}) {
           })
         : escapeHtml(department?.name || "");
 
-    if (departmentHtml && institutionHtml) {
+    if (stackedPosition) {
+      const positionLines = [
+        aboutMe.position
+          ? `<span class="block">${escapeHtml(aboutMe.position)}</span>`
+          : "",
+        departmentHtml
+          ? `<span class="mt-1 block">${departmentHtml}</span>`
+          : "",
+        institutionHtml
+          ? `<span class="mt-1 block">${institutionHtml}</span>`
+          : "",
+      ].filter(Boolean);
+
+      positionElement.innerHTML = positionLines.join("");
+    } else if (departmentHtml && institutionHtml) {
       positionElement.innerHTML = `${escapeHtml(
         aboutMe.position || ""
       )} at ${departmentHtml}, ${institutionHtml}`;

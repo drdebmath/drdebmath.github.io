@@ -30,6 +30,7 @@ function initializeWebsite(data) {
 
   renderProfileHeader(data.about_me, {
     department: data.about_me?.department,
+    stackedPosition: true,
   });
   setupNavbar(data);
   setupContentDisplay(data);
@@ -691,7 +692,7 @@ function setupGroupingButtons() {
     setActiveButton(groupByTopicBtn, [groupByTypeBtn, groupByYearBtn]);
   });
 
-  setActiveButton(groupByTopicBtn, [groupByTypeBtn, groupByYearBtn]);
+  setActiveButton(groupByYearBtn, [groupByTypeBtn, groupByTopicBtn]);
 }
 
 function setActiveButton(activeBtn, inactiveBtns) {
@@ -752,18 +753,11 @@ function groupPublicationsByTopic(publications) {
 
 function displayAsCard(item, groupBy, colors, cardIndex, groupIndex, yearLabel = null) {
   const yearFlag = yearLabel
-    ? `<div class="absolute -top-7 left-0 bg-blue-600 text-white text-xs px-3 py-1 font-bold rounded-t-lg shadow-sm whitespace-nowrap z-10 before:content-[''] before:absolute before:top-full before:left-0 before:border-t-4 before:border-t-blue-800 before:border-r-4 before:border-r-transparent">
+    ? `<div class="absolute -top-6 left-0 bg-blue-600 text-white text-xs px-3 py-1 font-bold rounded-t-lg shadow-sm whitespace-nowrap z-10 before:content-[''] before:absolute before:top-full before:left-0 before:border-t-4 before:border-t-blue-800 before:border-r-4 before:border-r-transparent">
          ${yearLabel}
        </div>`
     : "";
-  const marginClass =
-    item.title.length <= 50
-      ? "mb-20"
-      : item.title.length <= 75
-        ? "mb-14"
-        : item.title.length <= 100
-          ? "mb-8"
-          : "mb-2";
+  const topSpacingClass = yearLabel ? "mt-7" : "mt-8";
   const journalOrConference =
     item.type === "preprint"
       ? "arXiv"
@@ -787,31 +781,147 @@ function displayAsCard(item, groupBy, colors, cardIndex, groupIndex, yearLabel =
     : "";
   const cardColorClass =
     colors[item.type] || "bg-gray-100 dark:bg-gray-900 border-gray-600"; // Default color if type is not found
+  const cardBottomPaddingClass = item.arxiv ? "pb-8" : "";
 
   const keywordBubbles = (item.keywords || [])
     .map(k => `<span class="inline-block bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 px-2 py-0.5 rounded-full text-[9px] font-bold mr-1 mb-1 border border-blue-200 dark:border-blue-800/50">${escapeHtml(k)}</span>`)
     .join("");
+  const keywordSection = keywordBubbles
+    ? `<div class="card-keywords mt-4 flex flex-wrap">
+         ${keywordBubbles}
+       </div>`
+    : "";
 
   // Add a data attribute for identifying the card
   return `
-    <div class="publication-card p-4 shadow-lg rounded-lg border-l-4 w-full sm:w-56 mt-8 ${cardColorClass} flex flex-col justify-between relative transition-colors duration-200 cursor-pointer"
+    <div class="publication-card p-4 shadow-lg rounded-lg border-l-4 w-full sm:w-56 ${topSpacingClass} ${cardBottomPaddingClass} ${cardColorClass} flex flex-col relative transition-colors duration-200 cursor-pointer"
          data-card-index="${cardIndex}" data-group-index="${groupIndex}">
       ${yearFlag}
       ${toAppearBanner}
-      <div>
-        <p class="card-title text-md font-bold text-black dark:text-white ${marginClass}">${titleContent}</p>
-        <div class="card-keywords mb-4 flex flex-wrap">
-          ${keywordBubbles}
+      <div class="flex flex-1 flex-col">
+        <div>
+          <p class="card-title text-md font-bold text-black dark:text-white">${titleContent}</p>
+          ${keywordSection}
         </div>
-        <p class="card-authors text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">${formatAuthors(item.authors)}</p>
+        <div class="mt-auto pt-5">
+          <p class="card-authors text-sm font-semibold text-gray-800 dark:text-gray-200">${formatAuthors(item.authors)}</p>
+          <p class="card-details text-sm text-gray-700 dark:text-gray-300 mt-3">
+            ${journalOrConference} ${groupBy === "type" ? `(${item.year})` : ""}
+          </p>
+        </div>
       </div>
-      <div>
-        <p class="card-details text-sm text-gray-700 dark:text-gray-300 mb-2">
-          ${journalOrConference} ${groupBy === "type" ? `(${item.year})` : ""}
-        </p>
-        ${arxivBottomBanner}
+      ${arxivBottomBanner}
+    </div>
+  `;
+}
+
+function renderCommunityServiceItems(items, bulletClass) {
+  if (!items?.length) {
+    return `
+      <p class="rounded-xl border border-dashed border-gray-300 dark:border-gray-600 px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
+        Not listed
+      </p>
+    `;
+  }
+
+  return `
+    <ul class="space-y-2">
+      ${items
+        .map(
+          (item) => `
+            <li class="flex items-start gap-3 rounded-xl border border-gray-200/80 dark:border-gray-700 bg-white/80 dark:bg-gray-900/30 px-3 py-2">
+              <span class="mt-2 h-2 w-2 shrink-0 rounded-full ${bulletClass}"></span>
+              <span class="text-sm leading-6 text-gray-700 dark:text-gray-200">${escapeHtml(item)}</span>
+            </li>
+          `
+        )
+        .join("")}
+    </ul>
+  `;
+}
+
+function renderCommunityServiceCard({
+  title,
+  description,
+  countLabel,
+  accentBorderClass,
+  badgeClass,
+  contentHtml,
+  spanClass = "",
+}) {
+  const badgeHtml = countLabel
+    ? `<span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${badgeClass}">${countLabel}</span>`
+    : "";
+
+  return `
+    <section class="rounded-2xl border-l-4 ${accentBorderClass} bg-white dark:bg-gray-800 shadow-md p-5 transition-colors duration-200 ${spanClass}">
+      <div class="mb-4 flex items-start justify-between gap-3">
+        <div>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">${title}</h3>
+          <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">${description}</p>
+        </div>
+        ${badgeHtml}
+      </div>
+      ${contentHtml}
+    </section>
+  `;
+}
+
+function displayCommunityServices(services) {
+  const container = document.getElementById("community_services_list");
+  if (!container) return;
+
+  const reviewerJournals = services.reviewer_for?.journals || [];
+  const reviewerConferences = services.reviewer_for?.conferences || [];
+  const pcMemberItems = services.pc_member_for || [];
+  const organizingCommitteeItems = services.organizing_committee || [];
+
+  const reviewerContent = `
+    <div class="grid gap-4 lg:grid-cols-2">
+      <div class="rounded-2xl bg-amber-50/70 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-900/60 p-4">
+        <div class="mb-3 flex items-center justify-between gap-3">
+          <h4 class="text-sm font-semibold uppercase tracking-wide text-amber-900 dark:text-amber-200">Journals</h4>
+          <span class="text-xs font-semibold text-amber-700 dark:text-amber-300">${reviewerJournals.length}</span>
+        </div>
+        ${renderCommunityServiceItems(reviewerJournals, "bg-amber-500")}
+      </div>
+      <div class="rounded-2xl bg-amber-50/70 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-900/60 p-4">
+        <div class="mb-3 flex items-center justify-between gap-3">
+          <h4 class="text-sm font-semibold uppercase tracking-wide text-amber-900 dark:text-amber-200">Conferences</h4>
+          <span class="text-xs font-semibold text-amber-700 dark:text-amber-300">${reviewerConferences.length}</span>
+        </div>
+        ${renderCommunityServiceItems(reviewerConferences, "bg-amber-500")}
       </div>
     </div>
+  `;
+
+  container.className = "community-services mt-4 grid gap-4 xl:grid-cols-2";
+  container.innerHTML = `
+    ${renderCommunityServiceCard({
+      title: "Reviewer",
+      description: "Journal and conference reviewing activity across theory and distributed computing venues.",
+      countLabel: `${reviewerJournals.length + reviewerConferences.length} venues`,
+      accentBorderClass: "border-amber-500",
+      badgeClass: "bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-200",
+      contentHtml: reviewerContent,
+      spanClass: "xl:col-span-2",
+    })}
+    ${renderCommunityServiceCard({
+      title: "PC Member",
+      description: "Program committee and track-level service contributions.",
+      countLabel: `${pcMemberItems.length} roles`,
+      accentBorderClass: "border-blue-500",
+      badgeClass: "bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200",
+      contentHtml: renderCommunityServiceItems(pcMemberItems, "bg-blue-500"),
+    })}
+    ${renderCommunityServiceCard({
+      title: "Organizing Committee",
+      description: "Conference organization and workshop support.",
+      countLabel: `${organizingCommitteeItems.length} event${organizingCommitteeItems.length === 1 ? "" : "s"}`,
+      accentBorderClass: "border-emerald-500",
+      badgeClass: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-200",
+      contentHtml: renderCommunityServiceItems(organizingCommitteeItems, "bg-emerald-500"),
+    })}
   `;
 }
 
@@ -845,21 +955,17 @@ function displayAllPublications(publications, groupBy = "year") {
       topicsInitialized = true;
     }
 
-    // Create topic buttons container
     const filterContainer = document.createElement("div");
     filterContainer.id = "keyword-filter-container";
     filterContainer.className = "flex flex-wrap gap-2 mb-8 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700 shadow-inner";
 
-    // Add a helper text
     const helperText = document.createElement("p");
     helperText.className = "w-full text-xs text-gray-500 dark:text-gray-400 mb-3 font-medium uppercase tracking-wider";
     helperText.textContent = "Filter publications by topic:";
     filterContainer.appendChild(helperText);
 
-    // Create dynamic set of topics
     const topicsArr = Array.from(allTopics).sort();
 
-    // Create selection shortcuts container
     const shortcutContainer = document.createElement("div");
     shortcutContainer.className = "w-full flex gap-4 mb-4 pb-3 border-b border-gray-200 dark:border-gray-700";
 
@@ -1247,53 +1353,6 @@ function displayAsTeachingCard(
     }
       </div>
     </div>
-  `;
-}
-
-function displayCommunityServices(services) {
-  const container = document.getElementById("community_services_list");
-  container.className =
-    "community-services bg-white dark:bg-gray-800 p-4 shadow rounded transition-colors duration-200 mt-4";
-  container.innerHTML = `
-    <ul class="community-services-list list-disc pl-5">
-      <li class="community-services-item mb-2 dark:text-white">
-        <strong class="community-services-label dark:text-white">PC member:</strong>
-        <ul class="community-services-sublist ml-4 list-disc">
-          ${services.pc_member_for
-      ?.map((item) => `<li>${escapeHtml(item)}</li>`)
-      .join("") || "<li>Not listed</li>"
-    }
-        </ul>
-      </li>
-      <li class="community-services-item mb-2 dark:text-white">
-        <strong class="community-services-label dark:text-white">Reviewer:</strong>
-        <ul class="community-services-sublist ml-4 list-disc">
-          <li>
-            <strong class="community-services-sublabel dark:text-white">Journals:</strong>
-            <ul class="community-services-sublist-inner ml-4 list-disc">
-              ${services.reviewer_for?.journals
-      ?.map((journal) => `<li>${escapeHtml(journal)}</li>`)
-      .join("") || "<li>Not listed</li>"
-    }
-            </ul>
-          </li>
-          <li>
-            <strong class="community-services-sublabel dark:text-white">Conferences:</strong>
-            <ul class="community-services-sublist-inner ml-4 list-disc">
-              ${services.reviewer_for?.conferences
-      ?.map((conf) => `<li>${escapeHtml(conf)}</li>`)
-      .join("") || "<li>Not listed</li>"
-    }
-            </ul>
-          </li>
-        </ul>
-      </li>
-      <li class="community-services-item mb-2 dark:text-white">
-        <strong class="community-services-label dark:text-white">Organizing committee:</strong>
-        <p class="community-services-text ml-4">${services.organizing_committee?.map(escapeHtml).join(", ") || "Not listed"
-    }</p>
-      </li>
-    </ul>
   `;
 }
 
