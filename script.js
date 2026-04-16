@@ -3,6 +3,8 @@ import {
   escapeHtml,
   formatDateRange,
   linkifyBiographyHtml,
+  renderAwardsList,
+  renderGrantsList,
   renderProfileHeader,
   setupDarkMode,
   setupGoToTopButton,
@@ -103,6 +105,7 @@ function setupContentDisplay(data) {
   );
   displaySectionContent("talks_list", displayTalks, data.talks);
   displaySectionContent("awards_content", displayAwards, data.awards);
+  displaySectionContent("grants_content", displayGrants, data.grants);
   displaySectionContent(
     "community_services_list",
     displayCommunityServices,
@@ -160,6 +163,7 @@ function setupNavbar(data) {
     { id: "teaching", label: "Teaching" },
     { id: "talks", label: "Talks" },
     { id: "awards", label: "Awards" },
+    { id: "grants", label: "Grants" },
     { id: "service", label: "Service" },
     { id: "visualizations", label: "Visualizations" },
   ].filter((section) => document.getElementById(section.id));
@@ -758,12 +762,18 @@ function displayAsCard(item, groupBy, colors, cardIndex, groupIndex, yearLabel =
        </div>`
     : "";
   const topSpacingClass = yearLabel ? "mt-7" : "mt-8";
+  const hasAwardBanner = Boolean(item.award);
   const journalOrConference =
     item.type === "preprint"
       ? "arXiv"
       : item.conference?.short || item.journal?.short || "";
   const toAppearBanner = !item.doi
     ? `<div class="absolute top-0 right-0 bg-yellow-500 text-white px-1 py-0 origin-top-right text-xs rounded-l">To appear</div>`
+    : "";
+  const awardBanner = hasAwardBanner
+    ? `<div class="absolute top-0 left-0 max-w-[calc(100%-4rem)] bg-rose-600 text-white px-2 py-1 text-[10px] font-bold uppercase tracking-wide rounded-br shadow-sm">
+         ${escapeHtml(item.award)}
+       </div>`
     : "";
   const titleContent = item.doi
     ? createLinkHtml({
@@ -782,6 +792,7 @@ function displayAsCard(item, groupBy, colors, cardIndex, groupIndex, yearLabel =
   const cardColorClass =
     colors[item.type] || "bg-gray-100 dark:bg-gray-900 border-gray-600"; // Default color if type is not found
   const cardBottomPaddingClass = item.arxiv ? "pb-8" : "";
+  const cardTopPaddingClass = hasAwardBanner ? "pt-12" : "";
 
   const keywordBubbles = (item.keywords || [])
     .map(k => `<span class="inline-block bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 px-2 py-0.5 rounded-full text-[9px] font-bold mr-1 mb-1 border border-blue-200 dark:border-blue-800/50">${escapeHtml(k)}</span>`)
@@ -794,9 +805,10 @@ function displayAsCard(item, groupBy, colors, cardIndex, groupIndex, yearLabel =
 
   // Add a data attribute for identifying the card
   return `
-    <div class="publication-card p-4 shadow-lg rounded-lg border-l-4 w-full sm:w-56 ${topSpacingClass} ${cardBottomPaddingClass} ${cardColorClass} flex flex-col relative transition-colors duration-200 cursor-pointer"
+    <div class="publication-card p-4 ${cardTopPaddingClass} shadow-lg rounded-lg border-l-4 w-full sm:w-56 ${topSpacingClass} ${cardBottomPaddingClass} ${cardColorClass} flex flex-col relative transition-colors duration-200 cursor-pointer"
          data-card-index="${cardIndex}" data-group-index="${groupIndex}">
       ${yearFlag}
+      ${awardBanner}
       ${toAppearBanner}
       <div class="flex flex-1 flex-col">
         <div>
@@ -1281,15 +1293,16 @@ function displayTalks(talks) {
 
 function displayAwards(awards) {
   const container = document.getElementById("awards_content");
-  container.innerHTML = awards
-    .map(
-      (award) => `
-    <div class="awards-item bg-white dark:bg-gray-800 p-4 shadow mb-4 rounded transition-colors duration-200">
-      <p class="dark:text-white">${escapeHtml(award)}</p>
-    </div>
-  `
-    )
-    .join("");
+  if (!container) return;
+
+  container.innerHTML = renderAwardsList(awards);
+}
+
+function displayGrants(grants) {
+  const container = document.getElementById("grants_content");
+  if (!container) return;
+
+  container.innerHTML = renderGrantsList(grants);
 }
 
 function displaySkills(skills) {

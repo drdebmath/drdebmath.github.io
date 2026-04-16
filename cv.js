@@ -3,6 +3,8 @@ import {
   escapeHtml,
   formatDateRange,
   linkifyBiographyHtml,
+  renderAwardsList,
+  renderGrantsList,
   renderProfileHeader,
   setupDarkMode,
 } from "./shared.js";
@@ -100,16 +102,16 @@ function initializeCVPage(data) {
 
     <section class="bg-white dark:bg-gray-800 rounded-2xl shadow p-6">
       <h2 class="text-2xl font-bold mb-4">Awards</h2>
-      <ul class="space-y-3 list-disc pl-5">
-        ${(data.awards || [])
-          .map(
-            (award) =>
-              `<li class="text-slate-700 dark:text-slate-200">${escapeHtml(
-                award
-              )}</li>`
-          )
-          .join("")}
-      </ul>
+      ${renderAwardsList(data.awards || [], {
+        itemClass: "h-full",
+      })}
+    </section>
+
+    <section class="bg-white dark:bg-gray-800 rounded-2xl shadow p-6">
+      <h2 class="text-2xl font-bold mb-4">Grants</h2>
+      ${renderGrantsList(data.grants || [], {
+        itemClass: "h-full",
+      })}
     </section>
 
     <section class="bg-white dark:bg-gray-800 rounded-2xl shadow p-6">

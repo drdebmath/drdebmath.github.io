@@ -65,6 +65,92 @@ export function formatDateRange(startDate, endDate) {
   return `${start} - ${end}`;
 }
 
+export function renderAwardsList(
+  awards,
+  {
+    containerClass = "grid gap-4 md:grid-cols-2 list-none p-0 m-0",
+    itemClass = "",
+  } = {}
+) {
+  if (!Array.isArray(awards) || awards.length === 0) {
+    return `
+      <p class="text-sm text-gray-500 dark:text-gray-400 italic">
+        No awards listed.
+      </p>
+    `;
+  }
+
+  return `
+    <ul class="${containerClass}">
+      ${awards
+        .map(
+          (award, index) => `
+            <li class="rounded-lg border border-amber-200/80 dark:border-amber-900/70 bg-amber-50/70 dark:bg-amber-950/20 px-4 py-4 transition-colors duration-200 ${itemClass}">
+              <div class="flex items-start gap-3">
+                <span class="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-amber-500 text-sm font-semibold text-white">
+                  ${index + 1}
+                </span>
+                <div class="min-w-0">
+                  <span class="inline-flex items-center rounded-full border border-amber-200 dark:border-amber-800/70 bg-white/80 dark:bg-gray-900/60 px-2 py-0.5 text-xs font-semibold text-amber-800 dark:text-amber-200">
+                    Award
+                  </span>
+                  <p class="mt-2 text-sm leading-6 text-gray-800 dark:text-gray-100">
+                    ${escapeHtml(award)}
+                  </p>
+                </div>
+              </div>
+            </li>
+          `
+        )
+        .join("")}
+    </ul>
+  `;
+}
+
+export function renderGrantsList(
+  grants,
+  {
+    containerClass = "grid gap-4 md:grid-cols-2 list-none p-0 m-0",
+    itemClass = "",
+  } = {}
+) {
+  if (!Array.isArray(grants) || grants.length === 0) {
+    return `
+      <p class="text-sm text-gray-500 dark:text-gray-400 italic">
+        No grants listed.
+      </p>
+    `;
+  }
+
+  return `
+    <ul class="${containerClass}">
+      ${grants
+        .map(
+          (grant, index) => `
+            <li class="rounded-lg border border-emerald-200/80 dark:border-emerald-900/70 bg-emerald-50/70 dark:bg-emerald-950/20 px-4 py-4 transition-colors duration-200 ${itemClass}">
+              <div class="flex items-start gap-3">
+                <span class="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-sm font-semibold text-white">
+                  ${index + 1}
+                </span>
+                <div class="min-w-0">
+                  <span class="inline-flex items-center rounded-full border border-emerald-200 dark:border-emerald-800/70 bg-white/80 dark:bg-gray-900/60 px-2 py-0.5 text-xs font-semibold text-emerald-800 dark:text-emerald-200">
+                    Grant
+                  </span>
+                  <p class="mt-2 text-sm font-semibold text-gray-800 dark:text-gray-100">
+                    ${escapeHtml(grant.title || "")}${grant.year ? ` (${escapeHtml(grant.year)})` : ""}
+                  </p>
+                  ${grant.funding_agency ? `<p class="mt-1 text-sm text-gray-600 dark:text-gray-300"><strong>Funding Agency:</strong> ${escapeHtml(grant.funding_agency)}</p>` : ""}
+                  ${grant.project_title ? `<p class="mt-1 text-sm text-gray-600 dark:text-gray-300"><strong>Project:</strong> ${escapeHtml(grant.project_title)}</p>` : ""}
+                </div>
+              </div>
+            </li>
+          `
+        )
+        .join("")}
+    </ul>
+  `;
+}
+
 export function linkifyBiographyHtml(
   bioData,
   className = "text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200"

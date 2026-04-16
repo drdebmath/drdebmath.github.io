@@ -1,7 +1,7 @@
 {
   "about_me": {
     "name": "Debasish Pattanayak",
-    "name_odia": "ଦେବାଶିଷ ପଟ୍ଟନାୟକ",
+    "name_odia": "\u0b26\u0b47\u0b2c\u0b3e\u0b36\u0b3f\u0b37 \u0b2a\u0b1f\u0b4d\u0b1f\u0b28\u0b3e\u0b5f\u0b15",
     "picture": "./debasish_photo.jpeg",
     "dblp": "https://dblp.uni-trier.de/pers/hd/p/Pattanayak:Debasish",
     "google_scholar": "https://scholar.google.com/citations?user=E-jjx9gAAAAJ&hl=en&oi=ao",
@@ -221,6 +221,11 @@
     ]
   },
   "news": [
+    {
+      "date": "7 April 2026",
+      "title": "Best paper award for Universal Dancing paper in SIROCCO 2026.",
+      "url": "https://sirocco2026.webspace.durham.ac.uk/"
+    },
     {
       "date": "25 March 2026",
       "title": "Paper on Universal Pattern Formation accepted in Distributed Computing Journal.",
@@ -1160,6 +1165,7 @@
         "full": "33rd International Colloquium on Structural Information and Communication Complexity",
         "short": "SIROCCO"
       },
+      "award": "Best paper award",
       "abstract": "The Dancing problem requires a swarm of n autonomous mobile robots to form a sequence of patterns, aka perform a choreography. Existing work has proven that some crucial restrictions on choreographies and initial configurations (e.g., on repetitions of patterns, periodicity, symmetries, contractions/expansions) must hold so that the Dancing problem can be solved under certain robot models. Here, we prove that these necessary constraints can be dropped by considering the LUMI model (i.e., where robots are endowed with a light whose color can be chosen from a constant-size palette) under the quite unexplored sequential scheduler. We formalize the class of Universal Dancing problems which require a swarm of n robots starting from any initial configuration to perform a (periodic or finite) sequence of arbitrary patterns, only provided that each pattern consists of n vertices (including multiplicities). However, we prove that, to be solvable under LUMI, the length of the feasible choreographies is bounded by the compositions of n into the number of colors available to the robots. We provide an algorithm solving the Universal Dancing problem by exploiting the peculiar capability of sequential robots to implement a distributed counter mechanism. Even assuming non-rigid movements, our algorithm ensures spatial homogeneity of the performed choreography.",
       "arxiv": "https://doi.org/10.48550/arXiv.2508.15484"
     },
@@ -1305,12 +1311,21 @@
     }
   ],
   "awards": [
+    "Best paper award for Universal Dancing paper in SIROCCO 2026.",
     "Best Doctoral Thesis award from the Department of Mathematics, IIT Guwahati.",
     "Best Paper award at ICDCIT 2023 for paper on MIS Filling.",
-    "Awarded Distributed Computing Chair Research Grant, 2022 to work at UQO, Canada.",
-    "Awarded PRIN research grant titled 'AHeAD: efficient Algorithms for HArnessing networked Data' to work at LUISS Guido Carli, Italy.",
+    "Awarded position under Distributed Computing Chair Research Grant, 2022 to work at UQO, Canada.",
+    "Awarded position under PRIN research grant titled 'AHeAD: efficient Algorithms for HArnessing networked Data' to work at LUISS Guido Carli, Italy.",
     "Best Poster award in Doctoral Symposium, ICDCN 2020.",
     "SERB Overseas Visiting Doctoral Fellowship, 2018-19 to work at University of Vienna."
+  ],
+  "grants": [
+    {
+      "title": "PM-ECRG (Prime Minister Early Career Research Grant Scheme)",
+      "year": "2026",
+      "funding_agency": "ANRF",
+      "project_title": "Collective Resilience: Harnessing Swarm Intelligence Against Byzantine Faults"
+    }
   ],
   "community_services": {
     "pc_member_for": [
@@ -1450,7 +1465,7 @@
       "url": "https://scholar.google.com/citations?user=su_QHVwAAAAJ&hl=en&oi=ao"
     },
     "Loukas Georgiadis": {
-      "url": "https://sites.google.com/view/loukastgeorgiadis/αρχική-σελίδα"
+      "url": "https://sites.google.com/view/loukastgeorgiadis/\u03b1\u03c1\u03c7\u03b9\u03ba\u03ae-\u03c3\u03b5\u03bb\u03af\u03b4\u03b1"
     },
     "Evangelos Kosinas": {
       "url": "#"
