@@ -222,6 +222,11 @@
   },
   "news": [
     {
+      "date": "17 April 2026",
+      "title": "Paper on $k$-edge connected subgraph accepted to JCSS.",
+      "url": "https://doi.org/10.1016/j.jcss.2026.103801"
+    },
+    {
       "date": "11 April 2026",
       "title": "Awarded PM-ECRG by ANRF."
     },
@@ -946,7 +951,6 @@
         "Evangelos Kosinas",
         "Debasish Pattanayak"
       ],
-      "doi": "https://doi.org/10.48550/arXiv.2211.06521",
       "keywords": [
         "graphs",
         "edge connectivity"
