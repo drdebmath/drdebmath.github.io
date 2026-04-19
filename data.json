@@ -953,8 +953,13 @@
       ],
       "title": "On maximal k-edge-connected subgraphs of undirected graphs.",
       "arxiv": "https://arxiv.org/abs/2211.06521",
-      "type": "preprint",
-      "year": 2022,
+      "doi": "https://doi.org/10.1016/j.jcss.2026.103801",
+      "type": "journal",
+      "journal":{
+        "full": "Journal of Computer and System Sciences",
+        "short": "JCSS"
+      },
+      "year": 2026,
       "abstract": "We study structural and algorithmic properties related to maximal $k$-edge-connected subgraphs in an undirected graph $G = (V, E)$. For a given integer $k > 0$, a subgraph $H$ is $k$-edge-connected if the minimum number of edges whose removal disconnects $H$ is at least $k$. A $k$-edge-connected subgraph $H$ is maximal if no other $k$-edge-connected subgraph of $G$ properly contains $H$. We investigate the relationship between maximal $k$-edge-connected subgraphs for different values of $k$. We present efficient algorithms for finding all maximal $k$-edge-connected subgraphs of a given graph $G$. Our approach builds upon classic algorithms for computing edge connectivity and graph decomposition techniques. We analyze the time complexity of our algorithms and discuss their applications in network analysis, clustering, and fault-tolerant network design, where identifying highly connected components is crucial."
     },
     {
