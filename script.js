@@ -755,9 +755,50 @@ function groupPublicationsByTopic(publications) {
     .map(([topic, pubs]) => ({ type: topic, publications: pubs }));
 }
 
+function getPublicationAwardStyle(award) {
+  const normalizedAward = award.toLowerCase();
+
+  if (normalizedAward.includes("best paper")) {
+    return {
+      badgeClass:
+        "bg-red-300 text-red-950 dark:bg-red-500/45 dark:text-red-50",
+    };
+  }
+
+  if (normalizedAward.includes("best poster")) {
+    return {
+      badgeClass:
+        "bg-cyan-100 text-cyan-900 dark:bg-cyan-300/15 dark:text-cyan-100",
+    };
+  }
+
+  return {
+    badgeClass:
+      "bg-rose-100 text-rose-900 dark:bg-rose-300/15 dark:text-rose-100",
+  };
+}
+
+function renderPublicationAwardBadge(award) {
+  const { badgeClass } = getPublicationAwardStyle(award);
+
+  return `
+    <div class="absolute left-0 top-0 max-w-[calc(100%-4.5rem)] rounded-tl-md rounded-br-md px-2.5 py-1 text-[10px] font-semibold leading-none shadow-sm ${badgeClass}">
+      ${escapeHtml(award)}
+    </div>
+  `;
+}
+
+function renderPublicationStatusBadge(label) {
+  return `
+    <div class="absolute right-0 top-0 rounded-tr-md rounded-bl-md bg-gray-100 px-2.5 py-1 text-[10px] font-medium leading-none text-gray-700 shadow-sm dark:bg-gray-800 dark:text-gray-200">
+      ${escapeHtml(label)}
+    </div>
+  `;
+}
+
 function displayAsCard(item, groupBy, colors, cardIndex, groupIndex, yearLabel = null) {
   const yearFlag = yearLabel
-    ? `<div class="absolute -top-6 left-0 bg-blue-600 text-white text-xs px-3 py-1 font-bold rounded-t-lg shadow-sm whitespace-nowrap z-10 before:content-[''] before:absolute before:top-full before:left-0 before:border-t-4 before:border-t-blue-800 before:border-r-4 before:border-r-transparent">
+    ? `<div class="absolute top-px -left-1 -translate-y-full bg-blue-600 text-white text-xs px-3 py-1 font-bold rounded-t-lg shadow-sm whitespace-nowrap z-10 before:content-[''] before:absolute before:top-full before:left-0 before:border-t-4 before:border-t-blue-800 before:border-r-4 before:border-r-transparent">
          ${yearLabel}
        </div>`
     : "";
@@ -767,14 +808,8 @@ function displayAsCard(item, groupBy, colors, cardIndex, groupIndex, yearLabel =
     item.type === "preprint"
       ? "arXiv"
       : item.conference?.short || item.journal?.short || "";
-  const toAppearBanner = !item.doi
-    ? `<div class="absolute top-0 right-0 bg-yellow-500 text-white px-1 py-0 origin-top-right text-xs rounded-l">To appear</div>`
-    : "";
-  const awardBanner = hasAwardBanner
-    ? `<div class="absolute top-0 left-0 max-w-[calc(100%-4rem)] bg-rose-600 text-white px-2 py-1 text-[10px] font-bold uppercase tracking-wide rounded-br shadow-sm">
-         ${escapeHtml(item.award)}
-       </div>`
-    : "";
+  const awardBanner = hasAwardBanner ? renderPublicationAwardBadge(item.award) : "";
+  const toAppearBanner = !item.doi ? renderPublicationStatusBadge("To appear") : "";
   const titleContent = item.doi
     ? createLinkHtml({
         url: item.doi,
@@ -783,7 +818,7 @@ function displayAsCard(item, groupBy, colors, cardIndex, groupIndex, yearLabel =
       })
     : escapeHtml(item.title);
   const arxivBottomBanner = item.arxiv
-    ? `<div class="absolute bottom-0 right-0 bg-green-500 text-white px-2 py-0.5 text-xs rounded-l">${createLinkHtml({
+    ? `<div class="absolute bottom-0 right-0 bg-green-500 text-white px-2 py-0.5 text-xs rounded-tl-md rounded-br-md">${createLinkHtml({
         url: item.arxiv,
         label: "arXiv",
         className: "text-white hover:underline transition-colors duration-200",
@@ -792,7 +827,7 @@ function displayAsCard(item, groupBy, colors, cardIndex, groupIndex, yearLabel =
   const cardColorClass =
     colors[item.type] || "bg-gray-100 dark:bg-gray-900 border-gray-600"; // Default color if type is not found
   const cardBottomPaddingClass = item.arxiv ? "pb-8" : "";
-  const cardTopPaddingClass = hasAwardBanner ? "pt-12" : "";
+  const cardTopPaddingClass = awardBanner || toAppearBanner ? "pt-10" : "";
 
   const keywordBubbles = (item.keywords || [])
     .map(k => `<span class="inline-block bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 px-2 py-0.5 rounded-full text-[9px] font-bold mr-1 mb-1 border border-blue-200 dark:border-blue-800/50">${escapeHtml(k)}</span>`)
@@ -852,6 +887,30 @@ function renderCommunityServiceItems(items, bulletClass) {
   `;
 }
 
+function renderCommunityServicePills(items, pillClass) {
+  if (!items?.length) {
+    return `
+      <p class="rounded-xl border border-dashed border-gray-300 dark:border-gray-600 px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
+        Not listed
+      </p>
+    `;
+  }
+
+  return `
+    <div class="flex flex-wrap gap-2">
+      ${items
+        .map(
+          (item) => `
+            <span class="inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium ${pillClass}">
+              ${escapeHtml(item)}
+            </span>
+          `
+        )
+        .join("")}
+    </div>
+  `;
+}
+
 function renderCommunityServiceCard({
   title,
   description,
@@ -902,7 +961,10 @@ function displayCommunityServices(services) {
           <h4 class="text-sm font-semibold uppercase tracking-wide text-amber-900 dark:text-amber-200">Conferences</h4>
           <span class="text-xs font-semibold text-amber-700 dark:text-amber-300">${reviewerConferences.length}</span>
         </div>
-        ${renderCommunityServiceItems(reviewerConferences, "bg-amber-500")}
+        ${renderCommunityServicePills(
+          reviewerConferences,
+          "border-amber-200 bg-white/85 text-amber-900 dark:border-amber-800/70 dark:bg-amber-900/40 dark:text-amber-100"
+        )}
       </div>
     </div>
   `;

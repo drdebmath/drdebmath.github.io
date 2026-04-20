@@ -17,7 +17,7 @@
     "department": {
       "name": "Department of Computer Science and Engineering",
       "url": "https://cse.iiti.ac.in/faculty.php",
-      "office": "Room No. 19, Lab Complex, IIT Indore."
+      "office": "Room No. 19, CGS Advanced Research Complex, IIT Indore."
     },
     "biodata": {
       "urls": {
@@ -1338,6 +1338,11 @@
       "year": "2026",
       "funding_agency": "ANRF",
       "project_title": "Collective Resilience: Harnessing Swarm Intelligence Against Byzantine Faults"
+    },
+    {
+      "title": "YFRSG (Young Faculty Research Seed Grant Scheme)",
+      "funding_agency": "IIT Indore",
+      "project_title": "Schedulers Galore: Asynchronous, Synchronous and Sequential"
     }
   ],
   "community_services": {

@@ -50,6 +50,12 @@ function initializeCVPage(data) {
       label: "Research Areas",
       value: `${data.research?.length || 0} active themes`,
     },
+    {
+      label: "Grants",
+      value: `${data.grants?.length || 0} funded project${
+        data.grants?.length === 1 ? "" : "s"
+      }`,
+    },
   ];
 
   content.innerHTML = `
@@ -58,7 +64,7 @@ function initializeCVPage(data) {
       <div class="prose prose-slate max-w-none dark:prose-invert">
         <p>${renderCvBiography(data.about_me?.biodata)}</p>
       </div>
-      <div class="mt-6 grid gap-4 md:grid-cols-3">
+      <div class="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         ${snapshotCards
           .map(
             (card) => `
