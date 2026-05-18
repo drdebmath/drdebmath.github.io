@@ -184,6 +184,18 @@
         "source_url": "https://github.com/drdebmath/LCM"
       },
       {
+        "name": "Black Hole Search",
+        "description": "Interactive simulator for the Black Hole Search problem with Byzantine agents.",
+        "url": "https://drdebmath.github.io/BlackHoleSearch/",
+        "source_url": "https://github.com/drdebmath/BlackHoleSearch"
+      },
+      {
+        "name": "SILBOT",
+        "description": "Interactive simulator for the SILBOT mobile robot model.",
+        "url": "https://drdebmath.github.io/SILBOT/",
+        "source_url": "https://github.com/drdebmath/SILBOT"
+      },
+      {
         "name": "Graph Algorithm Visualizations",
         "description": "Slides and interactive demos for basic graph algorithms.",
         "url": "visualizations/"
