@@ -810,9 +810,10 @@ function displayAsCard(item, groupBy, colors, cardIndex, groupIndex, yearLabel =
       : item.conference?.short || item.journal?.short || "";
   const awardBanner = hasAwardBanner ? renderPublicationAwardBadge(item.award) : "";
   const toAppearBanner = !item.doi ? renderPublicationStatusBadge("To appear") : "";
-  const titleContent = item.doi
+  const publicationLink = item.doi || item.url;
+  const titleContent = publicationLink
     ? createLinkHtml({
-        url: item.doi,
+        url: publicationLink,
         label: item.title,
         className: "hover:underline transition-colors duration-200",
       })
@@ -826,8 +827,8 @@ function displayAsCard(item, groupBy, colors, cardIndex, groupIndex, yearLabel =
     : "";
   const cardColorClass =
     colors[item.type] || "bg-gray-100 dark:bg-gray-900 border-gray-600"; // Default color if type is not found
-  const cardBottomPaddingClass = item.arxiv ? "pb-8" : "";
-  const cardTopPaddingClass = awardBanner || toAppearBanner ? "pt-10" : "";
+  const cardBottomPaddingClass = "pb-8";
+  const cardTopPaddingClass = "pt-7";
 
   const keywordBubbles = (item.keywords || [])
     .map(k => `<span class="inline-block bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 px-2 py-0.5 rounded-full text-[9px] font-bold mr-1 mb-1 border border-blue-200 dark:border-blue-800/50">${escapeHtml(k)}</span>`)

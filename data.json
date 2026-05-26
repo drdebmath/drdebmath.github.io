@@ -196,6 +196,12 @@
         "source_url": "https://github.com/drdebmath/SILBOT"
       },
       {
+        "name": "MobileAutomata",
+        "description": "Interactive simulator for the MobileAutomata model.",
+        "url": "https://drdebmath.github.io/MobileAutomata/",
+        "source_url": "https://github.com/drdebmath/MobileAutomata"
+      },
+      {
         "name": "Graph Algorithm Visualizations",
         "description": "Slides and interactive demos for basic graph algorithms.",
         "url": "visualizations/"
@@ -233,6 +239,11 @@
     ]
   },
   "news": [
+    {
+      "date": "26 May 2026",
+      "title": "Brief Announcement: Asynchronous Dispersion with Optimal Time Complexity accepted to SPAA 2026.",
+      "url": "https://spaa.acm.org/"
+    },
     {
       "date": "17 April 2026",
       "title": "Paper on $k$-edge connected subgraph accepted to JCSS.",
@@ -990,7 +1001,7 @@
         "euclidean plane",
         "pattern formation"
       ],
-      "title": "Brief Announcement: Optimal Uniform Circle Formation by Asynchronous Luminous Robots.",
+      "title": "BA: Optimal Uniform Circle Formation by Asynchronous Luminous Robots.",
       "arxiv": "https://arxiv.org/abs/2405.06617",
       "type": "conference",
       "date": "Oct 29-31, 2024",
@@ -1127,7 +1138,7 @@
         "graphs",
         "dispersion"
       ],
-      "title": "Brief Announcement: Optimal Dispersion under Asynchrony",
+      "title": "BA: Optimal Dispersion under Asynchrony",
       "authors": [
         "Debasish Pattanayak",
         "Ajay D. Kshemkalyani",
@@ -1158,7 +1169,7 @@
         "euclidean plane",
         "pattern formation"
       ],
-      "title": "Brief Announcement: Universal Dancing by Luminous Robots Under Sequential Schedulers",
+      "title": "BA: Universal Dancing by Luminous Robots Under Sequential Schedulers",
       "pages": "56:1-56:7",
       "year": 2025,
       "doi": "https://doi.org/10.4230/LIPIcs.DISC.2025.56",
@@ -1169,6 +1180,32 @@
       },
       "abstract": "The Dancing problem requires a swarm of n autonomous mobile robots to form a sequence of patterns, aka perform a choreography. Existing work has proven that some crucial restrictions on choreographies and initial configurations (e.g., on repetitions of patterns, periodicity, symmetries, contractions/expansions) must hold so that the Dancing problem can be solved under certain robot models. Here, we prove that these necessary constraints can be dropped by considering the LUMI model (i.e., where robots are endowed with a light whose color can be chosen from a constant-size palette) under the quite unexplored sequential scheduler. We formalize the class of Universal Dancing problems which require a swarm of n robots starting from any initial configuration to perform a (periodic or finite) sequence of arbitrary patterns, only provided that each pattern consists of n vertices (including multiplicities). However, we prove that, to be solvable under LUMI, the length of the feasible choreographies is bounded by the compositions of n into the number of colors available to the robots. We provide an algorithm solving the Universal Dancing problem by exploiting the peculiar capability of sequential robots to implement a distributed counter mechanism. Even assuming non-rigid movements, our algorithm ensures spatial homogeneity of the performed choreography.",
       "arxiv": "https://doi.org/10.48550/arXiv.2508.15484"
+    },
+    {
+      "keywords": [
+        "mobile agents",
+        "graphs",
+        "dispersion"
+      ],
+      "title": "BA: Asynchronous Dispersion with Optimal Time Complexity",
+      "authors": [
+        "Debasish Pattanayak",
+        "Ajay D. Kshemkalyani",
+        "Manish Kumar",
+        "Anisur Rahaman Molla",
+        "Gokarna Sharma"
+      ],
+      "type": "conference",
+      "conference": {
+        "full": "38th ACM Symposium on Parallelism in Algorithms and Architectures",
+        "short": "SPAA"
+      },
+      "date": "July 6-10, 2026",
+      "url": "https://spaa.acm.org/",
+      "arxiv": "http://arxiv.org/abs/2507.01298",
+      "year": 2026,
+      "status": "Accepted",
+      "abstract": "We study dispersion in anonymous port-labeled graphs under asynchrony, where $k \\le n$ mobile agents with unique IDs must relocate so that no node hosts more than one agent. The result closes the asynchronous time-complexity gap by achieving optimal $O(k)$ time while using $O(\\log(k+\\Delta))$ bits of memory per agent, based on a port-one tree construction."
     },
     {
       "authors": [
