@@ -71,7 +71,17 @@ ensureRelativePathExists(data.about_me?.cv?.url, "about_me.cv.url");
   );
 });
 
-["index.html", "for_students.html", "cv.html", "script.js", "shared.js", "for_students.js", "cv.js"].forEach(
+[
+  "index.html",
+  "for_students.html",
+  "cv.html",
+  "visualizations/index.html",
+  "assets/site.css",
+  "script.js",
+  "shared.js",
+  "for_students.js",
+  "cv.js",
+].forEach(
   (file) => {
     assert(fs.existsSync(path.join(rootDir, file)), `missing required file "${file}"`);
   }

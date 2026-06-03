@@ -3,6 +3,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "validate": "node validate-site.mjs"
+    "build": "npm run build:css",
+    "build:css": "tailwindcss -c tailwind.config.cjs -i ./src/tailwind.css -o ./assets/site.css --minify",
+    "validate": "npm run build:css && node validate-site.mjs"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
   }
 }

@@ -51,8 +51,7 @@ function initializePage(data) {
   renderProfileHeader(data.about_me, {
     department: data.about_me?.department,
     linkItemClass:
-      "p-2 bg-white/20 backdrop-blur rounded-full hover:bg-white/30 transition-colors",
-    iconImageClass: "h-6 w-6 rounded-full",
+      "bg-white/20 px-3 text-white backdrop-blur hover:bg-white/30",
     positionLinkClass:
       "hover:underline decoration-blue-100 decoration-2 underline-offset-2 text-blue-100 hover:text-white transition-colors",
   });
@@ -75,7 +74,7 @@ function setupNavbar() {
     { href: "#simulators", label: "Simulators" },
   ];
 
-  navbar.className = "flex flex-wrap gap-2";
+  navbar.className = "flex min-w-0 flex-1 gap-2 overflow-x-auto whitespace-nowrap nav-scroll";
   navbar.innerHTML = links
     .map(
       (link) => `

@@ -141,7 +141,7 @@ function setupNavbar(data) {
 
   navbar.innerHTML = "";
   navbar.className =
-    "grid grid-cols-2 gap-x-2 gap-y-1 md:flex md:flex-wrap md:gap-2 p-2";
+    "flex min-w-0 flex-1 gap-2 overflow-x-auto whitespace-nowrap nav-scroll p-2";
 
   const featuredLinks = [];
 
@@ -173,12 +173,12 @@ function setupNavbar(data) {
     label: section.label,
   }))].forEach((link) => {
     const li = document.createElement("li");
-    li.className = "flex items-center w-full md:w-auto";
+    li.className = "flex shrink-0 items-center";
     li.innerHTML = createLinkHtml({
       url: link.href,
       label: link.label,
       className:
-        "block w-full text-center px-2 py-1 rounded hover:bg-blue-700 dark:hover:bg-blue-900 text-gray-100 transition-colors duration-200",
+        "block rounded px-3 py-1.5 text-center text-gray-100 transition-colors duration-200 hover:bg-blue-700 dark:hover:bg-blue-900",
     });
     navbar.appendChild(li);
   });
@@ -394,6 +394,7 @@ function displayNewsAndArchive(news) {
     dateElements.forEach((dateElement, itemIndex) => {
       dateElement.classList.toggle("bg-green-600", itemIndex === index);
       dateElement.classList.toggle("bg-blue-600", itemIndex !== index);
+      dateElement.setAttribute("aria-pressed", String(itemIndex === index));
     });
 
     newsContainer.innerHTML = renderNewsBody(news[index], { linkTitle: true });
@@ -401,6 +402,9 @@ function displayNewsAndArchive(news) {
 
   function startInterval() {
     clearInterval(interval);
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
     interval = setInterval(() => {
       currentIndex = (currentIndex + 1) % Math.min(5, news.length);
       showNews(currentIndex);
@@ -413,6 +417,11 @@ function displayNewsAndArchive(news) {
     dateElement.type = "button";
     dateElement.className =
       "flex-shrink-0 w-12 h-12 flex flex-col items-center justify-center bg-blue-600 text-white rounded m-1 cursor-pointer transition-colors duration-200 hover:bg-green-600";
+    dateElement.setAttribute(
+      "aria-label",
+      `Show news from ${item.date || "this date"}`
+    );
+    dateElement.setAttribute("aria-pressed", "false");
     dateElement.innerHTML = `
       <span class="text-xs">${escapeHtml(day)}</span>
       <span class="text-xs font-bold">${escapeHtml(month)}</span>
@@ -425,6 +434,12 @@ function displayNewsAndArchive(news) {
       showNews(index);
     });
     dateElement.addEventListener("mouseleave", startInterval);
+    dateElement.addEventListener("focus", () => {
+      clearInterval(interval);
+      currentIndex = index;
+      showNews(index);
+    });
+    dateElement.addEventListener("blur", startInterval);
     dateElement.addEventListener("click", () => {
       currentIndex = index;
       showNews(currentIndex);
@@ -702,10 +717,12 @@ function setupGroupingButtons() {
 function setActiveButton(activeBtn, inactiveBtns) {
   activeBtn.classList.add("bg-blue-700", "text-white");
   activeBtn.classList.remove("bg-blue-500", "hover:bg-blue-700");
+  activeBtn.setAttribute("aria-pressed", "true");
 
   inactiveBtns.forEach(btn => {
     btn.classList.add("bg-blue-500", "hover:bg-blue-700", "text-white");
     btn.classList.remove("bg-blue-700");
+    btn.setAttribute("aria-pressed", "false");
   });
 }
 
@@ -838,11 +855,19 @@ function displayAsCard(item, groupBy, colors, cardIndex, groupIndex, yearLabel =
          ${keywordBubbles}
        </div>`
     : "";
+  const interactiveAttributes = item.abstract
+    ? `role="button" tabindex="0" aria-expanded="false" aria-label="Show abstract for ${escapeHtml(
+        item.title || "publication"
+      )}"`
+    : "";
+  const interactiveClass = item.abstract
+    ? "cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900"
+    : "";
 
   // Add a data attribute for identifying the card
   return `
-    <div class="publication-card p-4 ${cardTopPaddingClass} shadow-lg rounded-lg border-l-4 w-full sm:w-56 ${topSpacingClass} ${cardBottomPaddingClass} ${cardColorClass} flex flex-col relative transition-colors duration-200 cursor-pointer"
-         data-card-index="${cardIndex}" data-group-index="${groupIndex}">
+    <div class="publication-card p-4 ${cardTopPaddingClass} shadow-lg rounded-lg border-l-4 w-full sm:w-56 ${topSpacingClass} ${cardBottomPaddingClass} ${cardColorClass} flex flex-col relative transition-colors duration-200 ${interactiveClass}"
+         data-card-index="${cardIndex}" data-group-index="${groupIndex}" ${interactiveAttributes}>
       ${yearFlag}
       ${awardBanner}
       ${toAppearBanner}
@@ -1072,6 +1097,7 @@ function displayAllPublications(publications, groupBy = "year") {
         : "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-300 dark:border-gray-600"
         }`;
       btn.textContent = topic;
+      btn.setAttribute("aria-pressed", String(isActive));
 
       btn.onclick = () => {
         if (activeTopics.has(topic)) {
@@ -1136,23 +1162,16 @@ function setupPublicationClickHandlers(container, allPublications, groupBy) {
   function removeAbstractPopout() {
     const existing = container.querySelector(".publication-abstract-wrapper");
     if (existing) existing.remove();
+    container
+      .querySelectorAll(".publication-card[aria-expanded='true']")
+      .forEach((openCard) => {
+        openCard.setAttribute("aria-expanded", "false");
+        openCard.removeAttribute("aria-controls");
+      });
     openAbstract = { groupIndex: null, cardIndex: null };
   }
 
-  container.onclick = function (e) {
-    if (e.target.classList.contains("close-abstract-popout")) {
-      removeAbstractPopout();
-      return;
-    }
-
-    if (e.target.closest("a")) {
-      return;
-    }
-
-    let card = e.target;
-    while (card && !card.classList.contains("publication-card")) {
-      card = card.parentElement;
-    }
+  function handlePublicationCard(card) {
     if (!card) return;
 
     const cardIndex = parseInt(card.getAttribute("data-card-index"));
@@ -1181,6 +1200,8 @@ function setupPublicationClickHandlers(container, allPublications, groupBy) {
     removeAbstractPopout();
 
     const abstractDiv = document.createElement("div");
+    const abstractId = `publication-abstract-${groupIndex}-${cardIndex}`;
+    abstractDiv.id = abstractId;
     abstractDiv.className = "publication-abstract-wrapper w-full";
     abstractDiv.style.width = "100%";
     abstractDiv.innerHTML = renderAbstractPopout(pub);
@@ -1190,6 +1211,9 @@ function setupPublicationClickHandlers(container, allPublications, groupBy) {
     } else {
       card.parentElement.appendChild(abstractDiv);
     }
+
+    card.setAttribute("aria-expanded", "true");
+    card.setAttribute("aria-controls", abstractId);
 
     const closeBtn = abstractDiv.querySelector(".close-abstract-popout");
     if (closeBtn) {
@@ -1210,13 +1234,50 @@ function setupPublicationClickHandlers(container, allPublications, groupBy) {
     }
 
     openAbstract = { groupIndex, cardIndex };
+  }
+
+  function findPublicationCard(target) {
+    let card = target;
+    while (card && !card.classList.contains("publication-card")) {
+      card = card.parentElement;
+    }
+    return card;
+  }
+
+  container.onclick = function (e) {
+    if (e.target.classList.contains("close-abstract-popout")) {
+      removeAbstractPopout();
+      return;
+    }
+
+    if (e.target.closest("a")) {
+      return;
+    }
+
+    handlePublicationCard(findPublicationCard(e.target));
+  };
+
+  container.onkeydown = function (e) {
+    if (e.target.closest("a")) {
+      return;
+    }
+
+    if (e.key !== "Enter" && e.key !== " ") {
+      return;
+    }
+
+    const card = findPublicationCard(e.target);
+    if (!card) return;
+
+    e.preventDefault();
+    handlePublicationCard(card);
   };
 }
 
 function renderAbstractPopout(item) {
   if (!item.abstract) return "";
   const keywordBubbles = (item.keywords || [])
-    .map(k => `<span class="inline-block bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 px-2 py-0.5 rounded-full text-[10px] font-bold mr-1 mb-1 border border-blue-200 dark:border-blue-800">${k}</span>`)
+    .map(k => `<span class="inline-block bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 px-2 py-0.5 rounded-full text-[10px] font-bold mr-1 mb-1 border border-blue-200 dark:border-blue-800">${escapeHtml(k)}</span>`)
     .join("");
 
   return `
@@ -1226,7 +1287,7 @@ function renderAbstractPopout(item) {
           <span class="font-bold text-lg text-black dark:text-white mr-4">Abstract</span>
           ${keywordBubbles}
         </div>
-        <button class="close-abstract-popout text-gray-600 dark:text-gray-300 hover:text-red-600 text-xl font-bold px-2">&times;</button>
+        <button class="close-abstract-popout text-gray-600 dark:text-gray-300 hover:text-red-600 text-xl font-bold px-2" aria-label="Close abstract">&times;</button>
       </div>
       <div class="text-gray-800 dark:text-gray-200 text-justify leading-relaxed">${item.abstract}</div>
     </div>

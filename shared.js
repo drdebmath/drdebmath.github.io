@@ -354,37 +354,37 @@ export function renderProfileHeader(aboutMe, options = {}) {
     const linkIcons = [
       {
         href: aboutMe.dblp,
-        src: "https://dblp.org/img/dblp.icon.192x192.png",
+        src: "assets/icons/dblp.icon.192x192.png",
         alt: "DBLP Logo",
         title: "DBLP Profile",
       },
       {
         href: aboutMe.google_scholar,
-        src: "https://upload.wikimedia.org/wikipedia/commons/c/c7/Google_Scholar_logo.svg",
+        src: "assets/icons/google_scholar_logo.svg",
         alt: "Google Scholar Logo",
         title: "Google Scholar Profile",
       },
       {
         href: aboutMe.orcid,
-        src: "https://orcid.org/sites/default/files/images/orcid_24x24.png",
+        src: "assets/icons/orcid_24x24.png",
         alt: "ORCID Logo",
         title: "ORCID Profile",
       },
       {
         href: aboutMe.x,
-        src: "https://x.com/favicon.ico",
+        src: "assets/icons/x_favicon.ico",
         alt: "X Logo",
         title: "X Profile",
       },
       {
         href: aboutMe.github,
-        src: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+        src: "assets/icons/GitHub-Mark.png",
         alt: "GitHub Logo",
         title: "GitHub Profile",
       },
       {
         href: aboutMe.linkedin,
-        src: "https://cdn-icons-png.flaticon.com/512/174/174857.png",
+        src: "assets/icons/linkedin.png",
         alt: "LinkedIn Logo",
         title: "LinkedIn Profile",
       },
@@ -398,8 +398,8 @@ export function renderProfileHeader(aboutMe, options = {}) {
             icon.href
           )} title="${escapeAttribute(icon.title)}" class="${linkItemClass}">
             <img src="${escapeAttribute(icon.src)}" alt="${escapeAttribute(
-              icon.alt
-            )}" class="${iconImageClass}" style="object-fit: cover;">
+            icon.alt
+          )}" class="${iconImageClass}" style="object-fit: cover;">
           </a>
         `
       )
