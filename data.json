@@ -167,6 +167,10 @@
     "cv": {
       "label": "View detailed CV",
       "url": "cv.html"
+    },
+    "whiteboard": {
+      "label": "Whiteboard",
+      "url": "https://drdebmath.github.io/whiteboard/"
     }
   },
   "visualizations": {

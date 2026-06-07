@@ -149,6 +149,13 @@ function setupNavbar(data) {
     featuredLinks.push({ href: data.about_me.cv.url, label: "CV" });
   }
 
+  if (data.about_me?.whiteboard?.url) {
+    featuredLinks.push({
+      href: data.about_me.whiteboard.url,
+      label: data.about_me.whiteboard.label || "Whiteboard",
+    });
+  }
+
   const currentCourse = data.current_teaching?.[0];
   if (currentCourse?.url) {
     featuredLinks.push({
