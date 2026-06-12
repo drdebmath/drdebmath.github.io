@@ -1286,6 +1286,13 @@
   ],
   "talks": [
     {
+      "title": "AI Agents: The Moving Frontier",
+      "event": "Mathematics Seminar",
+      "links": {
+        "talk": "https://drdebmath.github.io/Talks/ai-agents-moving-frontier.html"
+      }
+    },
+    {
       "title": "AI AGENTS ON THE FRONTIER: HYPE VS REALITY",
       "event": "Symposium 4.0",
       "date": "Feb 13 2026",
