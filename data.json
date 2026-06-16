@@ -1286,6 +1286,13 @@
   ],
   "talks": [
     {
+      "title": "Introduction to Distributed Algorithms",
+      "event": "From your phone to the cloud — making many computers act as one",
+      "links": {
+        "talk": "https://drdebmath.github.io/Talks/distributed-algorithms.html"
+      }
+    },
+    {
       "title": "AI Agents: The Moving Frontier",
       "event": "Department of Mathematics, IIT Guwahati",
       "date": "Jun 12 2026",
