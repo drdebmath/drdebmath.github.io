@@ -206,6 +206,12 @@
         "source_url": "https://github.com/drdebmath/MobileAutomata"
       },
       {
+        "name": "India Future Mobility Planner",
+        "description": "Interactive simulator of flight vs high-speed rail vs hybrid city-center journeys.",
+        "url": "https://drdebmath.github.io/Transport/",
+        "source_url": "https://github.com/drdebmath/Transport"
+      },
+      {
         "name": "Graph Algorithm Visualizations",
         "description": "Slides and interactive demos for basic graph algorithms.",
         "url": "visualizations/"
