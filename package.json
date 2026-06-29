@@ -3,8 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "npm run build:css",
+    "build": "npm run build:css && npm run build:seo",
     "build:css": "tailwindcss -c tailwind.config.cjs -i ./src/tailwind.css -o ./assets/site.css --minify",
+    "build:seo": "node gen-seo.mjs",
     "validate": "npm run build:css && node validate-site.mjs"
   },
   "devDependencies": {
