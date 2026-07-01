@@ -1218,6 +1218,32 @@
       "abstract": "We study dispersion in anonymous port-labeled graphs under asynchrony, where $k \\le n$ mobile agents with unique IDs must relocate so that no node hosts more than one agent. The result closes the asynchronous time-complexity gap by achieving optimal $O(k)$ time while using $O(\\log(k+\\Delta))$ bits of memory per agent, based on a port-one tree construction."
     },
     {
+      "keywords": [
+        "mobile agents",
+        "graphs",
+        "dispersion"
+      ],
+      "title": "Asynchronous Dispersion with Optimal Time Complexity",
+      "authors": [
+        "Debasish Pattanayak",
+        "Ajay D. Kshemkalyani",
+        "Manish Kumar",
+        "Anisur Rahaman Molla",
+        "Gokarna Sharma"
+      ],
+      "type": "conference",
+      "conference": {
+        "full": "55th International Conference on Parallel Processing",
+        "short": "ICPP"
+      },
+      "date": "September 28 - October 1, 2026",
+      "location": "Singapore",
+      "arxiv": "http://arxiv.org/abs/2507.01298",
+      "year": 2026,
+      "status": "Accepted",
+      "abstract": "We study dispersion in anonymous port-labeled graphs under asynchrony, where $k \\le n$ mobile agents with unique IDs must relocate so that no node hosts more than one agent. The result closes the asynchronous time-complexity gap by achieving optimal $O(k)$ time while using $O(\\log(k+\\Delta))$ bits of memory per agent, based on a port-one tree construction. This is the full version of the SPAA 2026 brief announcement."
+    },
+    {
       "authors": [
         "Caterina Feletti",
         "Paola Flocchini",
