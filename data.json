@@ -250,6 +250,11 @@
   },
   "news": [
     {
+      "date": "1 July 2026",
+      "title": "Full version of Asynchronous Dispersion with Optimal Time Complexity accepted to ICPP 2026.",
+      "url": "http://arxiv.org/abs/2507.01298"
+    },
+    {
       "date": "26 May 2026",
       "title": "Brief Announcement: Asynchronous Dispersion with Optimal Time Complexity accepted to SPAA 2026.",
       "url": "https://spaa.acm.org/"
@@ -1241,7 +1246,7 @@
       "arxiv": "http://arxiv.org/abs/2507.01298",
       "year": 2026,
       "status": "Accepted",
-      "abstract": "We study dispersion in anonymous port-labeled graphs under asynchrony, where $k \\le n$ mobile agents with unique IDs must relocate so that no node hosts more than one agent. The result closes the asynchronous time-complexity gap by achieving optimal $O(k)$ time while using $O(\\log(k+\\Delta))$ bits of memory per agent, based on a port-one tree construction. This is the full version of the SPAA 2026 brief announcement."
+      "abstract": "We study the dispersion problem for $k$ mobile agents on an $n$-node anonymous graph with memory-less nodes and maximum degree $\\Delta$. Agents must autonomously relocate so that no two agents occupy the same node. While an optimal $O(k)$-time, $O(\\log(k+\\Delta))$-memory algorithm is known under synchronous settings, the best known asynchronous algorithm requires $O\\!\\left(k \\log \\min\\{k,\\Delta\\}\\right)$ time due to the difficulty of distinguishing unvisited nodes from nodes temporarily vacated by agents in the asynchronous environment. We close this gap by presenting the first fully asynchronous algorithm achieving asymptotically optimal $O(k)$ time and $O(\\log(k+\\Delta))$ memory. Our main technical contribution is the introduction of the Port-1 Tree (P1Tree), a novel structural property of a port-labeled graph. By forcing the DFS traversal to prioritize edges locally labeled with port~1, P1Tree allows agents to verify the status of neighboring nodes in $O(1)$ asynchronous epochs without relying on timing assumptions unavailable in the asynchronous model. We prove the $O(k)$ bound first for rooted initial configurations and then extend it to general initial configurations via asynchronous tree mergers, preserving the same asymptotic time and memory bounds."
     },
     {
       "authors": [
