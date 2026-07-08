@@ -1218,6 +1218,7 @@
       "date": "July 6-10, 2026",
       "url": "https://spaa.acm.org/",
       "arxiv": "http://arxiv.org/abs/2507.01298",
+      "doi": "https://doi.org/10.1145/3816782.3819188",
       "year": 2026,
       "status": "Accepted",
       "abstract": "We study dispersion in anonymous port-labeled graphs under asynchrony, where $k \\le n$ mobile agents with unique IDs must relocate so that no node hosts more than one agent. The result closes the asynchronous time-complexity gap by achieving optimal $O(k)$ time while using $O(\\log(k+\\Delta))$ bits of memory per agent, based on a port-one tree construction."

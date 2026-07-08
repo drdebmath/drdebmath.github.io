@@ -50,7 +50,7 @@ const jsonld =
 
 let html = readFileSync("index.html", "utf8");
 html = html.replace(
-  /<!-- SEO:JSONLD:START[\s\S]*?<!-- SEO:JSONLD:END -->/,
+  /^[ \t]*<!-- SEO:JSONLD:START[\s\S]*?^[ \t]*<!-- SEO:JSONLD:END -->/m,
   jsonld,
 );
 writeFileSync("index.html", html);
