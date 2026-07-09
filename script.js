@@ -555,7 +555,42 @@ const THEME_ACCENTS = [
   },
 ];
 
-function renderSelectedPaperRow(pub, index) {
+// "BA:" brief announcements point at their full paper; conference papers
+// point at their journal write-up (and vice versa) — see_also just stores
+// publicationKey() slugs, so the label is derived from the target's own
+// type/title rather than duplicated in data.json.
+function relatedVersionLabel(source, target) {
+  const sourceIsBA = /^BA:/i.test(source.title || "");
+  const targetIsBA = /^BA:/i.test(target.title || "");
+  if (targetIsBA) return "Brief announcement";
+  if (sourceIsBA) return "Full version";
+  if (target.type === "journal") return "Journal version";
+  if (target.type === "conference") return "Conference version";
+  return "Related version";
+}
+
+function renderRelatedVersionLinks(pub, publications) {
+  if (!pub.see_also?.length) return "";
+  const byKey = new Map(publications.map((p) => [publicationKey(p), p]));
+  return pub.see_also
+    .map((key) => byKey.get(key))
+    .filter(Boolean)
+    .map((target) => {
+      const url = target.doi || target.arxiv || target.url;
+      if (!url) return "";
+      const venue = target.conference?.short || target.journal?.short || "";
+      const label = `${relatedVersionLabel(pub, target)}${venue ? ` (${venue})` : ""}`;
+      return createLinkHtml({
+        url,
+        label: `${label} →`,
+        className:
+          "inline-flex items-center rounded-md bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800 px-2 py-0.5 text-[11px] font-semibold text-indigo-700 dark:text-indigo-300 hover:underline",
+      });
+    })
+    .join("");
+}
+
+function renderSelectedPaperRow(pub, index, publications) {
   if (!pub) return "";
 
   const venue =
@@ -600,6 +635,7 @@ function renderSelectedPaperRow(pub, index) {
         pub.award
       )}</span>`
     : "";
+  const relatedVersionLinks = renderRelatedVersionLinks(pub, publications || []);
 
   return `
     <li class="group relative rounded-xl border border-gray-100 dark:border-gray-700/80 bg-white dark:bg-gray-900/60 px-3.5 py-3 shadow-sm hover:shadow-md hover:border-blue-200 dark:hover:border-blue-800 transition-all">
@@ -628,6 +664,7 @@ function renderSelectedPaperRow(pub, index) {
             }
             ${arxivLink}
             ${award}
+            ${relatedVersionLinks}
           </div>
         </div>
       </div>
@@ -681,7 +718,7 @@ function displayResearchThemes({ themes, publications }) {
                     papers.length
                       ? papers
                           .map((paper, paperIndex) =>
-                            renderSelectedPaperRow(paper, paperIndex)
+                            renderSelectedPaperRow(paper, paperIndex, publications)
                           )
                           .join("")
                       : '<li class="text-sm text-gray-500 italic">No selected papers.</li>'

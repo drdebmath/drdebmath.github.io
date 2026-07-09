@@ -62,6 +62,39 @@ function monthKeyLabel(key) {
   return date.toLocaleDateString("en-US", { month: "short", year: "numeric" });
 }
 
+// Visits are day-precision (unlike eras, which are month-precision), and an
+// open-ended end_date shouldn't read as "- Present" the way formatDateRange
+// renders it for an ongoing position — so this formats visits on its own.
+function parseIsoDate(iso) {
+  const [y, m = "1", d = "1"] = String(iso || "").split("-");
+  if (!/^\d{4}$/.test(y)) return null;
+  return new Date(Number(y), Number(m) - 1, Number(d));
+}
+
+function formatVisitDates(visit) {
+  const start = parseIsoDate(visit.start_date);
+  if (!start) return "";
+  if (!visit.end_date) {
+    return start.toLocaleDateString("en-US", { month: "short", year: "numeric" });
+  }
+  const end = parseIsoDate(visit.end_date);
+  if (!end) return start.toLocaleDateString("en-US", { month: "short", year: "numeric" });
+
+  const sameMonth =
+    start.getFullYear() === end.getFullYear() && start.getMonth() === end.getMonth();
+  if (sameMonth) {
+    const monthLabel = start.toLocaleDateString("en-US", { month: "short" });
+    return `${monthLabel} ${start.getDate()}-${end.getDate()}, ${end.getFullYear()}`;
+  }
+  const startLabel = start.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  const endLabel = end.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+  return `${startLabel} - ${endLabel}`;
+}
+
 // ---------------------------------------------------------------------------
 // Type styles (semantic accents from AGENT.md)
 
@@ -81,6 +114,10 @@ const EVENT_STYLES = {
   News: {
     dot: "bg-green-500",
     chip: "border-green-200 dark:border-green-800/70 bg-green-50/80 dark:bg-green-950/40 text-green-800 dark:text-green-200",
+  },
+  Visit: {
+    dot: "bg-rose-500",
+    chip: "border-rose-200 dark:border-rose-800/70 bg-rose-50/80 dark:bg-rose-950/40 text-rose-800 dark:text-rose-200",
   },
 };
 
@@ -241,15 +278,64 @@ function buildEvents(data) {
     };
   });
 
+  // A talk given during a trip is the same story as the visit itself (its
+  // "reason" already names the talk) — matched talks fold into the visit
+  // card below instead of getting their own duplicate card.
+  const visitRanges = (data.visits || []).map((visit) => {
+    const start = monthKeyFromIso(visit.start_date);
+    const end = visit.end_date ? monthKeyFromIso(visit.end_date) : start;
+    return { visit, start, end: end ?? start };
+  });
+
+  // Place strings are messy ("Dept. of Mathematics, IIT Guwahati" vs.
+  // "IIT Guwahati, India", or the place folded into "event" instead of
+  // "Place") — match on shared distinctive words rather than substrings.
+  const PLACE_STOPWORDS = new Set([
+    "the", "and", "for", "institute", "department", "mathematics",
+    "mathematical", "science", "sciences", "technology", "university",
+    "india", "school", "conference", "workshop", "symposium", "international",
+  ]);
+  function placeTokens(text) {
+    return new Set(
+      (String(text || "").toLowerCase().match(/[a-z]{3,}/g) || []).filter(
+        (word) => !PLACE_STOPWORDS.has(word)
+      )
+    );
+  }
+
+  function findMatchingVisit(talk) {
+    const talkKey = monthKeyFromLoose(talk.date);
+    if (talkKey === null) return null;
+    const talkTokens = placeTokens([talk.Place, talk.event].filter(Boolean).join(" "));
+    if (talkTokens.size === 0) return null;
+    return visitRanges.find(({ visit, start, end }) => {
+      if (start === null || talkKey < start || talkKey > end) return false;
+      const visitTokens = placeTokens(visit.place);
+      return [...visitTokens].some((token) => talkTokens.has(token));
+    })?.visit;
+  }
+
   (data.talks || []).forEach((talk) => {
     const key = monthKeyFromLoose(talk.date);
     if (key === null) return;
+    if (findMatchingVisit(talk)) return; // folded into its visit card instead
     events.push({
       kind: "Talk",
       monthKey: key,
       title: talk.title || "",
       subtitle: [talk.event, talk.Place].filter(Boolean).join(" · "),
       href: "talks.html",
+    });
+  });
+
+  visitRanges.forEach(({ visit, start }) => {
+    if (start === null) return;
+    events.push({
+      kind: "Visit",
+      monthKey: start,
+      title: visit.place || "",
+      subtitle: [visit.reason, formatVisitDates(visit)].filter(Boolean).join(" · "),
+      href: "",
     });
   });
 
@@ -464,13 +550,28 @@ function renderStintCard(stint) {
   `;
 }
 
+const ALL_KINDS = ["Education", "Position", "Publication", "Talk", "Teaching", "News", "Visit"];
+const activeKinds = new Set(ALL_KINDS);
+let timelineData = null;
+
 function renderTimeline(data) {
+  timelineData = data;
+  renderLegend();
+  renderFilteredTimeline();
+}
+
+function renderFilteredTimeline() {
+  const data = timelineData;
   const container = document.getElementById("timeline_content");
-  if (!container) return;
+  if (!container || !data) return;
 
   const allEras = buildEras(data.about_me);
+  // Section boundaries always come from the FULL era list, filtered or not:
+  // dropping an era kind must not let a neighboring era's section swell to
+  // cover months it never actually spanned. The active-kinds filter only
+  // decides whether a given era/stint's card is drawn, further down.
   const { primary: eras, stints } = splitEras(allEras);
-  const events = buildEvents(data);
+  const events = buildEvents(data).filter((event) => activeKinds.has(event.kind));
 
   if (eras.length === 0) {
     container.innerHTML =
@@ -503,6 +604,8 @@ function renderTimeline(data) {
   container.innerHTML = [...sections]
     .reverse()
     .map(({ era, from, to }) => {
+      // Boundaries stay true to the full era list; a filtered-out stint kind
+      // just renders without its card, still inside its real owning section.
       const sectionStints = stints.filter(
         (stint) => stint.start >= from && stint.start <= to
       );
@@ -522,11 +625,16 @@ function renderTimeline(data) {
             const monthEvents = eventsByMonth.get(k);
             if (monthEvents?.length) rows.push(renderMonthRow(k, monthEvents));
           }
-          months.push(`
-            <div class="relative">
+          const stintCard = activeKinds.has(stint.kind)
+            ? `
               <div class="sticky top-[6.75rem] z-[5] pl-6 py-1">
                 ${renderStintCard(stint)}
               </div>
+            `
+            : "";
+          months.push(`
+            <div class="relative">
+              ${stintCard}
               ${rows.join("")}
             </div>
           `);
@@ -546,7 +654,7 @@ function renderTimeline(data) {
       return `
         <section class="grid gap-x-8 gap-y-4 lg:grid-cols-[20rem,minmax(0,1fr)] items-start">
           <div class="sticky top-24 z-10">
-            ${renderEraCard(era)}
+            ${activeKinds.has(era.kind) ? renderEraCard(era) : ""}
           </div>
           <div class="relative ml-2 border-l-2 border-gray-200 dark:border-gray-700">
             ${months.join("")}
@@ -556,7 +664,6 @@ function renderTimeline(data) {
     })
     .join("");
 
-  renderLegend();
   setupMonthIndicator();
 }
 
@@ -571,28 +678,43 @@ function renderLegend() {
     ["Talk", EVENT_STYLES.Talk],
     ["Teaching", EVENT_STYLES.Teaching],
     ["News", EVENT_STYLES.News],
+    ["Visit", EVENT_STYLES.Visit],
   ];
 
   container.innerHTML = entries
     .map(
       ([label, style]) => `
-        <span class="inline-flex items-center gap-1.5 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-1 text-xs font-semibold text-gray-700 dark:text-gray-200 surface-chip">
+        <button type="button" data-kind="${label}" aria-pressed="true"
+          class="legend-filter inline-flex items-center gap-1.5 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-1 text-xs font-semibold text-gray-700 dark:text-gray-200 surface-chip transition-opacity duration-150 hover:opacity-80">
           <span class="h-2.5 w-2.5 rounded-full ${style.dot}"></span>
           ${label}
-        </span>
+        </button>
       `
     )
     .join("");
+
+  container.querySelectorAll(".legend-filter").forEach((button) => {
+    button.addEventListener("click", () => {
+      const kind = button.dataset.kind;
+      if (activeKinds.has(kind)) {
+        activeKinds.delete(kind);
+      } else {
+        activeKinds.add(kind);
+      }
+      button.setAttribute("aria-pressed", String(activeKinds.has(kind)));
+      button.classList.toggle("opacity-40", !activeKinds.has(kind));
+      renderFilteredTimeline();
+    });
+  });
 }
 
 function setupMonthIndicator() {
   const indicator = document.getElementById("timeline_current_month");
   if (!indicator) return;
 
-  const rows = [...document.querySelectorAll("[data-month-label]")];
-  if (rows.length === 0) return;
-
   const update = () => {
+    const rows = [...document.querySelectorAll("[data-month-label]")];
+    if (rows.length === 0) return;
     // Rows are newest-first; pick the last one that has crossed the header line.
     let label = rows[0].dataset.monthLabel;
     for (const row of rows) {
@@ -605,6 +727,9 @@ function setupMonthIndicator() {
     indicator.textContent = label;
   };
 
-  window.addEventListener("scroll", update, { passive: true });
+  if (!indicator.dataset.listenerAttached) {
+    window.addEventListener("scroll", update, { passive: true });
+    indicator.dataset.listenerAttached = "true";
+  }
   update();
 }
