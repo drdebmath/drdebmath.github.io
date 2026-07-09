@@ -1,43 +1,90 @@
 import {
+  appendNavLinks,
   createLinkHtml,
   escapeHtml,
   formatDateRange,
+  getPrimarySiteLinks,
   linkifyBiographyHtml,
-  renderAwardsList,
-  renderGrantsList,
+  publicationKey,
   renderProfileHeader,
+  renderSimulatorCardsHtml,
+  renderSiteFooter,
   setupDarkMode,
   setupGoToTopButton,
+  setupPrimaryNav,
+  setupSiteSearch,
 } from "./shared.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   setupDarkMode();
   setupGoToTopButton();
 
-  if (!document.getElementById("publications_list")) {
-    return;
-  }
-
   fetch("data.json")
     .then((response) => response.json())
     .then((data) => {
-      initializeWebsite(data);
+      commonAuthors = data.common_authors || {};
+      publications = data.publications || [];
+      renderSiteFooter(data);
+      setupSiteSearch(data);
+
+      const page = document.body.dataset.page || "home";
+      if (page === "publications") {
+        initializePublicationsPage(data);
+      } else if (page === "teaching") {
+        initializeTeachingPage(data);
+      } else if (page === "talks") {
+        initializeTalksPage(data);
+      } else if (document.getElementById("about_me_content")) {
+        initializeWebsite(data);
+      }
     })
     .catch((error) => console.error("Error fetching data:", error));
 });
 
 function initializeWebsite(data) {
-  commonAuthors = data.common_authors || {};
-  publications = data.publications || [];
-
   renderProfileHeader(data.about_me, {
     department: data.about_me?.department,
     stackedPosition: true,
   });
-  setupNavbar(data);
+  setupPrimaryNav(data, getHomeQuickLinks(data));
   setupContentDisplay(data);
-  setupGroupingButtons();
   setupResponsiveLayout();
+}
+
+function getHomeQuickLinks(data) {
+  const links = [];
+  const cs103 = [...(data.current_teaching || []), ...(data.teaching || [])].find(
+    (course) => /CS103/i.test(course.title || course.course || "")
+  );
+  if (cs103?.url) links.push({ href: cs103.url, label: "CS103" });
+  if (data.about_me?.whiteboard?.url) {
+    links.push({
+      href: data.about_me.whiteboard.url,
+      label: data.about_me.whiteboard.label || "Whiteboard",
+    });
+  }
+  return links;
+}
+
+function initializePublicationsPage(data) {
+  setupPrimaryNav(data);
+  setupGroupingButtons();
+  displayAllPublications(data.publications || [], "year");
+  // Deep link from search: ?pub=<key>
+  requestAnimationFrame(() => focusPublicationFromUrl());
+}
+
+function initializeTeachingPage(data) {
+  setupPrimaryNav(data);
+  displayTeachingSection({
+    currentTeaching: data.current_teaching || [],
+    teaching: data.teaching || [],
+  });
+}
+
+function initializeTalksPage(data) {
+  setupPrimaryNav(data);
+  displayTalks(data.talks || []);
 }
 
 /**
@@ -80,44 +127,25 @@ function setupContentDisplay(data) {
   displaySectionContent("about_me_content", displayAboutMe, data.about_me);
   displaySectionContent("news_content", displayNewsAndArchive, data.news);
   displaySectionContent(
-    "research_interests_content",
-    displayResearchInterests,
-    data.research
-  );
-  displaySectionContent(
-    "current_research_content",
-    displayCurrentResearch,
+    "research_overview_content",
+    displayResearchOverview,
     data.current_research
   );
   displaySectionContent(
-    "publications_list",
-    displayAllPublications,
-    data.publications,
-    "year"
-  ); // Default grouping by year
-  displaySectionContent(
-    "teaching_content",
-    displayTeachingSection,
+    "research_themes_content",
+    displayResearchThemes,
     {
-      currentTeaching: data.current_teaching || [],
-      teaching: data.teaching || [],
+      themes: data.research_themes || [],
+      publications: data.publications || [],
     }
   );
-  displaySectionContent("talks_list", displayTalks, data.talks);
+  displaySectionContent("talks_list", displayRecentTalks, {
+    talks: data.talks || [],
+    featuredTitles: data.homepage_talks || [],
+    limit: 3,
+  });
   displaySectionContent("awards_content", displayAwards, data.awards);
   displaySectionContent("grants_content", displayGrants, data.grants);
-  displaySectionContent(
-    "community_services_list",
-    displayCommunityServices,
-    data.community_services
-  );
-  displaySectionContent(
-    "administrative_responsibilities_content",
-    displayAdministrativeResponsibilities,
-    data.administrative_responsibilities
-  );
-  displaySectionContent("education_content", displayEducation, data.about_me?.education);
-  displaySectionContent("positions_content", displayPositions, data.about_me?.positions);
   displaySectionContent("visualizations_content", displayVisualizations, data.visualizations);
 }
 
@@ -135,66 +163,11 @@ function displaySectionContent(elementId, displayFunction, data, ...args) {
   }
 }
 
-function setupNavbar(data) {
-  const navbar = document.getElementById("navbar");
-  if (!navbar) return;
-
-  navbar.innerHTML = "";
-  navbar.className =
-    "flex min-w-0 flex-1 gap-2 overflow-x-auto whitespace-nowrap nav-scroll p-2";
-
-  const featuredLinks = [];
-
-  if (data.about_me?.cv?.url) {
-    featuredLinks.push({ href: data.about_me.cv.url, label: "CV" });
-  }
-
-  if (data.about_me?.whiteboard?.url) {
-    featuredLinks.push({
-      href: data.about_me.whiteboard.url,
-      label: data.about_me.whiteboard.label || "Whiteboard",
-    });
-  }
-
-  const currentCourse = data.current_teaching?.[0];
-  if (currentCourse?.url) {
-    featuredLinks.push({
-      href: currentCourse.url,
-      label: (currentCourse.title || "Current Course").split(":")[0].trim(),
-    });
-  }
-
-  const sectionLinks = [
-    { id: "research", label: "Research" },
-    { id: "publications", label: "Publications" },
-    { id: "teaching", label: "Teaching" },
-    { id: "talks", label: "Talks" },
-    { id: "awards", label: "Awards" },
-    { id: "grants", label: "Grants" },
-    { id: "service", label: "Service" },
-    { id: "visualizations", label: "Visualizations" },
-  ].filter((section) => document.getElementById(section.id));
-
-  [...featuredLinks, ...sectionLinks.map((section) => ({
-    href: `#${section.id}`,
-    label: section.label,
-  }))].forEach((link) => {
-    const li = document.createElement("li");
-    li.className = "flex shrink-0 items-center";
-    li.innerHTML = createLinkHtml({
-      url: link.href,
-      label: link.label,
-      className:
-        "block rounded px-3 py-1.5 text-center text-gray-100 transition-colors duration-200 hover:bg-blue-700 dark:hover:bg-blue-900",
-    });
-    navbar.appendChild(li);
-  });
-}
-
 function displayAboutMe(aboutMe) {
   const container = document.getElementById("about_me_content");
+  // Keep panel-body padding from HTML; only style the text block
   container.className =
-    "text-justify dark:text-white bg-white p-4 rounded-lg shadow-md dark:bg-gray-800 transition-colors duration-200";
+    "panel-body text-justify text-sm sm:text-base leading-7 text-gray-800 dark:text-gray-100";
   container.innerHTML = "";
 
   const bioContainer = document.createElement("div");
@@ -375,12 +348,9 @@ function renderNewsBody(item, { linkTitle = false } = {}) {
 
 function displayNewsAndArchive(news) {
   const container = document.getElementById("news_content");
-  const archiveContainer = document.getElementById("archive_list");
-
-  if (!container || !archiveContainer) return;
+  if (!container) return;
 
   container.innerHTML = "";
-  archiveContainer.innerHTML = "";
 
   if (!news || news.length === 0) {
     container.innerHTML = '<p class="dark:text-white">No news available.</p>';
@@ -388,10 +358,10 @@ function displayNewsAndArchive(news) {
   }
 
   const dateContainer = document.createElement("div");
-  dateContainer.className = "flex flex-wrap mb-4 justify-center";
+  dateContainer.className = "flex flex-wrap gap-1 mb-3";
   const newsContainer = document.createElement("div");
   newsContainer.className =
-    "news-item bg-white dark:bg-gray-800 p-4 shadow rounded border-l-4 border-green-600 dark:text-white transition-colors duration-200";
+    "news-item rounded-xl border border-gray-200/80 dark:border-gray-700 bg-gray-50/80 dark:bg-gray-900/40 p-4 border-l-4 border-l-green-600 dark:text-white shadow-sm text-sm leading-6";
 
   let currentIndex = 0;
   let interval;
@@ -413,26 +383,26 @@ function displayNewsAndArchive(news) {
       return;
     }
     interval = setInterval(() => {
-      currentIndex = (currentIndex + 1) % Math.min(5, news.length);
+      currentIndex = (currentIndex + 1) % Math.min(4, news.length);
       showNews(currentIndex);
     }, 3000);
   }
 
-  news.slice(0, 5).forEach((item, index) => {
+  news.slice(0, 4).forEach((item, index) => {
     const { day, month, year } = formatNewsDateParts(item.date);
     const dateElement = document.createElement("button");
     dateElement.type = "button";
     dateElement.className =
-      "flex-shrink-0 w-12 h-12 flex flex-col items-center justify-center bg-blue-600 text-white rounded m-1 cursor-pointer transition-colors duration-200 hover:bg-green-600";
+      "flex-shrink-0 w-11 h-11 flex flex-col items-center justify-center bg-blue-600 text-white rounded-lg m-0.5 cursor-pointer shadow-md hover:shadow-lg transition-all duration-200 hover:bg-green-600";
     dateElement.setAttribute(
       "aria-label",
       `Show news from ${item.date || "this date"}`
     );
     dateElement.setAttribute("aria-pressed", "false");
     dateElement.innerHTML = `
-      <span class="text-xs">${escapeHtml(day)}</span>
-      <span class="text-xs font-bold">${escapeHtml(month)}</span>
-      <span class="text-xs font-bold">${escapeHtml(year)}</span>
+      <span class="text-[10px] leading-tight">${escapeHtml(day)}</span>
+      <span class="text-[10px] leading-tight font-bold">${escapeHtml(month)}</span>
+      <span class="text-[10px] leading-tight font-bold">${escapeHtml(year)}</span>
     `;
 
     dateElement.addEventListener("mouseenter", () => {
@@ -463,7 +433,7 @@ function displayNewsAndArchive(news) {
   showNews(currentIndex);
   startInterval();
 
-  displayArchive(news.slice(5));
+  // Older news stays on CV / full history is not duplicated on the homepage
 }
 
 function displayArchive(archiveItems) {
@@ -537,29 +507,247 @@ function displayArchive(archiveItems) {
   });
 }
 
-function displayResearchInterests(interests) {
-  const container = document.getElementById("research_interests_content");
+function displayResearchOverview(currentResearch) {
+  const container = document.getElementById("research_overview_content");
   if (!container) return;
 
-  container.className =
-    "bg-white dark:bg-gray-800 p-4 shadow rounded transition-colors duration-200";
-  container.innerHTML = (interests || [])
-    .map(
-      (interest) => `
-        <span class="inline-block bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 px-3 py-1 rounded-full text-sm font-semibold mr-2 mb-2 border border-blue-200 dark:border-blue-800/50">
-          ${escapeHtml(interest)}
-        </span>
-      `
-    )
-    .join("");
+  container.innerHTML = `
+    <div class="surface-card relative overflow-hidden bg-white/95 dark:bg-gray-900/50">
+      <div class="absolute inset-y-0 left-0 w-1.5 bg-gradient-to-b from-blue-500 via-cyan-500 to-blue-600"></div>
+      <div class="px-5 py-5 sm:px-6">
+        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-blue-600 dark:text-blue-300 mb-2">Overview</p>
+        <p class="text-sm sm:text-[0.95rem] leading-7 text-gray-700 dark:text-gray-200">
+          ${escapeHtml(currentResearch || "No current research information available.")}
+        </p>
+      </div>
+    </div>
+  `;
 }
 
-function displayCurrentResearch(currentResearch) {
-  document.getElementById("current_research_content").innerHTML = `
-    <p class="bg-white dark:bg-gray-800 p-4 shadow rounded dark:text-white transition-colors duration-200">${escapeHtml(
-      currentResearch || "No current research information available."
-    )}</p>
+function findPublicationByTitle(publications, title) {
+  return (publications || []).find((pub) => pub.title === title);
+}
+
+const THEME_ACCENTS = [
+  {
+    bar: "from-blue-500 to-cyan-500",
+    badge: "bg-blue-600 text-white",
+    soft: "bg-blue-50 dark:bg-blue-950/30 border-blue-100 dark:border-blue-900/50",
+    chip: "bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200",
+  },
+  {
+    bar: "from-violet-500 to-fuchsia-500",
+    badge: "bg-violet-600 text-white",
+    soft: "bg-violet-50 dark:bg-violet-950/30 border-violet-100 dark:border-violet-900/50",
+    chip: "bg-violet-100 text-violet-800 dark:bg-violet-900/50 dark:text-violet-200",
+  },
+  {
+    bar: "from-amber-500 to-orange-500",
+    badge: "bg-amber-600 text-white",
+    soft: "bg-amber-50 dark:bg-amber-950/30 border-amber-100 dark:border-amber-900/50",
+    chip: "bg-amber-100 text-amber-900 dark:bg-amber-900/50 dark:text-amber-100",
+  },
+  {
+    bar: "from-emerald-500 to-teal-500",
+    badge: "bg-emerald-600 text-white",
+    soft: "bg-emerald-50 dark:bg-emerald-950/30 border-emerald-100 dark:border-emerald-900/50",
+    chip: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-200",
+  },
+];
+
+function renderSelectedPaperRow(pub, index) {
+  if (!pub) return "";
+
+  const venue =
+    pub.type === "preprint"
+      ? "arXiv"
+      : pub.conference?.short ||
+        pub.journal?.short ||
+        pub.journal?.full ||
+        pub.booktitle ||
+        "";
+  const typeLabel =
+    pub.type === "journal"
+      ? "Journal"
+      : pub.type === "conference"
+        ? "Conference"
+        : pub.type === "preprint"
+          ? "Preprint"
+          : pub.type
+            ? escapeHtml(pub.type)
+            : "";
+  const link = pub.doi || pub.arxiv || pub.url;
+  const titleHtml = link
+    ? createLinkHtml({
+        url: link,
+        label: pub.title,
+        className:
+          "font-semibold text-gray-900 dark:text-white hover:text-blue-700 dark:hover:text-blue-300 transition-colors",
+      })
+    : `<span class="font-semibold text-gray-900 dark:text-white">${escapeHtml(
+        pub.title
+      )}</span>`;
+  const arxivLink = pub.arxiv
+    ? createLinkHtml({
+        url: pub.arxiv,
+        label: "arXiv",
+        className:
+          "inline-flex items-center rounded-md bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 dark:text-emerald-300 hover:underline",
+      })
+    : "";
+  const award = pub.award
+    ? `<span class="inline-flex items-center rounded-md bg-amber-100 dark:bg-amber-900/40 border border-amber-200 dark:border-amber-800 px-2 py-0.5 text-[11px] font-semibold text-amber-800 dark:text-amber-200">${escapeHtml(
+        pub.award
+      )}</span>`
+    : "";
+
+  return `
+    <li class="group relative rounded-xl border border-gray-100 dark:border-gray-700/80 bg-white dark:bg-gray-900/60 px-3.5 py-3 shadow-sm hover:shadow-md hover:border-blue-200 dark:hover:border-blue-800 transition-all">
+      <div class="flex items-start gap-3">
+        <span class="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-[11px] font-bold text-gray-500 dark:text-gray-400 shadow-sm">
+          ${index + 1}
+        </span>
+        <div class="min-w-0 flex-1">
+          <div class="text-sm leading-6">${titleHtml}</div>
+          <div class="mt-2 flex flex-wrap items-center gap-2">
+            ${
+              typeLabel
+                ? `<span class="inline-flex items-center rounded-md bg-gray-100 dark:bg-gray-800 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">${typeLabel}</span>`
+                : ""
+            }
+            ${
+              venue
+                ? `<span class="text-xs text-gray-600 dark:text-gray-400">${escapeHtml(
+                    venue
+                  )}${pub.year ? ` · ${escapeHtml(String(pub.year))}` : ""}</span>`
+                : pub.year
+                  ? `<span class="text-xs text-gray-600 dark:text-gray-400">${escapeHtml(
+                      String(pub.year)
+                    )}</span>`
+                  : ""
+            }
+            ${arxivLink}
+            ${award}
+          </div>
+        </div>
+      </div>
+    </li>
   `;
+}
+
+function displayResearchThemes({ themes, publications }) {
+  const container = document.getElementById("research_themes_content");
+  if (!container) return;
+
+  if (!Array.isArray(themes) || themes.length === 0) {
+    container.innerHTML =
+      '<p class="text-gray-600 dark:text-gray-400 italic">No research themes listed.</p>';
+    return;
+  }
+
+  container.className = "space-y-4";
+  container.innerHTML = `
+    <div class="grid gap-4 lg:grid-cols-2">
+      ${themes
+        .map((theme, themeIndex) => {
+          const accent = THEME_ACCENTS[themeIndex % THEME_ACCENTS.length];
+          const papers = (theme.selected_papers || [])
+            .map((title) => findPublicationByTitle(publications, title))
+            .filter(Boolean);
+
+          return `
+            <article class="surface-card-hover group relative overflow-hidden h-full flex flex-col">
+              <div class="h-1.5 bg-gradient-to-r ${accent.bar}"></div>
+              <div class="p-5 flex flex-col flex-1">
+                <div class="flex items-start gap-3">
+                  <span class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-sm font-bold shadow-md ${accent.badge}">
+                    ${themeIndex + 1}
+                  </span>
+                  <div class="min-w-0">
+                    <h3 class="text-base sm:text-lg font-bold text-gray-900 dark:text-white leading-snug">
+                      ${escapeHtml(theme.title || "")}
+                    </h3>
+                    ${
+                      theme.description
+                        ? `<p class="mt-1.5 text-sm leading-6 text-gray-600 dark:text-gray-300">${escapeHtml(
+                            theme.description
+                          )}</p>`
+                        : ""
+                    }
+                  </div>
+                </div>
+                <ul class="mt-4 space-y-2 flex-1">
+                  ${
+                    papers.length
+                      ? papers
+                          .map((paper, paperIndex) =>
+                            renderSelectedPaperRow(paper, paperIndex)
+                          )
+                          .join("")
+                      : '<li class="text-sm text-gray-500 italic">No selected papers.</li>'
+                  }
+                </ul>
+              </div>
+            </article>
+          `;
+        })
+        .join("")}
+    </div>
+    <div class="surface-card px-5 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white/90 dark:bg-gray-900/50">
+      <div>
+        <p class="text-sm font-semibold text-gray-900 dark:text-white">Work with me on these themes</p>
+        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">
+          Open problems, supervision, and student opportunities.
+        </p>
+      </div>
+      <div class="flex flex-wrap gap-2 shrink-0">
+        <a href="for_students.html"
+           class="inline-flex items-center rounded-full border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/40 px-4 py-2 text-sm font-semibold text-blue-800 dark:text-blue-200 shadow-sm hover:shadow-md hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-all">
+          For students
+        </a>
+        <a href="publications.html"
+           class="inline-flex items-center rounded-full bg-blue-600 hover:bg-blue-700 px-4 py-2 text-sm font-semibold text-white shadow-md hover:shadow-lg transition-all">
+          Full publications →
+        </a>
+      </div>
+    </div>
+  `;
+}
+
+function parseTalkSortKey(talk) {
+  if (!talk?.date) return 0;
+  const parsed = Date.parse(talk.date);
+  if (!Number.isNaN(parsed)) return parsed;
+  // Fallback for formats like "Jun 19 2026" / "April 24 2025"
+  const loose = Date.parse(String(talk.date).replace(/(\d{1,2})\s+(\w+)\s+(\d{4})/, "$2 $1, $3"));
+  return Number.isNaN(loose) ? 0 : loose;
+}
+
+function displayRecentTalks({ talks = [], featuredTitles = [], limit = 3 } = {}) {
+  const container = document.getElementById("talks_list");
+  if (!container) return;
+
+  const byTitle = new Map((talks || []).map((talk) => [talk.title, talk]));
+  let recent = (featuredTitles || [])
+    .map((title) => byTitle.get(title))
+    .filter(Boolean)
+    .slice(0, limit);
+
+  // Fallback: newest talks if featured list is missing/empty
+  if (recent.length === 0) {
+    recent = [...(talks || [])]
+      .sort((a, b) => parseTalkSortKey(b) - parseTalkSortKey(a))
+      .slice(0, limit);
+  }
+
+  const colorClass = "bg-purple-50 dark:bg-purple-950/40 border-purple-500";
+
+  // panel-body is already on the container in HTML; keep only the grid
+  container.className =
+    "panel-body talks-container grid gap-3 sm:grid-cols-2 xl:grid-cols-3";
+  container.innerHTML = recent.length
+    ? recent.map((talk) => displayAsTalkCard(talk, colorClass)).join("")
+    : '<p class="text-gray-600 dark:text-gray-400 italic">No talks listed.</p>';
 }
 
 function renderTeachingCards(
@@ -577,9 +765,9 @@ function renderTeachingCards(
 
   if (!Array.isArray(courses) || courses.length === 0) {
     return `
-      <div class="teaching-card p-4 shadow-lg rounded-lg border-l-4 w-full sm:w-64 mt-8 ${colorClass} flex flex-col justify-between relative transition-colors duration-200">
+      <div class="teaching-card surface-card-hover h-full p-4 !rounded-xl border-l-4 mt-8 ${colorClass} relative">
         ${sectionFlag}
-        <p class="text-black dark:text-white font-medium">${escapeHtml(emptyMessage)}</p>
+        <p class="text-gray-900 dark:text-white font-medium">${escapeHtml(emptyMessage)}</p>
       </div>
     `;
   }
@@ -608,15 +796,15 @@ function displayTeachingSection(teachingData) {
   const currentTeaching = teachingData?.currentTeaching || [];
   const teaching = teachingData?.teaching || [];
   const currentStyle = {
-    cardClass: "bg-teal-100 dark:bg-teal-900 border-teal-600",
+    cardClass: "bg-teal-50 dark:bg-teal-950/40 border-teal-500",
     flagClass: "bg-teal-700 before:border-t-teal-900",
   };
   const pastStyle = {
-    cardClass: "bg-emerald-100 dark:bg-emerald-900 border-emerald-600",
+    cardClass: "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500",
     flagClass: "bg-emerald-700 before:border-t-emerald-900",
   };
 
-  container.className = "teaching-container mt-4 flex flex-wrap gap-4 items-stretch";
+  container.className = "teaching-container grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 items-stretch";
   container.innerHTML = `
     ${renderTeachingCards(
       currentTeaching,
@@ -642,35 +830,8 @@ function displayVisualizations(visualizations) {
   const simulators = (visualizations?.simulators || []).filter(
     (item) => item.featured_on_homepage !== false
   );
-  container.className = "grid gap-4 md:grid-cols-2 xl:grid-cols-3";
-  container.innerHTML = simulators
-    .map((item) => {
-      const primaryLink = createLinkHtml({
-        url: item.url,
-        label: item.name,
-        className:
-          "text-lg font-semibold text-blue-700 dark:text-blue-300 hover:underline transition-colors duration-200",
-      });
-      const sourceLink = item.source_url
-        ? createLinkHtml({
-            url: item.source_url,
-            label: "Source code",
-            className:
-              "text-sm text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200",
-          })
-        : "";
-
-      return `
-        <article class="bg-white dark:bg-gray-800 p-4 shadow rounded transition-colors duration-200">
-          <p>${primaryLink}</p>
-          <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">${escapeHtml(
-            item.description || "Interactive resource"
-          )}</p>
-          ${sourceLink ? `<p class="mt-3">${sourceLink}</p>` : ""}
-        </article>
-      `;
-    })
-    .join("");
+  container.className = "panel-body grid gap-3 sm:grid-cols-2 xl:grid-cols-3";
+  container.innerHTML = renderSimulatorCardsHtml(simulators);
 }
 
 function displayCV(cv) {
@@ -721,14 +882,22 @@ function setupGroupingButtons() {
   setActiveButton(groupByYearBtn, [groupByTypeBtn, groupByTopicBtn]);
 }
 
+const GROUP_BTN_ACTIVE = ["bg-blue-600", "text-white"];
+const GROUP_BTN_INACTIVE = [
+  "text-blue-700",
+  "dark:text-blue-300",
+  "hover:bg-blue-50",
+  "dark:hover:bg-gray-700",
+];
+
 function setActiveButton(activeBtn, inactiveBtns) {
-  activeBtn.classList.add("bg-blue-700", "text-white");
-  activeBtn.classList.remove("bg-blue-500", "hover:bg-blue-700");
+  activeBtn.classList.add(...GROUP_BTN_ACTIVE);
+  activeBtn.classList.remove(...GROUP_BTN_INACTIVE);
   activeBtn.setAttribute("aria-pressed", "true");
 
   inactiveBtns.forEach(btn => {
-    btn.classList.add("bg-blue-500", "hover:bg-blue-700", "text-white");
-    btn.classList.remove("bg-blue-700");
+    btn.classList.add(...GROUP_BTN_INACTIVE);
+    btn.classList.remove(...GROUP_BTN_ACTIVE);
     btn.setAttribute("aria-pressed", "false");
   });
 }
@@ -871,10 +1040,12 @@ function displayAsCard(item, groupBy, colors, cardIndex, groupIndex, yearLabel =
     ? "cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900"
     : "";
 
+  const pubKey = publicationKey(item);
+
   // Add a data attribute for identifying the card
   return `
     <div class="publication-card p-4 ${cardTopPaddingClass} shadow-lg rounded-lg border-l-4 w-full sm:w-56 ${topSpacingClass} ${cardBottomPaddingClass} ${cardColorClass} flex flex-col relative transition-colors duration-200 ${interactiveClass}"
-         data-card-index="${cardIndex}" data-group-index="${groupIndex}" ${interactiveAttributes}>
+         data-card-index="${cardIndex}" data-group-index="${groupIndex}" data-publication-key="${pubKey}" ${interactiveAttributes}>
       ${yearFlag}
       ${awardBanner}
       ${toAppearBanner}
@@ -1161,6 +1332,44 @@ function displayAllPublications(publications, groupBy = "year") {
     }
   }
   setupPublicationClickHandlers(container, publications, groupBy);
+  // Re-apply deep link after re-render (year/type/topic switch)
+  requestAnimationFrame(() => focusPublicationFromUrl());
+}
+
+let publicationOpenController = null;
+
+function clearPublicationHighlights(container) {
+  if (!container) return;
+  container.querySelectorAll(".publication-card.publication-highlight").forEach((card) => {
+    card.classList.remove(
+      "publication-highlight",
+      "ring-4",
+      "ring-blue-500",
+      "ring-offset-2",
+      "dark:ring-offset-gray-900",
+      "scale-[1.02]",
+      "z-10"
+    );
+  });
+}
+
+function highlightPublicationCard(card) {
+  if (!card) return;
+  card.classList.add(
+    "publication-highlight",
+    "ring-4",
+    "ring-blue-500",
+    "ring-offset-2",
+    "dark:ring-offset-gray-900",
+    "scale-[1.02]",
+    "z-10"
+  );
+}
+
+function focusPublicationFromUrl() {
+  const key = new URLSearchParams(window.location.search).get("pub");
+  if (!key || !publicationOpenController) return;
+  publicationOpenController.openByKey(key, { force: true, scroll: true });
 }
 
 function setupPublicationClickHandlers(container, allPublications, groupBy) {
@@ -1178,33 +1387,55 @@ function setupPublicationClickHandlers(container, allPublications, groupBy) {
     openAbstract = { groupIndex: null, cardIndex: null };
   }
 
-  function handlePublicationCard(card) {
-    if (!card) return;
+  function resolvePublication(card) {
+    const cardIndex = parseInt(card.getAttribute("data-card-index"), 10);
+    const groupIndex = parseInt(card.getAttribute("data-group-index"), 10);
 
-    const cardIndex = parseInt(card.getAttribute("data-card-index"));
-    const groupIndex = parseInt(card.getAttribute("data-group-index"));
-
-    let pub;
     if (groupBy === "topic") {
-      const filteredPubs = allPublications.filter(p => {
+      const filteredPubs = allPublications.filter((p) => {
         const pKeywords = p.keywords || ["Other"];
-        return pKeywords.some(k => activeTopics.has(k));
+        return pKeywords.some((k) => activeTopics.has(k));
       });
-      pub = filteredPubs[cardIndex];
-    } else {
-      const groupFunction = groupBy === "type" ? groupPublicationsByType : groupPublicationsByYear;
-      const grouped = groupFunction(allPublications);
-      pub = grouped[groupIndex]?.publications[cardIndex];
+      return { pub: filteredPubs[cardIndex], cardIndex, groupIndex };
     }
 
-    if (!pub || !pub.abstract) return;
+    const groupFunction =
+      groupBy === "type" ? groupPublicationsByType : groupPublicationsByYear;
+    const grouped = groupFunction(allPublications);
+    return {
+      pub: grouped[groupIndex]?.publications[cardIndex],
+      cardIndex,
+      groupIndex,
+    };
+  }
 
-    if (openAbstract.groupIndex === groupIndex && openAbstract.cardIndex === cardIndex) {
+  function openPublicationCard(card, { force = false, scroll = false } = {}) {
+    if (!card) return;
+
+    clearPublicationHighlights(container);
+    highlightPublicationCard(card);
+
+    const { pub, cardIndex, groupIndex } = resolvePublication(card);
+
+    if (!pub?.abstract) {
+      if (scroll) {
+        card.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+      return;
+    }
+
+    if (
+      !force &&
+      openAbstract.groupIndex === groupIndex &&
+      openAbstract.cardIndex === cardIndex
+    ) {
       removeAbstractPopout();
+      clearPublicationHighlights(container);
       return;
     }
 
     removeAbstractPopout();
+    highlightPublicationCard(card);
 
     const abstractDiv = document.createElement("div");
     const abstractId = `publication-abstract-${groupIndex}-${cardIndex}`;
@@ -1227,6 +1458,7 @@ function setupPublicationClickHandlers(container, allPublications, groupBy) {
       closeBtn.onclick = function (event) {
         event.stopPropagation();
         removeAbstractPopout();
+        clearPublicationHighlights(container);
       };
     }
 
@@ -1234,13 +1466,34 @@ function setupPublicationClickHandlers(container, allPublications, groupBy) {
       renderMathInElement(abstractDiv, {
         delimiters: [
           { left: "$$", right: "$$", display: true },
-          { left: "$", right: "$", display: false }
+          { left: "$", right: "$", display: false },
         ],
-        throwOnError: false
+        throwOnError: false,
       });
     }
 
     openAbstract = { groupIndex, cardIndex };
+
+    if (scroll) {
+      requestAnimationFrame(() => {
+        card.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+    }
+  }
+
+  function openByKey(key, options = {}) {
+    if (!key) return false;
+    const decoded = decodeURIComponent(key);
+    const card =
+      container.querySelector(
+        `.publication-card[data-publication-key="${CSS.escape(decoded)}"]`
+      ) ||
+      container.querySelector(
+        `.publication-card[data-publication-key="${decoded.replace(/"/g, "")}"]`
+      );
+    if (!card) return false;
+    openPublicationCard(card, options);
+    return true;
   }
 
   function findPublicationCard(target) {
@@ -1254,6 +1507,7 @@ function setupPublicationClickHandlers(container, allPublications, groupBy) {
   container.onclick = function (e) {
     if (e.target.classList.contains("close-abstract-popout")) {
       removeAbstractPopout();
+      clearPublicationHighlights(container);
       return;
     }
 
@@ -1261,7 +1515,7 @@ function setupPublicationClickHandlers(container, allPublications, groupBy) {
       return;
     }
 
-    handlePublicationCard(findPublicationCard(e.target));
+    openPublicationCard(findPublicationCard(e.target));
   };
 
   container.onkeydown = function (e) {
@@ -1277,8 +1531,10 @@ function setupPublicationClickHandlers(container, allPublications, groupBy) {
     if (!card) return;
 
     e.preventDefault();
-    handlePublicationCard(card);
+    openPublicationCard(card);
   };
+
+  publicationOpenController = { openByKey, openPublicationCard };
 }
 
 function renderAbstractPopout(item) {
@@ -1332,15 +1588,6 @@ function formatAuthors(authors) {
 }
 
 function displayAsTalkCard(talk, colorClass) {
-  const marginClass =
-    talk.title.length <= 50
-      ? "mb-20"
-      : talk.title.length <= 75
-        ? "mb-14"
-        : talk.title.length <= 100
-          ? "mb-8"
-          : "mb-2";
-
   const linksHTML = talk.links
     ? Object.entries(talk.links)
       .map(
@@ -1387,22 +1634,20 @@ function displayAsTalkCard(talk, colorClass) {
     : "";
 
   return `
-    <div class="talk-card p-4 shadow-lg rounded-lg border-l-4 w-full sm:w-64 ${colorClass} flex flex-col justify-between relative overflow-hidden transition-colors duration-200">
-      <div>
-        <p class="card-title text-md font-bold text-black dark:text-white ${marginClass}">${escapeHtml(
-          talk.title
-        )}</p>
-        ${talk.event
-          ? `<p class="card-event text-sm font-semibold text-gray-800 dark:text-gray-200 mb-1">${escapeHtml(
-              talk.event
-            )}</p>`
-          : ""}
-        ${placeHTML}
-        ${organizerHTML}
-        ${authorHTML}
-      </div>
-      <div class="card-footer mt-2 flex flex-wrap gap-2 text-sm">
-        ${talk.date ? `<span class="text-gray-600 dark:text-gray-400 italic">${escapeHtml(talk.date)}</span>` : ""}
+    <div class="talk-card surface-card-hover h-full p-4 !rounded-xl border-l-4 ${colorClass} flex flex-col">
+      <p class="card-title text-sm sm:text-base font-bold text-gray-900 dark:text-white leading-snug">${escapeHtml(
+        talk.title
+      )}</p>
+      ${talk.event
+        ? `<p class="card-event text-sm font-medium text-gray-700 dark:text-gray-200 mt-2 mb-1">${escapeHtml(
+            talk.event
+          )}</p>`
+        : ""}
+      ${placeHTML}
+      ${organizerHTML}
+      ${authorHTML}
+      <div class="card-footer mt-auto pt-3 flex flex-wrap items-center gap-2 text-sm">
+        ${talk.date ? `<span class="text-gray-500 dark:text-gray-400 italic">${escapeHtml(talk.date)}</span>` : ""}
         <div class="flex gap-2">
           ${linksHTML}
           ${tweetHTML}
@@ -1414,26 +1659,91 @@ function displayAsTalkCard(talk, colorClass) {
 
 function displayTalks(talks) {
   const container = document.getElementById("talks_list");
-  container.className = "talks-container flex flex-wrap gap-4 items-stretch mt-4";
-  const colorClass = "bg-purple-100 dark:bg-purple-900 border-purple-600";
+  if (!container) return;
 
-  container.innerHTML = talks
-    .map((talk) => displayAsTalkCard(talk, colorClass))
-    .join("");
+  container.className = "talks-container grid gap-4 sm:grid-cols-2 xl:grid-cols-3";
+  const colorClass = "bg-purple-50 dark:bg-purple-950/40 border-purple-500";
+  const sorted = [...(talks || [])].sort(
+    (a, b) => parseTalkSortKey(b) - parseTalkSortKey(a)
+  );
+
+  container.innerHTML = sorted.length
+    ? sorted.map((talk) => displayAsTalkCard(talk, colorClass)).join("")
+    : '<p class="text-gray-600 dark:text-gray-400 italic">No talks listed.</p>';
 }
 
 function displayAwards(awards) {
   const container = document.getElementById("awards_content");
   if (!container) return;
 
-  container.innerHTML = renderAwardsList(awards);
+  if (!Array.isArray(awards) || awards.length === 0) {
+    container.innerHTML =
+      '<p class="text-sm text-gray-500 dark:text-gray-400 italic">No awards listed.</p>';
+    return;
+  }
+
+  container.innerHTML = `
+    <ul class="divide-y divide-amber-200/70 dark:divide-amber-900/40 -mx-1">
+      ${awards
+        .map(
+          (award) => `
+            <li class="flex items-start gap-3 px-1 py-2.5 first:pt-0 last:pb-0">
+              <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500 shadow-sm"></span>
+              <p class="text-sm leading-6 text-gray-800 dark:text-gray-100">${escapeHtml(
+                award
+              )}</p>
+            </li>
+          `
+        )
+        .join("")}
+    </ul>
+  `;
 }
 
 function displayGrants(grants) {
   const container = document.getElementById("grants_content");
   if (!container) return;
 
-  container.innerHTML = renderGrantsList(grants);
+  if (!Array.isArray(grants) || grants.length === 0) {
+    container.innerHTML =
+      '<p class="text-sm text-gray-500 dark:text-gray-400 italic">No grants listed.</p>';
+    return;
+  }
+
+  container.innerHTML = `
+    <ul class="divide-y divide-emerald-200/70 dark:divide-emerald-900/40 -mx-1">
+      ${grants
+        .map((grant) => {
+          const meta = [grant.funding_agency, grant.year]
+            .filter(Boolean)
+            .join(" · ");
+          return `
+            <li class="px-1 py-3 first:pt-0 last:pb-0">
+              <div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                <p class="text-sm font-semibold text-gray-900 dark:text-white">
+                  ${escapeHtml(grant.title || "")}
+                </p>
+                ${
+                  meta
+                    ? `<p class="text-xs font-medium text-emerald-800 dark:text-emerald-300">${escapeHtml(
+                        meta
+                      )}</p>`
+                    : ""
+                }
+              </div>
+              ${
+                grant.project_title
+                  ? `<p class="mt-1 text-sm leading-6 text-gray-600 dark:text-gray-300">${escapeHtml(
+                      grant.project_title
+                    )}</p>`
+                  : ""
+              }
+            </li>
+          `;
+        })
+        .join("")}
+    </ul>
+  `;
 }
 
 function displaySkills(skills) {
@@ -1462,30 +1772,19 @@ function displayAsTeachingCard(
          ${escapeHtml(sectionLabel)}
        </div>`
     : "";
-  const marginClass =
-    courseTitle.length <= 50
-      ? "mb-20"
-      : courseTitle.length <= 75
-        ? "mb-14"
-        : courseTitle.length <= 100
-          ? "mb-8"
-          : "mb-2";
-
   return `
-    <div class="teaching-card p-4 shadow-lg rounded-lg border-l-4 w-full sm:w-64 mt-8 ${colorClass} flex flex-col justify-between relative transition-colors duration-200">
+    <div class="teaching-card surface-card-hover h-full p-4 !rounded-xl border-l-4 mt-8 ${colorClass} flex flex-col relative">
       ${sectionFlag}
-      <div>
-        <p class="card-title text-md font-bold text-black dark:text-white ${marginClass}">${escapeHtml(
-          courseTitle
-        )}</p>
-        <p class="card-institution text-sm font-semibold text-gray-800 dark:text-gray-200 mb-1">${escapeHtml(
-          course.institution
-        )}</p>
-        <p class="card-duration text-xs text-gray-600 dark:text-gray-400">${escapeHtml(
-          course.duration ? course.duration : (course.year ? String(course.year) : "")
-        )}</p>
-      </div>
-      <div class="card-footer mt-2 text-sm">
+      <p class="card-title text-sm sm:text-base font-bold text-gray-900 dark:text-white leading-snug">${escapeHtml(
+        courseTitle
+      )}</p>
+      <p class="card-institution text-sm font-semibold text-gray-800 dark:text-gray-200 mt-2 mb-1">${escapeHtml(
+        course.institution
+      )}</p>
+      <p class="card-duration text-xs text-gray-600 dark:text-gray-400">${escapeHtml(
+        course.duration ? course.duration : (course.year ? String(course.year) : "")
+      )}</p>
+      <div class="card-footer mt-auto pt-2 text-sm">
         ${course.url
       ? createLinkHtml({
           url: course.url,

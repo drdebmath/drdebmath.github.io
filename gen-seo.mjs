@@ -60,6 +60,11 @@ const urls = new Set([
   SITE + "/",
   SITE + "/cv.html",
   SITE + "/for_students.html",
+  SITE + "/publications.html",
+  SITE + "/teaching.html",
+  SITE + "/talks.html",
+  SITE + "/timeline.html",
+  SITE + "/visualizations/",
 ]);
 for (const s of data.visualizations?.simulators || []) {
   if (s.url?.startsWith(SITE)) urls.add(s.url);

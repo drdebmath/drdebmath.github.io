@@ -26,30 +26,27 @@
 </script>
     <!-- SEO:JSONLD:END -->
 
-    <!-- Font & compiled site styles -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/site.css">
 
-    <!-- KaTeX -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
         crossorigin="anonymous"></script>
 </head>
 
-<body class="bg-gray-100 text-gray-900 dark:bg-dark-bg dark:text-dark-text transition-colors duration-200 font-sans">
+<body data-page="home"
+    class="bg-gray-100 text-gray-900 dark:bg-dark-bg dark:text-dark-text transition-colors duration-200 font-sans">
 
-    <!-- Skip‑to‑content link for keyboard / screen‑reader users -->
     <a href="#about_me"
         class="sr-only focus:not-sr-only fixed top-2 left-2 z-50 bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-300 px-3 py-1 rounded shadow">Skip
         to content</a>
 
-    <!-- ───── Navbar ────────────────────────────────────────────── -->
     <nav class="sticky top-0 z-40 bg-blue-600/95 dark:bg-blue-800/90 backdrop-blur shadow-lg">
-        <div class="mx-auto max-w-screen-xl flex items-center justify-between gap-3 px-4 py-2 xl:pl-6 2xl:pl-10">
-            <ul id="navbar" class="flex min-w-0 flex-1 gap-2 overflow-x-auto whitespace-nowrap nav-scroll">
+        <div class="page-shell flex items-center justify-between gap-3 py-2.5">
+            <ul id="navbar" class="flex min-w-0 flex-1 gap-1.5 overflow-x-auto whitespace-nowrap nav-scroll">
                 <!-- filled by script.js -->
             </ul>
             <button id="darkModeToggle" aria-label="Toggle dark mode"
@@ -63,139 +60,136 @@
         </div>
     </nav>
 
-    <!-- ───── Hero / Header ─────────────────────────────────────── -->
-    <header class="bg-blue-700 dark:bg-blue-900 text-white py-6 md:py-8 shadow">
-        <div class="mx-auto max-w-screen-xl px-4 xl:pl-6 2xl:pl-10">
-            <div class="flex flex-col lg:flex-row items-center lg:items-start gap-4 md:gap-6">
-                <div id="picture" class="mt-2 lg:mt-0 flex justify-center w-32 h-48 md:w-40 md:h-60 overflow-hidden shrink-0">
+    <header class="bg-blue-700 dark:bg-blue-900 text-white py-8 shadow">
+        <div class="page-shell">
+            <div class="flex flex-col lg:flex-row items-center lg:items-start gap-6">
+                <div id="picture"
+                    class="w-32 h-48 md:w-40 md:h-60 shrink-0 overflow-hidden rounded-3xl shadow-2xl ring-2 ring-white/30">
                     <img src="debasish_photo.jpeg" alt="Debasish Pattanayak" width="400" height="600"
-                        decoding="async" class="rounded-full object-cover w-full h-full" />
+                        decoding="async" class="block w-full h-full object-cover object-top" />
                 </div>
-                <div class="flex-1 text-center lg:text-left">
+                <div class="flex-1 text-center lg:text-left min-w-0">
                     <h1 id="name" class="text-3xl sm:text-4xl font-extrabold tracking-tight"></h1>
-                    <h2 id="name_odia" class="text-xl mt-2 font-semibold"></h2>
-                    <h3 id="position" class="text-base sm:text-lg mt-4 sm:mt-5 font-semibold"></h3>
-                    <div id="links" class="mt-4 flex flex-wrap items-center justify-center lg:justify-start gap-2 sm:gap-3"></div>
+                    <h2 id="name_odia" class="text-xl mt-2 font-semibold opacity-95"></h2>
+                    <h3 id="position" class="text-base sm:text-lg mt-4 font-semibold opacity-95"></h3>
+                    <div id="links"
+                        class="mt-4 flex flex-wrap items-center justify-center lg:justify-start gap-2"></div>
                 </div>
                 <div id="header_address_container"
-                    class="hidden lg:block text-right self-center lg:self-start mt-4 lg:mt-0 bg-blue-800/50 p-4 rounded-lg backdrop-blur-sm border border-blue-600/50 shadow-sm max-w-xs">
+                    class="hidden lg:block text-right self-center lg:self-start bg-blue-800/60 p-4 rounded-xl backdrop-blur-sm border border-blue-500/40 shadow-lg max-w-xs shrink-0">
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- ───── Main content ──────────────────────────────────────── -->
-    <main id="main_container" class="mx-auto max-w-screen-2xl pr-4 pl-6 my-8 md:my-12 flex flex-col xl:flex-row gap-8 items-start sm:pl-8 lg:pl-10 xl:pl-14 2xl:pl-20">
+    <main id="main_container" class="page-shell py-10 md:py-12">
+        <div class="flex flex-col xl:flex-row gap-8 xl:gap-10 items-start">
+            <div id="left-content" class="w-full xl:flex-1 min-w-0 space-y-10 md:space-y-12">
 
-        <!-- ───── Left Column (Main Content) ────────────────────────── -->
-        <div id="left-content" class="w-full xl:flex-1 space-y-12">
-            <!-- Use utility scroll‑mt so in‑page links aren’t hidden under sticky nav -->
-            <section id="about_me">
-                <h2 class="text-2xl font-semibold scroll-mt-24">About Me</h2>
-                <div id="about_me_content" class="mt-4"></div>
-            </section>
-
-            <!-- News will be here on mobile -->
-            <section id="news">
-                <h2 class="text-2xl font-semibold scroll-mt-24">News</h2>
-                <div id="news_content" class="mt-4"></div>
-            </section>
-
-            <section id="research" class="xl:col-start-1">
-                <h2 class="text-2xl font-semibold scroll-mt-24">Research</h2>
-                <div id="current_research_content" class="mt-4"></div>
-                <div id="research_interests_content" class="mt-4"></div>
-                <div id="current_research_graph" class="mt-6">
-                    <p class="text-2xl font-bold text-blue-700 dark:text-blue-300"><a href="for_students.html">For
-                            students
-                            interested in working with me, click here.</a></p>
-                </div>
-            </section>
-
-            <section id="publications" class="xl:col-start-1">
-                <h2 class="text-2xl font-semibold scroll-mt-24 mb-6">Publications</h2>
-                <div class="mb-6 flex">
-                    <button id="group_by_year" aria-label="Group publications by year"
-                        class="bg-blue-700 text-white py-1 px-4 rounded-l-full border-r-0 transition-colors">By
-                        year</button>
-                    <button id="group_by_type" aria-label="Group publications by type"
-                        class="bg-blue-500 hover:bg-blue-700 text-white py-1 px-4 border-r-0 transition-colors">By
-                        type</button>
-                    <button id="group_by_topic" aria-label="Group publications by topic"
-                        class="bg-blue-500 hover:bg-blue-700 text-white py-1 px-4 rounded-r-full transition-colors">By
-                        topic</button>
-                </div>
-                <div id="publications_list" class="mt-6"></div>
-            </section>
-
-            <section id="teaching" class="xl:col-start-1">
-                <h2 class="text-2xl font-semibold scroll-mt-24">Teaching</h2>
-                <div id="teaching_content" class="mt-4"></div>
-            </section>
-
-            <section id="talks" class="xl:col-start-1">
-                <div class="flex items-baseline justify-between gap-4">
-                    <h2 class="text-2xl font-semibold scroll-mt-24">Talks</h2>
-                    <a href="https://drdebmath.github.io/Talks/"
-                        class="text-blue-700 dark:text-blue-300 hover:underline whitespace-nowrap">All talks
-                        &rarr;</a>
-                </div>
-                <div id="talks_list" class="mt-4 flex flex-wrap gap-4 items-stretch"></div>
-            </section>
-
-            <section id="awards" class="xl:col-start-1">
-                <h2 class="text-2xl font-semibold scroll-mt-24">Awards</h2>
-                <div id="awards_content" class="mt-4"></div>
-            </section>
-
-            <section id="grants" class="xl:col-start-1">
-                <h2 class="text-2xl font-semibold scroll-mt-24">Grants</h2>
-                <div id="grants_content" class="mt-4"></div>
-            </section>
-
-            <section id="service" class="xl:col-start-1">
-                <h2 class="text-2xl font-semibold scroll-mt-24">Service</h2>
-                <div class="mt-4 space-y-8">
-                    <div>
-                        <h3 class="text-lg font-semibold">Administrative Responsibilities</h3>
-                        <div id="administrative_responsibilities_content" class="mt-3"></div>
+                <section id="about_me" class="home-section surface-panel">
+                    <div class="panel-header">
+                        <h2 class="section-heading">About Me</h2>
                     </div>
-                    <div>
-                        <h3 class="text-lg font-semibold">Community Services</h3>
-                        <div id="community_services_list" class="mt-3"></div>
+                    <div id="about_me_content" class="panel-body"></div>
+                </section>
+
+                <section id="news" class="home-section surface-panel">
+                    <div class="panel-header">
+                        <h2 class="section-heading">News</h2>
                     </div>
+                    <div id="news_content" class="panel-body"></div>
+                </section>
+
+                <section id="research" class="home-section surface-panel bg-gradient-to-br from-white via-blue-50/50 to-cyan-50/40 dark:from-gray-800 dark:via-gray-800 dark:to-blue-950/25 border-blue-100 dark:border-blue-900/40">
+                    <div class="panel-header border-blue-100/80 dark:border-gray-700/80 bg-white/70 dark:bg-gray-900/35 backdrop-blur">
+                        <div class="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-4">
+                            <div class="min-w-0">
+                                <h2 class="section-heading">Research &amp; Publications</h2>
+                                <p class="mt-1.5 max-w-2xl text-sm leading-6 text-gray-600 dark:text-gray-300">
+                                    Selected work by theme. Search the full list or open the publications page.
+                                </p>
+                            </div>
+                            <div class="flex flex-col sm:flex-row sm:items-center gap-2.5 w-full xl:w-auto shrink-0">
+                                <div class="relative w-full sm:w-64 md:w-72">
+                                    <form id="site_search_form" role="search">
+                                        <label for="site_search_input" class="sr-only">Search publications</label>
+                                        <input id="site_search_input" type="search"
+                                            placeholder="Search publications…" autocomplete="off"
+                                            aria-controls="site_search_results" aria-expanded="false"
+                                            class="w-full rounded-full border border-blue-200 dark:border-blue-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 text-sm px-4 py-2 shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500" />
+                                    </form>
+                                    <div id="site_search_results"
+                                        class="hidden absolute left-0 right-0 sm:left-auto sm:right-0 mt-1 w-full sm:w-96 max-h-80 overflow-y-auto rounded-xl bg-white dark:bg-gray-800 shadow-2xl border border-gray-200 dark:border-gray-700 z-50">
+                                    </div>
+                                </div>
+                                <a href="publications.html"
+                                    class="inline-flex items-center justify-center rounded-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 shadow-md hover:shadow-lg transition-all whitespace-nowrap">
+                                    All publications →
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body space-y-5">
+                        <div id="research_overview_content"></div>
+                        <div id="research_themes_content"></div>
+                    </div>
+                </section>
+
+                <section id="talks" class="home-section surface-panel">
+                    <div class="panel-header">
+                        <div class="flex flex-wrap items-baseline justify-between gap-3">
+                            <h2 class="section-heading">Recent Talks</h2>
+                            <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm">
+                                <a href="talks.html"
+                                    class="text-blue-700 dark:text-blue-300 hover:underline whitespace-nowrap">All talks
+                                    →</a>
+                                <a href="https://drdebmath.github.io/Talks/"
+                                    class="text-blue-700 dark:text-blue-300 hover:underline whitespace-nowrap">Talk archive
+                                    →</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="talks_list" class="panel-body"></div>
+                </section>
+
+                <div class="grid gap-8 lg:grid-cols-2">
+                    <section id="awards" class="home-section surface-panel min-w-0">
+                        <div class="panel-header bg-amber-50/80 dark:bg-amber-950/25 border-amber-100 dark:border-amber-900/40">
+                            <h2 class="section-heading">Awards</h2>
+                        </div>
+                        <div id="awards_content" class="panel-body"></div>
+                    </section>
+
+                    <section id="grants" class="home-section surface-panel min-w-0">
+                        <div class="panel-header bg-emerald-50/80 dark:bg-emerald-950/25 border-emerald-100 dark:border-emerald-900/40">
+                            <h2 class="section-heading">Grants</h2>
+                        </div>
+                        <div id="grants_content" class="panel-body"></div>
+                    </section>
                 </div>
-            </section>
 
-            <section id="education">
-                <h2 class="text-2xl font-semibold scroll-mt-24">Education</h2>
-                <div id="education_content" class="mt-4"></div>
-            </section>
+                <section id="visualizations" class="home-section surface-panel">
+                    <div class="panel-header">
+                        <div class="flex flex-wrap items-baseline justify-between gap-3">
+                            <h2 class="section-heading">Visualizations &amp; Simulators</h2>
+                            <a href="for_students.html#simulators"
+                                class="text-sm text-blue-700 dark:text-blue-300 hover:underline whitespace-nowrap">All
+                                simulators →</a>
+                        </div>
+                    </div>
+                    <div id="visualizations_content" class="panel-body"></div>
+                </section>
+            </div>
 
-            <section id="positions">
-                <h2 class="text-2xl font-semibold scroll-mt-24">Academic Positions</h2>
-                <div id="positions_content" class="mt-4"></div>
-            </section>
-
-            <section id="visualizations" class="xl:col-start-1">
-                <h2 class="text-2xl font-semibold scroll-mt-24">Visualizations & Simulators</h2>
-                <div id="visualizations_content" class="mt-4"></div>
-            </section>
-
-            <section id="archive" class="xl:col-start-1">
-                <h2 class="text-2xl font-semibold scroll-mt-24">Archive</h2>
-                <div id="archive_list" class="mt-4"></div>
-            </section>
+            <aside id="right-sidebar"
+                class="w-full xl:w-72 2xl:w-80 shrink-0 sticky top-24 space-y-6 hidden xl:block">
+                <!-- News moved here on desktop by script.js -->
+            </aside>
         </div>
-
-        <!-- ───── Right Column (Sidebar) ────────────────────────────── -->
-        <aside id="right-sidebar" class="w-full xl:w-[300px] shrink-0 sticky top-24 space-y-8 hidden xl:block">
-            <!-- News will be moved here on desktop by script.js -->
-        </aside>
-
     </main>
 
-    <!-- Go‑to‑top Floating Action Button -->
+    <footer id="site_footer" class="mt-12 bg-blue-800 dark:bg-blue-950 text-white"></footer>
+
     <button id="goToTop" aria-label="Scroll to top"
         class="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white font-bold p-3 rounded-full shadow-lg hidden focus-visible:ring">
         ↑

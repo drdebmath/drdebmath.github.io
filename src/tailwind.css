@@ -6,6 +6,66 @@
   html {
     scroll-behavior: smooth;
   }
+
+  /* Keep in-page anchors below the sticky navbar */
+  section[id],
+  [id].scroll-mt-28 {
+    scroll-margin-top: 7rem;
+  }
+}
+
+@layer components {
+  /* Shared homepage rhythm */
+  .page-shell {
+    @apply mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-heading {
+    @apply text-xl sm:text-2xl font-semibold tracking-tight text-gray-900 dark:text-white;
+  }
+
+  .home-section {
+    @apply scroll-mt-28;
+  }
+
+  /* Elevation tokens — soft base shadow + stronger hover lift */
+  .surface-card {
+    @apply bg-white dark:bg-gray-800 rounded-2xl border border-gray-200/80 dark:border-gray-700
+      shadow-[0_4px_14px_rgba(15,23,42,0.08),0_1px_3px_rgba(15,23,42,0.06)]
+      dark:shadow-[0_8px_24px_rgba(0,0,0,0.35),0_2px_6px_rgba(0,0,0,0.25)]
+      transition-shadow duration-200;
+  }
+
+  .surface-card-hover {
+    @apply surface-card hover:shadow-[0_12px_28px_rgba(15,23,42,0.12),0_4px_10px_rgba(15,23,42,0.08)]
+      dark:hover:shadow-[0_16px_36px_rgba(0,0,0,0.45),0_6px_14px_rgba(0,0,0,0.3)]
+      hover:-translate-y-0.5 transition-all duration-200;
+  }
+
+  .surface-panel {
+    @apply rounded-2xl border border-gray-200/90 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden
+      shadow-[0_8px_24px_rgba(15,23,42,0.1),0_2px_8px_rgba(15,23,42,0.06)]
+      dark:shadow-[0_12px_32px_rgba(0,0,0,0.45),0_4px_12px_rgba(0,0,0,0.3)];
+  }
+
+  .panel-header {
+    @apply px-5 sm:px-6 py-4 border-b border-gray-200/80 dark:border-gray-700
+      bg-gray-50/80 dark:bg-gray-900/40;
+  }
+
+  .panel-body {
+    @apply px-5 sm:px-6 py-5;
+  }
+
+  .surface-list {
+    @apply rounded-xl border overflow-hidden
+      shadow-[0_6px_18px_rgba(15,23,42,0.08),0_2px_6px_rgba(15,23,42,0.05)]
+      dark:shadow-[0_8px_22px_rgba(0,0,0,0.35),0_2px_8px_rgba(0,0,0,0.25)];
+  }
+
+  .surface-chip {
+    @apply shadow-[0_2px_8px_rgba(15,23,42,0.08)] dark:shadow-[0_2px_10px_rgba(0,0,0,0.35)];
+  }
 }
 
 @layer utilities {

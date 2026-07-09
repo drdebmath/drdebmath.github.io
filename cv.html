@@ -22,21 +22,21 @@
     <link rel="stylesheet" href="assets/site.css">
 </head>
 
-<body class="bg-slate-100 text-slate-900 dark:bg-dark-bg dark:text-dark-text transition-colors duration-200 font-sans">
+<body data-page="cv"
+    class="bg-gray-100 text-gray-900 dark:bg-dark-bg dark:text-dark-text transition-colors duration-200 font-sans">
     <a href="#cv_content"
         class="sr-only focus:not-sr-only fixed top-2 left-2 z-50 bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-300 px-3 py-1 rounded shadow">
         Skip to content
     </a>
 
-    <nav class="sticky top-0 z-40 bg-slate-900/95 text-white backdrop-blur shadow-lg">
-        <div class="mx-auto max-w-screen-xl flex items-center justify-between px-4 py-3 xl:pl-6 2xl:pl-10">
-            <ul id="navbar" class="flex flex-wrap items-center gap-2">
-                <li><a href="index.html" class="rounded px-3 py-1 hover:bg-slate-700 transition-colors">Home</a></li>
-                <li><a href="for_students.html" class="rounded px-3 py-1 hover:bg-slate-700 transition-colors">For Students</a></li>
+    <nav class="sticky top-0 z-40 bg-blue-600/95 dark:bg-blue-800/90 backdrop-blur shadow-lg">
+        <div class="page-shell flex items-center justify-between gap-3 py-2.5">
+            <ul id="navbar" class="flex min-w-0 flex-1 gap-1.5 overflow-x-auto whitespace-nowrap nav-scroll">
+                <!-- filled by cv.js -->
             </ul>
             <button id="darkModeToggle" aria-label="Toggle dark mode"
-                class="p-2 rounded-full bg-slate-200 text-slate-900 dark:bg-slate-700 dark:text-white focus:outline-none focus-visible:ring">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                class="shrink-0 p-2 rounded-full bg-gray-200 dark:bg-gray-700 focus:outline-none focus-visible:ring">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-500 dark:text-white" viewBox="0 0 20 20" fill="currentColor">
                     <path
                         d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z" />
                 </svg>
@@ -44,29 +44,38 @@
         </div>
     </nav>
 
-    <header class="bg-gradient-to-br from-slate-900 via-blue-900 to-cyan-800 text-white py-10 shadow-xl">
-        <div class="mx-auto max-w-screen-xl px-4 xl:pl-6 2xl:pl-10">
+    <header class="bg-blue-700 dark:bg-blue-900 text-white py-8 shadow">
+        <div class="page-shell">
             <div class="flex flex-col lg:flex-row items-center lg:items-start gap-6">
-                <div id="picture" class="mt-2 lg:mt-0 flex justify-center w-32 h-48 md:w-40 md:h-60 overflow-hidden shrink-0">
-                    <img src="debasish_photo.jpeg" alt="Profile picture" class="rounded-full object-cover w-full h-full" />
+                <div id="picture"
+                    class="w-32 h-48 md:w-40 md:h-60 shrink-0 overflow-hidden rounded-3xl shadow-2xl ring-2 ring-white/30">
+                    <img src="debasish_photo.jpeg" alt="Profile picture"
+                        class="block w-full h-full object-cover object-top" />
                 </div>
                 <div class="flex-1 text-center lg:text-left">
-                    <p class="text-sm uppercase tracking-[0.3em] text-cyan-200">Curriculum Vitae</p>
+                    <p class="text-sm uppercase tracking-[0.25em] text-blue-200">Curriculum Vitae</p>
                     <h1 id="name" class="mt-2 text-4xl font-extrabold tracking-tight"></h1>
                     <h2 id="name_odia" class="text-xl mt-2 font-semibold"></h2>
                     <h3 id="position" class="text-lg mt-5 font-semibold"></h3>
                     <div id="links" class="mt-4 flex flex-wrap items-center justify-center lg:justify-start gap-3"></div>
                 </div>
                 <div id="header_address_container"
-                    class="hidden lg:block text-right self-center lg:self-start mt-4 lg:mt-0 bg-white/10 p-4 rounded-lg backdrop-blur-sm border border-white/20 shadow-sm max-w-xs">
+                    class="hidden lg:block text-right self-center lg:self-start bg-blue-800/60 p-4 rounded-xl backdrop-blur-sm border border-blue-500/40 shadow-lg max-w-xs shrink-0">
                 </div>
             </div>
         </div>
     </header>
 
-    <main class="mx-auto max-w-screen-xl px-4 py-10 xl:pl-6 2xl:pl-10">
+    <main class="page-shell py-10 md:py-12">
         <div id="cv_content" class="space-y-8"></div>
     </main>
+
+    <footer id="site_footer" class="mt-12 bg-blue-800 dark:bg-blue-950 text-white"></footer>
+
+    <button id="goToTop" aria-label="Scroll to top"
+        class="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white font-bold p-3 rounded-full shadow-lg hidden focus-visible:ring">
+        ↑
+    </button>
 
     <script type="module" src="cv.js"></script>
 </body>

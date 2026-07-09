@@ -1,8 +1,12 @@
 import {
   escapeHtml,
-  renderProfileHeader,
+  renderSimulatorCardsHtml,
+  renderSiteFooter,
+  renderStudentsSectionHtml,
   setupDarkMode,
   setupGoToTopButton,
+  setupPrimaryNav,
+  setupSiteSearch,
 } from "./shared.js";
 
 const collaboratorData = [
@@ -48,42 +52,13 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function initializePage(data) {
-  renderProfileHeader(data.about_me, {
-    department: data.about_me?.department,
-    linkItemClass:
-      "bg-white/20 px-3 text-white backdrop-blur hover:bg-white/30",
-    positionLinkClass:
-      "hover:underline decoration-blue-100 decoration-2 underline-offset-2 text-blue-100 hover:text-white transition-colors",
-  });
-
-  setupNavbar();
+  setupPrimaryNav(data);
+  renderSiteFooter(data);
+  setupSiteSearch(data);
   displayResearchInterests(data.research || []);
+  displayStudents(data.students || {});
+  displaySimulators(data.visualizations?.simulators || []);
   initializeMap(collaboratorData);
-}
-
-function setupNavbar() {
-  const navbar = document.getElementById("navbar");
-
-  if (!navbar) return;
-
-  const links = [
-    { href: "index.html", label: "Home" },
-    { href: "#research", label: "Research" },
-    { href: "#research-topics", label: "Topics" },
-    { href: "#collaborator-map", label: "Map" },
-    { href: "#simulators", label: "Simulators" },
-  ];
-
-  navbar.className = "flex min-w-0 flex-1 gap-2 overflow-x-auto whitespace-nowrap nav-scroll";
-  navbar.innerHTML = links
-    .map(
-      (link) => `
-        <li>
-          <a href="${link.href}" class="block px-3 py-1 rounded text-white hover:bg-blue-700 dark:hover:bg-blue-900 transition-colors">${link.label}</a>
-        </li>
-      `
-    )
-    .join("");
 }
 
 function displayResearchInterests(interests) {
@@ -94,12 +69,24 @@ function displayResearchInterests(interests) {
   container.innerHTML = interests
     .map(
       (interest) => `
-        <span class="bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-5 py-2 rounded-full font-semibold shadow-md hover:shadow-lg transition-shadow">
+        <span class="inline-flex items-center rounded-full bg-blue-600 text-white px-4 py-1.5 text-sm font-semibold surface-chip">
           ${escapeHtml(interest)}
         </span>
       `
     )
     .join("");
+}
+
+function displaySimulators(simulators) {
+  const container = document.getElementById("simulators_grid");
+  if (!container) return;
+  container.innerHTML = renderSimulatorCardsHtml(simulators);
+}
+
+function displayStudents(students) {
+  const container = document.getElementById("students_content");
+  if (!container) return;
+  container.innerHTML = renderStudentsSectionHtml(students);
 }
 
 function initializeMap(collaborators) {

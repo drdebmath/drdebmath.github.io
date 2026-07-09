@@ -39,6 +39,22 @@ assert(Array.isArray(data.talks), "talks must be an array");
 assert(Array.isArray(data.teaching), "teaching must be an array");
 assert(Array.isArray(data.about_me?.education), "about_me.education must be an array");
 assert(Array.isArray(data.about_me?.positions), "about_me.positions must be an array");
+assert(Array.isArray(data.research_themes), "research_themes must be an array");
+assert(data.students && typeof data.students === "object", "students must be an object");
+assert(Array.isArray(data.students?.phd_ongoing), "students.phd_ongoing must be an array");
+assert(Array.isArray(data.students?.mtech_ongoing), "students.mtech_ongoing must be an array");
+assert(Array.isArray(data.students?.bsc_honors), "students.bsc_honors must be an array");
+warn(Boolean(data.about_me?.email || data.about_me?.contact?.email), "about_me is missing email/contact.email");
+
+const publicationTitles = new Set((data.publications || []).map((p) => p.title));
+(data.research_themes || []).forEach((theme, themeIndex) => {
+  (theme.selected_papers || []).forEach((title, paperIndex) => {
+    assert(
+      publicationTitles.has(title),
+      `research_themes[${themeIndex}].selected_papers[${paperIndex}] title not found in publications: "${title}"`
+    );
+  });
+});
 
 data.about_me.positions.forEach((position, index) => {
   assert(
@@ -75,6 +91,10 @@ ensureRelativePathExists(data.about_me?.cv?.url, "about_me.cv.url");
   "index.html",
   "for_students.html",
   "cv.html",
+  "publications.html",
+  "teaching.html",
+  "talks.html",
+  "timeline.html",
   "visualizations/index.html",
   "assets/site.css",
   "script.js",
