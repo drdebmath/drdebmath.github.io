@@ -1695,7 +1695,8 @@
     {
       "title": "YFRSG (Young Faculty Research Seed Grant Scheme)",
       "funding_agency": "IIT Indore",
-      "project_title": "Schedulers Galore: Asynchronous, Synchronous and Sequential"
+      "project_title": "Schedulers Galore: Asynchronous, Synchronous and Sequential",
+      "url": "visualizations/seedgrant.html"
     }
   ],
   "community_services": {

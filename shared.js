@@ -140,7 +140,15 @@ export function renderGrantsList(
                     ${escapeHtml(grant.title || "")}${grant.year ? ` (${escapeHtml(grant.year)})` : ""}
                   </p>
                   ${grant.funding_agency ? `<p class="mt-1 text-sm text-gray-600 dark:text-gray-300"><strong>Funding Agency:</strong> ${escapeHtml(grant.funding_agency)}</p>` : ""}
-                  ${grant.project_title ? `<p class="mt-1 text-sm text-gray-600 dark:text-gray-300"><strong>Project:</strong> ${escapeHtml(grant.project_title)}</p>` : ""}
+                  ${grant.project_title ? `<p class="mt-1 text-sm text-gray-600 dark:text-gray-300"><strong>Project:</strong> ${
+                    grant.url
+                      ? createLinkHtml({
+                          url: grant.url,
+                          label: grant.project_title,
+                          className: "text-blue-700 dark:text-blue-300 hover:underline",
+                        })
+                      : escapeHtml(grant.project_title)
+                  }</p>` : ""}
                 </div>
               </div>
             </li>
@@ -939,9 +947,12 @@ export function renderProfileHeader(aboutMe, options = {}) {
   }
 
   if (pictureElement) {
+    const fullPictureUrl = pictureUrl.replace(/(\.[^./]+)$/, "_full$1");
     // Keep container as the circular frame; only replace the image content.
     pictureElement.innerHTML = `
-      <img src="${escapeAttribute(pictureUrl)}" alt="Profile picture" class="${pictureClass}" />
+      <a href="${escapeAttribute(fullPictureUrl)}" target="_blank" rel="noopener">
+        <img src="${escapeAttribute(pictureUrl)}" alt="Profile picture" class="${pictureClass}" />
+      </a>
     `;
   }
 

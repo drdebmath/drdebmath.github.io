@@ -6,6 +6,8 @@ import {
   getPrimarySiteLinks,
   linkifyBiographyHtml,
   publicationKey,
+  renderAwardsList,
+  renderGrantsList,
   renderProfileHeader,
   renderSimulatorCardsHtml,
   renderSiteFooter,
@@ -434,77 +436,6 @@ function displayNewsAndArchive(news) {
   startInterval();
 
   // Older news stays on CV / full history is not duplicated on the homepage
-}
-
-function displayArchive(archiveItems) {
-  const archiveContainer = document.getElementById("archive_list");
-  if (!archiveContainer) return;
-
-  if (!archiveItems || archiveItems.length === 0) {
-    archiveContainer.innerHTML =
-      '<p class="text-gray-600 dark:text-gray-400 italic">No archived news yet.</p>';
-    return;
-  }
-
-  const groupedByYear = archiveItems.reduce((accumulator, item) => {
-    const yearMatch = item.date?.match(/\d{4}$/);
-    const year = yearMatch ? yearMatch[0] : "Other";
-    if (!accumulator[year]) accumulator[year] = [];
-    accumulator[year].push(item);
-    return accumulator;
-  }, {});
-
-  const years = Object.keys(groupedByYear).sort((left, right) => {
-    if (left === "Other") return 1;
-    if (right === "Other") return -1;
-    return Number(right) - Number(left);
-  });
-
-  archiveContainer.innerHTML = years
-    .map(
-      (year) => `
-        <div class="mt-8 mb-4">
-          <button id="toggle-${year}" type="button" aria-expanded="false" aria-controls="archive-${year}-content"
-            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-lg transition-colors duration-200 flex items-center gap-2">
-            <span>Show ${year} Archive</span>
-            <svg id="toggle-icon-${year}" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-          <div id="archive-${year}-content" class="hidden mt-4 space-y-4">
-            ${groupedByYear[year]
-              .map(
-                (item) => `
-                  <article class="news-item bg-white dark:bg-gray-800 p-4 shadow rounded dark:text-white transition-colors duration-200">
-                    <p class="text-sm font-semibold text-gray-500 dark:text-gray-400">${escapeHtml(
-                      item.date || ""
-                    )}</p>
-                    <div class="mt-2">${renderNewsBody(item)}</div>
-                  </article>
-                `
-              )
-              .join("")}
-          </div>
-        </div>
-      `
-    )
-    .join("");
-
-  years.forEach((year) => {
-    const toggleButton = document.getElementById(`toggle-${year}`);
-    const content = document.getElementById(`archive-${year}-content`);
-    const icon = document.getElementById(`toggle-icon-${year}`);
-
-    toggleButton.addEventListener("click", () => {
-      const isHidden = content.classList.contains("hidden");
-      content.classList.toggle("hidden");
-      toggleButton.setAttribute("aria-expanded", String(isHidden));
-      icon.style.transform = isHidden ? "rotate(180deg)" : "rotate(0deg)";
-      toggleButton.querySelector("span").textContent = isHidden
-        ? `Hide ${year} Archive`
-        : `Show ${year} Archive`;
-    });
-  });
 }
 
 function displayResearchOverview(currentResearch) {
@@ -1711,90 +1642,18 @@ function displayTalks(talks) {
 
 function displayAwards(awards) {
   const container = document.getElementById("awards_content");
-  if (!container) return;
-
-  if (!Array.isArray(awards) || awards.length === 0) {
-    container.innerHTML =
-      '<p class="text-sm text-gray-500 dark:text-gray-400 italic">No awards listed.</p>';
-    return;
-  }
-
-  container.innerHTML = `
-    <ul class="divide-y divide-amber-200/70 dark:divide-amber-900/40 -mx-1">
-      ${awards
-        .map(
-          (award) => `
-            <li class="flex items-start gap-3 px-1 py-2.5 first:pt-0 last:pb-0">
-              <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500 shadow-sm"></span>
-              <p class="text-sm leading-6 text-gray-800 dark:text-gray-100">${escapeHtml(
-                award
-              )}</p>
-            </li>
-          `
-        )
-        .join("")}
-    </ul>
-  `;
+  if (container)
+    container.innerHTML = renderAwardsList(awards || [], {
+      containerClass: "flex flex-col gap-3 list-none p-0 m-0",
+    });
 }
 
 function displayGrants(grants) {
   const container = document.getElementById("grants_content");
-  if (!container) return;
-
-  if (!Array.isArray(grants) || grants.length === 0) {
-    container.innerHTML =
-      '<p class="text-sm text-gray-500 dark:text-gray-400 italic">No grants listed.</p>';
-    return;
-  }
-
-  container.innerHTML = `
-    <ul class="divide-y divide-emerald-200/70 dark:divide-emerald-900/40 -mx-1">
-      ${grants
-        .map((grant) => {
-          const meta = [grant.funding_agency, grant.year]
-            .filter(Boolean)
-            .join(" · ");
-          return `
-            <li class="px-1 py-3 first:pt-0 last:pb-0">
-              <div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-                <p class="text-sm font-semibold text-gray-900 dark:text-white">
-                  ${escapeHtml(grant.title || "")}
-                </p>
-                ${
-                  meta
-                    ? `<p class="text-xs font-medium text-emerald-800 dark:text-emerald-300">${escapeHtml(
-                        meta
-                      )}</p>`
-                    : ""
-                }
-              </div>
-              ${
-                grant.project_title
-                  ? `<p class="mt-1 text-sm leading-6 text-gray-600 dark:text-gray-300">${escapeHtml(
-                      grant.project_title
-                    )}</p>`
-                  : ""
-              }
-            </li>
-          `;
-        })
-        .join("")}
-    </ul>
-  `;
-}
-
-function displaySkills(skills) {
-  const container = document.getElementById("skills_content");
-  container.innerHTML = `
-    <div class="skills-content bg-white dark:bg-gray-800 p-4 shadow rounded transition-colors duration-200">
-      <p class="dark:text-white"><strong class="skills-label dark:text-white">Programming:</strong> ${skills.programming ? skills.programming.map(escapeHtml).join(", ") : "Not listed"
-    }</p>
-      <p class="dark:text-white"><strong class="skills-label dark:text-white">Python Libraries:</strong> ${skills.python_libraries
-      ? skills.python_libraries.map(escapeHtml).join(", ")
-      : "Not listed"
-    }</p>
-    </div>
-  `;
+  if (container)
+    container.innerHTML = renderGrantsList(grants || [], {
+      containerClass: "flex flex-col gap-3 list-none p-0 m-0",
+    });
 }
 
 function displayAsTeachingCard(

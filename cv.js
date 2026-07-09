@@ -158,6 +158,47 @@ function initializeCVPage(data) {
       <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">${renderTalks(data.talks || [])}</div>
       </div>
     </section>
+
+    <section class="surface-panel">
+      <div class="panel-header"><h2 class="section-heading">Skills</h2></div>
+      <div class="panel-body">
+      ${renderSkills(data.skills || {})}
+      </div>
+    </section>
+  `;
+}
+
+function renderSkillChips(items) {
+  if (!Array.isArray(items) || items.length === 0) {
+    return '<p class="text-sm text-gray-500 dark:text-gray-400 italic">None listed.</p>';
+  }
+  return `
+    <div class="flex flex-wrap gap-2">
+      ${items
+        .map(
+          (item) => `
+            <span class="inline-flex items-center rounded-full bg-blue-600 text-white px-3 py-1 text-xs font-semibold surface-chip">
+              ${escapeHtml(item)}
+            </span>
+          `
+        )
+        .join("")}
+    </div>
+  `;
+}
+
+function renderSkills(skills) {
+  return `
+    <div class="grid gap-4 md:grid-cols-2">
+      <div>
+        <p class="text-xs uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400">Programming</p>
+        <div class="mt-2">${renderSkillChips(skills.programming)}</div>
+      </div>
+      <div>
+        <p class="text-xs uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400">Python Libraries</p>
+        <div class="mt-2">${renderSkillChips(skills.python_libraries)}</div>
+      </div>
+    </div>
   `;
 }
 
