@@ -62,6 +62,26 @@ function monthKeyLabel(key) {
   return date.toLocaleDateString("en-US", { month: "short", year: "numeric" });
 }
 
+// Day-precision companions to the month keys above, used only to break ties
+// between same-month events so they still read newest-first within a month
+// row instead of falling back to whatever order they were pushed in.
+function dayKeyFromIso(isoDate) {
+  const [year, month = "1", day = "1"] = String(isoDate || "").split("-");
+  if (!/^\d{4}$/.test(year)) return null;
+  return Number(year) * 372 + (Number(month) - 1) * 31 + Number(day || 1);
+}
+
+function dayKeyFromLoose(text) {
+  const s = String(text || "");
+  const yearMatch = s.match(/\d{4}/);
+  if (!yearMatch) return null;
+  const monthMatch = s.toLowerCase().match(/jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec/);
+  const month = monthMatch ? MONTH_INDEXES[monthMatch[0]] : 5;
+  const dayMatch = s.replace(yearMatch[0], "").match(/\b(\d{1,2})\b/);
+  const day = dayMatch ? Number(dayMatch[1]) : 1;
+  return Number(yearMatch[0]) * 372 + month * 31 + Math.min(Math.max(day, 1), 31);
+}
+
 // Visits are day-precision (unlike eras, which are month-precision), and an
 // open-ended end_date shouldn't read as "- Present" the way formatDateRange
 // renders it for an ongoing position — so this formats visits on its own.
@@ -267,6 +287,8 @@ function buildEvents(data) {
     const preciseKey =
       monthKeyFromLoose(pub.date) ??
       (iso.includes("-") ? monthKeyFromIso(iso) : null);
+    const preciseDayKey =
+      dayKeyFromLoose(pub.date) ?? (iso.includes("-") ? dayKeyFromIso(iso) : null);
     return {
       pub,
       doi: doiFromUrl(pub.doi),
@@ -275,6 +297,7 @@ function buildEvents(data) {
       venueTokens: venueTokens(pub),
       monthKey: preciseKey ?? monthKeyFromLoose(String(pub.year || "")),
       monthIsPrecise: preciseKey !== null,
+      dayKey: preciseDayKey ?? dayKeyFromLoose(String(pub.year || "")) ?? 0,
     };
   });
 
@@ -284,7 +307,8 @@ function buildEvents(data) {
   const visitRanges = (data.visits || []).map((visit) => {
     const start = monthKeyFromIso(visit.start_date);
     const end = visit.end_date ? monthKeyFromIso(visit.end_date) : start;
-    return { visit, start, end: end ?? start };
+    const dayKey = dayKeyFromIso(visit.end_date || visit.start_date);
+    return { visit, start, end: end ?? start, dayKey };
   });
 
   // Place strings are messy ("Dept. of Mathematics, IIT Guwahati" vs.
@@ -322,17 +346,21 @@ function buildEvents(data) {
     events.push({
       kind: "Talk",
       monthKey: key,
+      dayKey: dayKeyFromLoose(talk.date) ?? 0,
       title: talk.title || "",
       subtitle: [talk.event, talk.Place].filter(Boolean).join(" · "),
       href: "talks.html",
     });
   });
 
-  visitRanges.forEach(({ visit, start }) => {
+  visitRanges.forEach(({ visit, start, end, dayKey }) => {
     if (start === null) return;
+    // A visit that crosses a month boundary (e.g. Nov 30 - Dec 6) is placed
+    // under its last month, matching where it sits in the newest-first scan.
     events.push({
       kind: "Visit",
-      monthKey: start,
+      monthKey: end ?? start,
+      dayKey: dayKey ?? 0,
       title: visit.place || "",
       subtitle: [visit.reason, formatVisitDates(visit)].filter(Boolean).join(" · "),
       href: "",
@@ -345,6 +373,7 @@ function buildEvents(data) {
     events.push({
       kind: "Teaching",
       monthKey: key,
+      dayKey: dayKeyFromLoose(course.session || course.duration || course.year) ?? 0,
       title: course.title || course.course || "",
       subtitle: [course.institution, course.session || course.duration || course.year]
         .filter(Boolean)
@@ -364,6 +393,7 @@ function buildEvents(data) {
         if (!match.monthIsPrecise) {
           // Year-only publication: place it at its announcement date instead.
           match.monthKey = key;
+          match.dayKey = dayKeyFromLoose(item.date) ?? 0;
           match.monthIsPrecise = true;
         }
         return;
@@ -373,17 +403,19 @@ function buildEvents(data) {
     events.push({
       kind: "News",
       monthKey: key,
+      dayKey: dayKeyFromLoose(item.date) ?? 0,
       title: item.title || "",
       subtitle: item.date || "",
       href: item.url || "",
     });
   });
 
-  pubEntries.forEach(({ pub, monthKey }) => {
+  pubEntries.forEach(({ pub, monthKey, dayKey }) => {
     if (monthKey === null) return;
     events.push({
       kind: "Publication",
       monthKey,
+      dayKey: dayKey ?? 0,
       title: pub.title || "",
       subtitle: [
         pub.journal?.short || pub.conference?.short || pub.booktitle || "",
@@ -395,7 +427,9 @@ function buildEvents(data) {
     });
   });
 
-  return events.sort((a, b) => a.monthKey - b.monthKey);
+  // Ascending by month (needed for the "lastMonth" tail below); within the
+  // same month, descending by day so a row reads newest-first throughout.
+  return events.sort((a, b) => a.monthKey - b.monthKey || b.dayKey - a.dayKey);
 }
 
 // ---------------------------------------------------------------------------
@@ -625,10 +659,19 @@ function renderFilteredTimeline() {
             const monthEvents = eventsByMonth.get(k);
             if (monthEvents?.length) rows.push(renderMonthRow(k, monthEvents));
           }
+          const stintLabelKey = stint.end ?? stint.start;
           const stintCard = activeKinds.has(stint.kind)
             ? `
-              <div class="sticky top-[6.75rem] z-[5] pl-6 py-1">
-                ${renderStintCard(stint)}
+              <div class="relative sticky top-36 z-[5] pl-6 py-2" data-month-label="${escapeHtml(
+                monthKeyLabel(stintLabelKey)
+              )}">
+                <span class="absolute -left-[7px] top-2.5 h-3 w-3 rounded-full ring-4 ring-gray-100 dark:ring-dark-bg ${
+                  ERA_STYLES[stint.kind].dot
+                }"></span>
+                <p class="text-xs font-bold uppercase tracking-wide text-gray-600 dark:text-gray-300">${escapeHtml(
+                  monthKeyLabel(stintLabelKey)
+                )}</p>
+                <div class="mt-1.5">${renderStintCard(stint)}</div>
               </div>
             `
             : "";
@@ -653,7 +696,7 @@ function renderFilteredTimeline() {
 
       return `
         <section class="grid gap-x-8 gap-y-4 lg:grid-cols-[20rem,minmax(0,1fr)] items-start">
-          <div class="sticky top-24 z-10">
+          <div class="sticky top-36 z-10">
             ${activeKinds.has(era.kind) ? renderEraCard(era) : ""}
           </div>
           <div class="relative ml-2 border-l-2 border-gray-200 dark:border-gray-700">
