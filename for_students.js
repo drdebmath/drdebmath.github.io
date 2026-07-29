@@ -58,6 +58,7 @@ function initializePage(data) {
   displayResearchInterests(data.research || []);
   displayStudents(data.students || {});
   displaySimulators(data.visualizations?.simulators || []);
+  displayBooks(data.recommended_books || []);
   initializeMap(collaboratorData);
 }
 
@@ -81,6 +82,23 @@ function displaySimulators(simulators) {
   const container = document.getElementById("simulators_grid");
   if (!container) return;
   container.innerHTML = renderSimulatorCardsHtml(simulators);
+}
+
+function displayBooks(books) {
+  const container = document.getElementById("books_grid");
+  if (!container) return;
+  container.innerHTML = books
+    .map(
+      (book) => `
+        <div class="rounded-xl bg-gray-50/80 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 p-6">
+          <h3 class="font-bold text-lg mb-1 text-gray-800 dark:text-white">${escapeHtml(book.title)}</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">${escapeHtml(book.authors)} · ${escapeHtml(book.publisher)}</p>
+          <p class="text-gray-600 dark:text-gray-300">${escapeHtml(book.description)}</p>
+          <a href="${escapeHtml(book.link)}" class="mt-3 inline-block text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline" target="_blank" rel="noopener">${escapeHtml(book.link_label)} →</a>
+        </div>
+      `
+    )
+    .join("");
 }
 
 function displayStudents(students) {
