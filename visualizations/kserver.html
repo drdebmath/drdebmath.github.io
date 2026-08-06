@@ -4,95 +4,159 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>The k-Server Problem Visualization</title>
-<meta name="description" content="Interactive comparison of Greedy, Double Coverage, and offline optimal for the k-server problem on a line."/>
+<meta name="description" content="Interactive comparison of Greedy, Double Coverage, and the offline optimum for the k-server problem on a line, with per-step costs and competitive ratios."/>
 <style>
-  body { font-family: system-ui, sans-serif; background: #f7f7f7; color: #222; margin: 0; padding: 1.5rem; }
-  .container { max-width: 980px; margin: auto; }
-  h1 { font-weight: 500; margin: 0 0 .25rem; }
-  a.back { font-size: 13px; color: #2563eb; text-decoration: none; }
-  .intro { font-size: 14px; line-height: 1.6; color: #444; max-width: 72ch; }
-  .controls { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; margin: 1rem 0 .75rem; font-size: 14px; }
-  button, select { padding: .45rem .8rem; font-size: 14px; border: 1px solid #ccc; border-radius: 6px; background: #fff; cursor: pointer; }
-  button:disabled { opacity: .5; cursor: not-allowed; }
-  .panel { background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: .75rem .9rem; margin-bottom: .9rem; }
-  .panel-title { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: #666; margin-bottom: .3rem; }
-  #builder { cursor: crosshair; }
+  :root {
+    --ink: #0f172a; --muted: #64748b; --line: #e2e8f0; --panel: #fff; --bg: #f1f5f9;
+    --greedy: #e11d48; --dc: #2563eb; --opt: #059669;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--ink); margin: 0; padding: 1.25rem 1rem 2rem; }
+  .wrap { max-width: 900px; margin: auto; }
+  a.back { font-size: 12.5px; color: var(--dc); text-decoration: none; }
+  a.back:hover { text-decoration: underline; }
+  h1 { font-size: 1.6rem; font-weight: 650; letter-spacing: -.02em; margin: .35rem 0 .4rem; }
+  .lede { font-size: 13.5px; line-height: 1.6; color: #334155; margin: 0 0 .9rem; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: .7rem .85rem; margin-bottom: .7rem; }
+  .panel > h2 { font-size: 11px; text-transform: uppercase; letter-spacing: .09em; color: var(--muted); margin: 0 0 .5rem; font-weight: 600; }
+
+  /* competitive-ratio explainer */
+  .explain { display: grid; gap: .55rem; font-size: 13px; line-height: 1.55; color: #334155; }
+  .formula { font: 15px/1.4 ui-monospace, 'Consolas', monospace; background: #f8fafc; border: 1px solid var(--line);
+             border-radius: 8px; padding: .55rem .7rem; text-align: center; color: var(--ink); }
+  .formula b { font-weight: 700; }
+  .facts { display: flex; flex-wrap: wrap; gap: .4rem; }
+  .fact { font-size: 12px; border: 1px solid var(--line); border-radius: 999px; padding: .22rem .6rem; background: #f8fafc; }
+  .fact b { font-variant-numeric: tabular-nums; }
+
+  /* controls */
+  .controls { display: flex; gap: .4rem; align-items: center; flex-wrap: wrap; font-size: 13px; }
+  button, select { font: inherit; padding: .34rem .6rem; border: 1px solid #cbd5e1; border-radius: 7px; background: #fff; color: var(--ink); cursor: pointer; }
+  button:hover:not(:disabled) { background: #f8fafc; border-color: #94a3b8; }
+  button:disabled { opacity: .4; cursor: not-allowed; }
+  button.primary { background: var(--ink); border-color: var(--ink); color: #fff; }
+  button.primary:hover:not(:disabled) { background: #1e293b; }
+  .sep { width: 1px; align-self: stretch; background: var(--line); margin: 0 .2rem; }
+  input[type=range] { width: 90px; vertical-align: middle; }
+  .controls label { color: var(--muted); display: inline-flex; align-items: center; gap: .3rem; }
+
   svg { display: block; width: 100%; height: auto; }
-  .chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: .5rem; }
-  .chip { font: 12px/1 'Consolas', monospace; padding: 4px 7px; border: 1px solid #ddd; border-radius: 4px; background: #fafafa; cursor: pointer; }
-  .chip.done { background: #eef2ff; border-color: #c7d2fe; }
-  .chip.now { background: #ef4444; border-color: #ef4444; color: #fff; }
-  .lane-head { display: flex; align-items: baseline; gap: .6rem; flex-wrap: wrap; }
-  .lane-head h2 { font-size: 15px; margin: 0; font-weight: 600; }
-  .lane-head .desc { font-size: 12px; color: #777; flex: 1; min-width: 12ch; }
-  .cost { font: 13px/1 'Consolas', monospace; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 4px; padding: 4px 7px; }
-  .ratio { font: 13px/1 'Consolas', monospace; padding: 4px 0; color: #666; }
-  .ratio.bad { color: #dc2626; font-weight: 700; }
-  .note { font: 12px/1.4 'Consolas', monospace; color: #555; min-height: 1.2em; margin-top: .2rem; }
-  .foot { font-size: 13px; line-height: 1.6; color: #555; max-width: 72ch; }
-  .foot code { background: #eee; padding: 1px 4px; border-radius: 3px; }
+  #viz { cursor: crosshair; }
+  .srv { transition: transform .42s cubic-bezier(.4,0,.2,1); }
+  .hint { font-size: 11.5px; color: var(--muted); margin-top: .35rem; }
+
+  /* request chips */
+  .chips { display: flex; flex-wrap: wrap; gap: 3px; margin-top: .45rem; }
+  .chip { font: 11.5px/1 ui-monospace, monospace; padding: 3.5px 6px; border: 1px solid var(--line); border-radius: 5px;
+          background: #f8fafc; color: var(--muted); cursor: pointer; }
+  .chip:hover { border-color: #94a3b8; }
+  .chip.done { background: #eef2ff; border-color: #c7d2fe; color: #3730a3; }
+  .chip.now { background: var(--ink); border-color: var(--ink); color: #fff; font-weight: 700; }
+
+  /* per-algorithm cost cards */
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; }
+  @media (max-width: 620px) { .cards { grid-template-columns: 1fr; } }
+  .card { border: 1px solid var(--line); border-left: 3px solid var(--c); border-radius: 8px; padding: .5rem .6rem; background: #fff; }
+  .card .name { font-size: 12px; font-weight: 650; color: var(--c); }
+  .card .sub { font-size: 10.5px; color: var(--muted); margin-top: 1px; }
+  .nums { display: flex; align-items: baseline; gap: .5rem; margin-top: .35rem; font-variant-numeric: tabular-nums; }
+  .total { font-size: 22px; font-weight: 650; line-height: 1; }
+  .delta { font: 12px/1 ui-monospace, monospace; color: var(--muted); }
+  .delta.up { color: var(--c); font-weight: 700; }
+  .ratio { margin-left: auto; font: 12px/1 ui-monospace, monospace; color: var(--muted); }
+  .ratio.bad { color: var(--greedy); font-weight: 700; }
+  .move { font: 10.5px/1.3 ui-monospace, monospace; color: var(--muted); margin-top: .3rem; min-height: 1.3em;
+          white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .foot { font-size: 12.5px; line-height: 1.6; color: #475569; }
+  .foot p { margin: 0 0 .45rem; }
+  .foot p:last-child { margin: 0; }
+  .foot b { color: var(--ink); }
+  code { font: 12px ui-monospace, monospace; background: #f1f5f9; padding: 1px 4px; border-radius: 4px; }
 </style>
 </head>
 <body>
-<div class="container">
+<div class="wrap">
   <a class="back" href="index.html">← All visualizations</a>
   <h1>The k-Server Problem</h1>
-  <p class="intro">
-    <strong>k</strong> servers sit on a metric space (here, the integer line 0–20). Requests arrive one at a time;
-    each must be served by moving some server onto the requested point. The cost is the total distance moved.
-    An online algorithm sees each request only when it arrives — it is <em>c-competitive</em> if its cost never
-    exceeds <em>c</em>·OPT plus a constant. Compare three strategies on the same request sequence below.
+  <p class="lede">
+    <b>k</b> servers sit on a metric space — here the integer line 0–20. Requests arrive one at a time and each must be
+    served by moving a server onto the requested point; the cost is the total distance moved. The catch: an online
+    algorithm must decide <em>now</em>, without seeing the rest of the sequence.
   </p>
 
-  <div class="controls">
-    <label>Servers k:
-      <select id="k"><option>2</option><option selected>3</option><option>4</option></select>
-    </label>
-    <button id="random">Random sequence</button>
-    <button id="adversarial">Adversarial (beats Greedy)</button>
-    <button id="clear">Clear</button>
-    <span style="flex-basis:100%"></span>
-    <button id="play">▶ Play</button>
-    <button id="pause">⏸ Pause</button>
-    <button id="step">Step</button>
-    <button id="reset">↻ Reset</button>
-    <label>Speed: <input id="speed" type="range" min="150" max="2000" value="800"> <span id="spd">800ms</span></label>
+  <div class="panel">
+    <h2>Competitive ratio</h2>
+    <div class="explain">
+      <div>An online algorithm <code>ALG</code> is <b>c-competitive</b> if, for every request sequence σ, its cost stays
+        within a factor <code>c</code> of what a clairvoyant offline optimum would have paid:</div>
+      <div class="formula">ALG(σ) &nbsp;≤&nbsp; <b>c</b> · OPT(σ) &nbsp;+&nbsp; b</div>
+      <div>The constant <code>b</code> absorbs start-up effects, so <code>c</code> is what matters — it is the worst-case
+        price of not knowing the future. Lower is better; <code>c = 1</code> means matching the optimum.</div>
+      <div class="facts">
+        <span class="fact">No deterministic algorithm beats <b>c = k</b></span>
+        <span class="fact" style="border-color:#bfdbfe;background:#eff6ff">Double Coverage on a line: <b>c = k</b>, optimal</span>
+        <span class="fact" style="border-color:#fecdd3;background:#fff1f2">Greedy: <b>no finite c</b></span>
+      </div>
+    </div>
   </div>
 
   <div class="panel">
-    <div class="panel-title">Request sequence — click the line to append a request</div>
-    <svg id="builder" viewBox="0 0 640 80"></svg>
-    <div class="chips" id="chips"></div>
+    <div class="controls">
+      <label>k <select id="k"><option>2</option><option selected>3</option><option>4</option></select></label>
+      <button id="random">Random</button>
+      <button id="adversarial">Adversarial</button>
+      <button id="clear">Clear</button>
+      <span class="sep"></span>
+      <button id="play" class="primary">▶ Play</button>
+      <button id="pause">Pause</button>
+      <button id="step">Step ›</button>
+      <button id="reset">↻</button>
+      <label>speed <input id="speed" type="range" min="150" max="1800" value="700"></label>
+      <span id="progress" style="margin-left:auto;font:12px ui-monospace,monospace;color:var(--muted)">0 / 0</span>
+    </div>
   </div>
 
-  <div id="lanes"></div>
+  <div class="panel">
+    <svg id="viz" viewBox="0 0 720 200"></svg>
+    <div class="chips" id="chips"></div>
+    <div class="hint">Click anywhere on the plot to append a request · click a chip to jump to that step</div>
+  </div>
 
-  <p class="foot">
-    <strong>Greedy</strong> moves the nearest server. It is not competitive: the adversarial sequence keeps
-    poking just past one server while another sits idle, so its cost grows without bound while OPT stays fixed.<br>
-    <strong>Double Coverage</strong> moves <em>both</em> neighbours of the request toward it at equal speed
-    (only the nearest one, if all servers are on one side). It is exactly <code>k</code>-competitive on a line —
-    the best possible. The k-server conjecture says a k-competitive algorithm exists in every metric space.<br>
-    <strong>OPT</strong> is the offline optimum, computed here by dynamic programming over server configurations.
-    It knows the whole sequence in advance, so its running total is the prefix cost of the final optimal plan —
-    early on it can look worse than an online algorithm.
-  </p>
+  <div class="cards" id="cards"></div>
+
+  <div class="panel" style="margin-top:.7rem">
+    <h2>Cumulative cost vs. step</h2>
+    <svg id="chart" viewBox="0 0 720 158"></svg>
+  </div>
+
+  <div class="panel foot">
+    <p><b>Greedy</b> moves the nearest server. The adversarial sequence pokes back and forth between two points that
+      straddle one server while another sits idle far away: Greedy shuttles that one server forever, so its cost grows
+      without bound while OPT stays fixed. No constant <code>c</code> can hold.</p>
+    <p><b>Double Coverage</b> moves <em>both</em> neighbours of the request toward it at equal speed, stopping when one
+      arrives (only the nearest server moves if all of them lie on one side). Paying double looks wasteful, but it drags
+      idle servers into useful territory — that is exactly what makes it <code>k</code>-competitive on a line. The
+      k-server conjecture, still open, says some algorithm is <code>k</code>-competitive in <em>every</em> metric space.</p>
+    <p><b>OPT</b> here is the true offline optimum <em>for the requests seen so far</em>, recomputed at every step by
+      dynamic programming over server configurations — so the ratio shown is the honest one. It may revise its whole
+      plan when a new request arrives, which is why its servers can jump.</p>
+  </div>
 </div>
 
 <script>
-const N = 20, X0 = 30, DX = 29, YL = 50;
-const COLORS = ['#2563eb', '#16a34a', '#f97316', '#a855f7'];
+const N = 20, X0 = 40, X1 = 700, DX = (X1 - X0) / N, YAX = 176;
 const x = p => X0 + p * DX;
 
 const ALGOS = [
-  { id: 'greedy', name: 'Greedy (nearest server)', desc: 'Move whichever server is closest.' },
-  { id: 'dc', name: 'Double Coverage', desc: 'Both neighbours close in at equal speed. k-competitive.' },
-  { id: 'opt', name: 'Offline optimum (OPT)', desc: 'Knows every request in advance.' }
+  { id: 'greedy', name: 'Greedy', sub: 'move the nearest server', color: '#e11d48' },
+  { id: 'dc', name: 'Double Coverage', sub: 'both neighbours close in', color: '#2563eb' },
+  { id: 'opt', name: 'Offline optimum', sub: 'best possible so far', color: '#059669' }
 ];
-
+const rowY = i => 40 + i * 52;
 const initPos = k => Array.from({ length: k }, (_, i) => Math.round(i * N / (k - 1)));
 
-// --- algorithms: each returns positions after every request (sorted, so index = identity) ---
+// --- algorithms: positions after every request, kept sorted so index i = i-th server from the left ---
 function runGreedy(init, reqs) {
   let pos = [...init], total = 0;
   return reqs.map(r => {
@@ -111,7 +175,7 @@ function runDC(init, reqs) {
     let left = -1, right = -1;
     pos.forEach((p, i) => { if (p <= r) left = i; });
     for (let i = pos.length - 1; i >= 0; i--) if (pos[i] >= r) right = i;
-    if (left === -1 || right === -1) {         // all servers on one side: only one neighbour to move
+    if (left === -1 || right === -1) {          // all servers on one side: only one neighbour exists
       const i = left === -1 ? right : left;
       total += Math.abs(pos[i] - r); pos[i] = r;
     } else {
@@ -124,159 +188,187 @@ function runDC(init, reqs) {
   });
 }
 
-// DP over server configurations. Only one server moves per request in some optimal solution,
-// so reachable positions are the initial ones plus the requests seen so far.
+// Offline optimum for every prefix: DP over server configurations. Some optimal solution moves only
+// one server per request, so the reachable positions are the initial ones plus the requests seen.
 function runOPT(init, reqs) {
-  const key = a => a.join(',');
-  let layer = new Map([[key(init), { cost: 0, pos: init, back: null }]]);
-  const layers = [layer];
-  for (const r of reqs) {
+  let layer = new Map([[init.join(), { cost: 0, pos: init }]]);
+  return reqs.map(r => {
     const next = new Map();
-    for (const [ky, st] of layer) {
+    for (const st of layer.values()) {
       for (let i = 0; i < st.pos.length; i++) {
         const np = [...st.pos];
         const c = st.cost + Math.abs(np[i] - r);
         np[i] = r; np.sort((a, b) => a - b);
-        const nk = key(np), cur = next.get(nk);
-        if (!cur || c < cur.cost) next.set(nk, { cost: c, pos: np, back: ky });
+        const nk = np.join(), cur = next.get(nk);
+        if (!cur || c < cur.cost) next.set(nk, { cost: c, pos: np });
       }
     }
-    layers.push(next); layer = next;
-  }
-  let best = null;
-  for (const st of layer.values()) if (!best || st.cost < best.cost) best = st;
-  const out = [];
-  for (let i = layers.length - 1; i >= 1; i--) {
-    out.unshift({ pos: best.pos, cost: best.cost });
-    best = layers[i - 1].get(best.back);
-  }
-  return out;
+    layer = next;
+    let best = null;
+    for (const st of layer.values()) if (!best || st.cost < best.cost) best = st;
+    return { pos: best.pos, cost: best.cost };
+  });
 }
 
 const RUNNERS = { greedy: runGreedy, dc: runDC, opt: runOPT };
 
 // --- state ---
-let k = 3, reqs = [], runs = {}, idx = 0, timer = null, speed = 800;
+let k = 3, reqs = [], runs = {}, idx = 0, timer = null, speed = 700;
+const $ = id => document.getElementById(id);
 
 function recompute() {
   const init = initPos(k);
   for (const a of ALGOS) runs[a.id] = [{ pos: init, cost: 0 }, ...RUNNERS[a.id](init, reqs)];
   idx = Math.min(idx, reqs.length);
-  render();
+  buildViz(); buildCards(); buildChart(); render();
 }
 
-// --- rendering ---
-function axis(withLabels) {
-  let s = `<line x1="${x(0)}" y1="${YL}" x2="${x(N)}" y2="${YL}" stroke="#94a3b8" stroke-width="2"/>`;
+// --- static scaffolding (rebuilt only when k or the sequence changes) ---
+function buildViz() {
+  // axis and request marker first, so row labels and servers paint over them
+  let s = `<line x1="${X0}" y1="${YAX}" x2="${X1}" y2="${YAX}" stroke="#cbd5e1"/>`;
   for (let p = 0; p <= N; p++) {
-    s += `<line x1="${x(p)}" y1="${YL}" x2="${x(p)}" y2="${YL + 5}" stroke="#cbd5e1"/>`;
-    if (withLabels && p % 5 === 0) s += `<text x="${x(p)}" y="${YL + 20}" font-size="11" fill="#64748b" text-anchor="middle">${p}</text>`;
+    s += `<line x1="${x(p)}" y1="${YAX}" x2="${x(p)}" y2="${YAX + (p % 5 ? 3 : 6)}" stroke="#cbd5e1"/>`;
+    if (p % 5 === 0) s += `<text x="${x(p)}" y="${YAX + 18}" font-size="10.5" fill="#94a3b8" text-anchor="middle">${p}</text>`;
   }
-  return s;
+  s += `<g id="reqmark" transform="translate(${x(0)},0)" opacity="0">
+          <line y1="16" y2="${YAX - 3}" stroke="#0f172a" stroke-width="1.5" stroke-dasharray="3 4" opacity=".4"/>
+          <circle cy="${YAX - 3}" r="3" fill="#0f172a"/>
+          <text y="11" font-size="11" font-weight="700" fill="#0f172a" text-anchor="middle" id="reqlabel">0</text>
+        </g>`;
+  ALGOS.forEach((a, i) => {
+    const y = rowY(i);
+    s += `<line x1="${X0}" y1="${y}" x2="${X1}" y2="${y}" stroke="#e2e8f0" stroke-width="6" stroke-linecap="round"/>
+          <text x="${X0}" y="${y - 14}" font-size="11.5" font-weight="600" fill="${a.color}">${a.name}</text>`;
+    s += runs[a.id][0].pos.map((_, j) => `
+      <g class="srv" id="srv-${a.id}-${j}" transform="translate(${x(0)},0)">
+        <circle cy="${y}" r="10.5" fill="${a.color}"/>
+        <text y="${y + 3.5}" font-size="9.5" fill="#fff" text-anchor="middle" font-weight="700">${j + 1}</text>
+      </g>`).join('');
+  });
+  $('viz').innerHTML = s;
 }
 
-function buildLanes() {
-  document.getElementById('lanes').innerHTML = ALGOS.map(a => `
-    <div class="panel">
-      <div class="lane-head">
-        <h2>${a.name}</h2>
-        <span class="desc">${a.desc}</span>
-        <span class="cost">cost <b id="cost-${a.id}">0</b></span>
-        <span class="ratio" id="ratio-${a.id}">—</span>
+function buildCards() {
+  $('cards').innerHTML = ALGOS.map(a => `
+    <div class="card" style="--c:${a.color}">
+      <div class="name">${a.name}</div>
+      <div class="sub">${a.sub}</div>
+      <div class="nums">
+        <span class="total" id="tot-${a.id}">0</span>
+        <span class="delta" id="del-${a.id}">+0</span>
+        <span class="ratio" id="rat-${a.id}">—</span>
       </div>
-      <div class="note" id="note-${a.id}">&nbsp;</div>
-      <svg viewBox="0 0 640 80"><g id="lane-${a.id}"></g></svg>
+      <div class="move" id="mov-${a.id}">&nbsp;</div>
     </div>`).join('');
 }
 
-function renderLane(a) {
-  const frames = runs[a.id], f = frames[idx], prev = frames[Math.max(idx - 1, 0)];
-  const r = idx > 0 ? reqs[idx - 1] : null;
-  let s = axis(true);
-  if (r !== null) {
-    s += `<line x1="${x(r)}" y1="14" x2="${x(r)}" y2="${YL}" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="3 3"/>
-          <path d="M${x(r)},${YL - 4} l-6,-11 h12 z" fill="#ef4444"/>
-          <text x="${x(r)}" y="12" font-size="11" fill="#ef4444" text-anchor="middle" font-weight="700">${r}</text>`;
-  }
-  s += f.pos.map((p, i) => `
-    <g class="srv" transform="translate(${x(p)},0)" style="transition:transform ${Math.min(speed, 600) * 0.7}ms ease">
-      <circle cy="${YL}" r="12" fill="${COLORS[i]}" stroke="#fff" stroke-width="2"/>
-      <text y="${YL + 4}" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">S${i + 1}</text>
-    </g>`).join('');
-  document.getElementById(`lane-${a.id}`).innerHTML = s;
-
-  const moves = f.pos.map((p, i) => prev.pos[i] === p ? null : `S${i + 1} ${prev.pos[i]}→${p}`).filter(Boolean);
-  const step = f.cost - prev.cost;
-  document.getElementById(`note-${a.id}`).textContent =
-    idx === 0 ? ' ' : (moves.length ? `${moves.join(', ')}  (+${step})` : `already covered  (+0)`);
-  document.getElementById(`cost-${a.id}`).textContent = f.cost;
-
-  const opt = runs.opt[idx].cost;
-  const el = document.getElementById(`ratio-${a.id}`);
-  el.textContent = a.id === 'opt' ? 'baseline' : (opt === 0 ? '—' : `${(f.cost / opt).toFixed(2)}× OPT`);
-  el.classList.toggle('bad', a.id !== 'opt' && opt > 0 && f.cost / opt > k);
+const CH = { x0: 44, x1: 700, y0: 18, y1: 118 };
+function chartMax() { return Math.max(1, ...ALGOS.map(a => runs[a.id].at(-1).cost)); }
+function chartPoints(id, upto) {
+  const m = reqs.length, max = chartMax();
+  return runs[id].slice(0, upto + 1).map((f, i) =>
+    `${CH.x0 + (m ? i / m : 0) * (CH.x1 - CH.x0)},${CH.y1 - f.cost / max * (CH.y1 - CH.y0)}`).join(' ');
+}
+function buildChart() {
+  const m = reqs.length, max = chartMax();
+  if (!m) { $('chart').innerHTML = `<text x="360" y="70" font-size="12" fill="#94a3b8" text-anchor="middle">Add some requests to see how the costs diverge.</text>`; return; }
+  let s = `<line x1="${CH.x0}" y1="${CH.y1}" x2="${CH.x1}" y2="${CH.y1}" stroke="#cbd5e1"/>
+           <line x1="${CH.x0}" y1="${CH.y0}" x2="${CH.x1}" y2="${CH.y0}" stroke="#f1f5f9"/>
+           <text x="${CH.x0 - 8}" y="${CH.y1 + 4}" font-size="10.5" fill="#94a3b8" text-anchor="end">0</text>
+           <text x="${CH.x0 - 8}" y="${CH.y0 + 4}" font-size="10.5" fill="#94a3b8" text-anchor="end">${max}</text>
+           <text x="${CH.x0}" y="${CH.y1 + 18}" font-size="10.5" fill="#94a3b8">step 0</text>
+           <text x="${CH.x1}" y="${CH.y1 + 18}" font-size="10.5" fill="#94a3b8" text-anchor="end">${m}</text>
+           <line id="chmark" x1="${CH.x0}" y1="${CH.y0 - 6}" x2="${CH.x0}" y2="${CH.y1}" stroke="#0f172a" stroke-width="1" opacity=".25"/>`;
+  s += ALGOS.map(a => `
+    <polyline fill="none" stroke="${a.color}" stroke-width="1.5" opacity=".2" points="${chartPoints(a.id, m)}"/>
+    <polyline fill="none" stroke="${a.color}" stroke-width="2.5" stroke-linejoin="round" id="ch-${a.id}" points=""/>`).join('');
+  s += ALGOS.map((a, i) => `<text x="${CH.x0 + 4 + i * 118}" y="${CH.y1 + 30}" font-size="10.5" fill="${a.color}" font-weight="600">— ${a.name}</text>`).join('');
+  $('chart').innerHTML = s;
 }
 
+// --- per-frame updates ---
 function render() {
-  document.getElementById('builder').innerHTML = axis(true) +
-    reqs.map((r, i) => `<circle cx="${x(r)}" cy="${YL - 12}" r="4" fill="${i < idx ? '#ef4444' : '#fca5a5'}"/>`).join('');
-  document.getElementById('chips').innerHTML = reqs.length
-    ? reqs.map((r, i) => `<span class="chip ${i === idx - 1 ? 'now' : i < idx ? 'done' : ''}" data-i="${i}">${r}</span>`).join('')
-    : '<span style="font-size:13px;color:#888">No requests yet — click the line above, or pick a preset.</span>';
-  ALGOS.forEach(renderLane);
-  document.getElementById('step').disabled = idx >= reqs.length;
+  const r = idx > 0 ? reqs[idx - 1] : null, m = reqs.length;
+  const optCost = runs.opt[idx].cost;
+
+  const mark = $('reqmark');
+  if (mark) {
+    mark.setAttribute('opacity', r === null ? '0' : '1');
+    if (r !== null) { mark.setAttribute('transform', `translate(${x(r)},0)`); $('reqlabel').textContent = r; }
+  }
+
+  for (const a of ALGOS) {
+    const f = runs[a.id][idx], prev = runs[a.id][Math.max(idx - 1, 0)];
+    f.pos.forEach((p, j) => $(`srv-${a.id}-${j}`).setAttribute('transform', `translate(${x(p)},0)`));
+
+    const d = f.cost - prev.cost;
+    $(`tot-${a.id}`).textContent = f.cost;
+    $(`del-${a.id}`).textContent = idx === 0 ? '' : `+${d} this step`;
+    $(`del-${a.id}`).className = 'delta' + (d > 0 ? ' up' : '');
+
+    const el = $(`rat-${a.id}`);
+    el.textContent = a.id === 'opt' ? 'optimum' : optCost === 0 ? '—' : `${(f.cost / optCost).toFixed(2)}× OPT`;
+    el.className = 'ratio' + (a.id !== 'opt' && optCost > 0 && f.cost / optCost > k ? ' bad' : '');
+
+    const moves = f.pos.map((p, j) => prev.pos[j] === p ? null : `S${j + 1} ${prev.pos[j]}→${p}`).filter(Boolean);
+    $(`mov-${a.id}`).textContent = idx === 0 ? ' ' : moves.length ? moves.join(', ') : 'already covered';
+
+    const line = $(`ch-${a.id}`);
+    if (line) line.setAttribute('points', chartPoints(a.id, idx));
+  }
+  if ($('chmark')) {
+    const cx = CH.x0 + (m ? idx / m : 0) * (CH.x1 - CH.x0);
+    $('chmark').setAttribute('x1', cx); $('chmark').setAttribute('x2', cx);
+  }
+
+  $('chips').innerHTML = m
+    ? reqs.map((q, i) => `<span class="chip ${i === idx - 1 ? 'now' : i < idx ? 'done' : ''}" data-i="${i}">${q}</span>`).join('')
+    : '<span style="font-size:12px;color:var(--muted)">No requests yet — click the plot, or pick a preset.</span>';
+  $('progress').textContent = `${idx} / ${m}`;
+  $('step').disabled = idx >= m;
+  $('play').disabled = idx >= m;
 }
 
 // --- controls ---
 function pause() { clearInterval(timer); timer = null; }
 function stepOnce() { if (idx < reqs.length) { idx++; render(); } else pause(); }
+function load(sequence, servers) {
+  pause(); idx = 0; reqs = sequence;
+  if (servers) { k = servers; $('k').value = String(servers); }
+  recompute();
+}
 
-document.getElementById('builder').onclick = e => {
+$('viz').onclick = e => {
   const box = e.currentTarget.getBoundingClientRect();
-  const p = Math.round(((e.clientX - box.left) / box.width * 640 - X0) / DX);
+  const p = Math.round(((e.clientX - box.left) / box.width * 720 - X0) / DX);
   if (p >= 0 && p <= N && reqs.length < 40) { reqs.push(p); recompute(); }
 };
-document.getElementById('chips').onclick = e => {
-  if (e.target.dataset.i !== undefined) { pause(); idx = +e.target.dataset.i + 1; render(); }
-};
-document.getElementById('k').onchange = e => { pause(); k = +e.target.value; idx = 0; recompute(); };
-document.getElementById('random').onclick = () => {
-  pause(); idx = 0;
-  reqs = Array.from({ length: 12 }, () => Math.floor(Math.random() * (N + 1)));
-  recompute();
-};
-document.getElementById('adversarial').onclick = () => {
-  pause(); idx = 0; k = 2; document.getElementById('k').value = '2';
-  reqs = Array.from({ length: 16 }, (_, i) => i % 2 ? 11 : 9);   // both points sit between the two servers
-  recompute();
-};
-document.getElementById('clear').onclick = () => { pause(); idx = 0; reqs = []; recompute(); };
-document.getElementById('play').onclick = () => {
-  if (timer || idx >= reqs.length) return;
-  timer = setInterval(stepOnce, speed);
-};
-document.getElementById('pause').onclick = pause;
-document.getElementById('step').onclick = () => { pause(); stepOnce(); };
-document.getElementById('reset').onclick = () => { pause(); idx = 0; render(); };
-document.getElementById('speed').oninput = e => {
-  speed = +e.target.value;
-  document.getElementById('spd').textContent = speed + 'ms';
-  if (timer) { pause(); timer = setInterval(stepOnce, speed); }
-};
+$('chips').onclick = e => { if (e.target.dataset.i !== undefined) { pause(); idx = +e.target.dataset.i + 1; render(); } };
+$('k').onchange = e => load([...reqs], +e.target.value);
+$('random').onclick = () => load(Array.from({ length: 12 }, () => Math.floor(Math.random() * (N + 1))));
+// Two points straddling one server, with the others idle far away — Greedy shuttles forever.
+$('adversarial').onclick = () => load(Array.from({ length: 16 }, (_, i) => i % 2 ? 11 : 9), 2);
+$('clear').onclick = () => load([]);
+$('play').onclick = () => { if (!timer && idx < reqs.length) timer = setInterval(stepOnce, speed); };
+$('pause').onclick = pause;
+$('step').onclick = () => { pause(); stepOnce(); };
+$('reset').onclick = () => { pause(); idx = 0; render(); };
+$('speed').oninput = e => { speed = +e.target.value; if (timer) { pause(); timer = setInterval(stepOnce, speed); } };
 
-buildLanes();
-document.getElementById('random').click();
+$('adversarial').click();
 
 // ponytail: self-check — runs on load, cheap enough to keep honest.
 (function selfCheck() {
   const init = [0, 20], seq = Array.from({ length: 16 }, (_, i) => i % 2 ? 11 : 9);
   const g = runGreedy(init, seq), d = runDC(init, seq), o = runOPT(init, seq);
-  console.assert(g.at(-1).cost === 9 + 2 * 15, 'greedy ping-pongs one server', g.at(-1).cost);
-  console.assert(d.at(-1).cost === 18 && d[0].pos.join() === '9,11', 'DC pays 18 once, then nothing', d.at(-1));
+  console.assert(g.at(-1).cost === 9 + 2 * 15, 'greedy shuttles one server', g.at(-1).cost);
+  console.assert(d[0].pos.join() === '9,11' && d.at(-1).cost === 18, 'DC pays 18 once, then nothing', d.at(-1));
   console.assert(o.at(-1).cost === 18, 'OPT splits the servers for 18', o.at(-1).cost);
-  console.assert(o.at(-1).cost <= g.at(-1).cost && o.at(-1).cost <= d.at(-1).cost, 'OPT is a lower bound');
-  const one = runOPT([5], [3, 8]);                       // k=1: forced walk, 2 + 5
-  console.assert(one.at(-1).cost === 7, 'k=1 cost is the walk length', one.at(-1).cost);
+  console.assert(o.every((f, i) => f.cost <= g[i].cost && f.cost <= d[i].cost), 'OPT lower-bounds every prefix');
+  console.assert(o.every((f, i) => i === 0 || f.cost >= o[i - 1].cost), 'prefix optima are non-decreasing');
+  console.assert(o[0].cost === 9 && o[1].cost === 11, 'short prefixes prefer shuttling one server', o.slice(0, 2));
+  console.assert(runOPT([5], [3, 8]).at(-1).cost === 7, 'k=1 cost is the walk length');
 })();
 </script>
 </body>
