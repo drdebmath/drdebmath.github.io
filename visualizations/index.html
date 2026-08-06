@@ -5,16 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
-        content="Interactive graph algorithm visualizations and slides covering DFS, BFS, Dijkstra, Prim, and Kruskal.">
+        content="Interactive algorithm visualizations by category: traversal, shortest paths, minimum spanning trees, online algorithms, and distributed computing.">
     <link rel="canonical" href="https://drdebmath.github.io/visualizations/">
-    <meta property="og:title" content="Graph Algorithm Visualizations">
+    <meta property="og:title" content="Algorithm Visualizations">
     <meta property="og:description"
-        content="Slides and interactive demos for basic graph algorithms by Debasish Pattanayak.">
+        content="Interactive algorithm visualizations and slides by Debasish Pattanayak, organised by category.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://drdebmath.github.io/visualizations/">
     <meta property="og:image" content="https://drdebmath.github.io/debasish_photo.jpeg">
     <meta name="twitter:card" content="summary">
-    <title>Graph Algorithm Visualizations - Debasish Pattanayak</title>
+    <title>Algorithm Visualizations - Debasish Pattanayak</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -35,7 +35,17 @@
                 <li class="shrink-0"><a class="block rounded px-3 py-1.5 hover:bg-blue-700 dark:hover:bg-blue-900"
                         href="../for_students.html">For Students</a></li>
                 <li class="shrink-0"><a class="block rounded px-3 py-1.5 hover:bg-blue-700 dark:hover:bg-blue-900"
-                        href="graphalgos.html">Slides</a></li>
+                        href="#traversal">Traversal</a></li>
+                <li class="shrink-0"><a class="block rounded px-3 py-1.5 hover:bg-blue-700 dark:hover:bg-blue-900"
+                        href="#shortest-paths">Shortest Paths</a></li>
+                <li class="shrink-0"><a class="block rounded px-3 py-1.5 hover:bg-blue-700 dark:hover:bg-blue-900"
+                        href="#mst">Spanning Trees</a></li>
+                <li class="shrink-0"><a class="block rounded px-3 py-1.5 hover:bg-blue-700 dark:hover:bg-blue-900"
+                        href="#online">Online</a></li>
+                <li class="shrink-0"><a class="block rounded px-3 py-1.5 hover:bg-blue-700 dark:hover:bg-blue-900"
+                        href="#distributed">Distributed</a></li>
+                <li class="shrink-0"><a class="block rounded px-3 py-1.5 hover:bg-blue-700 dark:hover:bg-blue-900"
+                        href="#tools">Tools &amp; Slides</a></li>
             </ul>
         </div>
     </nav>
@@ -43,79 +53,153 @@
     <header class="bg-blue-700 dark:bg-blue-900 text-white py-10 shadow">
         <div class="mx-auto max-w-screen-lg px-4">
             <p class="text-sm font-semibold uppercase tracking-[0.25em] text-blue-100">Interactive Teaching Resources</p>
-            <h1 class="mt-3 text-4xl font-extrabold tracking-tight">Graph Algorithm Visualizations</h1>
+            <h1 class="mt-3 text-4xl font-extrabold tracking-tight">Algorithm Visualizations</h1>
             <p class="mt-4 max-w-3xl text-lg text-blue-50">
-                Slides and browser-based demos for traversal, shortest paths, and minimum spanning tree algorithms.
+                Browser-based demos, one algorithm at a time — step through each one, or use the editors and slides
+                to build your own examples.
             </p>
         </div>
     </header>
 
     <main id="visualization-list" class="mx-auto max-w-screen-lg px-4 py-10">
-        <section class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            <a href="graphalgos.html"
-                class="group rounded-lg border border-blue-100 bg-white p-5 shadow transition hover:-translate-y-1 hover:shadow-lg dark:border-blue-900 dark:bg-gray-800">
-                <p class="text-sm font-semibold uppercase tracking-wide text-blue-600 dark:text-blue-300">Slides</p>
-                <h2 class="mt-2 text-xl font-bold">Graph Algorithms Lecture</h2>
-                <p class="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-300">Reveal.js slides with embedded
-                    visual walkthroughs.</p>
-            </a>
-            <a href="dfs.html"
-                class="group rounded-lg border border-emerald-100 bg-white p-5 shadow transition hover:-translate-y-1 hover:shadow-lg dark:border-emerald-900 dark:bg-gray-800">
-                <p class="text-sm font-semibold uppercase tracking-wide text-emerald-600 dark:text-emerald-300">Traversal</p>
-                <h2 class="mt-2 text-xl font-bold">Depth-First Search</h2>
-                <p class="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-300">Step through stack-driven graph
-                    exploration and discovery order.</p>
-            </a>
-            <a href="bfs.html"
-                class="group rounded-lg border border-cyan-100 bg-white p-5 shadow transition hover:-translate-y-1 hover:shadow-lg dark:border-cyan-900 dark:bg-gray-800">
-                <p class="text-sm font-semibold uppercase tracking-wide text-cyan-600 dark:text-cyan-300">Traversal</p>
-                <h2 class="mt-2 text-xl font-bold">Breadth-First Search</h2>
-                <p class="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-300">Watch queue-based layer expansion
-                    from a source vertex.</p>
-            </a>
-            <a href="dijkstra.html"
-                class="group rounded-lg border border-amber-100 bg-white p-5 shadow transition hover:-translate-y-1 hover:shadow-lg dark:border-amber-900 dark:bg-gray-800">
-                <p class="text-sm font-semibold uppercase tracking-wide text-amber-600 dark:text-amber-300">Shortest Path</p>
-                <h2 class="mt-2 text-xl font-bold">Dijkstra's Algorithm</h2>
-                <p class="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-300">Track tentative distances and
-                    settled vertices in a weighted graph.</p>
-            </a>
-            <a href="prim.html"
-                class="group rounded-lg border border-fuchsia-100 bg-white p-5 shadow transition hover:-translate-y-1 hover:shadow-lg dark:border-fuchsia-900 dark:bg-gray-800">
-                <p class="text-sm font-semibold uppercase tracking-wide text-fuchsia-600 dark:text-fuchsia-300">MST</p>
-                <h2 class="mt-2 text-xl font-bold">Prim's Algorithm</h2>
-                <p class="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-300">Build a minimum spanning tree by
-                    growing from one component.</p>
-            </a>
-            <a href="kruskal.html"
-                class="group rounded-lg border border-rose-100 bg-white p-5 shadow transition hover:-translate-y-1 hover:shadow-lg dark:border-rose-900 dark:bg-gray-800">
-                <p class="text-sm font-semibold uppercase tracking-wide text-rose-600 dark:text-rose-300">MST</p>
-                <h2 class="mt-2 text-xl font-bold">Kruskal's Algorithm</h2>
-                <p class="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-300">Sort edges, avoid cycles, and
-                    assemble an MST step by step.</p>
-            </a>
-            <a href="viz.html"
-                class="group rounded-lg border border-indigo-100 bg-white p-5 shadow transition hover:-translate-y-1 hover:shadow-lg dark:border-indigo-900 dark:bg-gray-800">
-                <p class="text-sm font-semibold uppercase tracking-wide text-indigo-600 dark:text-indigo-300">Tool</p>
-                <h2 class="mt-2 text-xl font-bold">Interactive Graph Editor</h2>
-                <p class="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-300">Build and style custom graphs:
-                    nodes, edges, port numbers, colors.</p>
-            </a>
-            <a href="basic.html"
-                class="group rounded-lg border border-teal-100 bg-white p-5 shadow transition hover:-translate-y-1 hover:shadow-lg dark:border-teal-900 dark:bg-gray-800">
-                <p class="text-sm font-semibold uppercase tracking-wide text-teal-600 dark:text-teal-300">Simulation</p>
-                <h2 class="mt-2 text-xl font-bold">Grid Agent Simulation</h2>
-                <p class="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-300">Distribute agents on a grid and
-                    step through settling and movement dynamics.</p>
-            </a>
-            <a href="seedgrant.html"
-                class="group rounded-lg border border-orange-100 bg-white p-5 shadow transition hover:-translate-y-1 hover:shadow-lg dark:border-orange-900 dark:bg-gray-800">
-                <p class="text-sm font-semibold uppercase tracking-wide text-orange-600 dark:text-orange-300">Slides</p>
-                <h2 class="mt-2 text-xl font-bold">Schedulers Galore</h2>
-                <p class="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-300">Research proposal on mobile robot
-                    coordination under sequential schedulers.</p>
-            </a>
+
+        <section id="traversal" class="scroll-mt-16">
+            <h2 class="text-2xl font-bold tracking-tight">Graph Traversal</h2>
+            <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Systematic ways to visit every vertex of a graph.
+            </p>
+            <div class="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                <a href="dfs.html"
+                    class="group rounded-lg border border-emerald-100 bg-white p-5 shadow transition hover:-translate-y-1 hover:shadow-lg dark:border-emerald-900 dark:bg-gray-800">
+                    <p class="text-sm font-semibold uppercase tracking-wide text-emerald-600 dark:text-emerald-300">
+                        Stack</p>
+                    <h3 class="mt-2 text-xl font-bold">Depth-First Search</h3>
+                    <p class="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-300">Step through stack-driven graph
+                        exploration and discovery order.</p>
+                </a>
+                <a href="bfs.html"
+                    class="group rounded-lg border border-cyan-100 bg-white p-5 shadow transition hover:-translate-y-1 hover:shadow-lg dark:border-cyan-900 dark:bg-gray-800">
+                    <p class="text-sm font-semibold uppercase tracking-wide text-cyan-600 dark:text-cyan-300">Queue</p>
+                    <h3 class="mt-2 text-xl font-bold">Breadth-First Search</h3>
+                    <p class="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-300">Watch queue-based layer expansion
+                        from a source vertex.</p>
+                </a>
+            </div>
         </section>
+
+        <section id="shortest-paths" class="mt-12 scroll-mt-16">
+            <h2 class="text-2xl font-bold tracking-tight">Shortest Paths</h2>
+            <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Cheapest routes through a weighted graph.</p>
+            <div class="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                <a href="dijkstra.html"
+                    class="group rounded-lg border border-amber-100 bg-white p-5 shadow transition hover:-translate-y-1 hover:shadow-lg dark:border-amber-900 dark:bg-gray-800">
+                    <p class="text-sm font-semibold uppercase tracking-wide text-amber-600 dark:text-amber-300">Greedy
+                    </p>
+                    <h3 class="mt-2 text-xl font-bold">Dijkstra's Algorithm</h3>
+                    <p class="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-300">Track tentative distances and
+                        settled vertices in a weighted graph.</p>
+                </a>
+            </div>
+        </section>
+
+        <section id="mst" class="mt-12 scroll-mt-16">
+            <h2 class="text-2xl font-bold tracking-tight">Minimum Spanning Trees</h2>
+            <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Two greedy routes to the same cheapest spanning
+                tree.</p>
+            <div class="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                <a href="prim.html"
+                    class="group rounded-lg border border-fuchsia-100 bg-white p-5 shadow transition hover:-translate-y-1 hover:shadow-lg dark:border-fuchsia-900 dark:bg-gray-800">
+                    <p class="text-sm font-semibold uppercase tracking-wide text-fuchsia-600 dark:text-fuchsia-300">
+                        Grow</p>
+                    <h3 class="mt-2 text-xl font-bold">Prim's Algorithm</h3>
+                    <p class="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-300">Build a minimum spanning tree by
+                        growing from one component.</p>
+                </a>
+                <a href="kruskal.html"
+                    class="group rounded-lg border border-rose-100 bg-white p-5 shadow transition hover:-translate-y-1 hover:shadow-lg dark:border-rose-900 dark:bg-gray-800">
+                    <p class="text-sm font-semibold uppercase tracking-wide text-rose-600 dark:text-rose-300">Merge</p>
+                    <h3 class="mt-2 text-xl font-bold">Kruskal's Algorithm</h3>
+                    <p class="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-300">Sort edges, avoid cycles, and
+                        assemble an MST step by step.</p>
+                </a>
+            </div>
+        </section>
+
+        <section id="online" class="mt-12 scroll-mt-16">
+            <h2 class="text-2xl font-bold tracking-tight">Online Algorithms</h2>
+            <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Decisions made without seeing the future, measured
+                against the offline optimum.</p>
+            <div class="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                <a href="kserver.html"
+                    class="group rounded-lg border border-sky-100 bg-white p-5 shadow transition hover:-translate-y-1 hover:shadow-lg dark:border-sky-900 dark:bg-gray-800">
+                    <p class="text-sm font-semibold uppercase tracking-wide text-sky-600 dark:text-sky-300">Competitive
+                        Analysis</p>
+                    <h3 class="mt-2 text-xl font-bold">The k-Server Problem</h3>
+                    <p class="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-300">Race Greedy against Double
+                        Coverage and the offline optimum on a line.</p>
+                </a>
+            </div>
+        </section>
+
+        <section id="distributed" class="mt-12 scroll-mt-16">
+            <h2 class="text-2xl font-bold tracking-tight">Distributed &amp; Mobile Agents</h2>
+            <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Many agents, local information, no central
+                controller.</p>
+            <div class="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                <a href="blackhole.html"
+                    class="group rounded-lg border border-slate-200 bg-white p-5 shadow transition hover:-translate-y-1 hover:shadow-lg dark:border-slate-700 dark:bg-gray-800">
+                    <p class="text-sm font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">Search
+                    </p>
+                    <h3 class="mt-2 text-xl font-bold">Black Hole Search</h3>
+                    <p class="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-300">Agents locate a node that
+                        destroys every visitor, without losing them all.</p>
+                </a>
+                <a href="basic.html"
+                    class="group rounded-lg border border-teal-100 bg-white p-5 shadow transition hover:-translate-y-1 hover:shadow-lg dark:border-teal-900 dark:bg-gray-800">
+                    <p class="text-sm font-semibold uppercase tracking-wide text-teal-600 dark:text-teal-300">
+                        Simulation</p>
+                    <h3 class="mt-2 text-xl font-bold">Grid Agent Simulation</h3>
+                    <p class="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-300">Distribute agents on a grid and
+                        step through settling and movement dynamics.</p>
+                </a>
+            </div>
+        </section>
+
+        <section id="tools" class="mt-12 scroll-mt-16">
+            <h2 class="text-2xl font-bold tracking-tight">Tools &amp; Slides</h2>
+            <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Lecture decks and an editor for building your own
+                examples.</p>
+            <div class="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                <a href="graphalgos.html"
+                    class="group rounded-lg border border-blue-100 bg-white p-5 shadow transition hover:-translate-y-1 hover:shadow-lg dark:border-blue-900 dark:bg-gray-800">
+                    <p class="text-sm font-semibold uppercase tracking-wide text-blue-600 dark:text-blue-300">Slides</p>
+                    <h3 class="mt-2 text-xl font-bold">Graph Algorithms Lecture</h3>
+                    <p class="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-300">Reveal.js slides with embedded
+                        visual walkthroughs.</p>
+                </a>
+                <a href="viz.html"
+                    class="group rounded-lg border border-indigo-100 bg-white p-5 shadow transition hover:-translate-y-1 hover:shadow-lg dark:border-indigo-900 dark:bg-gray-800">
+                    <p class="text-sm font-semibold uppercase tracking-wide text-indigo-600 dark:text-indigo-300">Tool
+                    </p>
+                    <h3 class="mt-2 text-xl font-bold">Interactive Graph Editor</h3>
+                    <p class="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-300">Build and style custom graphs:
+                        nodes, edges, port numbers, colors.</p>
+                </a>
+                <a href="seedgrant.html"
+                    class="group rounded-lg border border-orange-100 bg-white p-5 shadow transition hover:-translate-y-1 hover:shadow-lg dark:border-orange-900 dark:bg-gray-800">
+                    <p class="text-sm font-semibold uppercase tracking-wide text-orange-600 dark:text-orange-300">Slides
+                    </p>
+                    <h3 class="mt-2 text-xl font-bold">Schedulers Galore</h3>
+                    <p class="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-300">Research proposal on mobile robot
+                        coordination under sequential schedulers.</p>
+                </a>
+            </div>
+        </section>
+
+        <p class="mt-12 text-sm text-gray-600 dark:text-gray-300">
+            Looking for the mobile-robot model simulators (CCM, LCM, SILBOT, MobileAutomata)?
+            They live on the <a href="../index.html#visualizations"
+                class="text-blue-700 underline dark:text-blue-300">home page</a>.
+        </p>
     </main>
 </body>
 

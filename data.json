@@ -251,39 +251,9 @@
         "source_url": "https://github.com/drdebmath/Transport"
       },
       {
-        "name": "Graph Algorithm Visualizations",
-        "description": "Slides and interactive demos for basic graph algorithms.",
+        "name": "Algorithm Visualizations",
+        "description": "Step-by-step demos by category: traversal, shortest paths, spanning trees, online algorithms, and distributed agents.",
         "url": "visualizations/"
-      },
-      {
-        "name": "DFS",
-        "description": "Depth-first search traversal walkthrough.",
-        "url": "visualizations/dfs.html",
-        "featured_on_homepage": false
-      },
-      {
-        "name": "BFS",
-        "description": "Breadth-first search traversal walkthrough.",
-        "url": "visualizations/bfs.html",
-        "featured_on_homepage": false
-      },
-      {
-        "name": "Dijkstra",
-        "description": "Shortest path visualization for weighted graphs.",
-        "url": "visualizations/dijkstra.html",
-        "featured_on_homepage": false
-      },
-      {
-        "name": "Prim's Algorithm",
-        "description": "Minimum spanning tree construction with Prim's algorithm.",
-        "url": "visualizations/prim.html",
-        "featured_on_homepage": false
-      },
-      {
-        "name": "Kruskal's Algorithm",
-        "description": "Minimum spanning tree construction with Kruskal's algorithm.",
-        "url": "visualizations/kruskal.html",
-        "featured_on_homepage": false
       }
     ]
   },
