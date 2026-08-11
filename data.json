@@ -259,6 +259,14 @@
   },
   "news": [
     {
+      "date": "8 August 2026",
+      "title": "Optimal Luminous UCF under Asynchrony accepted to JPDC, as the journal version of the DISC Brief Announcement.",
+      "url": "https://www.sciencedirect.com/journal/journal-of-parallel-and-distributed-computing",
+      "urls": {
+        "DISC BA": "https://doi.org/10.4230/LIPIcs.DISC.2024.46"
+      }
+    },
+    {
       "date": "1 July 2026",
       "title": "Full version of Asynchronous Dispersion with Optimal Time Complexity accepted to ICPP 2026.",
       "url": "http://arxiv.org/abs/2507.01298"
@@ -413,10 +421,10 @@
   "current_research": "My research interests lie in the design and analysis of algorithms for mobile agents and mobile robots operating in both discrete (graphs) and continuous spaces. I focus on fundamental problems such as exploration, search, rendezvous, evacuation, and filling under constraints of limited memory, communication, or environmental knowledge. I am particularly interested in distributed coordination, fault-tolerant behavior, and the impact of structure and complexity on algorithmic performance. My work spans deterministic and randomized strategies, with applications in swarm robotics, multi-agent coordination, and autonomous systems. I also work on developing simulators for these systems, a couple of them are linked here, under CCM Model and LCM Model.",
   "current_teaching": [
     {
-      "title": "CS637: Theory of Computation and Graph Theory",
-      "session": "Jan-Apr 2026",
+      "course": "CS103: Introduction to Programming",
+      "duration": "Jul-Nov 2026",
       "institution": "IIT Indore",
-      "url": "https://drdebmath.github.io/IITIJan2026CS637"
+      "url": "https://drdebmath.github.io/IITIJul2026CS103/"
     }
   ],
   "publications": [
@@ -1082,6 +1090,7 @@
         "full": "International Symposium on Distributed Computing",
         "short": "DISC"
       },
+      "see_also": ["optimal-luminous-ucf-under-asynchrony--2026-journal"],
       "year": 2024,
       "abstract": "We study the uniform circle formation (UCF) problem where n >= 3 autonomous mobile robots, initially arbitrarily positioned in the plane, have to arrange themselves equally spaced on the boundary of a circle not fixed in advance. Robots are anonymous, asynchronous, oblivious, and luminous: they execute Look-Compute-Move cycles asynchronously, cannot be distinguished by their appearance, have no memory of past actions, but possess a light that can assume colors from a constant-sized set C. The light color is visible to other robots and persists between cycles. It is known that UCF is impossible for such robots without lights or with only 1 color. Prior work showed UCF solvability with O(n) colors in O(n) epochs and with O(log n) colors in poly(n) epochs. We present an algorithm that solves UCF using O(1) colors (specifically, 4 colors) in O(n^2) epochs. This result is optimal in terms of colors, as UCF requires at least 2 colors. Our algorithm relies on carefully managing robot states using the constant number of colors to break symmetries and coordinate movements towards the final uniform circular configuration."
     },
@@ -1423,6 +1432,29 @@
       },
       "abstract": "We study the computational power that oblivious robots operating in the plane have under sequential schedulers. We show that this power is much stronger than the obvious capacity these schedulers offer of breaking symmetry, and thus to create a leader. In fact, we prove that under any sequential scheduler, robots are capable of solving problems that are unsolvable even with a leader under the fully synchronous scheduler \\(\\mathcal {FSYNC}\\). More precisely, we consider the class of pattern formation problems, and focus on the most general problem in this class, Universal Pattern Formation (UPF), which requires the robots to form every pattern given in input, starting from any initial configuration (where some robots may occupy the same point, hence forming a multiplicity). We first show that UPF is unsolvable under \\(\\mathcal {FSYNC}\\), even if the robots are endowed with additional strong capabilities (multiplicity detection, rigid movement, agreement on coordinate systems, presence of a unique leader). On the other hand, we prove that, except for point formation (Gathering), UPF is solvable under any sequential scheduler without any additional assumptions. We then turn our attention to the Gathering problem, and prove that weak multiplicity detection (the ability to detect a multiplicity but not the exact number of robots forming it) is necessary and sufficient for solvability under sequential schedulers. The results obtained show that the computational power of the robots under \\(\\mathcal {FSYNC}\\) (where Gathering is solvable without any multiplicity detection) and that under sequential schedulers are orthogonal.",
       "published_date": "2026-03-25"
+    },
+    {
+      "authors": [
+        "Caterina Feletti",
+        "Debasish Pattanayak",
+        "Gokarna Sharma"
+      ],
+      "keywords": [
+        "mobile robots",
+        "euclidean plane",
+        "pattern formation"
+      ],
+      "title": "Optimal Luminous UCF under Asynchrony",
+      "type": "journal",
+      "journal": {
+        "full": "Journal of Parallel and Distributed Computing",
+        "short": "J. Parallel Distrib. Comput."
+      },
+      "year": 2026,
+      "status": "Accepted",
+      "accepted_date": "2026-08-08",
+      "see_also": ["optimal-uniform-circle-formation-by-asynchronous-luminous-robots--2024-conference"],
+      "abstract": "We study the uniform circle formation (UCF) problem where n >= 3 autonomous mobile robots, initially arbitrarily positioned in the plane, have to arrange themselves equally spaced on the boundary of a circle not fixed in advance. Robots are anonymous, asynchronous, oblivious, and luminous: they execute Look-Compute-Move cycles asynchronously, cannot be distinguished by their appearance, have no memory of past actions, but possess a light that can assume colors from a constant-sized set C. The light color is visible to other robots and persists between cycles. It is known that UCF is impossible for such robots without lights or with only 1 color. Prior work showed UCF solvability with O(n) colors in O(n) epochs and with O(log n) colors in poly(n) epochs. We present an algorithm that solves UCF using O(1) colors (specifically, 4 colors) in O(n^2) epochs. This result is optimal in terms of colors, as UCF requires at least 2 colors. Our algorithm relies on carefully managing robot states using the constant number of colors to break symmetries and coordinate movements towards the final uniform circular configuration."
     }
   ],
   "talks": [
@@ -1608,6 +1640,12 @@
     }
   ],
   "teaching": [
+    {
+      "course": "CS637: Theory of Computation and Graph Theory",
+      "duration": "Jan-Apr 2026",
+      "institution": "IIT Indore",
+      "url": "https://drdebmath.github.io/IITIJan2026CS637"
+    },
     {
       "course": "CS103: Introduction to Programming",
       "duration": "July-Nov 2025",

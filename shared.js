@@ -816,15 +816,24 @@ export function getPrimarySiteLinks(data = {}) {
   const links = [
     { href: "index.html", label: "Home" },
     { href: "publications.html", label: "Publications" },
-    { href: "teaching.html", label: "Teaching" },
+  ];
+
+  const cs103 = [...(data.current_teaching || []), ...(data.teaching || [])].find(
+    (course) => /CS103/i.test(course.title || course.course || "")
+  );
+  if (cs103?.url) links.push({ href: cs103.url, label: "CS103" });
+
+  links.push(
     { href: "talks.html", label: "Talks" },
     { href: "timeline.html", label: "Timeline" },
-    { href: "for_students.html", label: "For Students" },
-  ];
+    { href: "for_students.html", label: "For Students" }
+  );
 
   if (data.about_me?.cv?.url) {
     links.push({ href: data.about_me.cv.url, label: "CV" });
   }
+
+  links.push({ href: "teaching.html", label: "Teaching" });
 
   return links;
 }

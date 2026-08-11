@@ -55,10 +55,6 @@ function initializeWebsite(data) {
 
 function getHomeQuickLinks(data) {
   const links = [];
-  const cs103 = [...(data.current_teaching || []), ...(data.teaching || [])].find(
-    (course) => /CS103/i.test(course.title || course.course || "")
-  );
-  if (cs103?.url) links.push({ href: cs103.url, label: "CS103" });
   if (data.about_me?.whiteboard?.url) {
     links.push({
       href: data.about_me.whiteboard.url,
@@ -970,7 +966,7 @@ function displayAsCard(item, groupBy, colors, cardIndex, groupIndex, yearLabel =
       ? "arXiv"
       : item.conference?.short || item.journal?.short || "";
   const awardBanner = hasAwardBanner ? renderPublicationAwardBadge(item.award) : "";
-  const toAppearBanner = !item.doi ? renderPublicationStatusBadge("To appear") : "";
+  const statusBanner = !item.doi ? renderPublicationStatusBadge("To appear") : "";
   const publicationLink = item.doi || item.url;
   const titleContent = publicationLink
     ? createLinkHtml({
@@ -1016,7 +1012,7 @@ function displayAsCard(item, groupBy, colors, cardIndex, groupIndex, yearLabel =
          data-card-index="${cardIndex}" data-group-index="${groupIndex}" data-publication-key="${pubKey}" ${interactiveAttributes}>
       ${yearFlag}
       ${awardBanner}
-      ${toAppearBanner}
+      ${statusBanner}
       <div class="flex flex-1 flex-col">
         <div>
           <p class="card-title text-md font-bold text-black dark:text-white">${titleContent}</p>
