@@ -1952,9 +1952,9 @@
       "title": "Pattern Formation by Robot Swarms",
       "description": "Universal pattern formation, dancing, and geometric arrangements by luminous and oblivious robots.",
       "selected_papers": [
+        "Optimal Luminous UCF under Asynchrony",
         "Universal Dancing by Luminous Robots Under Sequential Schedulers",
-        "Universal pattern formation by oblivious robots under sequential schedulers",
-        "Asynchronous Separation of Unconscious Colored Robots"
+        "Universal pattern formation by oblivious robots under sequential schedulers"
       ]
     },
     {

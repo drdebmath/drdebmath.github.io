@@ -826,26 +826,20 @@ function displayCV(cv) {
 function setupGroupingButtons() {
   const groupByTypeBtn = document.getElementById("group_by_type");
   const groupByYearBtn = document.getElementById("group_by_year");
-  const groupByTopicBtn = document.getElementById("group_by_topic");
 
-  if (!groupByTypeBtn || !groupByYearBtn || !groupByTopicBtn) return;
+  if (!groupByTypeBtn || !groupByYearBtn) return;
 
   groupByTypeBtn.addEventListener("click", () => {
     displayAllPublications(publications, "type");
-    setActiveButton(groupByTypeBtn, [groupByYearBtn, groupByTopicBtn]);
+    setActiveButton(groupByTypeBtn, [groupByYearBtn]);
   });
 
   groupByYearBtn.addEventListener("click", () => {
     displayAllPublications(publications, "year");
-    setActiveButton(groupByYearBtn, [groupByTypeBtn, groupByTopicBtn]);
+    setActiveButton(groupByYearBtn, [groupByTypeBtn]);
   });
 
-  groupByTopicBtn.addEventListener("click", () => {
-    displayAllPublications(publications, "topic");
-    setActiveButton(groupByTopicBtn, [groupByTypeBtn, groupByYearBtn]);
-  });
-
-  setActiveButton(groupByYearBtn, [groupByTypeBtn, groupByTopicBtn]);
+  setActiveButton(groupByYearBtn, [groupByTypeBtn]);
 }
 
 const GROUP_BTN_ACTIVE = ["bg-blue-600", "text-white"];
@@ -1181,6 +1175,70 @@ const colors = {
   preprint: "bg-gray-100 dark:bg-gray-900 border-gray-600",
 };
 
+function filterByActiveTopics(publications) {
+  return publications.filter((pub) =>
+    (pub.keywords || ["Other"]).some((keyword) => activeTopics.has(keyword))
+  );
+}
+
+function buildTopicFilter(publications, topics, groupBy) {
+  const wrapper = document.createElement("div");
+  wrapper.id = "keyword-filter-container";
+  wrapper.className =
+    "mb-8 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 p-4 shadow-inner";
+  wrapper.innerHTML = `
+    <div class="flex flex-wrap items-baseline justify-between gap-3 border-b border-gray-200 dark:border-gray-700 pb-3">
+      <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
+        Filter by topic
+      </p>
+      <div class="flex gap-4">
+        <button type="button" data-topic-action="all"
+          class="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline">Select all</button>
+        <button type="button" data-topic-action="none"
+          class="text-xs font-bold text-red-600 dark:text-red-400 hover:underline">Clear</button>
+      </div>
+    </div>
+    <div class="mt-3 flex flex-wrap gap-2">
+      ${topics
+        .map((topic) => {
+          const isActive = activeTopics.has(topic);
+          return `
+            <button type="button" data-topic="${escapeHtml(topic)}" aria-pressed="${isActive}"
+              class="rounded-full border px-3 py-1 text-xs font-semibold transition-all duration-200 ${
+                isActive
+                  ? "border-blue-600 bg-blue-600 text-white shadow-md"
+                  : "border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400"
+              }">${escapeHtml(topic)}</button>
+          `;
+        })
+        .join("")}
+    </div>
+  `;
+
+  wrapper.addEventListener("click", (event) => {
+    const button = event.target.closest("button");
+    if (!button) return;
+    // The filter sits inside the publications container, which opens abstracts on click.
+    event.stopPropagation();
+
+    const { topicAction, topic } = button.dataset;
+    if (topicAction === "all") {
+      topics.forEach((item) => activeTopics.add(item));
+    } else if (topicAction === "none") {
+      activeTopics.clear();
+    } else if (topic) {
+      if (activeTopics.has(topic)) activeTopics.delete(topic);
+      else activeTopics.add(topic);
+    } else {
+      return;
+    }
+
+    displayAllPublications(publications, groupBy);
+  });
+
+  return wrapper;
+}
+
 function displayAllPublications(publications, groupBy = "year") {
   currentFilterMode = groupBy;
   const container = document.getElementById("publications_list");
@@ -1188,117 +1246,56 @@ function displayAllPublications(publications, groupBy = "year") {
   container.innerHTML = "";
   container.className = "publications-container mt-4";
 
-  if (groupBy === "topic") {
-    const allTopics = new Set();
-    publications.forEach(pub => {
-      (pub.keywords || ["Other"]).forEach(k => allTopics.add(k));
+  const topics = [
+    ...new Set(publications.flatMap((pub) => pub.keywords || ["Other"])),
+  ].sort();
+
+  if (!topicsInitialized) {
+    topics.forEach((topic) => activeTopics.add(topic));
+    topicsInitialized = true;
+  }
+
+  container.appendChild(buildTopicFilter(publications, topics, groupBy));
+
+  const filtered = filterByActiveTopics(publications);
+
+  if (filtered.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "text-sm italic text-gray-500 dark:text-gray-400";
+    empty.textContent = "No publications match the selected topics.";
+    container.appendChild(empty);
+    return;
+  }
+
+  if (groupBy === "type") {
+    groupPublicationsByType(filtered).forEach((group, groupIndex) => {
+      const groupDiv = document.createElement("div");
+      groupDiv.className = "publication-group w-full mb-8";
+      groupDiv.setAttribute("data-group-index", groupIndex);
+      groupDiv.innerHTML = `
+        <h3 class="group-title text-xl font-bold mb-4 dark:text-white transition-colors duration-200">
+          ${group.type.charAt(0).toUpperCase() + group.type.slice(1).toLowerCase() + "s"}
+        </h3>
+        <div class="publication-cards flex flex-wrap gap-4 items-stretch">
+          ${group.publications.map((item, cardIndex) => displayAsCard(item, groupBy, colors, cardIndex, groupIndex)).join("")}
+        </div>
+      `;
+      container.appendChild(groupDiv);
     });
-
-    if (!topicsInitialized) {
-      allTopics.forEach(t => activeTopics.add(t));
-      topicsInitialized = true;
-    }
-
-    const filterContainer = document.createElement("div");
-    filterContainer.id = "keyword-filter-container";
-    filterContainer.className = "flex flex-wrap gap-2 mb-8 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-700 shadow-inner";
-
-    const helperText = document.createElement("p");
-    helperText.className = "w-full text-xs text-gray-500 dark:text-gray-400 mb-3 font-medium uppercase tracking-wider";
-    helperText.textContent = "Filter publications by topic:";
-    filterContainer.appendChild(helperText);
-
-    const topicsArr = Array.from(allTopics).sort();
-
-    const shortcutContainer = document.createElement("div");
-    shortcutContainer.className = "w-full flex gap-4 mb-4 pb-3 border-b border-gray-200 dark:border-gray-700";
-
-    const selectAllBtn = document.createElement("button");
-    selectAllBtn.className = "text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1";
-    selectAllBtn.innerHTML = `<svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" /></svg> Select All`;
-    selectAllBtn.onclick = () => {
-      topicsArr.forEach(t => activeTopics.add(t));
-      displayAllPublications(publications, "topic");
-    };
-
-    const deselectAllBtn = document.createElement("button");
-    deselectAllBtn.className = "text-xs font-bold text-red-600 dark:text-red-400 hover:underline flex items-center gap-1";
-    deselectAllBtn.innerHTML = `<svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12" /></svg> Deselect All`;
-    deselectAllBtn.onclick = () => {
-      activeTopics.clear();
-      displayAllPublications(publications, "topic");
-    };
-
-    shortcutContainer.appendChild(selectAllBtn);
-    shortcutContainer.appendChild(deselectAllBtn);
-    filterContainer.appendChild(shortcutContainer);
-
-    topicsArr.forEach(topic => {
-      const btn = document.createElement("button");
-      const isActive = activeTopics.has(topic);
-      btn.className = `px-3 py-1 rounded-full text-xs font-semibold transition-all duration-200 border ${isActive
-        ? "bg-blue-600 text-white border-blue-600 shadow-md"
-        : "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-300 dark:border-gray-600"
-        }`;
-      btn.textContent = topic;
-      btn.setAttribute("aria-pressed", String(isActive));
-
-      btn.onclick = () => {
-        if (activeTopics.has(topic)) {
-          activeTopics.delete(topic);
-        } else {
-          activeTopics.add(topic);
-        }
-        displayAllPublications(publications, "topic");
-      };
-      filterContainer.appendChild(btn);
-    });
-    container.appendChild(filterContainer);
-
-    const filteredPubs = publications.filter(pub => {
-      const pubKeywords = pub.keywords || ["Other"];
-      return pubKeywords.some(k => activeTopics.has(k));
-    });
-
+  } else {
     const cardContainer = document.createElement("div");
     cardContainer.className = "flex flex-wrap gap-4 items-stretch";
-    filteredPubs.forEach((item, index) => {
-      cardContainer.innerHTML += displayAsCard(item, groupBy, colors, index, 0);
+    groupPublicationsByYear(filtered).forEach((group, groupIndex) => {
+      group.publications.forEach((item, cardIndex) => {
+        const yearLabel = cardIndex === 0 ? group.year : null;
+        cardContainer.innerHTML += displayAsCard(item, groupBy, colors, cardIndex, groupIndex, yearLabel);
+      });
     });
     container.appendChild(cardContainer);
-  } else {
-    const groupFunction = groupBy === "type" ? groupPublicationsByType : groupPublicationsByYear;
-    const groupedPublications = groupFunction(publications);
-
-    if (groupBy === "year") {
-      const cardContainer = document.createElement("div");
-      cardContainer.className = "flex flex-wrap gap-4 items-stretch";
-      groupedPublications.forEach((group, groupIndex) => {
-        group.publications.forEach((item, cardIndex) => {
-          const yearLabel = cardIndex === 0 ? group.year : null;
-          cardContainer.innerHTML += displayAsCard(item, groupBy, colors, cardIndex, groupIndex, yearLabel);
-        });
-      });
-      container.appendChild(cardContainer);
-    } else {
-      groupedPublications.forEach((group, groupIndex) => {
-        const groupDiv = document.createElement("div");
-        groupDiv.className = "publication-group w-full mb-8";
-        groupDiv.setAttribute("data-group-index", groupIndex);
-        groupDiv.innerHTML = `
-          <h3 class="group-title text-xl font-bold mb-4 dark:text-white transition-colors duration-200">
-            ${group.type.charAt(0).toUpperCase() + group.type.slice(1).toLowerCase() + "s"}
-          </h3>
-          <div class="publication-cards flex flex-wrap gap-4 items-stretch">  
-            ${group.publications.map((item, cardIndex) => displayAsCard(item, groupBy, colors, cardIndex, groupIndex)).join("")}
-          </div>
-        `;
-        container.appendChild(groupDiv);
-      });
-    }
   }
+
   setupPublicationClickHandlers(container, publications, groupBy);
-  // Re-apply deep link after re-render (year/type/topic switch)
+  // Re-apply deep link after re-render (year/type switch, topic filter change)
   requestAnimationFrame(() => focusPublicationFromUrl());
 }
 
@@ -1357,17 +1354,9 @@ function setupPublicationClickHandlers(container, allPublications, groupBy) {
     const cardIndex = parseInt(card.getAttribute("data-card-index"), 10);
     const groupIndex = parseInt(card.getAttribute("data-group-index"), 10);
 
-    if (groupBy === "topic") {
-      const filteredPubs = allPublications.filter((p) => {
-        const pKeywords = p.keywords || ["Other"];
-        return pKeywords.some((k) => activeTopics.has(k));
-      });
-      return { pub: filteredPubs[cardIndex], cardIndex, groupIndex };
-    }
-
     const groupFunction =
       groupBy === "type" ? groupPublicationsByType : groupPublicationsByYear;
-    const grouped = groupFunction(allPublications);
+    const grouped = groupFunction(filterByActiveTopics(allPublications));
     return {
       pub: grouped[groupIndex]?.publications[cardIndex],
       cardIndex,
