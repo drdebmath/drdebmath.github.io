@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>The Ski Rental Problem Visualization</title>
+<meta name="description" content="Interactive ski rental problem: rent-vs-buy strategies against the offline optimum, with per-day costs and the 2 - 1/B competitive ratio."/>
+<style>
+  :root {
+    --ink: #0f172a; --muted: #64748b; --line: #e2e8f0; --panel: #fff; --bg: #f1f5f9;
+    --eager: #e11d48; --even: #2563eb; --rent: #d97706; --opt: #059669;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--ink); margin: 0; padding: 1.25rem 1rem 2rem; }
+  .wrap { max-width: 900px; margin: auto; }
+  a.back { font-size: 12.5px; color: var(--even); text-decoration: none; }
+  a.back:hover { text-decoration: underline; }
+  h1 { font-size: 1.6rem; font-weight: 650; letter-spacing: -.02em; margin: .35rem 0 .4rem; }
+  .lede { font-size: 13.5px; line-height: 1.6; color: #334155; margin: 0 0 .9rem; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: .7rem .85rem; margin-bottom: .7rem; }
+  .panel > h2 { font-size: 11px; text-transform: uppercase; letter-spacing: .09em; color: var(--muted); margin: 0 0 .5rem; font-weight: 600; }
+
+  .explain { display: grid; gap: .55rem; font-size: 13px; line-height: 1.55; color: #334155; }
+  .formula { font: 15px/1.4 ui-monospace, 'Consolas', monospace; background: #f8fafc; border: 1px solid var(--line);
+             border-radius: 8px; padding: .55rem .7rem; text-align: center; color: var(--ink); }
+  .formula b { font-weight: 700; }
+  .facts { display: flex; flex-wrap: wrap; gap: .4rem; }
+  .fact { font-size: 12px; border: 1px solid var(--line); border-radius: 999px; padding: .22rem .6rem; background: #f8fafc; }
+  .fact b { font-variant-numeric: tabular-nums; }
+
+  .controls { display: flex; gap: .4rem; align-items: center; flex-wrap: wrap; font-size: 13px; }
+  button { font: inherit; padding: .34rem .6rem; border: 1px solid #cbd5e1; border-radius: 7px; background: #fff; color: var(--ink); cursor: pointer; }
+  button:hover:not(:disabled) { background: #f8fafc; border-color: #94a3b8; }
+  button:disabled { opacity: .4; cursor: not-allowed; }
+  button.primary { background: var(--ink); border-color: var(--ink); color: #fff; }
+  button.primary:hover:not(:disabled) { background: #1e293b; }
+  .sep { width: 1px; align-self: stretch; background: var(--line); margin: 0 .2rem; }
+  input[type=range] { width: 100px; vertical-align: middle; }
+  .controls label { color: var(--muted); display: inline-flex; align-items: center; gap: .3rem; }
+  .controls b { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+  svg { display: block; width: 100%; height: auto; }
+  #viz { cursor: pointer; }
+  .mark { transition: opacity .3s ease; }
+  .hint { font-size: 11.5px; color: var(--muted); margin-top: .35rem; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: .5rem; }
+  .card { border: 1px solid var(--line); border-left: 3px solid var(--c); border-radius: 8px; padding: .5rem .6rem; background: #fff; }
+  .card .name { font-size: 12px; font-weight: 650; color: var(--c); }
+  .card .sub { font-size: 10.5px; color: var(--muted); margin-top: 1px; }
+  .nums { display: flex; align-items: baseline; gap: .5rem; margin-top: .35rem; font-variant-numeric: tabular-nums; }
+  .total { font-size: 22px; font-weight: 650; line-height: 1; }
+  .delta { font: 12px/1 ui-monospace, monospace; color: var(--muted); }
+  .delta.up { color: var(--c); font-weight: 700; }
+  .ratio { margin-left: auto; font: 12px/1 ui-monospace, monospace; color: var(--muted); }
+  .ratio.bad { color: var(--eager); font-weight: 700; }
+  .move { font: 10.5px/1.3 ui-monospace, monospace; color: var(--muted); margin-top: .3rem; min-height: 1.3em;
+          white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .foot { font-size: 12.5px; line-height: 1.6; color: #475569; }
+  .foot p { margin: 0 0 .45rem; }
+  .foot p:last-child { margin: 0; }
+  .foot b { color: var(--ink); }
+  code { font: 12px ui-monospace, monospace; background: #f1f5f9; padding: 1px 4px; border-radius: 4px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">← All visualizations</a>
+  <h1>The Ski Rental Problem</h1>
+  <p class="lede">
+    You are skiing for an unknown number of days. Each morning you either rent skis for <b>1</b>, or buy a pair for
+    <b>B</b> and ski free forever after. Every evening the season might end — and nobody tells you in advance. Rent too
+    long and you overpay; buy too early and the season ends tomorrow. How much does not knowing the future cost you?
+  </p>
+
+  <div class="panel">
+    <h2>Competitive ratio</h2>
+    <div class="explain">
+      <div>An online algorithm <code>ALG</code> is <b>c-competitive</b> if, on every input σ, it stays within a factor
+        <code>c</code> of what a clairvoyant offline optimum would have paid:</div>
+      <div class="formula">ALG(σ) &nbsp;≤&nbsp; <b>c</b> · OPT(σ) &nbsp;+&nbsp; b</div>
+      <div>Here σ is the true season length <code>d</code>, and the optimum in hindsight is trivial:
+        <code>OPT(d) = min(d, B)</code> — rent all season if it is short, buy on day 1 if it is long. The whole
+        difficulty is that <code>d</code> is revealed only as it happens.</div>
+      <div class="facts">
+        <span class="fact" style="border-color:#bfdbfe;background:#eff6ff">Rent, then buy on day B: <b>c = 2 − 1/B</b>, optimal</span>
+        <span class="fact">No deterministic algorithm beats it</span>
+        <span class="fact">Randomized: <b>c = e/(e−1) ≈ 1.58</b></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="controls">
+      <label>buy price B <input id="B" type="range" min="3" max="20" value="10"> <b id="Bval">10</b></label>
+      <span class="sep"></span>
+      <button id="play" class="primary">▶ Play</button>
+      <button id="pause">Pause</button>
+      <button id="step">Next day ›</button>
+      <button id="reset">↻</button>
+      <label>speed <input id="speed" type="range" min="120" max="1200" value="450"></label>
+      <span id="progress" style="margin-left:auto;font:12px ui-monospace,monospace;color:var(--muted)">day 0</span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <svg id="viz" viewBox="0 0 720 232"></svg>
+    <div class="hint">Click a day to jump to it · ▪ rented (+1) · ◆ bought (+B) · ▫ already owned (+0)</div>
+  </div>
+
+  <div class="cards" id="cards"></div>
+
+  <div class="panel" style="margin-top:.7rem">
+    <h2>Cumulative cost if the season ends on day <span id="dayEcho" style="color:var(--ink)">0</span></h2>
+    <svg id="chart" viewBox="0 0 720 158"></svg>
+  </div>
+
+  <div class="panel">
+    <h2>Worst-case ratio for “rent, then buy on day j”</h2>
+    <svg id="vcurve" viewBox="0 0 720 168"></svg>
+    <div class="hint">Every deterministic strategy is “buy on day j” for some j. Buying too early risks paying B for a
+      one-day season; buying too late means renting past the point where owning was cheaper. The two risks balance
+      exactly at j = B.</div>
+  </div>
+
+  <div class="panel foot">
+    <p><b>Why 2 − 1/B.</b> Rent on days 1…B−1, buy on day B. If the season ends before day B you paid exactly what OPT
+      paid — ratio 1. Otherwise you paid <code>(B−1) + B = 2B−1</code> while OPT paid <code>B</code>, giving
+      <code>(2B−1)/B = 2 − 1/B</code>. The worst case lands precisely on day B: one day earlier and the extra rental
+      day has not happened yet, one day later and OPT stops growing while you have already stopped paying.</p>
+    <p><b>Nothing deterministic does better.</b> An adversary that ends the season the moment you buy forces the ratio
+      above; the curve shows every other buy-day j is worse. Randomizing the buy day defeats that adversary — it can no
+      longer aim at a day it cannot predict — and brings the expected ratio down to <code>e/(e−1) ≈ 1.58</code>.</p>
+    <p><b>OPT</b> here is the optimum for a season ending <em>today</em>, i.e. <code>min(day, B)</code>, so the ratio
+      shown at each step is the honest one. Ski rental is the seed of a whole family — TCP acknowledgement delay,
+      snoopy caching, spinning-vs-blocking locks are all rent-or-buy in disguise.</p>
+  </div>
+</div>
+
+<script>
+const X0 = 40, X1 = 700, YAX = 190;
+const ALGOS = [
+  { id: 'eager', name: 'Buy on day 1', sub: 'own immediately', color: '#e11d48' },
+  { id: 'even', name: 'Break-even', sub: 'rent, then buy on day B', color: '#2563eb' },
+  { id: 'rent', name: 'Rent forever', sub: 'never buy', color: '#d97706' },
+  { id: 'opt', name: 'OPT (hindsight)', sub: 'best plan for a season ending today', color: '#059669' }
+];
+const rowY = i => 34 + i * 42;
+
+// Every deterministic strategy is "rent until day j, then buy". j = Infinity never buys.
+function run(j, D, B) {
+  const out = [{ cost: 0, paid: 0, act: '' }];
+  let total = 0;
+  for (let d = 1; d <= D; d++) {
+    const paid = d < j ? 1 : d === j ? B : 0;
+    total += paid;
+    out.push({ cost: total, paid, act: d < j ? 'rent' : d === j ? 'buy' : 'own' });
+  }
+  return out;
+}
+// OPT(d) = min(d, B): the cost envelope, paying 1 a day until owning would have been cheaper.
+function runOPT(D, B) {
+  const out = [{ cost: 0, paid: 0, act: '' }];
+  for (let d = 1; d <= D; d++) out.push({ cost: Math.min(d, B), paid: d <= B ? 1 : 0, act: d <= B ? 'rent' : 'own' });
+  return out;
+}
+// Worst case over all season lengths for buy-day j, against OPT = min(d, B).
+function worstRatio(j, B) {
+  return j <= B ? (j - 1 + B) / j : (j - 1 + B) / B;
+}
+
+// --- state ---
+let B = 10, D = 24, runs = {}, day = 0, timer = null, speed = 450;
+const $ = id => document.getElementById(id);
+const x = d => X0 + (d - 0.5) * (X1 - X0) / D;
+
+function recompute() {
+  D = Math.min(40, Math.max(12, 2 * B + 4));
+  runs = { eager: run(1, D, B), even: run(B, D, B), rent: run(Infinity, D, B), opt: runOPT(D, B) };
+  day = Math.min(day, D);
+  buildViz(); buildCards(); buildChart(); buildCurve(); render();
+}
+
+// --- static scaffolding ---
+function buildViz() {
+  const slot = (X1 - X0) / D;
+  let s = `<line x1="${x(B)}" y1="16" x2="${x(B)}" y2="${YAX}" stroke="#cbd5e1" stroke-dasharray="2 3"/>
+           <text x="${x(B)}" y="12" font-size="10" fill="#94a3b8" text-anchor="middle">day B</text>`;
+  s += `<g id="cursor" transform="translate(${x(1)},0)" opacity="0">
+          <line y1="16" y2="${YAX - 3}" stroke="#0f172a" stroke-width="1.5" stroke-dasharray="3 4" opacity=".4"/>
+          <circle cy="${YAX - 3}" r="3" fill="#0f172a"/>
+        </g>`;
+  ALGOS.forEach((a, i) => {
+    const y = rowY(i);
+    s += `<line x1="${X0}" y1="${y}" x2="${X1}" y2="${y}" stroke="#f1f5f9" stroke-width="14" stroke-linecap="round"/>
+          <text x="${X0}" y="${y - 13}" font-size="11.5" font-weight="600" fill="${a.color}">${a.name}</text>`;
+    for (let d = 1; d <= D; d++) {
+      const act = runs[a.id][d].act, w = Math.min(slot * 0.52, 7);
+      const shape = act === 'buy'
+        ? `<path d="M0,${y - w - 2} L${w + 2},${y} L0,${y + w + 2} L${-w - 2},${y} Z" fill="${a.color}"/>`
+        : act === 'rent'
+          ? `<rect x="${-w}" y="${y - w}" width="${2 * w}" height="${2 * w}" rx="1.5" fill="${a.color}"/>`
+          : `<rect x="${-w + 1}" y="${y - w + 1}" width="${2 * w - 2}" height="${2 * w - 2}" rx="1.5" fill="none" stroke="${a.color}" stroke-width="1.2"/>`;
+      s += `<g class="mark" id="m-${a.id}-${d}" transform="translate(${x(d)},0)" opacity=".12">${shape}</g>`;
+    }
+  });
+  s += `<line x1="${X0}" y1="${YAX}" x2="${X1}" y2="${YAX}" stroke="#cbd5e1"/>`;
+  const every = D > 20 ? 5 : 2;
+  for (let d = 1; d <= D; d++) {
+    const tick = d === 1 || d === B || d % every === 0;
+    s += `<line x1="${x(d)}" y1="${YAX}" x2="${x(d)}" y2="${YAX + (tick ? 5 : 3)}" stroke="#cbd5e1"/>`;
+    if (tick) s += `<text x="${x(d)}" y="${YAX + 17}" font-size="10" fill="#94a3b8" text-anchor="middle">${d}</text>`;
+  }
+  s += `<text x="${X0}" y="${YAX + 30}" font-size="10.5" fill="#94a3b8">day of the season →</text>`;
+  $('viz').innerHTML = s;
+}
+
+function buildCards() {
+  $('cards').innerHTML = ALGOS.map(a => `
+    <div class="card" style="--c:${a.color}">
+      <div class="name">${a.name}</div>
+      <div class="sub">${a.sub}</div>
+      <div class="nums">
+        <span class="total" id="tot-${a.id}">0</span>
+        <span class="delta" id="del-${a.id}"></span>
+        <span class="ratio" id="rat-${a.id}">—</span>
+      </div>
+      <div class="move" id="mov-${a.id}">&nbsp;</div>
+    </div>`).join('');
+}
+
+const CH = { x0: 44, x1: 700, y0: 18, y1: 118 };
+const chartMax = () => Math.max(1, ...ALGOS.map(a => runs[a.id][D].cost));
+function chartPoints(id, upto) {
+  const max = chartMax();
+  return runs[id].slice(0, upto + 1).map((f, d) =>
+    `${CH.x0 + d / D * (CH.x1 - CH.x0)},${CH.y1 - f.cost / max * (CH.y1 - CH.y0)}`).join(' ');
+}
+function buildChart() {
+  const max = chartMax();
+  let s = `<line x1="${CH.x0}" y1="${CH.y1}" x2="${CH.x1}" y2="${CH.y1}" stroke="#cbd5e1"/>
+           <line x1="${CH.x0}" y1="${CH.y0}" x2="${CH.x1}" y2="${CH.y0}" stroke="#f1f5f9"/>
+           <text x="${CH.x0 - 8}" y="${CH.y1 + 4}" font-size="10.5" fill="#94a3b8" text-anchor="end">0</text>
+           <text x="${CH.x0 - 8}" y="${CH.y0 + 4}" font-size="10.5" fill="#94a3b8" text-anchor="end">${max}</text>
+           <text x="${CH.x0}" y="${CH.y1 + 18}" font-size="10.5" fill="#94a3b8">day 0</text>
+           <text x="${CH.x1}" y="${CH.y1 + 18}" font-size="10.5" fill="#94a3b8" text-anchor="end">${D}</text>
+           <line id="chmark" x1="${CH.x0}" y1="${CH.y0 - 6}" x2="${CH.x0}" y2="${CH.y1}" stroke="#0f172a" stroke-width="1" opacity=".25"/>`;
+  s += ALGOS.map(a => `
+    <polyline fill="none" stroke="${a.color}" stroke-width="1.5" opacity=".2" points="${chartPoints(a.id, D)}"/>
+    <polyline fill="none" stroke="${a.color}" stroke-width="2.5" stroke-linejoin="round" id="ch-${a.id}" points=""/>`).join('');
+  s += ALGOS.map((a, i) => `<text x="${CH.x0 + 4 + i * 138}" y="${CH.y1 + 34}" font-size="10.5" fill="${a.color}" font-weight="600">— ${a.name}</text>`).join('');
+  $('chart').innerHTML = s;
+}
+
+// V-shaped curve: worst-case ratio as a function of the buy day, minimised at j = B.
+function buildCurve() {
+  const JX0 = 44, JX1 = 700, JY0 = 22, JY1 = 118, JMAX = 2 * B, YMAX = 4, best = worstRatio(B, B);
+  const px = j => JX0 + (j - 1) / (JMAX - 1) * (JX1 - JX0);
+  const py = r => JY1 - (Math.min(r, YMAX) - 1) / (YMAX - 1) * (JY1 - JY0);
+  let s = '';
+  for (const [r, label] of [[1, '1'], [2, '2'], [YMAX, `${YMAX}+`]]) {
+    s += `<line x1="${JX0}" y1="${py(r)}" x2="${JX1}" y2="${py(r)}" stroke="${r === 2 ? '#e2e8f0' : '#f1f5f9'}" ${r === 2 ? 'stroke-dasharray="4 4"' : ''}/>
+          <text x="${JX0 - 8}" y="${py(r) + 4}" font-size="10.5" fill="#94a3b8" text-anchor="end">${label}</text>`;
+  }
+  const pts = [];
+  for (let j = 1; j <= JMAX; j++) pts.push(`${px(j)},${py(worstRatio(j, B))}`);
+  s += `<polyline fill="none" stroke="#7c3aed" stroke-width="2.5" stroke-linejoin="round" points="${pts.join(' ')}"/>`;
+  s += `<line x1="${px(B)}" y1="${py(best)}" x2="${px(B)}" y2="${JY1}" stroke="#7c3aed" stroke-dasharray="2 3" opacity=".5"/>
+        <circle cx="${px(B)}" cy="${py(best)}" r="4" fill="#7c3aed"/>
+        <text x="${px(B)}" y="${py(best) - 10}" font-size="11" font-weight="700" fill="#7c3aed" text-anchor="middle">${best.toFixed(2)} at j = B</text>`;
+  s += `<line x1="${JX0}" y1="${JY1}" x2="${JX1}" y2="${JY1}" stroke="#cbd5e1"/>
+        <text x="${JX0}" y="${JY1 + 18}" font-size="10.5" fill="#94a3b8">buy on day 1</text>
+        <text x="${JX1}" y="${JY1 + 18}" font-size="10.5" fill="#94a3b8" text-anchor="end">day ${JMAX}</text>
+        <text x="${JX0}" y="${JY1 + 34}" font-size="10.5" fill="#94a3b8">worst-case ratio over all season lengths</text>`;
+  $('vcurve').innerHTML = s;
+}
+
+// --- per-frame updates ---
+function render() {
+  const optCost = runs.opt[day].cost;
+  const cursor = $('cursor');
+  cursor.setAttribute('opacity', day === 0 ? '0' : '1');
+  if (day > 0) cursor.setAttribute('transform', `translate(${x(day)},0)`);
+
+  for (const a of ALGOS) {
+    const f = runs[a.id][day];
+    for (let d = 1; d <= D; d++) $(`m-${a.id}-${d}`).setAttribute('opacity', d <= day ? '1' : '.12');
+
+    $(`tot-${a.id}`).textContent = f.cost;
+    $(`del-${a.id}`).textContent = day === 0 ? '' : `+${f.paid} today`;
+    $(`del-${a.id}`).className = 'delta' + (f.paid > 0 ? ' up' : '');
+
+    let peak = 0;
+    for (let d = 1; d <= day; d++) peak = Math.max(peak, runs[a.id][d].cost / runs.opt[d].cost);
+    const el = $(`rat-${a.id}`);
+    el.textContent = a.id === 'opt' ? 'optimum' : optCost === 0 ? '—' : `${(f.cost / optCost).toFixed(2)}× OPT`;
+    el.className = 'ratio' + (a.id !== 'opt' && f.cost / optCost > 2 ? ' bad' : '');
+
+    const act = { rent: 'rented', buy: `bought for ${B}`, own: 'own skis' }[f.act] || ' ';
+    $(`mov-${a.id}`).textContent = day === 0 ? ' '
+      : a.id === 'opt' ? act : `${act} · worst ${peak.toFixed(2)}×`;
+
+    $(`ch-${a.id}`).setAttribute('points', chartPoints(a.id, day));
+  }
+  const cx = CH.x0 + day / D * (CH.x1 - CH.x0);
+  $('chmark').setAttribute('x1', cx); $('chmark').setAttribute('x2', cx);
+  $('progress').textContent = day === 0 ? 'day 0' : `day ${day} / ${D}`;
+  $('dayEcho').textContent = day;
+  $('step').disabled = day >= D;
+  $('play').disabled = day >= D;
+}
+
+// --- controls ---
+function pause() { clearInterval(timer); timer = null; }
+function stepOnce() { if (day < D) { day++; render(); } else pause(); }
+
+$('viz').onclick = e => {
+  const box = e.currentTarget.getBoundingClientRect();
+  const vx = (e.clientX - box.left) / box.width * 720;
+  const target = Math.round((vx - X0) / ((X1 - X0) / D) + 0.5);
+  if (target >= 0 && target <= D) { pause(); day = target; render(); }
+};
+$('B').oninput = e => { pause(); B = +e.target.value; $('Bval').textContent = B; day = 0; recompute(); };
+$('play').onclick = () => { if (!timer && day < D) timer = setInterval(stepOnce, speed); };
+$('pause').onclick = pause;
+$('step').onclick = () => { pause(); stepOnce(); };
+$('reset').onclick = () => { pause(); day = 0; render(); };
+$('speed').oninput = e => { speed = +e.target.value; if (timer) { pause(); timer = setInterval(stepOnce, speed); } };
+
+recompute();
+
+// ponytail: self-check — runs on load, cheap enough to keep honest.
+(function selfCheck() {
+  const b = 10, d = 30;
+  const even = run(b, d, b), eager = run(1, d, b), rent = run(Infinity, d, b), opt = runOPT(d, b);
+  console.assert(even[b - 1].cost === b - 1 && even[b].cost === 2 * b - 1, 'break-even pays 2B-1 the day it buys', even[b].cost);
+  console.assert(even[d].cost === 2 * b - 1, 'and nothing after', even[d].cost);
+  console.assert(eager[1].cost === b && eager[d].cost === b, 'eager pays B once', eager[d].cost);
+  console.assert(rent[d].cost === d, 'renting forever pays a day at a time');
+  console.assert(opt[d].cost === Math.min(d, b) && opt[3].cost === 3, 'OPT(d) = min(d, B)');
+
+  // the peak ratio of break-even lands exactly on day B, at 2 - 1/B
+  const ratios = Array.from({ length: d }, (_, i) => even[i + 1].cost / opt[i + 1].cost);
+  const peak = Math.max(...ratios);
+  console.assert(Math.abs(peak - (2 - 1 / b)) < 1e-9, 'break-even peaks at 2 - 1/B', peak);
+  console.assert(ratios.indexOf(peak) === b - 1, 'and it peaks on day B', ratios.indexOf(peak) + 1);
+
+  // no other buy day has a better worst case
+  console.assert(Math.abs(worstRatio(b, b) - (2 - 1 / b)) < 1e-9, 'worstRatio agrees at j = B');
+  for (let j = 1; j <= 3 * b; j++) console.assert(worstRatio(j, b) >= worstRatio(b, b) - 1e-9, 'j = B minimises the worst case', j);
+  console.assert(worstRatio(1, b) === b, 'buying on day 1 is B-competitive at worst');
+})();
+</script>
+</body>
+</html>
