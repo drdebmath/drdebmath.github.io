@@ -8,6 +8,7 @@ import {
   publicationKey,
   renderAwardsList,
   renderGrantsList,
+  renderOutreachCredit,
   renderProfileHeader,
   renderSimulatorCardsHtml,
   renderSiteFooter,
@@ -144,6 +145,7 @@ function setupContentDisplay(data) {
   });
   displaySectionContent("awards_content", displayAwards, data.awards);
   displaySectionContent("grants_content", displayGrants, data.grants);
+  displaySectionContent("outreach_content", displayOutreach, data.community_services?.social);
   displaySectionContent("visualizations_content", displayVisualizations, data.visualizations);
 }
 
@@ -1639,9 +1641,45 @@ function displayTalks(talks) {
 function displayAwards(awards) {
   const container = document.getElementById("awards_content");
   if (container)
-    container.innerHTML = renderAwardsList(awards || [], {
+    container.innerHTML = renderAwardsList((awards || []).slice(0, 3), {
       containerClass: "flex flex-col gap-3 list-none p-0 m-0",
     });
+}
+
+function displayOutreach(social) {
+  const container = document.getElementById("outreach_content");
+  if (!container) return;
+
+  container.innerHTML = social
+    .map(
+      (item) => `
+        <article class="surface-card-hover h-full p-4 !rounded-xl">
+          <p>
+            ${createLinkHtml({
+              url: item.url,
+              label: item.title,
+              className:
+                "text-base font-semibold text-blue-700 dark:text-blue-300 hover:underline transition-colors duration-200",
+            })}
+            ${
+              item.role
+                ? `<span class="ml-2 inline-flex items-center rounded-full bg-rose-100 dark:bg-rose-900/50 px-2 py-0.5 text-xs font-semibold text-rose-800 dark:text-rose-200">${escapeHtml(
+                    item.role
+                  )}</span>`
+                : ""
+            }
+          </p>
+          <p class="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-300">${escapeHtml(
+            item.description || ""
+          )}</p>
+          ${renderOutreachCredit(
+            item,
+            "mt-2 text-sm text-gray-600 dark:text-gray-300"
+          )}
+        </article>
+      `
+    )
+    .join("");
 }
 
 function displayGrants(grants) {

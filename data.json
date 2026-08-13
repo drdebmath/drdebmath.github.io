@@ -267,6 +267,11 @@
       }
     },
     {
+      "date": "1 August 2026",
+      "title": "Launched Project Pankhuri, a learning and enrichment initiative for students of Classes 6-8 from tribal and rural communities.",
+      "url": "https://projectpankhuri.github.io"
+    },
+    {
       "date": "1 July 2026",
       "title": "Full version of Asynchronous Dispersion with Optimal Time Complexity accepted to ICPP 2026.",
       "url": "http://arxiv.org/abs/2507.01298"
@@ -1755,6 +1760,24 @@
     },
     "organizing_committee": [
       "13th International Conference and Workshop on Algorithms and Computation (WALCOM), 2019"
+    ],
+    "social": [
+      {
+        "title": "Project Pankhuri",
+        "role": "Coordinator",
+        "url": "https://projectpankhuri.github.io",
+        "description": "Alongside my academic work, I help run Project Pankhuri, a small learning and enrichment initiative for students of Classes 6-8 from tribal and rural communities. We create spaces where they can learn with curiosity, ask questions freely, explore new ideas, and experience the joy of learning. Pankhuri is our small effort to ensure that a child's background does not define the opportunities they have to learn, explore, dream, and grow.",
+        "founder": {
+          "name": "Dr. Lawqueen Kanesh",
+          "url": "https://sites.google.com/view/lawqueenkanesh/home"
+        },
+        "collaborators": [
+          {
+            "name": "Dr. Subhra Mazumdar",
+            "url": "https://sites.google.com/site/subhramazumdar1993/home"
+          }
+        ]
+      }
     ]
   },
   "administrative_responsibilities": [

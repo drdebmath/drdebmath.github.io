@@ -258,6 +258,33 @@ export function getContactInfo(data) {
   };
 }
 
+export function renderOutreachCredit(item, className = "") {
+  const link = (person) =>
+    createLinkHtml({
+      url: person.url,
+      label: person.name,
+      className: "text-blue-600 dark:text-blue-400 hover:underline",
+    });
+
+  const parts = [];
+  if (item.founder) parts.push(`Started by ${link(item.founder)}.`);
+  if (item.collaborators?.length) {
+    parts.push(`Coordinated with ${item.collaborators.map(link).join(", ")}.`);
+  }
+
+  return parts.length ? `<p class="${className}">${parts.join(" ")}</p>` : "";
+}
+
+// ponytail: pages that build their sections after fetch miss the browser's
+// own hash scroll — re-run it once the markup exists.
+export function scrollToHash() {
+  if (!location.hash) return;
+  const target = document.getElementById(
+    decodeURIComponent(location.hash.slice(1))
+  );
+  if (target) requestAnimationFrame(() => target.scrollIntoView());
+}
+
 export function renderSiteFooter(data, containerId = "site_footer") {
   const container = document.getElementById(containerId);
   if (!container) return;
@@ -333,6 +360,17 @@ export function renderSiteFooter(data, containerId = "site_footer") {
             <li><a class="hover:underline" href="teaching.html">Teaching</a></li>
             <li><a class="hover:underline" href="talks.html">Talks</a></li>
             <li><a class="hover:underline" href="timeline.html">Timeline</a></li>
+            ${(data?.community_services?.social || [])
+              .map(
+                (item) => `
+                  <li>${createLinkHtml({
+                    url: item.url,
+                    label: item.title,
+                    className: "hover:underline",
+                  })}</li>
+                `
+              )
+              .join("")}
             ${
               about.whiteboard?.url
                 ? `<li>${createLinkHtml({

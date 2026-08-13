@@ -6,8 +6,10 @@ import {
   linkifyBiographyHtml,
   renderAwardsList,
   renderGrantsList,
+  renderOutreachCredit,
   renderProfileHeader,
   renderSiteFooter,
+  scrollToHash,
   setupDarkMode,
   setupGoToTopButton,
   setupPrimaryNav,
@@ -124,7 +126,7 @@ function initializeCVPage(data) {
       </div>
     </section>
 
-    <section class="surface-panel">
+    <section id="service" class="surface-panel">
       <div class="panel-header"><h2 class="section-heading">Service</h2></div>
       <div class="panel-body">
       ${renderServiceSection(
@@ -134,7 +136,7 @@ function initializeCVPage(data) {
       </div>
     </section>
 
-    <section class="surface-panel">
+    <section id="awards" class="surface-panel">
       <div class="panel-header"><h2 class="section-heading">Awards</h2></div>
       <div class="panel-body">
       ${renderAwardsList(data.awards || [], {
@@ -166,6 +168,8 @@ function initializeCVPage(data) {
       </div>
     </section>
   `;
+
+  scrollToHash();
 }
 
 function renderSkillChips(items) {
@@ -444,7 +448,32 @@ function renderServiceItems(items, emptyLabel = "None listed.") {
         .map(
           (item) => `
             <li class="py-2.5 first:pt-0 last:pb-0 text-sm leading-6 text-gray-700 dark:text-gray-200">
-              ${escapeHtml(item)}
+              ${
+                // ponytail: string items stay plain; objects get a linked title + blurb
+                typeof item === "string"
+                  ? escapeHtml(item)
+                  : `${createLinkHtml({
+                      url: item.url,
+                      label: item.title,
+                      className:
+                        "font-medium text-blue-600 dark:text-blue-400 hover:underline",
+                    })}${
+                      item.role
+                        ? ` <span class="text-xs text-gray-500 dark:text-gray-400">— ${escapeHtml(
+                            item.role
+                          )}</span>`
+                        : ""
+                    }${
+                      item.description
+                        ? `<p class="mt-1 text-xs text-gray-600 dark:text-gray-400">${escapeHtml(
+                            item.description
+                          )}</p>`
+                        : ""
+                    }${renderOutreachCredit(
+                      item,
+                      "mt-1 text-xs text-gray-600 dark:text-gray-400"
+                    )}`
+              }
             </li>
           `
         )
@@ -476,6 +505,7 @@ function renderServiceSection(administrative, community) {
   const reviewerConferences = community.reviewer_for?.conferences || [];
   const pcMember = community.pc_member_for || [];
   const organizing = community.organizing_committee || [];
+  const social = community.social || [];
 
   return `
     <div class="space-y-6">
@@ -500,6 +530,13 @@ function renderServiceSection(administrative, community) {
           "bg-emerald-50 dark:bg-emerald-950/30"
         )}
       </div>
+
+      ${renderServiceColumn(
+        "Social",
+        social.length,
+        social,
+        "bg-rose-50 dark:bg-rose-950/30"
+      )}
 
       ${renderServiceColumn(
         "Program committee",
