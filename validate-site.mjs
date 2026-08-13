@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { publicationKey } from "./shared.js";
 
 const rootDir = process.cwd();
 const dataPath = path.join(rootDir, "data.json");
@@ -52,6 +53,19 @@ const publicationTitles = new Set((data.publications || []).map((p) => p.title))
     assert(
       publicationTitles.has(title),
       `research_themes[${themeIndex}].selected_papers[${paperIndex}] title not found in publications: "${title}"`
+    );
+  });
+});
+
+// A see_also key that resolves to nothing silently drops the cross-version link.
+const publicationKeys = new Set(
+  (data.publications || []).map((pub) => publicationKey(pub))
+);
+(data.publications || []).forEach((pub) => {
+  (pub.see_also || []).forEach((key) => {
+    assert(
+      publicationKeys.has(key),
+      `publication "${pub.title}" has a see_also key matching no publication: "${key}"`
     );
   });
 });

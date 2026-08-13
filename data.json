@@ -1450,6 +1450,7 @@
         "pattern formation"
       ],
       "title": "Optimal Luminous UCF under Asynchrony",
+      "arxiv": "https://arxiv.org/abs/2405.06617",
       "type": "journal",
       "journal": {
         "full": "Journal of Parallel and Distributed Computing",
@@ -1458,7 +1459,7 @@
       "year": 2026,
       "status": "Accepted",
       "accepted_date": "2026-08-08",
-      "see_also": ["optimal-uniform-circle-formation-by-asynchronous-luminous-robots--2024-conference"],
+      "see_also": ["ba-optimal-uniform-circle-formation-by-asynchronous-luminous-robots--2024-conference"],
       "abstract": "We study the uniform circle formation (UCF) problem where n >= 3 autonomous mobile robots, initially arbitrarily positioned in the plane, have to arrange themselves equally spaced on the boundary of a circle not fixed in advance. Robots are anonymous, asynchronous, oblivious, and luminous: they execute Look-Compute-Move cycles asynchronously, cannot be distinguished by their appearance, have no memory of past actions, but possess a light that can assume colors from a constant-sized set C. The light color is visible to other robots and persists between cycles. It is known that UCF is impossible for such robots without lights or with only 1 color. Prior work showed UCF solvability with O(n) colors in O(n) epochs and with O(log n) colors in poly(n) epochs. We present an algorithm that solves UCF using O(1) colors (specifically, 4 colors) in O(n^2) epochs. This result is optimal in terms of colors, as UCF requires at least 2 colors. Our algorithm relies on carefully managing robot states using the constant number of colors to break symmetries and coordinate movements towards the final uniform circular configuration."
     }
   ],
