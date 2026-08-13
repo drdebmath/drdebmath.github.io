@@ -453,8 +453,14 @@ function displayResearchOverview(currentResearch) {
   `;
 }
 
+// Versions of the same work share one title, so highlight the most complete one.
+const PUBLICATION_VERSION_RANK = { journal: 0, conference: 1, poster: 2, preprint: 3 };
+
 function findPublicationByTitle(publications, title) {
-  return (publications || []).find((pub) => pub.title === title);
+  const rank = (pub) => PUBLICATION_VERSION_RANK[pub.type] ?? 9;
+  return (publications || [])
+    .filter((pub) => pub.title === title)
+    .sort((a, b) => rank(a) - rank(b))[0];
 }
 
 const THEME_ACCENTS = [
