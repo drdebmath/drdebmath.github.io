@@ -19,8 +19,11 @@ Run both after any change to HTML/JS/`data.json`. `assets/site.css` is generated
 2. `<nav class="sticky top-0 z-40 bg-blue-600/95 dark:bg-blue-800/90 backdrop-blur shadow-lg">`
    with inner `<div class="page-shell flex items-center justify-between gap-3 py-2.5">`.
    The `<ul id="navbar">` is filled by JS via `setupPrimaryNav(data)` from `shared.js`
-   — same six links everywhere (Home · Publications · Teaching · Talks · For Students · CV),
-   active page gets `bg-blue-700 dark:bg-blue-900` + `aria-current="page"`. Never hand-build a nav.
+   — the same links everywhere, in the order `getPrimarySiteLinks` builds them
+   (Home · Publications · CS103 · Talks · Timeline · For Students · CV · Teaching · Blog;
+   CS103, CV and Blog appear only when `data.json` supplies their URLs — the blog is
+   `about_me.blog`, also listed in the footer), active page gets
+   `bg-blue-700 dark:bg-blue-900` + `aria-current="page"`. Never hand-build a nav.
 3. Header band `bg-blue-700 dark:bg-blue-900 text-white py-8 shadow`, inner `page-shell`.
    - **Profile pages** (index, cv): photo + name + position. Photo frame:
      `w-32 h-48 md:w-40 md:h-60 rounded-3xl overflow-hidden ring-2 ring-white/30 shadow-2xl`

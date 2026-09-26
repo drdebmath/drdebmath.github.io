@@ -372,6 +372,16 @@ export function renderSiteFooter(data, containerId = "site_footer") {
               )
               .join("")}
             ${
+              about.blog?.url
+                ? `<li>${createLinkHtml({
+                    url: about.blog.url,
+                    label: about.blog.label || "Blog",
+                    title: about.blog.title || "",
+                    className: "hover:underline",
+                  })}</li>`
+                : ""
+            }
+            ${
               about.whiteboard?.url
                 ? `<li>${createLinkHtml({
                     url: about.whiteboard.url,
@@ -785,6 +795,7 @@ export function appendNavLinks(navbar, links, className = NAV_LINK_CLASS) {
     li.innerHTML = createLinkHtml({
       url: link.href,
       label: link.label,
+      title: link.title || "",
       className: link.active ? NAV_LINK_ACTIVE_CLASS : className,
       extraAttributes: link.active ? 'aria-current="page"' : "",
     });
@@ -872,6 +883,14 @@ export function getPrimarySiteLinks(data = {}) {
   }
 
   links.push({ href: "teaching.html", label: "Teaching" });
+
+  if (data.about_me?.blog?.url) {
+    links.push({
+      href: data.about_me.blog.url,
+      label: data.about_me.blog.label || "Blog",
+      title: data.about_me.blog.title || "",
+    });
+  }
 
   return links;
 }

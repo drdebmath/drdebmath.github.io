@@ -7,7 +7,9 @@ const data = JSON.parse(readFileSync("data.json", "utf8"));
 const a = data.about_me;
 
 // ---- JSON-LD: Person + the publication list (good for Google Scholar / Knowledge Graph) ----
-const sameAs = [a.dblp, a.google_scholar, a.orcid, a.github, a.linkedin, a.x].filter(Boolean);
+const sameAs = [a.dblp, a.google_scholar, a.orcid, a.github, a.linkedin, a.x, a.blog?.url].filter(
+  Boolean,
+);
 
 const person = {
   "@context": "https://schema.org",
