@@ -66,6 +66,7 @@ const urls = new Set([
   SITE + "/teaching.html",
   SITE + "/talks.html",
   SITE + "/timeline.html",
+  SITE + "/simulators.html",
   SITE + "/visualizations/",
 ]);
 for (const s of data.visualizations?.simulators || []) {

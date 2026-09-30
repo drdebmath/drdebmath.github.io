@@ -207,7 +207,8 @@
     "blog": {
       "label": "Blog",
       "title": "The Oblivious Robot",
-      "url": "https://drdebmath.github.io/blog/"
+      "url": "https://drdebmath.github.io/blog/",
+      "feed": "https://drdebmath.github.io/blog/feed.xml"
     },
     "email": "debasish@iiti.ac.in",
     "contact": {

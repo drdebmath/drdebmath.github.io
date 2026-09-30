@@ -423,6 +423,65 @@ export function publicationKey(titleOrPub, year, type) {
   return suffix ? `${base}--${suffix}` : base;
 }
 
+// Brief announcements and posters are previews of a fuller paper, so a
+// stack is headed by the latest full journal or conference version.
+function publicationStackRank(pub) {
+  const isBA = /^BA:/i.test(pub.title || "");
+  const isFull = !isBA && (pub.type === "journal" || pub.type === "conference");
+  return [
+    isFull ? 0 : 1,
+    -(Number(pub.year) || 0),
+    -(Date.parse(pub.published_date || "") || 0),
+    pub.type === "journal" ? 0 : 1,
+  ];
+}
+
+function compareStackRank(a, b) {
+  const ra = publicationStackRank(a);
+  const rb = publicationStackRank(b);
+  for (let i = 0; i < ra.length; i += 1) {
+    if (ra[i] !== rb[i]) return ra[i] - rb[i];
+  }
+  return 0;
+}
+
+// Groups versions of the same work (linked through see_also, in either
+// direction) into stacks. Returns a Map from every publication key to its
+// stack: { head, others } with `others` newest first.
+export function buildPublicationStacks(publications = []) {
+  const byKey = new Map(publications.map((pub) => [publicationKey(pub), pub]));
+  const neighbours = new Map([...byKey.keys()].map((key) => [key, new Set()]));
+  byKey.forEach((pub, key) => {
+    (pub.see_also || []).forEach((target) => {
+      if (!byKey.has(target)) return;
+      neighbours.get(key).add(target);
+      neighbours.get(target).add(key);
+    });
+  });
+
+  const stacks = new Map();
+  byKey.forEach((_, start) => {
+    if (stacks.has(start)) return;
+    const members = [];
+    const queue = [start];
+    const seen = new Set(queue);
+    while (queue.length) {
+      const key = queue.shift();
+      members.push(byKey.get(key));
+      neighbours.get(key).forEach((next) => {
+        if (!seen.has(next)) {
+          seen.add(next);
+          queue.push(next);
+        }
+      });
+    }
+    const [head, ...others] = members.sort(compareStackRank);
+    const stack = { head, others };
+    members.forEach((pub) => stacks.set(publicationKey(pub), stack));
+  });
+  return stacks;
+}
+
 export function getPublicationDeepLink(titleOrPub) {
   const key = publicationKey(titleOrPub);
   return key ? `publications.html?pub=${encodeURIComponent(key)}` : "publications.html";
@@ -810,6 +869,7 @@ const PAGE_HREFS = {
   talks: "talks.html",
   timeline: "timeline.html",
   "for-students": "for_students.html",
+  simulators: "simulators.html",
   cv: "cv.html",
 };
 
@@ -875,7 +935,8 @@ export function getPrimarySiteLinks(data = {}) {
   links.push(
     { href: "talks.html", label: "Talks" },
     { href: "timeline.html", label: "Timeline" },
-    { href: "for_students.html", label: "For Students" }
+    { href: "for_students.html", label: "For Students" },
+    { href: "simulators.html", label: "Simulators" }
   );
 
   if (data.about_me?.cv?.url) {
@@ -1077,5 +1138,73 @@ export function renderProfileHeader(aboutMe, options = {}) {
         `
       )
       .join("");
+  }
+}
+
+// Latest posts from the blog's RSS feed (about_me.blog.feed). The feed is
+// on another origin locally, so a failed fetch falls back to a plain link.
+export async function renderLatestBlogPosts(containerId, blog = {}, limit = 3) {
+  const container = document.getElementById(containerId);
+  if (!container || !blog.feed) return;
+
+  const fallback = blog.url
+    ? `<p class="text-sm text-gray-500 dark:text-gray-400 italic">Read the latest posts on ${createLinkHtml({
+        url: blog.url,
+        label: blog.title || "the blog",
+        className: "text-blue-600 dark:text-blue-400 hover:underline not-italic",
+      })}.</p>`
+    : "";
+
+  try {
+    const response = await fetch(blog.feed);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const xml = new DOMParser().parseFromString(await response.text(), "application/xml");
+    const posts = [...xml.querySelectorAll("item")].slice(0, limit).map((item) => ({
+      title: item.querySelector("title")?.textContent?.trim() || "",
+      url: item.querySelector("link")?.textContent?.trim() || blog.url,
+      date: item.querySelector("pubDate")?.textContent?.trim() || "",
+      description: item.querySelector("description")?.textContent?.trim() || "",
+    }));
+    if (!posts.length) throw new Error("empty feed");
+
+    container.innerHTML = `
+      <ul class="space-y-3">
+        ${posts
+          .map((post) => {
+            const parsed = Date.parse(post.date);
+            const date = Number.isNaN(parsed)
+              ? ""
+              : new Date(parsed).toLocaleDateString("en-GB", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                  timeZone: "UTC",
+                });
+            return `
+              <li class="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/80 dark:bg-gray-900/40 px-3.5 py-3">
+                ${
+                  date
+                    ? `<p class="text-[11px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">${escapeHtml(date)}</p>`
+                    : ""
+                }
+                <p class="mt-1 text-sm font-semibold leading-snug">${createLinkHtml({
+                  url: post.url,
+                  label: post.title,
+                  className: "text-blue-600 dark:text-blue-400 hover:underline",
+                })}</p>
+                ${
+                  post.description
+                    ? `<p class="mt-1 text-xs leading-5 text-gray-600 dark:text-gray-300 line-clamp-3">${escapeHtml(post.description)}</p>`
+                    : ""
+                }
+              </li>
+            `;
+          })
+          .join("")}
+      </ul>
+    `;
+  } catch (error) {
+    console.warn("Blog feed unavailable:", error);
+    container.innerHTML = fallback;
   }
 }

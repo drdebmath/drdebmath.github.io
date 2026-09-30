@@ -106,8 +106,21 @@
                     <div id="news_content" class="panel-body"></div>
                 </section>
 
-                <section id="research" class="home-section surface-panel bg-gradient-to-br from-white via-blue-50/50 to-cyan-50/40 dark:from-gray-800 dark:via-gray-800 dark:to-blue-950/25 border-blue-100 dark:border-blue-900/40">
-                    <div class="panel-header border-blue-100/80 dark:border-gray-700/80 bg-white/70 dark:bg-gray-900/35 backdrop-blur">
+                <section id="blog" class="home-section surface-panel">
+                    <div class="panel-header">
+                        <div class="flex flex-wrap items-baseline justify-between gap-3">
+                            <h2 class="section-heading">From the Blog</h2>
+                            <a id="blog_link" href="https://drdebmath.github.io/blog/" target="_blank" rel="noopener noreferrer"
+                                class="text-blue-700 dark:text-blue-300 hover:underline whitespace-nowrap text-sm">All posts →</a>
+                        </div>
+                    </div>
+                    <div id="blog_content" class="panel-body">
+                        <p class="text-sm text-gray-500 dark:text-gray-400 italic">Loading posts…</p>
+                    </div>
+                </section>
+
+                <section id="research" class="home-section surface-panel !overflow-visible bg-gradient-to-br from-white via-blue-50/50 to-cyan-50/40 dark:from-gray-800 dark:via-gray-800 dark:to-blue-950/25 border-blue-100 dark:border-blue-900/40">
+                    <div class="panel-header relative z-30 rounded-t-2xl border-blue-100/80 dark:border-gray-700/80 bg-white/70 dark:bg-gray-900/35 backdrop-blur">
                         <div class="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-4">
                             <div class="min-w-0">
                                 <h2 class="section-heading">Research &amp; Publications</h2>
@@ -199,7 +212,7 @@
                                 <a href="visualizations/"
                                     class="text-sm text-blue-700 dark:text-blue-300 hover:underline whitespace-nowrap">Algorithm
                                     visualizations →</a>
-                                <a href="for_students.html#simulators"
+                                <a href="simulators.html"
                                     class="text-sm text-blue-700 dark:text-blue-300 hover:underline whitespace-nowrap">All
                                     simulators →</a>
                             </div>
@@ -211,7 +224,7 @@
 
             <aside id="right-sidebar"
                 class="w-full xl:w-72 2xl:w-80 shrink-0 sticky top-24 space-y-6 hidden xl:block">
-                <!-- News moved here on desktop by script.js -->
+                <!-- News and blog moved here on desktop by script.js -->
             </aside>
         </div>
     </main>

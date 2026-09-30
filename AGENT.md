@@ -20,7 +20,7 @@ Run both after any change to HTML/JS/`data.json`. `assets/site.css` is generated
    with inner `<div class="page-shell flex items-center justify-between gap-3 py-2.5">`.
    The `<ul id="navbar">` is filled by JS via `setupPrimaryNav(data)` from `shared.js`
    — the same links everywhere, in the order `getPrimarySiteLinks` builds them
-   (Home · Publications · CS103 · Talks · Timeline · For Students · CV · Teaching · Blog;
+   (Home · Publications · CS103 · Talks · Timeline · For Students · Simulators · CV · Teaching · Blog;
    CS103, CV and Blog appear only when `data.json` supplies their URLs — the blog is
    `about_me.blog`, also listed in the footer), active page gets
    `bg-blue-700 dark:bg-blue-900` + `aria-current="page"`. Never hand-build a nav.
@@ -36,7 +36,7 @@ Run both after any change to HTML/JS/`data.json`. `assets/site.css` is generated
    `renderSiteFooter(data)`.
 6. Go-to-top button (`#goToTop`, blue-600 round FAB) + dark-mode toggle in nav (`#darkModeToggle`).
 
-`<body>` always: `data-page="<home|publications|teaching|talks|for-students|cv>"` and
+`<body>` always: `data-page="<home|publications|teaching|talks|for-students|simulators|cv>"` and
 `bg-gray-100 text-gray-900 dark:bg-dark-bg dark:text-dark-text transition-colors duration-200 font-sans`.
 
 ## Layout tokens (defined in `src/tailwind.css`)
@@ -70,11 +70,12 @@ Run both after any change to HTML/JS/`data.json`. `assets/site.css` is generated
 | Content | Canonical page | Elsewhere |
 |---|---|---|
 | Bio, news, research themes | index | CV shows condensed profile |
-| Publications (full, groupable) | publications.html | index shows selected per theme |
+| Publications (full, groupable) | publications.html — versions linked by `see_also` stack under the latest full journal/conference version (`buildPublicationStacks`) | index shows selected per theme, headed by the stack head |
 | Talks (full) | talks.html | index shows 3 recent; CV lists for the record |
 | Teaching (full) | teaching.html | CV lists for the record |
 | Students (full list) | for_students.html | CV shows counts + link |
-| Simulators (all) | for_students.html | index shows `featured_on_homepage` subset + link |
+| Simulators (all) + Black Hole embed | simulators.html | index shows `featured_on_homepage` subset + link; for_students links out |
+| Blog posts | the blog itself (`about_me.blog.feed` RSS) | index sidebar shows the latest 3 (`renderLatestBlogPosts`) |
 | Awards, grants, service | data.json → rendered via shared helpers on index & CV | |
 | Chronology (everything by month) | timeline.html — eras (education/positions) as sticky cards, point events (pubs/talks/teaching/news) on a monthly rail | CV shows a compact era timeline |
 
@@ -87,4 +88,4 @@ If two pages need the same widget, move the renderer to `shared.js` — never co
 - Dark mode is class-based (`dark` on `<html>`, persisted in localStorage) — every color utility needs its `dark:` pair.
 - All external links via `createLinkHtml` (adds `target="_blank" rel="noopener noreferrer"`); all user data through `escapeHtml`.
 - In-page anchor targets need `scroll-mt` (handled globally for `section[id]`).
-- Keep KaTeX/Leaflet CDN includes only on pages that use them.
+- Keep KaTeX/d3 CDN includes only on pages that use them (d3 + topojson draw the static collaborator map on for_students).

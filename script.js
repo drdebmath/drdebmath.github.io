@@ -1,5 +1,6 @@
 import {
   appendNavLinks,
+  buildPublicationStacks,
   createLinkHtml,
   escapeHtml,
   formatDateRange,
@@ -9,6 +10,7 @@ import {
   renderAwardsList,
   renderGrantsList,
   renderOutreachCredit,
+  renderLatestBlogPosts,
   renderProfileHeader,
   renderSimulatorCardsHtml,
   renderSiteFooter,
@@ -27,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     .then((data) => {
       commonAuthors = data.common_authors || {};
       publications = data.publications || [];
+      publicationStacks = buildPublicationStacks(publications);
       renderSiteFooter(data);
       setupSiteSearch(data);
 
@@ -37,6 +40,8 @@ document.addEventListener("DOMContentLoaded", () => {
         initializeTeachingPage(data);
       } else if (page === "talks") {
         initializeTalksPage(data);
+      } else if (page === "simulators") {
+        initializeSimulatorsPage(data);
       } else if (document.getElementById("about_me_content")) {
         initializeWebsite(data);
       }
@@ -86,30 +91,40 @@ function initializeTalksPage(data) {
   displayTalks(data.talks || []);
 }
 
+function initializeSimulatorsPage(data) {
+  setupPrimaryNav(data);
+  const container = document.getElementById("simulators_grid");
+  if (container) {
+    container.innerHTML = renderSimulatorCardsHtml(data.visualizations?.simulators || []);
+  }
+}
+
 /**
- * Handles moving the News section between the main column (mobile)
+ * Handles moving the News and Blog sections between the main column (mobile)
  * and the sidebar (desktop) to ensure no vertical gap issues.
  */
 function setupResponsiveLayout() {
-  const newsSection = document.getElementById("news");
   const rightSidebar = document.getElementById("right-sidebar");
   const aboutMeSection = document.getElementById("about_me");
+  const sidebarSections = ["news", "blog"]
+    .map((id) => document.getElementById(id))
+    .filter(Boolean);
 
-  if (!newsSection || !rightSidebar || !aboutMeSection) return;
+  if (!sidebarSections.length || !rightSidebar || !aboutMeSection) return;
 
   const handleResize = () => {
     const isDesktop = window.matchMedia("(min-width: 1280px)").matches;
 
     if (isDesktop) {
       // Move to sidebar if not already there
-      if (newsSection.parentElement !== rightSidebar) {
-        rightSidebar.appendChild(newsSection);
+      if (sidebarSections[0].parentElement !== rightSidebar) {
+        rightSidebar.append(...sidebarSections);
         rightSidebar.classList.remove("hidden"); // Ensure sidebar is visible
       }
     } else {
       // Move back to main content flow (after About Me)
-      if (newsSection.parentElement === rightSidebar) {
-        aboutMeSection.insertAdjacentElement("afterend", newsSection);
+      if (sidebarSections[0].parentElement === rightSidebar) {
+        aboutMeSection.after(...sidebarSections);
         rightSidebar.classList.add("hidden");
       }
     }
@@ -125,6 +140,7 @@ function setupResponsiveLayout() {
 function setupContentDisplay(data) {
   displaySectionContent("about_me_content", displayAboutMe, data.about_me);
   displaySectionContent("news_content", displayNewsAndArchive, data.news);
+  displayBlog(data.about_me?.blog);
   displaySectionContent(
     "research_overview_content",
     displayResearchOverview,
@@ -147,6 +163,18 @@ function setupContentDisplay(data) {
   displaySectionContent("grants_content", displayGrants, data.grants);
   displaySectionContent("outreach_content", displayOutreach, data.community_services?.social);
   displaySectionContent("visualizations_content", displayVisualizations, data.visualizations);
+}
+
+function displayBlog(blog) {
+  const section = document.getElementById("blog");
+  if (!section) return;
+  if (!blog?.feed) {
+    section.remove();
+    return;
+  }
+  const link = document.getElementById("blog_link");
+  if (link && blog.url) link.href = blog.url;
+  renderLatestBlogPosts("blog_content", blog, 3);
 }
 
 function displaySectionContent(elementId, displayFunction, data, ...args) {
@@ -453,14 +481,11 @@ function displayResearchOverview(currentResearch) {
   `;
 }
 
-// Versions of the same work share one title, so highlight the most complete one.
-const PUBLICATION_VERSION_RANK = { journal: 0, conference: 1, poster: 2, preprint: 3 };
-
+// A theme may name any version of a work; show the head of its stack
+// (the latest full journal or conference version).
 function findPublicationByTitle(publications, title) {
-  const rank = (pub) => PUBLICATION_VERSION_RANK[pub.type] ?? 9;
-  return (publications || [])
-    .filter((pub) => pub.title === title)
-    .sort((a, b) => rank(a) - rank(b))[0];
+  const match = (publications || []).find((pub) => pub.title === title);
+  return match ? getPublicationStack(match).head : undefined;
 }
 
 const THEME_ACCENTS = [
@@ -490,9 +515,8 @@ const THEME_ACCENTS = [
   },
 ];
 
-// "BA:" brief announcements point at their full paper; conference papers
-// point at their journal write-up (and vice versa) — see_also just stores
-// publicationKey() slugs, so the label is derived from the target's own
+// Versions are linked through see_also (publicationKey() slugs) and stacked
+// by buildPublicationStacks, so the label is derived from the target's own
 // type/title rather than duplicated in data.json.
 function relatedVersionLabel(source, target) {
   const sourceIsBA = /^BA:/i.test(source.title || "");
@@ -504,13 +528,9 @@ function relatedVersionLabel(source, target) {
   return "Related version";
 }
 
-function renderRelatedVersionLinks(pub, publications) {
-  if (!pub.see_also?.length) return "";
-  const byKey = new Map(publications.map((p) => [publicationKey(p), p]));
-  return pub.see_also
-    .map((key) => byKey.get(key))
-    .filter(Boolean)
-    .map((target) => {
+function renderRelatedVersionLinks(pub) {
+  return getPublicationStack(pub)
+    .others.map((target) => {
       const url = target.doi || target.arxiv || target.url;
       if (!url) return "";
       const venue = target.conference?.short || target.journal?.short || "";
@@ -525,7 +545,7 @@ function renderRelatedVersionLinks(pub, publications) {
     .join("");
 }
 
-function renderSelectedPaperRow(pub, index, publications) {
+function renderSelectedPaperRow(pub, index) {
   if (!pub) return "";
 
   const venue =
@@ -570,7 +590,7 @@ function renderSelectedPaperRow(pub, index, publications) {
         pub.award
       )}</span>`
     : "";
-  const relatedVersionLinks = renderRelatedVersionLinks(pub, publications || []);
+  const relatedVersionLinks = renderRelatedVersionLinks(pub);
 
   return `
     <li class="group relative rounded-xl border border-gray-100 dark:border-gray-700/80 bg-white dark:bg-gray-900/60 px-3.5 py-3 shadow-sm hover:shadow-md hover:border-blue-200 dark:hover:border-blue-800 transition-all">
@@ -653,7 +673,7 @@ function displayResearchThemes({ themes, publications }) {
                     papers.length
                       ? papers
                           .map((paper, paperIndex) =>
-                            renderSelectedPaperRow(paper, paperIndex, publications)
+                            renderSelectedPaperRow(paper, paperIndex)
                           )
                           .join("")
                       : '<li class="text-sm text-gray-500 italic">No selected papers.</li>'
@@ -1007,10 +1027,14 @@ function displayAsCard(item, groupBy, colors, cardIndex, groupIndex, yearLabel =
     : "";
 
   const pubKey = publicationKey(item);
+  const { others: otherVersions } = getPublicationStack(item);
+  const stackShadowClass = otherVersions.length
+    ? "shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1),5px_5px_0_-1px_#d1d5db,10px_10px_0_-2px_#e5e7eb] dark:shadow-[0_10px_15px_-3px_rgba(0,0,0,0.3),5px_5px_0_-1px_#4b5563,10px_10px_0_-2px_#374151]"
+    : "shadow-lg";
 
   // Add a data attribute for identifying the card
   return `
-    <div class="publication-card p-4 ${cardTopPaddingClass} shadow-lg rounded-lg border-l-4 w-full sm:w-56 ${topSpacingClass} ${cardBottomPaddingClass} ${cardColorClass} flex flex-col relative transition-colors duration-200 ${interactiveClass}"
+    <div class="publication-card p-4 ${cardTopPaddingClass} ${stackShadowClass} rounded-lg border-l-4 w-full sm:w-56 ${topSpacingClass} ${cardBottomPaddingClass} ${cardColorClass} flex flex-col relative transition-colors duration-200 ${interactiveClass}"
          data-card-index="${cardIndex}" data-group-index="${groupIndex}" data-publication-key="${pubKey}" ${interactiveAttributes}>
       ${yearFlag}
       ${awardBanner}
@@ -1025,10 +1049,52 @@ function displayAsCard(item, groupBy, colors, cardIndex, groupIndex, yearLabel =
           <p class="card-details text-sm text-gray-700 dark:text-gray-300 mt-3">
             ${journalOrConference} ${groupBy === "type" ? `(${item.year})` : ""}
           </p>
+          ${renderOtherVersions(item, otherVersions)}
         </div>
       </div>
       ${arxivBottomBanner}
     </div>
+  `;
+}
+
+function renderOtherVersions(head, versions) {
+  if (!versions.length) return "";
+  const rows = versions
+    .map((version) => {
+      const url = version.doi || version.arxiv || version.url;
+      const venue =
+        version.conference?.short || version.journal?.short || version.booktitle || "";
+      const meta = [relatedVersionLabel(head, version), venue, version.year]
+        .filter(Boolean)
+        .join(" · ");
+      const title = url
+        ? createLinkHtml({ url, label: version.title, className: "hover:underline" })
+        : escapeHtml(version.title);
+      const arxiv =
+        version.arxiv && version.arxiv !== url
+          ? ` · ${createLinkHtml({
+              url: version.arxiv,
+              label: "arXiv",
+              className: "text-emerald-700 dark:text-emerald-300 hover:underline",
+            })}`
+          : "";
+      return `
+        <li class="publication-version rounded-md bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 px-2 py-1.5"
+            data-publication-key="${publicationKey(version)}">
+          <p class="text-xs font-semibold leading-snug text-gray-900 dark:text-white">${title}</p>
+          <p class="mt-0.5 text-[11px] text-gray-600 dark:text-gray-400">${escapeHtml(meta)}${arxiv}</p>
+        </li>
+      `;
+    })
+    .join("");
+  const label = `${versions.length} earlier version${versions.length > 1 ? "s" : ""}`;
+  return `
+    <details class="publication-versions group/versions mt-3">
+      <summary class="cursor-pointer select-none list-none text-xs font-semibold text-blue-700 dark:text-blue-300 hover:underline [&::-webkit-details-marker]:hidden">
+        <span class="inline-block transition-transform group-open/versions:rotate-90">▸</span> ${label}
+      </summary>
+      <ul class="absolute left-0 right-0 top-full z-20 mt-1 space-y-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-2 shadow-xl">${rows}</ul>
+    </details>
   `;
 }
 
@@ -1181,9 +1247,17 @@ const colors = {
   preprint: "bg-gray-100 dark:bg-gray-900 border-gray-600",
 };
 
+function stackKeywords(pub) {
+  const { head, others } = getPublicationStack(pub);
+  return [head, ...others].flatMap((version) => version.keywords || ["Other"]);
+}
+
+// Only the head of each version stack gets a card; the others fold under it.
 function filterByActiveTopics(publications) {
-  return publications.filter((pub) =>
-    (pub.keywords || ["Other"]).some((keyword) => activeTopics.has(keyword))
+  return publications.filter(
+    (pub) =>
+      getPublicationStack(pub).head === pub &&
+      stackKeywords(pub).some((keyword) => activeTopics.has(keyword))
   );
 }
 
@@ -1452,7 +1526,19 @@ function setupPublicationClickHandlers(container, allPublications, groupBy) {
       container.querySelector(
         `.publication-card[data-publication-key="${decoded.replace(/"/g, "")}"]`
       );
-    if (!card) return false;
+    if (!card) {
+      const stack = publicationStacks.get(decoded);
+      const headCard =
+        stack &&
+        container.querySelector(
+          `.publication-card[data-publication-key="${CSS.escape(publicationKey(stack.head))}"]`
+        );
+      if (!headCard) return false;
+      const versions = headCard.querySelector(".publication-versions");
+      if (versions) versions.open = true;
+      openPublicationCard(headCard, options);
+      return true;
+    }
     openPublicationCard(card, options);
     return true;
   }
@@ -1472,7 +1558,7 @@ function setupPublicationClickHandlers(container, allPublications, groupBy) {
       return;
     }
 
-    if (e.target.closest("a")) {
+    if (e.target.closest("a") || e.target.closest(".publication-versions")) {
       return;
     }
 
@@ -1480,7 +1566,7 @@ function setupPublicationClickHandlers(container, allPublications, groupBy) {
   };
 
   container.onkeydown = function (e) {
-    if (e.target.closest("a")) {
+    if (e.target.closest("a") || e.target.closest(".publication-versions")) {
       return;
     }
 
@@ -1520,6 +1606,11 @@ function renderAbstractPopout(item) {
 
 let commonAuthors = {};
 let publications = [];
+let publicationStacks = new Map();
+
+function getPublicationStack(pub) {
+  return publicationStacks.get(publicationKey(pub)) || { head: pub, others: [] };
+}
 
 function formatAuthors(authors) {
   const linkHoverClass =

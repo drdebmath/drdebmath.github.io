@@ -1,6 +1,5 @@
 import {
   escapeHtml,
-  renderSimulatorCardsHtml,
   renderSiteFooter,
   renderStudentsSectionHtml,
   setupDarkMode,
@@ -57,7 +56,6 @@ function initializePage(data) {
   setupSiteSearch(data);
   displayResearchInterests(data.research || []);
   displayStudents(data.students || {});
-  displaySimulators(data.visualizations?.simulators || []);
   displayBooks(data.recommended_books || []);
   initializeMap(collaboratorData);
 }
@@ -76,12 +74,6 @@ function displayResearchInterests(interests) {
       `
     )
     .join("");
-}
-
-function displaySimulators(simulators) {
-  const container = document.getElementById("simulators_grid");
-  if (!container) return;
-  container.innerHTML = renderSimulatorCardsHtml(simulators);
 }
 
 function displayBooks(books) {
@@ -107,50 +99,132 @@ function displayStudents(students) {
   container.innerHTML = renderStudentsSectionHtml(students);
 }
 
-function initializeMap(collaborators) {
-  const iitIndore = { name: "IIT Indore", coords: [22.7196, 75.8573] };
-  const map = L.map("map").setView([30, 20], 2);
+const WORLD_LAND_URL = "https://cdn.jsdelivr.net/npm/world-atlas@2/land-110m.json";
+const IIT_INDORE = { uni: "IIT Indore", coords: [22.7196, 75.8573] };
 
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
-    attribution:
-      '© <a href="https://www.openstreetmap.org/copyright">OSM</a> © <a href="https://carto.com/attributions">CARTO</a>',
-  }).addTo(map);
-
-  const indoreIcon = L.divIcon({
-    html: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ff6600" class="w-8 h-8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z"/></svg>',
-    className: "",
-    iconSize: [32, 32],
-    iconAnchor: [16, 32],
-  });
-
-  L.marker(iitIndore.coords, { icon: indoreIcon })
-    .addTo(map)
-    .bindPopup("<b>Debasish Pattanayak</b><br>IIT Indore")
-    .openPopup();
-
-  const markers = L.markerClusterGroup();
-
+// Groups collaborators sharing an institution into one pin.
+function groupCollaboratorsByInstitution(collaborators) {
+  const byUni = new Map();
   collaborators.forEach((collaborator) => {
-    const color = collaborator.type === "indian" ? "#003366" : "#990000";
-    const collaboratorIcon = L.divIcon({
-      html: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${color}" class="w-6 h-6"><circle cx="12" cy="12" r="10"/></svg>`,
-      className: "",
-      iconSize: [24, 24],
-      iconAnchor: [12, 12],
-    });
-
-    const marker = L.marker(collaborator.coords, { icon: collaboratorIcon })
-      .bindPopup(`<b>${collaborator.name}</b><br>${collaborator.uni}`);
-
-    markers.addLayer(marker);
-
-    L.polyline([iitIndore.coords, collaborator.coords], {
-      color: "gray",
-      weight: 1.5,
-      opacity: 0.6,
-      dashArray: collaborator.type === "indian" ? "" : "5, 5",
-    }).addTo(map);
+    const group = byUni.get(collaborator.uni) || { ...collaborator, names: [] };
+    group.names.push(collaborator.name);
+    byUni.set(collaborator.uni, group);
   });
+  return [...byUni.values()];
+}
 
-  map.addLayer(markers);
+function renderCollaboratorList(institutions) {
+  const container = document.getElementById("collaborator_list");
+  if (!container) return;
+  const ordered = [...institutions].sort(
+    (a, b) => (a.type === "indian" ? 0 : 1) - (b.type === "indian" ? 0 : 1) || a.uni.localeCompare(b.uni)
+  );
+  container.innerHTML = ordered
+    .map(
+      (group) => `
+        <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/80 dark:bg-gray-900/40 px-3.5 py-2.5">
+          <p class="flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-white">
+            <span class="h-2 w-2 shrink-0 rounded-full ${
+              group.type === "indian" ? "bg-blue-700 dark:bg-blue-400" : "bg-red-700 dark:bg-red-400"
+            }"></span>
+            ${escapeHtml(group.uni)}
+          </p>
+          <p class="mt-0.5 pl-4 text-xs leading-5 text-gray-600 dark:text-gray-300">${group.names
+            .map(escapeHtml)
+            .join(", ")}</p>
+        </div>
+      `
+    )
+    .join("");
+}
+
+// A fixed (no pan/zoom, no tiles) world map: land outline, one pin per
+// institution and a great-circle line to IIT Indore.
+async function initializeMap(collaborators) {
+  const container = document.getElementById("map");
+  if (!container) return;
+
+  const institutions = groupCollaboratorsByInstitution(collaborators);
+  renderCollaboratorList(institutions);
+
+  if (!window.d3 || !window.topojson) return;
+
+  let land;
+  try {
+    const world = await (await fetch(WORLD_LAND_URL)).json();
+    land = topojson.feature(world, world.objects.land);
+  } catch (error) {
+    console.warn("World map unavailable:", error);
+    return;
+  }
+
+  const width = 960;
+  const height = 440;
+  const toLonLat = ([lat, lon]) => [lon, lat];
+  // Frame the map on where the collaborators are, not on Antarctica.
+  const frame = {
+    type: "MultiPoint",
+    coordinates: [[-130, 60], [150, 60], [-130, -15], [150, -15]],
+  };
+  const projection = d3.geoNaturalEarth1().fitExtent([[10, 10], [width - 10, height - 10]], frame);
+  const path = d3.geoPath(projection);
+  const home = toLonLat(IIT_INDORE.coords);
+
+  const svg = d3
+    .create("svg")
+    .attr("viewBox", `0 0 ${width} ${height}`)
+    .attr("role", "img")
+    .attr("aria-label", "World map of collaborator institutions linked to IIT Indore")
+    .attr("class", "block w-full h-auto");
+
+  svg
+    .append("path")
+    .datum(land)
+    .attr("d", path)
+    .attr("class", "fill-gray-200 dark:fill-gray-700 stroke-white dark:stroke-gray-800")
+    .attr("stroke-width", 0.5);
+
+  svg
+    .append("g")
+    .attr("fill", "none")
+    .attr("stroke-linecap", "round")
+    .selectAll("path")
+    .data(institutions)
+    .join("path")
+    .attr("d", (group) =>
+      path({ type: "LineString", coordinates: [home, toLonLat(group.coords)] })
+    )
+    .attr("class", (group) =>
+      group.type === "indian"
+        ? "stroke-blue-700/50 dark:stroke-blue-400/60"
+        : "stroke-red-700/40 dark:stroke-red-400/50"
+    )
+    .attr("stroke-width", 1.2)
+    .attr("stroke-dasharray", (group) => (group.type === "indian" ? null : "4 3"));
+
+  const pins = svg
+    .append("g")
+    .selectAll("circle")
+    .data(institutions)
+    .join("circle")
+    .attr("transform", (group) => `translate(${projection(toLonLat(group.coords))})`)
+    .attr("r", (group) => 3.5 + Math.min(group.names.length, 3))
+    .attr("class", (group) =>
+      group.type === "indian"
+        ? "fill-blue-700 dark:fill-blue-400 stroke-white dark:stroke-gray-900"
+        : "fill-red-700 dark:fill-red-400 stroke-white dark:stroke-gray-900"
+    )
+    .attr("stroke-width", 1.2);
+  pins.append("title").text((group) => `${group.uni}: ${group.names.join(", ")}`);
+
+  svg
+    .append("circle")
+    .attr("transform", `translate(${projection(home)})`)
+    .attr("r", 7)
+    .attr("class", "fill-orange-500 stroke-white dark:stroke-gray-900")
+    .attr("stroke-width", 2)
+    .append("title")
+    .text("Debasish Pattanayak, IIT Indore");
+
+  container.replaceChildren(svg.node());
 }
