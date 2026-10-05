@@ -265,6 +265,10 @@
   },
   "news": [
     {
+      "date": "2 October 2026",
+      "title": "Beyond the Boundary: Optimal Grid Dispersion by Spread, Reverse, and Collect accepted to ICDCN 2027, to be held at NIT Karnataka, Surathkal."
+    },
+    {
       "date": "8 August 2026",
       "title": "Optimal Luminous UCF under Asynchrony accepted to JPDC, as the journal version of the DISC Brief Announcement.",
       "url": "https://www.sciencedirect.com/journal/journal-of-parallel-and-distributed-computing",
@@ -439,6 +443,30 @@
     }
   ],
   "publications": [
+    {
+      "keywords": [
+        "mobile agents",
+        "grids",
+        "dispersion"
+      ],
+      "title": "Beyond the Boundary: Optimal Grid Dispersion by Spread, Reverse, and Collect",
+      "authors": [
+        "Manish Kumar",
+        "Anisur Rahaman Molla",
+        "Debasish Pattanayak",
+        "Subhajit Pramanick"
+      ],
+      "type": "conference",
+      "conference": {
+        "full": "28th International Conference on Distributed Computing and Networking",
+        "short": "ICDCN"
+      },
+      "date": "January 4, 2027",
+      "location": "NIT Karnataka, Surathkal, India",
+      "year": 2027,
+      "status": "Accepted",
+      "abstract": "Dispersion requires a set of mobile agents to occupy distinct nodes of a graph such that each node contains at most one agent. We study deterministic dispersion of $k\\le n$ agents on an $n$-node oriented square grid, where each node has globally consistent North, East, South, and West port labels, from arbitrary initial configurations. This includes both rooted configurations, where all agents are co-located initially, and general configurations, where agents are initially distributed arbitrarily across the nodes. On oriented square grids, Kshemkalyani, Molla, and Sharma gave an $O(\\min(k,\\sqrt{n}))$-round algorithm in the local-communication model, where only agents on the same node can exchange information, and an $O(\\sqrt{k})$-round algorithm in the global-communication model, where any two agents can communicate regardless of position, both using $O(\\log k)$ bits per agent. The bound in the local communication model is optimal when $k=\\Theta(n)$, but it remains open whether local communication alone can match the $\\Omega(\\sqrt{k})$ time lower bound when $k=o(n)$. We solve this by presenting Spread–Reverse–Collect (SRC), a deterministic algorithm that disperses any $k\\le n$ agents in $O(\\sqrt{k})$ synchronous rounds using $O(\\log k)$ bits of persistent memory per agent, matching both time and memory lower bounds. SRC is based on a geometric primitive, an S-shaped parallel sweep, together with a simple priority rule. Unlike earlier grid algorithms that gather agents at the boundary and spread out from there, each SRC sweep starts from the agents' current position, and when it reaches the boundary the group simply reflects its sweep back inside and continues. SRC therefore needs no knowledge of the grid size and runs unchanged on an infinite oriented grid."
+    },
     {
       "authors": [
         "Debasish Pattanayak",
