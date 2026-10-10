@@ -1499,6 +1499,15 @@
   ],
   "talks": [
     {
+      "title": "AI Agents: Life and Money",
+      "event": "Ethereum Day",
+      "Place": "IIT Indore",
+      "date": "Oct 10 2026",
+      "links": {
+        "talk": "https://drdebmath.github.io/Talks/ai-agents-life-and-money.html"
+      }
+    },
+    {
       "title": "Introduction to Distributed Algorithms",
       "event": "Foundational Lecture Series on Theoretical Computer Science (FSTCS) 2026",
       "Place": "The Institute of Mathematical Sciences (IMSc), Chennai",
@@ -2012,9 +2021,9 @@
     }
   ],
   "homepage_talks": [
+    "AI Agents: Life and Money",
     "Introduction to Distributed Algorithms",
-    "AI Agents: The Moving Frontier",
-    "Pattern Formation of Robot Swarms: Points, Lines and Circles"
+    "AI Agents: The Moving Frontier"
   ],
   "recommended_books": [
     {
