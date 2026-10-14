@@ -382,6 +382,16 @@ export function renderSiteFooter(data, containerId = "site_footer") {
                 : ""
             }
             ${
+              about.mobility_matters?.url
+                ? `<li>${createLinkHtml({
+                    url: about.mobility_matters.url,
+                    label: about.mobility_matters.label || "Mobility Matters",
+                    title: about.mobility_matters.title || "",
+                    className: "hover:underline",
+                  })}</li>`
+                : ""
+            }
+            ${
               about.whiteboard?.url
                 ? `<li>${createLinkHtml({
                     url: about.whiteboard.url,
@@ -950,6 +960,14 @@ export function getPrimarySiteLinks(data = {}) {
       href: data.about_me.blog.url,
       label: data.about_me.blog.label || "Blog",
       title: data.about_me.blog.title || "",
+    });
+  }
+
+  if (data.about_me?.mobility_matters?.url) {
+    links.push({
+      href: data.about_me.mobility_matters.url,
+      label: data.about_me.mobility_matters.label || "Mobility Matters",
+      title: data.about_me.mobility_matters.title || "",
     });
   }
 

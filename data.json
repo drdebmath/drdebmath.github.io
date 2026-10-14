@@ -210,6 +210,14 @@
       "url": "https://drdebmath.github.io/blog/",
       "feed": "https://drdebmath.github.io/blog/feed.xml"
     },
+    "mobility_matters": {
+      "label": "Mobility Matters",
+      "title": "A Living Survey of Open Problems on Autonomous Agents, Robots and Particles",
+      "url": "https://drdebmath.github.io/mobility-matters/",
+      "description": "A public atlas of research problems in distributed computing by mobile entities: agents on graphs, robots in the plane, geometric search, and programmable matter. Each problem is mapped across its model settings, with the known results, the papers behind them, and what is still open.",
+      "pdf": "https://drdebmath.github.io/mobility-matters/mobility-matters.pdf",
+      "source_url": "https://github.com/drdebmath/mobility-matters"
+    },
     "email": "debasish@iiti.ac.in",
     "contact": {
       "email": "debasish@iiti.ac.in",

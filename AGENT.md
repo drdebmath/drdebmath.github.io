@@ -20,8 +20,8 @@ Run both after any change to HTML/JS/`data.json`. `assets/site.css` is generated
    with inner `<div class="page-shell flex items-center justify-between gap-3 py-2.5">`.
    The `<ul id="navbar">` is filled by JS via `setupPrimaryNav(data)` from `shared.js`
    — the same links everywhere, in the order `getPrimarySiteLinks` builds them
-   (Home · Publications · CS103 · Talks · Timeline · For Students · Simulators · CV · Teaching · Blog;
-   CS103, CV and Blog appear only when `data.json` supplies their URLs — the blog is
+   (Home · Publications · CS103 · Talks · Timeline · For Students · Simulators · CV · Teaching · Blog · Mobility Matters;
+   CS103, CV, Blog and Mobility Matters appear only when `data.json` supplies their URLs — the blog is
    `about_me.blog`, also listed in the footer), active page gets
    `bg-blue-700 dark:bg-blue-900` + `aria-current="page"`. Never hand-build a nav.
 3. Header band `bg-blue-700 dark:bg-blue-900 text-white py-8 shadow`, inner `page-shell`.

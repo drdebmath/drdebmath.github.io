@@ -122,9 +122,10 @@ function setupResponsiveLayout() {
         rightSidebar.classList.remove("hidden"); // Ensure sidebar is visible
       }
     } else {
-      // Move back to main content flow (after About Me)
+      // Move back to main content flow (after About Me and its highlight)
       if (sidebarSections[0].parentElement === rightSidebar) {
-        aboutMeSection.after(...sidebarSections);
+        const anchor = document.getElementById("mobility_matters") || aboutMeSection;
+        anchor.after(...sidebarSections);
         rightSidebar.classList.add("hidden");
       }
     }
@@ -141,6 +142,7 @@ function setupContentDisplay(data) {
   displaySectionContent("about_me_content", displayAboutMe, data.about_me);
   displaySectionContent("news_content", displayNewsAndArchive, data.news);
   displayBlog(data.about_me?.blog);
+  displayMobilityMatters(data.about_me?.mobility_matters);
   displaySectionContent(
     "research_overview_content",
     displayResearchOverview,
@@ -175,6 +177,44 @@ function displayBlog(blog) {
   const link = document.getElementById("blog_link");
   if (link && blog.url) link.href = blog.url;
   renderLatestBlogPosts("blog_content", blog, 3);
+}
+
+function displayMobilityMatters(survey) {
+  const section = document.getElementById("mobility_matters");
+  if (!section) return;
+  if (!survey?.url) {
+    section.remove();
+    return;
+  }
+
+  const secondaryClass =
+    "inline-flex items-center rounded-full border border-blue-200 dark:border-blue-800 bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-gray-700 text-sm font-semibold px-4 py-2 shadow-sm transition-colors";
+  const actions = [
+    createLinkHtml({
+      url: survey.url,
+      label: "Explore the survey →",
+      className:
+        "inline-flex items-center rounded-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 shadow-md hover:shadow-lg transition-all",
+    }),
+    survey.pdf
+      ? createLinkHtml({ url: survey.pdf, label: "Read as a book (PDF)", className: secondaryClass })
+      : "",
+    survey.source_url
+      ? createLinkHtml({ url: survey.source_url, label: "Contribute on GitHub", className: secondaryClass })
+      : "",
+  ].filter(Boolean);
+
+  document.getElementById("mobility_matters_content").innerHTML = `
+    <div class="panel-body border-l-4 border-blue-500 bg-gradient-to-br from-blue-50 via-white to-cyan-50/60 dark:from-blue-950/40 dark:via-gray-800 dark:to-gray-800">
+      <p class="text-xs font-semibold uppercase tracking-[0.18em] text-blue-600 dark:text-blue-300">Featured project · Living survey</p>
+      <h2 id="mobility_matters_heading" class="mt-2 text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">
+        ${createLinkHtml({ url: survey.url, label: survey.label || "Mobility Matters", className: "hover:underline" })}
+      </h2>
+      ${survey.title ? `<p class="mt-1 text-base font-medium text-blue-800 dark:text-blue-200">${escapeHtml(survey.title)}</p>` : ""}
+      ${survey.description ? `<p class="mt-3 max-w-3xl text-sm sm:text-[0.95rem] leading-7 text-gray-700 dark:text-gray-200">${escapeHtml(survey.description)}</p>` : ""}
+      <div class="mt-5 flex flex-wrap gap-2.5">${actions.join("")}</div>
+    </div>
+  `;
 }
 
 function displaySectionContent(elementId, displayFunction, data, ...args) {
