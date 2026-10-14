@@ -285,6 +285,37 @@ export function scrollToHash() {
   if (target) requestAnimationFrame(() => target.scrollIntoView());
 }
 
+// "Last updated" stamp. The build (gen-version.mjs) writes the time into
+// <meta name="last-updated">; visitors see it relative ("3 days ago"), worked out
+// in their browser so it stays right while the page is cached. Pre-rendered HTML
+// (no JavaScript) carries the plain date, which is also the hover title.
+export function formatLastUpdatedDate(iso) {
+  return new Date(iso).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    timeZone: "Asia/Kolkata",
+  });
+}
+
+export function formatTimeAgo(iso, now = Date.now()) {
+  const seconds = Math.max(0, (now - new Date(iso).getTime()) / 1000);
+  const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+  if (seconds < 60) return "just now";
+  if (seconds < 3600) return rtf.format(-Math.floor(seconds / 60), "minute");
+  if (seconds < 86400) return rtf.format(-Math.floor(seconds / 3600), "hour");
+  return rtf.format(-Math.floor(seconds / 86400), "day");
+}
+
+export function lastUpdatedTimeHtml(iso, { relative = !globalThis.window?.__PRERENDER__ } = {}) {
+  const date = formatLastUpdatedDate(iso);
+  if (date === "Invalid Date") return "";
+  const text = relative ? formatTimeAgo(iso) : date;
+  return `<time data-last-updated="" datetime="${escapeAttribute(iso)}" title="${escapeAttribute(
+    date
+  )}">${escapeHtml(text)}</time>`;
+}
+
 export function renderSiteFooter(data, containerId = "site_footer") {
   const container = document.getElementById(containerId);
   if (!container) return;
@@ -296,6 +327,9 @@ export function renderSiteFooter(data, containerId = "site_footer") {
   const office = contact.office;
   const institution = contact.institution;
   const department = contact.department;
+  const lastUpdated = document
+    .querySelector('meta[name="last-updated"]')
+    ?.getAttribute("content");
 
   const socialLinks = [
     { href: about.google_scholar, label: "Google Scholar" },
@@ -404,7 +438,9 @@ export function renderSiteFooter(data, containerId = "site_footer") {
         </div>
       </div>
       <p class="mt-8 border-t border-blue-500/40 pt-4 text-xs text-blue-100/70">
-        © ${new Date().getFullYear()} ${escapeHtml(name)}. Academic homepage.
+        © ${new Date().getFullYear()} ${escapeHtml(name)}. Academic homepage.${
+          lastUpdated ? ` Last updated ${lastUpdatedTimeHtml(lastUpdated)}.` : ""
+        }
       </p>
     </div>
   `;

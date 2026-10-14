@@ -8,11 +8,19 @@ Static academic homepage (GitHub Pages). No framework: plain HTML pages + ES mod
 
 ```sh
 npm run build      # tailwind → assets/site.css, gen-seo.mjs (JSON-LD + sitemap),
-                   # gen-llms.mjs (llms.txt), prerender.mjs (bakes content into the pages)
+                   # gen-llms.mjs (llms.txt), gen-version.mjs assets (cache-busting ?v= hashes),
+                   # prerender.mjs (bakes content into the pages), gen-version.mjs stamp (last updated)
 node validate-site.mjs
 ```
 
 Run both after any change to HTML/JS/`data.json`. `assets/site.css` and `llms.txt` are generated — never edit by hand.
+
+**Versions and "Last updated".** Every local script, stylesheet and `data.json` reference
+carries `?v=<content hash>`, rewritten by the build (including the `./shared.js` imports and
+`fetch("data.json")` calls inside the page scripts) — never edit those strings by hand, and add
+any new page script to `PAGE_SCRIPTS` in `gen-version.mjs`. `build-info.json` records when the
+built site last changed; the footer shows it relative ("3 days ago") in the browser and as a
+plain date in pre-rendered HTML. Rebuilding without changes keeps the date.
 
 **Pre-rendering.** `prerender.mjs` runs each page's own scripts in jsdom and writes the
 rendered DOM back into the `.html` file, so the pages read fully without JavaScript (curl,

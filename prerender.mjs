@@ -103,6 +103,9 @@ async function renderPage(file) {
   console.error = (...args) => errors.push(args.join(" "));
   console.warn = () => {}; // expected: external feeds are offline at build time
 
+  // Tells renderers they are being baked (e.g. the footer prints a plain date).
+  window.__PRERENDER__ = true;
+
   const scripts = [...window.document.querySelectorAll('script[type="module"][src]')];
   for (const script of scripts) {
     const src = new URL(script.getAttribute("src"), SITE + file);

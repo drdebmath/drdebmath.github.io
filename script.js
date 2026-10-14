@@ -18,13 +18,13 @@ import {
   setupGoToTopButton,
   setupPrimaryNav,
   setupSiteSearch,
-} from "./shared.js";
+} from "./shared.js?v=aac9500bb1";
 
 document.addEventListener("DOMContentLoaded", () => {
   setupDarkMode();
   setupGoToTopButton();
 
-  fetch("data.json")
+  fetch("data.json?v=090e41103b")
     .then((response) => response.json())
     .then((data) => {
       commonAuthors = data.common_authors || {};

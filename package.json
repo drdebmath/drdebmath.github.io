@@ -3,11 +3,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "npm run build:css && npm run build:seo && npm run build:llms && npm run build:prerender",
+    "build": "npm run build:css && npm run build:seo && npm run build:llms && npm run build:assets && npm run build:prerender && npm run build:stamp",
     "build:css": "tailwindcss -c tailwind.config.cjs -i ./src/tailwind.css -o ./assets/site.css --minify",
     "build:seo": "node gen-seo.mjs",
     "build:llms": "node gen-llms.mjs",
+    "build:assets": "node gen-version.mjs assets",
     "build:prerender": "node prerender.mjs",
+    "build:stamp": "node gen-version.mjs stamp",
     "validate": "npm run build:css && node validate-site.mjs"
   },
   "devDependencies": {
