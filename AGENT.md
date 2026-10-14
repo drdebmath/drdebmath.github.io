@@ -7,11 +7,22 @@ Static academic homepage (GitHub Pages). No framework: plain HTML pages + ES mod
 ## Build & validate
 
 ```sh
-npm run build      # tailwind → assets/site.css, then gen-seo.mjs (JSON-LD + sitemap)
+npm run build      # tailwind → assets/site.css, gen-seo.mjs (JSON-LD + sitemap),
+                   # gen-llms.mjs (llms.txt), prerender.mjs (bakes content into the pages)
 node validate-site.mjs
 ```
 
-Run both after any change to HTML/JS/`data.json`. `assets/site.css` is generated — never edit by hand.
+Run both after any change to HTML/JS/`data.json`. `assets/site.css` and `llms.txt` are generated — never edit by hand.
+
+**Pre-rendering.** `prerender.mjs` runs each page's own scripts in jsdom and writes the
+rendered DOM back into the `.html` file, so the pages read fully without JavaScript (curl,
+crawlers, link previews). In the browser the same scripts redraw everything as before.
+Consequences:
+- Content inside JS-filled containers is build output. Edit `data.json` or the renderer, then rebuild.
+- Every renderer must *replace* its container's content (`innerHTML = …` or clear first), never
+  append to what is there, because each build renders from the previous build's output.
+- Browser-only state (dark mode, desktop sidebar placement, live blog feed, d3 map) is applied at
+  runtime and never baked; the bake uses the phone layout and offline external fetches.
 
 ## Page anatomy (every page, in order)
 

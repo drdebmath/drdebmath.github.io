@@ -111,6 +111,7 @@ ensureRelativePathExists(data.about_me?.cv?.url, "about_me.cv.url");
   "timeline.html",
   "visualizations/index.html",
   "assets/site.css",
+  "llms.txt",
   "script.js",
   "shared.js",
   "for_students.js",

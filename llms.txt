@@ -1,0 +1,130 @@
+# Debasish Pattanayak
+
+> Assistant Professor, Department of Computer Science and Engineering, Indian Institute of Technology, Indore. Research on distributed algorithms for mobile agents and mobile robots.
+
+I am an Assistant Professor in Computer Science and Engineering at the Indian Institute of Technology, Indore. My research focuses on distributed algorithms for mobile agents and mobile robots in graphs and geometric spaces, with interests in exploration, rendezvous, dispersion, pattern formation, and fault tolerance. I also develop interactive simulators for these systems. Before joining IIT Indore, I completed my PhD in Theoretical Computer Science from the Department of Mathematics at IIT Guwahati under the supervision of Prof. Partha Sarathi Mandal and Dr. H. Ramesh, and held visiting and postdoctoral research positions in Europe and Canada. See my CV for a fuller academic profile.
+
+My research interests lie in the design and analysis of algorithms for mobile agents and mobile robots operating in both discrete (graphs) and continuous spaces. I focus on fundamental problems such as exploration, search, rendezvous, evacuation, and filling under constraints of limited memory, communication, or environmental knowledge. I am particularly interested in distributed coordination, fault-tolerant behavior, and the impact of structure and complexity on algorithmic performance. My work spans deterministic and randomized strategies, with applications in swarm robotics, multi-agent coordination, and autonomous systems. I also work on developing simulators for these systems, a couple of them are linked here, under CCM Model and LCM Model.
+
+## Contact and profiles
+
+- Email: debasish@iiti.ac.in
+- Office: Room No. 19, CGS Advanced Research Complex, IIT Indore.
+- [Google Scholar](https://scholar.google.com/citations?user=E-jjx9gAAAAJ&hl=en&oi=ao)
+- [DBLP](https://dblp.uni-trier.de/pers/hd/p/Pattanayak:Debasish)
+- [ORCID](https://orcid.org/0000-0003-2862-2795)
+- [GitHub](https://github.com/drdebmath)
+- [LinkedIn](https://www.linkedin.com/in/debasish-pattanayak-3750a530/)
+- [X](https://twitter.com/drdebmath?ref_src=twsrc%5Etfw)
+
+## Pages
+
+- [Home](https://drdebmath.github.io/index.html): bio, news, research themes, recent talks
+- [Publications](https://drdebmath.github.io/publications.html): full publication list with abstracts
+- [Talks](https://drdebmath.github.io/talks.html)
+- [Teaching](https://drdebmath.github.io/teaching.html)
+- [Timeline](https://drdebmath.github.io/timeline.html): everything by month
+- [For Students](https://drdebmath.github.io/for_students.html): supervised students and resources
+- [Simulators](https://drdebmath.github.io/simulators.html)
+- [CV](https://drdebmath.github.io/cv.html)
+
+## Projects
+
+- [Mobility Matters](https://drdebmath.github.io/mobility-matters/): A Living Survey of Open Problems on Autonomous Agents, Robots and Particles ([PDF](https://drdebmath.github.io/mobility-matters/mobility-matters.pdf))
+- [The Oblivious Robot](https://drdebmath.github.io/blog/): blog
+- [CCM Model](https://drdebmath.github.io/CCMModel/): Interactive simulator for the coordinated concurrent movement model.
+- [LCM Model](https://drdebmath.github.io/LCMmodel/): Interactive simulator for the classic Look-Compute-Move model.
+- [Black Hole Search](https://drdebmath.github.io/BlackHoleSearch/): Interactive simulator for the Black Hole Search problem with Byzantine agents.
+- [SILBOT](https://drdebmath.github.io/SILBOT/): Interactive simulator for the SILBOT mobile robot model.
+- [MobileAutomata](https://drdebmath.github.io/MobileAutomata/): Interactive simulator for the MobileAutomata model.
+- [India Future Mobility Planner](https://drdebmath.github.io/Transport/): Interactive simulator of flight vs high-speed rail vs hybrid city-center journeys.
+- [Algorithm Visualizations](https://drdebmath.github.io/visualizations/): Step-by-step demos by category: traversal, shortest paths, spanning trees, online algorithms, and distributed agents.
+
+## Research themes
+
+- Dispersion of Mobile Agents: Time-efficient dispersion of mobile agents on anonymous graphs under asynchrony and limited communication.
+- Pattern Formation by Robot Swarms: Universal pattern formation, dancing, and geometric arrangements by luminous and oblivious robots.
+- Fault Tolerance & Dangerous Environments: Coordination and exploration under crash faults, Byzantine companions, and hazardous environments.
+- Graph Algorithms & Mobile Computation: Leader election, connectivity, treasure hunt, and computation via mobile agents on graphs.
+
+## Publications
+
+- Manish Kumar, Anisur Rahaman Molla, Debasish Pattanayak, Subhajit Pramanick. [Beyond the Boundary: Optimal Grid Dispersion by Spread, Reverse, and Collect](https://drdebmath.github.io/publications.html?pub=beyond-the-boundary-optimal-grid-dispersion-by-spread-reverse-and-collect--2027-conference). 28th International Conference on Distributed Computing and Networking, ICDCN, 2027. Accepted
+- Loukas Georgiadis, Giuseppe F. Italiano, Evangelos Kosinas, Debasish Pattanayak. [On maximal k-edge-connected subgraphs of undirected graphs](https://drdebmath.github.io/publications.html?pub=on-maximal-k-edge-connected-subgraphs-of-undirected-graphs--2026-journal). Journal of Computer and System Sciences, JCSS, 2026. [DOI](https://doi.org/10.1016/j.jcss.2026.103801) · [arXiv](https://arxiv.org/abs/2211.06521)
+- Debasish Pattanayak, Ajay D. Kshemkalyani, Manish Kumar, Anisur Rahaman Molla, Gokarna Sharma. [BA: Asynchronous Dispersion with Optimal Time Complexity](https://drdebmath.github.io/publications.html?pub=ba-asynchronous-dispersion-with-optimal-time-complexity--2026-conference). 38th ACM Symposium on Parallelism in Algorithms and Architectures, SPAA, 2026. [DOI](https://doi.org/10.1145/3816782.3819188) · [arXiv](http://arxiv.org/abs/2507.01298) · Accepted
+- Debasish Pattanayak, Ajay D. Kshemkalyani, Manish Kumar, Anisur Rahaman Molla, Gokarna Sharma. [Asynchronous Dispersion with Optimal Time Complexity](https://drdebmath.github.io/publications.html?pub=asynchronous-dispersion-with-optimal-time-complexity--2026-conference). 55th International Conference on Parallel Processing, ICPP, 2026. [arXiv](http://arxiv.org/abs/2507.01298) · Accepted
+- Caterina Feletti, Paola Flocchini, Debasish Pattanayak, Giuseppe Prencipe, Nicola Santoro. [Universal Dancing by Luminous Robots Under Sequential Schedulers](https://drdebmath.github.io/publications.html?pub=universal-dancing-by-luminous-robots-under-sequential-schedulers--2026-conference). 33rd International Colloquium on Structural Information and Communication Complexity, SIROCCO, 2026. [DOI](https://doi.org/10.1007/978-3-032-26465-7_16) · [arXiv](https://doi.org/10.48550/arXiv.2508.15484)
+- Ajay D. Kshemkalyani, Manish Kumar, Anisur Rahaman Molla, Debasish Pattanayak, Gokarna Sharma. [Faster Leader Election via Mobile Agents and its Applications](https://drdebmath.github.io/publications.html?pub=faster-leader-election-via-mobile-agents-and-its-applications--2026-journal). Theoretical Computer Science, Theor. Comput. Sci., 2026. [DOI](https://doi.org/10.1016/j.tcs.2025.115578) · Accepted
+- Paola Flocchini, Alfredo Navarra, Debasish Pattanayak, Francesco Piselli, Nicola Santoro. [Universal pattern formation by oblivious robots under sequential schedulers](https://drdebmath.github.io/publications.html?pub=universal-pattern-formation-by-oblivious-robots-under-sequential-schedulers--2026-journal). Distributed Computing, 2026. [DOI](https://doi.org/10.1007/s00446-026-00504-3) · [arXiv](https://arxiv.org/abs/2412.10733)
+- Caterina Feletti, Debasish Pattanayak, Gokarna Sharma. [Optimal Luminous UCF under Asynchrony](https://drdebmath.github.io/publications.html?pub=optimal-luminous-ucf-under-asynchrony--2026-journal). Journal of Parallel and Distributed Computing, J. Parallel Distrib. Comput., 2026. [arXiv](https://arxiv.org/abs/2405.06617) · Accepted
+- Giuseppe F. Italiano, Debasish Pattanayak, Gokarna Sharma. [Dispersion of Mobile Robots on Directed Anonymous Graphs](https://drdebmath.github.io/publications.html?pub=dispersion-of-mobile-robots-on-directed-anonymous-graphs--2025-journal). Journal of Parallel and Distributed Computing, J. Parallel Distrib. Comput., 2025. [DOI](https://doi.org/10.1016/j.jpdc.2025.105139)
+- Paola Flocchini, Alfredo Navarra, Debasish Pattanayak, Francesco Piselli, Nicola Santoro. [Oblivious Robots Under Sequential Schedulers: Universal Pattern Formation](https://drdebmath.github.io/publications.html?pub=oblivious-robots-under-sequential-schedulers-universal-pattern-formation--2025-conference). International Colloquium on Structural Information and Communication Complexity, SIROCCO, 2025. [DOI](https://doi.org/10.1007/978-3-031-91736-3_18) · [arXiv](https://arxiv.org/abs/2412.10733)
+- Ajay D. Kshemkalyani, Manish Kumar, Anisur Rahaman Molla, Debasish Pattanayak, Gokarna Sharma. [Dispersion is (Almost) Optimal under (A)synchrony](https://drdebmath.github.io/publications.html?pub=dispersion-is-almost-optimal-under-a-synchrony--2025-conference). 37th ACM Symposium on Parallelism in Algorithms and Architectures, SPAA, 2025. [DOI](https://doi.org/10.1145/3694906.3743317) · Accepted
+- Giuseppe Antonio Di Luna, Paola Flocchini, Debasish Pattanayak, Francesco Piselli, Giuseppe Prencipe, Nicola Santoro. [Exploring Dangerous Graphs with Byzantine Companions](https://drdebmath.github.io/publications.html?pub=exploring-dangerous-graphs-with-byzantine-companions--2025-conference). 45th IEEE International Conference on Distributed Computing Systems, ICDCS, 2025. [DOI](https://doi.org/10.1109/ICDCS63083.2025.00042) · Accepted
+- Paola Flocchini, Debasish Pattanayak, Francesco Piselli, Nicola Santoro, Yukiko Yamauchi. [Asynchronous Separation of Unconscious Colored Robots](https://drdebmath.github.io/publications.html?pub=asynchronous-separation-of-unconscious-colored-robots--2025-journal). International Journal of Networking and Computing, Intern. J. Netw. Comput., 2025. [DOI](http://www.ijnc.org/index.php/ijnc/article/view/338) · Accepted
+- Debasish Pattanayak, Ajay D. Kshemkalyani, Manish Kumar, Anisur Rahaman Molla, Gokarna Sharma. [BA: Optimal Dispersion under Asynchrony](https://drdebmath.github.io/publications.html?pub=ba-optimal-dispersion-under-asynchrony--2025-conference). 39th International Symposium on Distributed Computing, DISC, 2025. [DOI](https://doi.org/10.4230/LIPIcs.DISC.2025.63) · [arXiv](http://arxiv.org/abs/2507.01298)
+- Caterina Feletti, Paola Flocchini, Debasish Pattanayak, Giuseppe Prencipe, Nicola Santoro. [BA: Universal Dancing by Luminous Robots Under Sequential Schedulers](https://drdebmath.github.io/publications.html?pub=ba-universal-dancing-by-luminous-robots-under-sequential-schedulers--2025-conference). 39th International Symposium on Distributed Computing, DISC, 2025. [DOI](https://doi.org/10.4230/LIPIcs.DISC.2025.56) · [arXiv](https://doi.org/10.48550/arXiv.2508.15484)
+- Debasish Pattanayak, Andrzej Pelc. [Deterministic Treasure Hunt and Rendezvous in Arbitrary Connected Graphs](https://drdebmath.github.io/publications.html?pub=deterministic-treasure-hunt-and-rendezvous-in-arbitrary-connected-graphs--2024-journal). Information Processing Letters, Inf. Process. Lett., 2024. [DOI](https://doi.org/10.1016/j.ipl.2023.106455) · [arXiv](https://arxiv.org/abs/2310.01136)
+- Debasish Pattanayak, Andrzej Pelc. [Graph Exploration by a Deterministic Memoryless Automaton with Pebbles](https://drdebmath.github.io/publications.html?pub=graph-exploration-by-a-deterministic-memoryless-automaton-with-pebbles--2024-journal). Discrete Applied Mathematics, Discrete Appl. Math., 2024. [DOI](https://doi.org/10.1016/j.dam.2024.05.024)
+- Debasish Pattanayak, Subhash Bhagat, Sruti Gan Choudhuri, Anisur Rahaman Molla. [Maximal Independent Set via Mobile Robots](https://drdebmath.github.io/publications.html?pub=maximal-independent-set-via-mobile-robots--2024-conference). International Conference on Distributed Computing and Networking, ICDCN, 2024. [DOI](https://doi.org/10.1145/3631461.3631543)
+- Debasish Pattanayak, Gokarna Sharma. [Time-Color Tradeoff on Uniform Circle Formation by Asynchronous Robots](https://drdebmath.github.io/publications.html?pub=time-color-tradeoff-on-uniform-circle-formation-by-asynchronous-robots--2024-conference). IEEE International Parallel and Distributed Processing Symposium, IPDPS, 2024. [DOI](https://doi.org/10.1109/IPDPS57955.2024.00092)
+- Paola Flocchini, Debasish Pattanayak, Nicola Santoro, Masafumi Yamashita. [The Minimum Algorithm Size of k-Grouping by Silent Oblivious Robots](https://drdebmath.github.io/publications.html?pub=the-minimum-algorithm-size-of-k-grouping-by-silent-oblivious-robots--2024-conference). International Workshop on Combinatorial Algorithms, IWOCA, 2024. [DOI](https://doi.org/10.1007/978-3-031-63021-7_36)
+- Caterina Feletti, Debasish Pattanayak, Gokarna Sharma. [BA: Optimal Uniform Circle Formation by Asynchronous Luminous Robots](https://drdebmath.github.io/publications.html?pub=ba-optimal-uniform-circle-formation-by-asynchronous-luminous-robots--2024-conference). International Symposium on Distributed Computing, DISC, 2024. [DOI](https://doi.org/10.4230/LIPIcs.DISC.2024.46) · [arXiv](https://arxiv.org/abs/2405.06617)
+- Paola Flocchini, Debasish Pattanayak, Francesco Piselli, Nicola Santoro, Yukiko Yamauchi. [Asynchronous Separation of Unconscious Colored Robots](https://drdebmath.github.io/publications.html?pub=asynchronous-separation-of-unconscious-colored-robots--2024-conference). 16th International Workshop on Parallel and Distributed Algorithms and Applications, CANDARW:PDAA, 2024. [DOI](https://doi.org/10.1109/CANDARW64572.2024.00037)
+- Subhajit Pramanick, Sai Vamshi Samala, Debasish Pattanayak, Partha Sarathi Mandal. [Distributed Algorithms for Filling MIS Vertices of an Arbitrary Graph by Myopic Luminous Robots](https://drdebmath.github.io/publications.html?pub=distributed-algorithms-for-filling-mis-vertices-of-an-arbitrary-graph-by-myopic-luminous-robots--2023-journal). Theoretical Computer Science, Theor. Comput. Sci., 2023. [DOI](https://doi.org/10.1016/j.tcs.2023.114187)
+- Subhajit Pramanick, Sai Vamshi Samala, Debasish Pattanayak, Partha Sarathi Mandal. [Filling MIS Vertices by Myopic Luminous Robots](https://drdebmath.github.io/publications.html?pub=filling-mis-vertices-by-myopic-luminous-robots--2023-conference). International Conference on Distributed Computing and Internet Technology, ICDCIT, 2023. [DOI](https://doi.org/10.1007/978-3-031-24848-1_1) · [arXiv](https://arxiv.org/abs/2107.04885)
+- Debasish Pattanayak, Gokarna Sharma, Partha Sarathi Mandal. [Dispersion of Mobile Robots in Spite of Faults](https://drdebmath.github.io/publications.html?pub=dispersion-of-mobile-robots-in-spite-of-faults--2023-conference). International Symposium on Stabilization, Safety, and Security of Distributed Systems, SSS, 2023. [DOI](https://doi.org/10.1007/978-3-031-44274-2_31)
+- Debasish Pattanayak, Andrzej Pelc. [Computing Functions by Teams of Deterministic Finite Automata](https://drdebmath.github.io/publications.html?pub=computing-functions-by-teams-of-deterministic-finite-automata--2023-preprint). 2023. [DOI](https://doi.org/10.48550/arXiv.2310.01151) · [arXiv](https://arxiv.org/abs/2310.01151)
+- Debasish Pattanayak, Kaushik Mondal, Partha Sarathi Mandal, Stefan Schmid. [Area Convergence of Weaker Robots with Additional Capabilities](https://drdebmath.github.io/publications.html?pub=area-convergence-of-weaker-robots-with-additional-capabilities--2022-journal). The Computer Journal, Comput. J., 2022. [DOI](https://doi.org/10.1093/comjnl/bxaa182)
+- Giuseppe F. Italiano, Debasish Pattanayak, Gokarna Sharma. [Dispersion of Mobile Robots on Directed Anonymous Graphs](https://drdebmath.github.io/publications.html?pub=dispersion-of-mobile-robots-on-directed-anonymous-graphs--2022-conference). International Colloquium on Structural Information and Communication Complexity, SIROCCO, 2022. [DOI](https://link.springer.com/chapter/10.1007/978-3-031-09993-9_11)
+- Debasish Pattanayak, John Augustine, Partha Sarathi Mandal. [Randomized Gathering of Asynchronous Mobile Robots](https://drdebmath.github.io/publications.html?pub=randomized-gathering-of-asynchronous-mobile-robots--2021-journal). Theoretical Computer Science, Theor. Comput. Sci., 2021. [DOI](https://doi.org/10.1016/j.tcs.2020.11.048)
+- Debasish Pattanayak, Gokarna Sharma, Partha Sarathi Mandal. [Dispersion of Mobile Robots Tolerating Faults](https://drdebmath.github.io/publications.html?pub=dispersion-of-mobile-robots-tolerating-faults--2021-conference). Workshop on Distributed Algorithms for Large-scale Fault-tolerant Robots, WDALFR, 2021. [DOI](https://doi.org/10.1145/3427477.3429464)
+- Debasish Pattanayak, Dibakar Saha, Debarati Mitra, Partha Sarathi Mandal. [A Reconstructive Model for Identifying the Global Spread in a Pandemic](https://drdebmath.github.io/publications.html?pub=a-reconstructive-model-for-identifying-the-global-spread-in-a-pandemic--2021-conference). International Conference on Distributed Computing and Internet Technology, ICDCIT, 2021. [DOI](https://doi.org/10.1007/978-3-030-65621-8_12)
+- Kartikey Kant, Debasish Pattanayak, Partha Sarathi Mandal. [Fort Formation by an Automaton](https://drdebmath.github.io/publications.html?pub=fort-formation-by-an-automaton--2021-conference). International Conference on COMmunication Systems & NETworkS, COMSNETS, 2021. [DOI](https://doi.org/10.1109/COMSNETS51098.2021.9352839)
+- Dibakar Saha, Debasish Pattanayak, Partha Sarathi Mandal. [Surveillance of Uneven Surface with Self-organizing Unmanned Aerial Vehicles](https://drdebmath.github.io/publications.html?pub=surveillance-of-uneven-surface-with-self-organizing-unmanned-aerial-vehicles--2020-journal). IEEE Transactions on Mobile Computing, IEEE Trans. Mobile Comput., 2020. [DOI](https://doi.org/10.1109/TMC.2020.3022075)
+- Dibakar Saha, Debasish Pattanayak, Partha Sarathi Mandal. [Surveillance of uneven surface with unmanned aerial vehicles](https://drdebmath.github.io/publications.html?pub=surveillance-of-uneven-surface-with-unmanned-aerial-vehicles--2020-conference). International Conference on Distributed Computing and Networking, ICDCN, 2020. [DOI](https://doi.org/10.1145/3369740.3369781)
+- Debasish Pattanayak, Klaus-Tycho Foerster, Partha Sarathi Mandal, Stefan Schmid. [Conic Formation in Presence of Faulty Robots](https://drdebmath.github.io/publications.html?pub=conic-formation-in-presence-of-faulty-robots--2020-conference). International Symposium on Algorithms and Experiments for Wireless Sensor Networks, ALGOSENSORS, 2020. [DOI](https://doi.org/10.1007/978-3-030-62401-9_12) · [arXiv](https://arxiv.org/abs/2003.01914)
+- Debasish Pattanayak, H. Ramesh, Partha Sarathi Mandal. [Collaborative Evacuation of Mobile Robots](https://drdebmath.github.io/publications.html?pub=collaborative-evacuation-of-mobile-robots--2020-poster). Doctoral Symposium, International Conference on Distributed Computing and Networking, ICDCN, 2020. [DOI](https://doi.org/10.1145/3369740.3373806)
+- Debasish Pattanayak, Kaushik Mondal, H. Ramesh, Partha Sarathi Mandal. [Gathering of mobile robots with weak multiplicity detection in presence of crash-faults](https://drdebmath.github.io/publications.html?pub=gathering-of-mobile-robots-with-weak-multiplicity-detection-in-presence-of-crash-faults--2019-journal). Journal of Parallel and Distributed Computing, J. Parallel Distrib. Comput., 2019. [DOI](https://doi.org/10.1016/j.jpdc.2018.09.015) · [arXiv](https://arxiv.org/pdf/1608.02432.pdf)
+- Debasish Pattanayak, H. Ramesh, Partha Sarathi Mandal. [Chauffeuring a crashed robot from a disk](https://drdebmath.github.io/publications.html?pub=chauffeuring-a-crashed-robot-from-a-disk--2019-conference). International Symposium on Algorithms and Experiments for Wireless Sensor Networks, ALGOSENSORS, 2019. [DOI](https://doi.org/10.1007/978-3-030-34405-4_10) · [arXiv](https://arxiv.org/pdf/1906.03024.pdf)
+- Debasish Pattanayak, H. Ramesh, Partha Sarathi Mandal, Stefan Schmid. [Evacuating two robots from two unknown exits on the perimeter of a disk with wireless communication](https://drdebmath.github.io/publications.html?pub=evacuating-two-robots-from-two-unknown-exits-on-the-perimeter-of-a-disk-with-wireless-communication--2018-conference). International Conference on Distributed Computing and Networking, ICDCN, 2018. [DOI](https://doi.org/10.1145/3154273.3154313) · [arXiv](https://arxiv.org/pdf/1708.03792.pdf)
+- Debasish Pattanayak, Kaushik Mondal, H. Ramesh, Partha Sarathi Mandal. [Fault-Tolerant Gathering of Mobile Robots with Weak Multiplicity Detection](https://drdebmath.github.io/publications.html?pub=fault-tolerant-gathering-of-mobile-robots-with-weak-multiplicity-detection--2017-conference). International Conference on Distributed Computing and Networking, ICDCN, 2017. [DOI](https://doi.org/10.1145/3007748.3007786) · [arXiv](https://arxiv.org/pdf/1608.02432.pdf)
+- Debasish Pattanayak, Kaushik Mondal, Partha Sarathi Mandal, Stefan Schmid. [Convergence of even simpler robots without position information](https://drdebmath.github.io/publications.html?pub=convergence-of-even-simpler-robots-without-position-information--2017-conference). Networked Systems - International Conference, NETYS, 2017. [DOI](https://doi.org/10.1007/978-3-319-59647-1_6) · [arXiv](https://arxiv.org/pdf/1608.06002.pdf)
+
+## Talks
+
+- [AI Agents: Life and Money](https://drdebmath.github.io/Talks/ai-agents-life-and-money.html). Ethereum Day, IIT Indore, Oct 10 2026
+- [Introduction to Distributed Algorithms](https://drdebmath.github.io/Talks/distributed-algorithms.html). Foundational Lecture Series on Theoretical Computer Science (FSTCS) 2026, The Institute of Mathematical Sciences (IMSc), Chennai, Jun 19 2026
+- [AI Agents: The Moving Frontier](https://drdebmath.github.io/Talks/ai-agents-moving-frontier.html). Department of Mathematics, IIT Guwahati, Jun 12 2026
+- [AI AGENTS ON THE FRONTIER: HYPE VS REALITY](https://drdebmath.github.io/Talks/aiagents.html). Symposium 4.0, IIT Indore, Feb 13 2026
+- [Pattern Formation of Robot Swarms: Points, Lines and Circles](https://www.dropbox.com/scl/fi/j4en9zgb1rqqmecv25zsj/Jadavpur.pptx?rlkey=98018mfzhqqk534jexmolibvi&dl=0). Online Workshop on Distributed Algorithms For Swarm Robots, Jadavpur University, April 24 2025
+- [A Demo of GPT-3](https://twitter.com/Zeta_Luiss/status/1403267050785710080). LUISS School of Journalism
+- On the capabilities of GPT-3. The AI Times Workshop
+- Dispersion of Mobile Robots. IIT Bhilai, 11 October 2022
+
+## Teaching
+
+- [CS103: Introduction to Programming](https://drdebmath.github.io/IITIJul2026CS103/). IIT Indore, Jul-Nov 2026
+- [CS637: Theory of Computation and Graph Theory](https://drdebmath.github.io/IITIJan2026CS637). IIT Indore, Jan-Apr 2026
+- [CS103: Introduction to Programming](https://drdebmath.github.io/IITIJul2025CS103). IIT Indore, July-Nov 2025
+- Artificial Intelligence and Machine Learning (Bachelor). LUISS, Sep-Dec 2021
+- Machine Learning (Master). LUISS, Feb-May 2022
+- Introduction to Programming with Python. LUISS
+- Data Structures and Algorithms Lab. IIT Guwahati, Jul-Nov 2018
+- Object Oriented Programming with C++. IIT Guwahati, Jan-Apr 2018
+- Introduction to Programming. IIT Guwahati, Jul-Nov 2016 & 2017
+
+## Awards
+
+- Best paper award for Universal Dancing paper in SIROCCO 2026.
+- Best Doctoral Thesis award from the Department of Mathematics, IIT Guwahati.
+- Best Paper award at ICDCIT 2023 for paper on MIS Filling.
+- Awarded position under Distributed Computing Chair Research Grant, 2022 to work at UQO, Canada.
+- Awarded position under PRIN research grant titled 'AHeAD: efficient Algorithms for HArnessing networked Data' to work at LUISS Guido Carli, Italy.
+- Best Poster award in Doctoral Symposium, ICDCN 2020.
+- SERB Overseas Visiting Doctoral Fellowship, 2018-19 to work at University of Vienna.
+
+## Grants
+
+- PM-ECRG (Prime Minister Early Career Research Grant Scheme), ANRF (2026): Collective Resilience: Harnessing Swarm Intelligence Against Byzantine Faults
+- YFRSG (Young Faculty Research Seed Grant Scheme), IIT Indore: Schedulers Galore: Asynchronous, Synchronous and Sequential

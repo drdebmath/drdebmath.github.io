@@ -3,12 +3,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "npm run build:css && npm run build:seo",
+    "build": "npm run build:css && npm run build:seo && npm run build:llms && npm run build:prerender",
     "build:css": "tailwindcss -c tailwind.config.cjs -i ./src/tailwind.css -o ./assets/site.css --minify",
     "build:seo": "node gen-seo.mjs",
+    "build:llms": "node gen-llms.mjs",
+    "build:prerender": "node prerender.mjs",
     "validate": "npm run build:css && node validate-site.mjs"
   },
   "devDependencies": {
+    "jsdom": "^26.1.0",
     "tailwindcss": "^3.4.17"
   }
 }
