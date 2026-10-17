@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupDarkMode();
   setupGoToTopButton();
 
-  fetch("data.json?v=090e41103b")
+  fetch("data.json?v=fd20b19b9e")
     .then((response) => response.json())
     .then((data) => {
       setupPrimaryNav(data);
