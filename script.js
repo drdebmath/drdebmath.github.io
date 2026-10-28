@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupDarkMode();
   setupGoToTopButton();
 
-  fetch("data.json?v=fd20b19b9e")
+  fetch("data.json?v=a0ea337e17")
     .then((response) => response.json())
     .then((data) => {
       commonAuthors = data.common_authors || {};
@@ -296,26 +296,27 @@ function displayPositions(positions) {
   container.innerHTML = [...positions]
     .sort((left, right) => (right.start_date || "").localeCompare(left.start_date || ""))
     .map((entry) => {
-      const institution = entry.institution?.url
-        ? createLinkHtml({
-            url: entry.institution.url,
-            label: entry.institution.name,
-            className:
-              "text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200",
-          })
-        : escapeHtml(entry.institution?.name || "");
+      const linkOrText = (item) =>
+        item.url
+          ? createLinkHtml({
+              url: item.url,
+              label: item.name,
+              className:
+                "text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200",
+            })
+          : escapeHtml(item.name);
 
-      const supervisor = entry.institution?.supervisor
-        ? `<p class="mt-2 text-sm text-gray-600 dark:text-gray-300">With ${
-            entry.institution.supervisor.url
-              ? createLinkHtml({
-                  url: entry.institution.supervisor.url,
-                  label: entry.institution.supervisor.name,
-                  className:
-                    "text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200",
-                })
-              : escapeHtml(entry.institution.supervisor.name)
-          }</p>`
+      const institution = (entry.institutions || [entry.institution])
+        .filter((item) => item?.name)
+        .map(linkOrText)
+        .join(" &amp; ");
+
+      const supervisors =
+        entry.supervisors || (entry.institution?.supervisor ? [entry.institution.supervisor] : []);
+      const supervisor = supervisors.length
+        ? `<p class="mt-2 text-sm text-gray-600 dark:text-gray-300">${
+            supervisors.length > 1 ? "Co-supervised by" : "With"
+          } ${supervisors.map(linkOrText).join(" and ")}</p>`
         : "";
 
       const fellowship = entry.fellowship

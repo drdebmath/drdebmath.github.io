@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupDarkMode();
   setupGoToTopButton();
 
-  fetch("data.json?v=fd20b19b9e")
+  fetch("data.json?v=a0ea337e17")
     .then((response) => response.json())
     .then((data) => {
       initializePage(data);

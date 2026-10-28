@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupDarkMode();
   setupGoToTopButton();
 
-  fetch("data.json?v=fd20b19b9e")
+  fetch("data.json?v=a0ea337e17")
     .then((response) => response.json())
     .then((data) => {
       setupPrimaryNav(data);
@@ -181,9 +181,10 @@ function buildEras(aboutMe = {}) {
     eras.push({
       kind: "Position",
       title: entry.title || entry.tile || "",
-      institution: entry.institution,
-      people: entry.institution?.supervisor ? [entry.institution.supervisor] : [],
-      peopleLabel: "With",
+      institution: entry.institutions || entry.institution,
+      people:
+        entry.supervisors || (entry.institution?.supervisor ? [entry.institution.supervisor] : []),
+      peopleLabel: entry.supervisors?.length > 1 ? "Co-supervised by" : "With",
       fellowship: entry.fellowship || "",
       start,
       end: monthKeyFromIso(entry.end_date),
@@ -437,16 +438,20 @@ function buildEvents(data) {
 
 function renderEraCard(era) {
   const style = ERA_STYLES[era.kind];
-  const institution = era.institution?.name
-    ? era.institution.url
-      ? createLinkHtml({
-          url: era.institution.url,
-          label: era.institution.name,
-          className:
-            "text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200",
-        })
-      : escapeHtml(era.institution.name)
-    : "";
+  const institution = [era.institution]
+    .flat()
+    .filter((item) => item?.name)
+    .map((item) =>
+      item.url
+        ? createLinkHtml({
+            url: item.url,
+            label: item.name,
+            className:
+              "text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200",
+          })
+        : escapeHtml(item.name)
+    )
+    .join(" &amp; ");
   const people = (era.people || [])
     .filter((person) => person?.name)
     .map((person) =>
@@ -549,15 +554,15 @@ function splitEras(eras) {
 
 function renderStintCard(stint) {
   const style = ERA_STYLES[stint.kind];
-  const institution = stint.institution?.name
-    ? stint.institution.url
-      ? createLinkHtml({
-          url: stint.institution.url,
-          label: stint.institution.name,
-          className: "hover:underline",
-        })
-      : escapeHtml(stint.institution.name)
-    : "";
+  const institution = [stint.institution]
+    .flat()
+    .filter((item) => item?.name)
+    .map((item) =>
+      item.url
+        ? createLinkHtml({ url: item.url, label: item.name, className: "hover:underline" })
+        : escapeHtml(item.name)
+    )
+    .join(" &amp; ");
   const person = stint.people?.[0];
   const personHtml = person?.name
     ? ` · With ${

@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupDarkMode();
   setupGoToTopButton();
 
-  fetch("data.json?v=fd20b19b9e")
+  fetch("data.json?v=a0ea337e17")
     .then((response) => response.json())
     .then((data) => initializeCVPage(data))
     .catch((error) => {
@@ -220,6 +220,9 @@ function renderCvBiography(bioData) {
 }
 
 function institutionLinkHtml(institution) {
+  if (Array.isArray(institution)) {
+    return institution.map(institutionLinkHtml).filter(Boolean).join(" &amp; ");
+  }
   if (!institution?.name) return "";
   return institution.url
     ? createLinkHtml({
@@ -262,9 +265,10 @@ function buildTimelineItems(education, positions) {
     items.push({
       kind: "Position",
       title: entry.title || entry.tile || "",
-      institution: entry.institution,
-      people: entry.institution?.supervisor ? [entry.institution.supervisor] : [],
-      peopleLabel: "With",
+      institution: entry.institutions || entry.institution,
+      people:
+        entry.supervisors || (entry.institution?.supervisor ? [entry.institution.supervisor] : []),
+      peopleLabel: entry.supervisors?.length > 1 ? "Co-supervised by" : "With",
       fellowship: entry.fellowship || "",
       dates: formatDateRange(entry.start_date, entry.end_date) || entry.duration || "",
       sortKey: entry.start_date || "",
