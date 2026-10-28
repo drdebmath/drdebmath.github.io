@@ -756,6 +756,8 @@ function renderLegend() {
   });
 }
 
+let monthIndicatorAttached = false;
+
 function setupMonthIndicator() {
   const indicator = document.getElementById("timeline_current_month");
   if (!indicator) return;
@@ -775,9 +777,11 @@ function setupMonthIndicator() {
     indicator.textContent = label;
   };
 
-  if (!indicator.dataset.listenerAttached) {
+  // Tracked in module state, not on the element: pre-rendering bakes the DOM
+  // into the HTML, and a baked-in marker would stop the browser attaching it.
+  if (!monthIndicatorAttached) {
     window.addEventListener("scroll", update, { passive: true });
-    indicator.dataset.listenerAttached = "true";
+    monthIndicatorAttached = true;
   }
   update();
 }
