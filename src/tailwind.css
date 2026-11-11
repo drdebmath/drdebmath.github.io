@@ -134,6 +134,12 @@
     @apply text-white underline underline-offset-2;
   }
 
+  /* Links written for the white page hover to blue; on blue they must hover to white. */
+  .site-band a:not(.btn-primary):hover,
+  .site-footer a:not(.btn-primary):hover {
+    color: #fff;
+  }
+
   .site-band .btn-primary {
     @apply bg-white text-blue-800 hover:bg-blue-50 dark:bg-white dark:text-blue-900 dark:hover:bg-blue-50;
   }
