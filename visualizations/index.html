@@ -6,58 +6,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
         content="Interactive algorithm visualizations by category: traversal, shortest paths, minimum spanning trees, online algorithms, and distributed computing.">
-    <link rel="canonical" href="https://drdebmath.github.io/visualizations/">
+    <link rel="canonical" href="https://debasishpattanayak.com/visualizations/">
     <meta property="og:title" content="Algorithm Visualizations">
     <meta property="og:description"
         content="Interactive algorithm visualizations and slides by Debasish Pattanayak, organised by category.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://drdebmath.github.io/visualizations/">
-    <meta property="og:image" content="https://drdebmath.github.io/debasish_photo.jpeg">
+    <meta property="og:url" content="https://debasishpattanayak.com/visualizations/">
+    <meta property="og:image" content="https://debasishpattanayak.com/debasish_photo.jpeg">
     <meta name="twitter:card" content="summary">
     <title>Algorithm Visualizations - Debasish Pattanayak</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/site.css?v=86740aef4c">
+    <link rel="stylesheet" href="../assets/site.css?v=f9df8bc6a7">
+    <script>
+        // Dark class before first paint (stored choice, else the system setting).
+        (() => { try { const s = localStorage.getItem("darkMode"); if (s === null ? matchMedia("(prefers-color-scheme: dark)").matches : s === "true") document.documentElement.classList.add("dark"); } catch {} })();
+    </script>
 </head>
 
-<body class="bg-gray-100 text-gray-900 dark:bg-dark-bg dark:text-dark-text transition-colors duration-200 font-sans">
+<body class="bg-white text-gray-900 dark:bg-dark-bg dark:text-dark-text transition-colors duration-200 font-sans">
     <a href="#visualization-list"
         class="sr-only focus:not-sr-only fixed top-2 left-2 z-50 bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-300 px-3 py-1 rounded shadow">Skip
         to content</a>
 
-    <nav class="sticky top-0 z-40 bg-blue-600/95 dark:bg-blue-800/90 text-white backdrop-blur shadow-lg">
+    <nav class="site-nav">
         <div class="mx-auto max-w-screen-lg flex items-center justify-between gap-3 px-4 py-2">
             <ul class="flex min-w-0 flex-1 gap-2 overflow-x-auto whitespace-nowrap nav-scroll">
-                <li class="shrink-0"><a class="block rounded px-3 py-1.5 hover:bg-blue-700 dark:hover:bg-blue-900"
+                <li class="shrink-0"><a class="nav-link"
                         href="../index.html">Home</a></li>
-                <li class="shrink-0"><a class="block rounded px-3 py-1.5 hover:bg-blue-700 dark:hover:bg-blue-900"
+                <li class="shrink-0"><a class="nav-link"
                         href="../for_students.html">For Students</a></li>
-                <li class="shrink-0"><a class="block rounded px-3 py-1.5 hover:bg-blue-700 dark:hover:bg-blue-900"
+                <li class="shrink-0"><a class="nav-link"
                         href="#traversal">Traversal</a></li>
-                <li class="shrink-0"><a class="block rounded px-3 py-1.5 hover:bg-blue-700 dark:hover:bg-blue-900"
+                <li class="shrink-0"><a class="nav-link"
                         href="#shortest-paths">Shortest Paths</a></li>
-                <li class="shrink-0"><a class="block rounded px-3 py-1.5 hover:bg-blue-700 dark:hover:bg-blue-900"
+                <li class="shrink-0"><a class="nav-link"
                         href="#mst">Spanning Trees</a></li>
-                <li class="shrink-0"><a class="block rounded px-3 py-1.5 hover:bg-blue-700 dark:hover:bg-blue-900"
+                <li class="shrink-0"><a class="nav-link"
                         href="#online">Online</a></li>
-                <li class="shrink-0"><a class="block rounded px-3 py-1.5 hover:bg-blue-700 dark:hover:bg-blue-900"
+                <li class="shrink-0"><a class="nav-link"
                         href="#distributed">Distributed</a></li>
-                <li class="shrink-0"><a class="block rounded px-3 py-1.5 hover:bg-blue-700 dark:hover:bg-blue-900"
+                <li class="shrink-0"><a class="nav-link"
                         href="#tools">Tools &amp; Slides</a></li>
             </ul>
         </div>
     </nav>
 
-    <header class="bg-blue-700 dark:bg-blue-900 text-white py-10 shadow">
+    <header class="site-band">
         <div class="mx-auto max-w-screen-lg px-4">
-            <p class="text-sm font-semibold uppercase tracking-[0.25em] text-blue-100">Interactive Teaching Resources</p>
-            <h1 class="mt-3 text-4xl font-extrabold tracking-tight">Algorithm Visualizations</h1>
-            <p class="mt-4 max-w-3xl text-lg text-blue-50">
-                Browser-based demos, one algorithm at a time — step through each one, or use the editors and slides
-                to build your own examples.
-            </p>
+            <h1 class="band-title">Algorithm Visualizations</h1>
         </div>
     </header>
 
@@ -153,14 +149,6 @@
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">Many agents, local information, no central
                 controller.</p>
             <div class="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                <a href="blackhole.html"
-                    class="group rounded-lg border border-slate-200 bg-white p-5 shadow transition hover:-translate-y-1 hover:shadow-lg dark:border-slate-700 dark:bg-gray-800">
-                    <p class="text-sm font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">Search
-                    </p>
-                    <h3 class="mt-2 text-xl font-bold">Black Hole Search</h3>
-                    <p class="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-300">Agents locate a node that
-                        destroys every visitor, without losing them all.</p>
-                </a>
                 <a href="basic.html"
                     class="group rounded-lg border border-teal-100 bg-white p-5 shadow transition hover:-translate-y-1 hover:shadow-lg dark:border-teal-900 dark:bg-gray-800">
                     <p class="text-sm font-semibold uppercase tracking-wide text-teal-600 dark:text-teal-300">

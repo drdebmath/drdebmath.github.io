@@ -8,13 +8,13 @@ import {
   setupGoToTopButton,
   setupPrimaryNav,
   setupSiteSearch,
-} from "./shared.js?v=aac9500bb1";
+} from "./shared.js?v=9c1b8a704f";
 
 document.addEventListener("DOMContentLoaded", () => {
   setupDarkMode();
   setupGoToTopButton();
 
-  fetch("data.json?v=a0ea337e17")
+  fetch("data.json?v=42e086e9ae")
     .then((response) => response.json())
     .then((data) => {
       setupPrimaryNav(data);
@@ -563,13 +563,15 @@ function renderStintCard(stint) {
         : escapeHtml(item.name)
     )
     .join(" &amp; ");
-  const person = stint.people?.[0];
-  const personHtml = person?.name
-    ? ` · With ${
-        person.url
-          ? createLinkHtml({ url: person.url, label: person.name, className: "hover:underline" })
-          : escapeHtml(person.name)
-      }`
+  const people = (stint.people || []).filter((person) => person?.name);
+  const personHtml = people.length
+    ? ` · ${people.length > 1 ? "Co-supervised by" : "With"} ${people
+        .map((person) =>
+          person.url
+            ? createLinkHtml({ url: person.url, label: person.name, className: "hover:underline" })
+            : escapeHtml(person.name)
+        )
+        .join(" and ")}`
     : "";
 
   return `

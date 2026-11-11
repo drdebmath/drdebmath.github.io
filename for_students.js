@@ -1,4 +1,5 @@
 import {
+  createLinkHtml,
   escapeHtml,
   renderSiteFooter,
   renderStudentsSectionHtml,
@@ -6,7 +7,7 @@ import {
   setupGoToTopButton,
   setupPrimaryNav,
   setupSiteSearch,
-} from "./shared.js?v=aac9500bb1";
+} from "./shared.js?v=9c1b8a704f";
 
 const collaboratorData = [
   { name: "John Augustine", uni: "IIT Madras", coords: [12.9915, 80.2337], type: "indian" },
@@ -39,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupDarkMode();
   setupGoToTopButton();
 
-  fetch("data.json?v=a0ea337e17")
+  fetch("data.json?v=42e086e9ae")
     .then((response) => response.json())
     .then((data) => {
       initializePage(data);
@@ -57,7 +58,44 @@ function initializePage(data) {
   displayResearchInterests(data.research || []);
   displayStudents(data.students || {});
   displayBooks(data.recommended_books || []);
+  displayOpenProblems(data.about_me?.mobility_matters);
   initializeMap(collaboratorData);
+}
+
+// Points students to the Mobility Matters survey as the place to pick a problem.
+function displayOpenProblems(survey) {
+  const section = document.getElementById("open-problems");
+  const container = document.getElementById("open_problems_content");
+  if (!section || !container) return;
+  if (!survey?.url) {
+    section.remove();
+    return;
+  }
+
+  const name = survey.label || "Mobility Matters";
+  const actions = [
+    createLinkHtml({ url: survey.url, label: "Browse the open problems →", className: "btn-primary" }),
+    survey.pdf ? createLinkHtml({ url: survey.pdf, label: "Book (PDF)", className: "btn-quiet" }) : "",
+    survey.source_url
+      ? createLinkHtml({ url: survey.source_url, label: "Suggest a result or a problem", className: "meta-link self-center ml-1.5" })
+      : "",
+  ].filter(Boolean);
+
+  container.innerHTML = `
+    <div class="theorem">
+      <p class="max-w-3xl text-lg leading-relaxed text-gray-800 dark:text-gray-200 text-pretty">
+        Start with ${createLinkHtml({
+          url: survey.url,
+          label: name,
+          className: "font-bold text-blue-700 dark:text-blue-300 hover:underline underline-offset-2",
+        })}${survey.title ? `, <em>${escapeHtml(survey.title)}</em>` : ""}. ${escapeHtml(survey.description || "")}
+      </p>
+      <p class="mt-3 max-w-3xl text-base leading-7 text-gray-700 dark:text-gray-300">
+        If one of the open questions there interests you, read the papers it cites and write to me about it.
+      </p>
+      <div class="mt-4 flex flex-wrap gap-2.5">${actions.join("")}</div>
+    </div>
+  `;
 }
 
 function displayResearchInterests(interests) {

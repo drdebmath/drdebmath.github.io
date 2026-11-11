@@ -14,13 +14,13 @@ import {
   setupGoToTopButton,
   setupPrimaryNav,
   setupSiteSearch,
-} from "./shared.js?v=aac9500bb1";
+} from "./shared.js?v=9c1b8a704f";
 
 document.addEventListener("DOMContentLoaded", () => {
   setupDarkMode();
   setupGoToTopButton();
 
-  fetch("data.json?v=a0ea337e17")
+  fetch("data.json?v=42e086e9ae")
     .then((response) => response.json())
     .then((data) => initializeCVPage(data))
     .catch((error) => {

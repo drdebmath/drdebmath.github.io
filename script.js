@@ -18,13 +18,13 @@ import {
   setupGoToTopButton,
   setupPrimaryNav,
   setupSiteSearch,
-} from "./shared.js?v=aac9500bb1";
+} from "./shared.js?v=9c1b8a704f";
 
 document.addEventListener("DOMContentLoaded", () => {
   setupDarkMode();
   setupGoToTopButton();
 
-  fetch("data.json?v=a0ea337e17")
+  fetch("data.json?v=42e086e9ae")
     .then((response) => response.json())
     .then((data) => {
       commonAuthors = data.common_authors || {};
@@ -53,21 +53,149 @@ function initializeWebsite(data) {
   renderProfileHeader(data.about_me, {
     department: data.about_me?.department,
     stackedPosition: true,
+    showOffice: false,
   });
-  setupPrimaryNav(data, getHomeQuickLinks(data));
+  setupPrimaryNav(data);
+  displayHero(data);
+  displayFeatured(data);
   setupContentDisplay(data);
-  setupResponsiveLayout();
 }
 
-function getHomeQuickLinks(data) {
-  const links = [];
-  if (data.about_me?.whiteboard?.url) {
-    links.push({
-      href: data.about_me.whiteboard.url,
-      label: data.about_me.whiteboard.label || "Whiteboard",
+// One light per research theme, in data.json order. The hero simulation
+const THEME_LIGHTS = [
+  { text: "text-light-1 dark:text-lightd-1", border: "border-light-1 dark:border-lightd-1" },
+  { text: "text-light-2 dark:text-lightd-2", border: "border-light-2 dark:border-lightd-2" },
+  { text: "text-light-3 dark:text-lightd-3", border: "border-light-3 dark:border-lightd-3" },
+  { text: "text-light-4 dark:text-lightd-4", border: "border-light-4 dark:border-lightd-4" },
+];
+
+function displayHero(data) {
+  const about = data.about_me || {};
+  const themes = (data.research_themes || []).slice(0, THEME_LIGHTS.length);
+
+  const tagline = document.getElementById("tagline");
+  if (tagline) tagline.textContent = about.tagline || "";
+
+  const cvLink = document.getElementById("hero_cv");
+  if (cvLink && about.cv?.url) cvLink.href = about.cv.url;
+
+  setupHeroSimulation(data.hero_simulations || []);
+}
+
+// The hero figure is a real simulator run in an <iframe> (the simulator's own
+// "embed" mode). It is loaded only after the page itself has finished loading.
+function setupHeroSimulation(simulations) {
+  const frame = document.getElementById("hero_sim");
+  const caption = document.getElementById("hero_sim_caption");
+  const tabs = document.getElementById("hero_sim_tabs");
+  if (!frame || !caption || !tabs || !simulations.length) return;
+
+  const TAB = "text-[0.95rem] underline-offset-4 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white";
+  const TAB_ON = "font-bold text-white underline";
+  const TAB_OFF = "text-blue-100 hover:text-white hover:underline";
+
+  tabs.innerHTML = simulations
+    .map(
+      (sim, index) =>
+        `<button type="button" data-sim="${index}" aria-pressed="false">(${String.fromCharCode(97 + index)}) ${escapeHtml(sim.label || sim.title || "")}</button>`
+    )
+    .join("");
+
+  let current = 0;
+  let ready = false;
+  const frameUrl = (sim) => {
+    const theme = document.documentElement.classList.contains("dark") ? "dark" : "light";
+    return `${sim.embed_url}${sim.embed_url.includes("?") ? "&" : "?"}theme=${theme}`;
+  };
+
+  const show = (index) => {
+    current = index;
+    const sim = simulations[index];
+    caption.innerHTML = `<span class="italic">${escapeHtml(sim.title || "")}.</span> ${escapeHtml(
+      sim.description || ""
+    )}`;
+    tabs.querySelectorAll("button[data-sim]").forEach((button) => {
+      const on = Number(button.dataset.sim) === index;
+      button.setAttribute("aria-pressed", String(on));
+      button.className = `${TAB} ${on ? TAB_ON : TAB_OFF}`;
     });
-  }
-  return links;
+    if (ready) frame.src = frameUrl(sim);
+  };
+
+  // The runs change on their own until the visitor picks one; they also wait
+  // while the pointer or focus is on the figure, or the tab is in the background.
+  const ROTATE_MS = 20000;
+  const figure = frame.closest("figure") || frame.parentElement;
+  let auto = simulations.length > 1;
+  let hovering = false;
+
+  tabs.addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-sim]");
+    if (!button) return;
+    auto = false;
+    show(Number(button.dataset.sim));
+  });
+
+  show(0);
+
+  // Pre-rendering bakes the DOM into the page: leave the frame empty there.
+  if (window.__PRERENDER__) return;
+
+  figure.addEventListener("pointerenter", () => (hovering = true));
+  figure.addEventListener("pointerleave", () => (hovering = false));
+  // Clicks inside the iframe never reach this page; the window losing focus to it is the signal.
+  window.addEventListener("blur", () => {
+    if (document.activeElement === frame) auto = false;
+  });
+
+  // Keep the simulator out of the page's own load: start it once the page is done and idle.
+  const start = () => {
+    ready = true;
+    frame.src = frameUrl(simulations[current]);
+    new MutationObserver(() => {
+      frame.src = frameUrl(simulations[current]);
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    setInterval(() => {
+      if (!auto || hovering || document.hidden) return;
+      show((current + 1) % simulations.length);
+    }, ROTATE_MS);
+  };
+  const whenIdle = () => (window.requestIdleCallback ? requestIdleCallback(start, { timeout: 1500 }) : setTimeout(start, 300));
+  if (document.readyState === "complete") whenIdle();
+  else window.addEventListener("load", whenIdle, { once: true });
+}
+
+// The featured project (about_me.mobility_matters), set as a theorem-like block.
+function displayFeatured(data) {
+  const section = document.getElementById("featured");
+  const container = document.getElementById("featured_content");
+  const survey = data.about_me?.mobility_matters;
+  if (!section || !container || !survey?.url) return;
+
+  const actions = [
+    createLinkHtml({ url: survey.url, label: "Open the survey →", className: "btn-primary" }),
+    survey.pdf ? createLinkHtml({ url: survey.pdf, label: "Book (PDF)", className: "btn-quiet" }) : "",
+    survey.source_url
+      ? createLinkHtml({ url: survey.source_url, label: "Contribute on GitHub", className: "meta-link self-center ml-1.5" })
+      : "",
+  ].filter(Boolean);
+
+  container.innerHTML = `
+    <div class="theorem">
+      <h2 class="text-3xl font-bold leading-tight text-gray-900 dark:text-white">
+        ${createLinkHtml({
+          url: survey.url,
+          label: survey.label || "Mobility Matters",
+          className: "hover:text-blue-700 dark:hover:text-blue-300 transition-colors",
+        })}
+      </h2>
+      <p class="mt-2 max-w-3xl text-lg leading-relaxed text-gray-800 dark:text-gray-200 text-pretty">${
+        survey.title ? `<em>${escapeHtml(survey.title)}.</em> ` : ""
+      }${escapeHtml(survey.description || "")}</p>
+      <div class="mt-4 flex flex-wrap gap-2.5">${actions.join("")}</div>
+    </div>
+  `;
+  section.classList.remove("hidden");
 }
 
 function initializePublicationsPage(data) {
@@ -95,59 +223,50 @@ function initializeSimulatorsPage(data) {
   setupPrimaryNav(data);
   const container = document.getElementById("simulators_grid");
   if (container) {
-    container.innerHTML = renderSimulatorCardsHtml(data.visualizations?.simulators || []);
+    container.innerHTML = renderSimulatorEmbedsHtml(data.visualizations?.simulators || []);
   }
 }
 
-/**
- * Handles moving the News and Blog sections between the main column (mobile)
- * and the sidebar (desktop) to ensure no vertical gap issues.
- */
-function setupResponsiveLayout() {
-  const rightSidebar = document.getElementById("right-sidebar");
-  const aboutMeSection = document.getElementById("about_me");
-  const sidebarSections = ["news", "blog"]
-    .map((id) => document.getElementById(id))
-    .filter(Boolean);
-
-  if (!sidebarSections.length || !rightSidebar || !aboutMeSection) return;
-
-  const handleResize = () => {
-    const isDesktop = window.matchMedia("(min-width: 1280px)").matches;
-
-    if (isDesktop) {
-      // Move to sidebar if not already there
-      if (sidebarSections[0].parentElement !== rightSidebar) {
-        rightSidebar.append(...sidebarSections);
-        rightSidebar.classList.remove("hidden"); // Ensure sidebar is visible
-      }
-    } else {
-      // Move back to main content flow (after About Me and its highlight)
-      if (sidebarSections[0].parentElement === rightSidebar) {
-        const anchor = document.getElementById("mobility_matters") || aboutMeSection;
-        anchor.after(...sidebarSections);
-        rightSidebar.classList.add("hidden");
-      }
-    }
-  };
-
-  // Initial check
-  handleResize();
-
-  // Listen for resize events
-  window.addEventListener("resize", handleResize);
+// Simulators page: every simulator runs in place, in its own lazily loaded frame.
+// `embed_url` (the simulator's compact embed mode) is used when it has one;
+// `embed: false` lists the entry without a frame.
+function renderSimulatorEmbedsHtml(simulators) {
+  return simulators
+    .map((item) => {
+      const links = [
+        createLinkHtml({ url: item.url, label: "Open full screen ↗", className: "meta-link whitespace-nowrap" }),
+        item.source_url
+          ? createLinkHtml({ url: item.source_url, label: "Source code", className: "meta-link whitespace-nowrap" })
+          : "",
+      ].filter(Boolean);
+      const frame =
+        item.embed === false
+          ? ""
+          : `<div class="mt-3 overflow-hidden rounded-sm border border-gray-300 dark:border-gray-600 bg-white">
+              <iframe src="${escapeHtml(item.embed_url || item.url)}" title="${escapeHtml(
+                item.name
+              )} simulator" loading="lazy" class="block h-[70vh] min-h-[26rem] max-h-[46rem] w-full border-0"></iframe>
+            </div>`;
+      return `
+        <article>
+          <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white">${escapeHtml(item.name)}</h3>
+            <p class="flex flex-wrap gap-x-5 gap-y-1">${links.join("")}</p>
+          </div>
+          <p class="mt-1 text-base leading-7 text-gray-700 dark:text-gray-300">${escapeHtml(
+            item.description || ""
+          )}</p>
+          ${frame}
+        </article>
+      `;
+    })
+    .join("");
 }
 
 function setupContentDisplay(data) {
   displaySectionContent("about_me_content", displayAboutMe, data.about_me);
   displaySectionContent("news_content", displayNewsAndArchive, data.news);
   displayBlog(data.about_me?.blog);
-  displayMobilityMatters(data.about_me?.mobility_matters);
-  displaySectionContent(
-    "research_overview_content",
-    displayResearchOverview,
-    data.current_research
-  );
   displaySectionContent(
     "research_themes_content",
     displayResearchThemes,
@@ -179,44 +298,6 @@ function displayBlog(blog) {
   renderLatestBlogPosts("blog_content", blog, 3);
 }
 
-function displayMobilityMatters(survey) {
-  const section = document.getElementById("mobility_matters");
-  if (!section) return;
-  if (!survey?.url) {
-    section.remove();
-    return;
-  }
-
-  const secondaryClass =
-    "inline-flex items-center rounded-full border border-blue-200 dark:border-blue-800 bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-gray-700 text-sm font-semibold px-4 py-2 shadow-sm transition-colors";
-  const actions = [
-    createLinkHtml({
-      url: survey.url,
-      label: "Explore the survey →",
-      className:
-        "inline-flex items-center rounded-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 shadow-md hover:shadow-lg transition-all",
-    }),
-    survey.pdf
-      ? createLinkHtml({ url: survey.pdf, label: "Read as a book (PDF)", className: secondaryClass })
-      : "",
-    survey.source_url
-      ? createLinkHtml({ url: survey.source_url, label: "Contribute on GitHub", className: secondaryClass })
-      : "",
-  ].filter(Boolean);
-
-  document.getElementById("mobility_matters_content").innerHTML = `
-    <div class="panel-body border-l-4 border-blue-500 bg-gradient-to-br from-blue-50 via-white to-cyan-50/60 dark:from-blue-950/40 dark:via-gray-800 dark:to-gray-800">
-      <p class="text-xs font-semibold uppercase tracking-[0.18em] text-blue-600 dark:text-blue-300">Featured project · Living survey</p>
-      <h2 id="mobility_matters_heading" class="mt-2 text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">
-        ${createLinkHtml({ url: survey.url, label: survey.label || "Mobility Matters", className: "hover:underline" })}
-      </h2>
-      ${survey.title ? `<p class="mt-1 text-base font-medium text-blue-800 dark:text-blue-200">${escapeHtml(survey.title)}</p>` : ""}
-      ${survey.description ? `<p class="mt-3 max-w-3xl text-sm sm:text-[0.95rem] leading-7 text-gray-700 dark:text-gray-200">${escapeHtml(survey.description)}</p>` : ""}
-      <div class="mt-5 flex flex-wrap gap-2.5">${actions.join("")}</div>
-    </div>
-  `;
-}
-
 function displaySectionContent(elementId, displayFunction, data, ...args) {
   if (data) {
     // Check if data exists before trying to display
@@ -233,14 +314,9 @@ function displaySectionContent(elementId, displayFunction, data, ...args) {
 
 function displayAboutMe(aboutMe) {
   const container = document.getElementById("about_me_content");
-  // Keep panel-body padding from HTML; only style the text block
   container.className =
-    "panel-body text-justify text-sm sm:text-base leading-7 text-gray-800 dark:text-gray-100";
-  container.innerHTML = "";
-
-  const bioContainer = document.createElement("div");
-  bioContainer.innerHTML = linkifyBiographyHtml(aboutMe.biodata);
-  container.appendChild(bioContainer);
+    "prose-link text-lg leading-relaxed text-gray-800 dark:text-gray-100 text-pretty";
+  container.innerHTML = `<p>${linkifyBiographyHtml(aboutMe.biodata, "")}</p>`;
 }
 
 function displayEducation(education) {
@@ -415,111 +491,88 @@ function renderNewsBody(item, { linkTitle = false } = {}) {
   `;
 }
 
+const KATEX_BASE = "https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/";
+let katexLoading = null;
+
+// KaTeX is fetched only when some text on the page actually contains math.
+function loadKatex() {
+  if (katexLoading) return katexLoading;
+  const script = (src) =>
+    new Promise((resolve, reject) => {
+      const el = document.createElement("script");
+      el.src = KATEX_BASE + src;
+      el.crossOrigin = "anonymous";
+      el.onload = resolve;
+      el.onerror = reject;
+      document.head.append(el);
+    });
+  const css = document.createElement("link");
+  css.rel = "stylesheet";
+  css.href = `${KATEX_BASE}katex.min.css`;
+  css.crossOrigin = "anonymous";
+  document.head.append(css);
+  katexLoading = script("katex.min.js").then(() => script("contrib/auto-render.min.js"));
+  return katexLoading;
+}
+
+function renderMath(element) {
+  // Never while pre-rendering: the loader would be baked into the page.
+  if (window.__PRERENDER__ || !element || !element.textContent.includes("$")) return;
+  loadKatex()
+    .then(() =>
+      window.renderMathInElement(element, {
+        delimiters: [
+          { left: "$$", right: "$$", display: true },
+          { left: "$", right: "$", display: false },
+        ],
+        throwOnError: false,
+      })
+    )
+    .catch((error) => console.warn("KaTeX unavailable:", error));
+}
+
+// The six most recent items as a dated list; the full history is on the timeline.
 function displayNewsAndArchive(news) {
   const container = document.getElementById("news_content");
   if (!container) return;
 
-  container.innerHTML = "";
-
   if (!news || news.length === 0) {
-    container.innerHTML = '<p class="dark:text-white">No news available.</p>';
+    container.innerHTML =
+      '<p class="text-sm text-gray-500 dark:text-gray-400 italic">No news available.</p>';
     return;
   }
 
-  const dateContainer = document.createElement("div");
-  dateContainer.className = "flex flex-wrap gap-1 mb-3";
-  const newsContainer = document.createElement("div");
-  newsContainer.className =
-    "news-item rounded-xl border border-gray-200/80 dark:border-gray-700 bg-gray-50/80 dark:bg-gray-900/40 p-4 border-l-4 border-l-green-600 dark:text-white shadow-sm text-sm leading-6";
-
-  let currentIndex = 0;
-  let interval;
-  const dateElements = [];
-
-  function showNews(index) {
-    dateElements.forEach((dateElement, itemIndex) => {
-      dateElement.classList.toggle("bg-green-600", itemIndex === index);
-      dateElement.classList.toggle("bg-blue-600", itemIndex !== index);
-      dateElement.setAttribute("aria-pressed", String(itemIndex === index));
-    });
-
-    newsContainer.innerHTML = renderNewsBody(news[index], { linkTitle: true });
-  }
-
-  function startInterval() {
-    clearInterval(interval);
-    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
-      return;
-    }
-    interval = setInterval(() => {
-      currentIndex = (currentIndex + 1) % Math.min(4, news.length);
-      showNews(currentIndex);
-    }, 3000);
-  }
-
-  news.slice(0, 4).forEach((item, index) => {
-    const { day, month, year } = formatNewsDateParts(item.date);
-    const dateElement = document.createElement("button");
-    dateElement.type = "button";
-    dateElement.className =
-      "flex-shrink-0 w-11 h-11 flex flex-col items-center justify-center bg-blue-600 text-white rounded-lg m-0.5 cursor-pointer shadow-md hover:shadow-lg transition-all duration-200 hover:bg-green-600";
-    dateElement.setAttribute(
-      "aria-label",
-      `Show news from ${item.date || "this date"}`
-    );
-    dateElement.setAttribute("aria-pressed", "false");
-    dateElement.innerHTML = `
-      <span class="text-[10px] leading-tight">${escapeHtml(day)}</span>
-      <span class="text-[10px] leading-tight font-bold">${escapeHtml(month)}</span>
-      <span class="text-[10px] leading-tight font-bold">${escapeHtml(year)}</span>
-    `;
-
-    dateElement.addEventListener("mouseenter", () => {
-      clearInterval(interval);
-      currentIndex = index;
-      showNews(index);
-    });
-    dateElement.addEventListener("mouseleave", startInterval);
-    dateElement.addEventListener("focus", () => {
-      clearInterval(interval);
-      currentIndex = index;
-      showNews(index);
-    });
-    dateElement.addEventListener("blur", startInterval);
-    dateElement.addEventListener("click", () => {
-      currentIndex = index;
-      showNews(currentIndex);
-      startInterval();
-    });
-
-    dateContainer.appendChild(dateElement);
-    dateElements.push(dateElement);
-  });
-
-  container.appendChild(dateContainer);
-  container.appendChild(newsContainer);
-
-  showNews(currentIndex);
-  startInterval();
-
-  // Older news stays on CV / full history is not duplicated on the homepage
-}
-
-function displayResearchOverview(currentResearch) {
-  const container = document.getElementById("research_overview_content");
-  if (!container) return;
-
   container.innerHTML = `
-    <div class="surface-card relative overflow-hidden bg-white/95 dark:bg-gray-900/50">
-      <div class="absolute inset-y-0 left-0 w-1.5 bg-gradient-to-b from-blue-500 via-cyan-500 to-blue-600"></div>
-      <div class="px-5 py-5 sm:px-6">
-        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-blue-600 dark:text-blue-300 mb-2">Overview</p>
-        <p class="text-sm sm:text-[0.95rem] leading-7 text-gray-700 dark:text-gray-200">
-          ${escapeHtml(currentResearch || "No current research information available.")}
-        </p>
-      </div>
-    </div>
+    <ol class="divide-y divide-gray-200 dark:divide-gray-700">
+      ${news
+        .slice(0, 6)
+        .map((item) => {
+          const { day, month, year } = formatNewsDateParts(item.date);
+          const title = item.url
+            ? createLinkHtml({
+                url: item.url,
+                label: item.title,
+                className:
+                  "text-gray-900 dark:text-gray-100 hover:text-blue-700 dark:hover:text-blue-300 underline decoration-gray-300 dark:decoration-gray-600 underline-offset-4 hover:decoration-current",
+              })
+            : escapeHtml(item.title || "");
+          const extras = extractResourceLinks(item, { includePrimary: false })
+            .map((link) => createLinkHtml({ url: link.url, label: link.label, className: "meta-link" }))
+            .join('<span class="mx-1.5 text-gray-400">·</span>');
+          return `
+            <li class="py-3.5 first:pt-0">
+              <p class="text-xs font-semibold uppercase tracking-[0.12em] text-gray-500 dark:text-gray-400 tabular-nums">${escapeHtml(
+                [day, month, year].filter(Boolean).join(" ")
+              )}</p>
+              <p class="mt-1 text-[0.95rem] leading-6 text-gray-800 dark:text-gray-200">${title}</p>
+              ${extras ? `<p class="mt-1">${extras}</p>` : ""}
+            </li>
+          `;
+        })
+        .join("")}
+    </ol>
   `;
+  renderMath(container);
 }
 
 // A theme may name any version of a work; show the head of its stack
@@ -528,33 +581,6 @@ function findPublicationByTitle(publications, title) {
   const match = (publications || []).find((pub) => pub.title === title);
   return match ? getPublicationStack(match).head : undefined;
 }
-
-const THEME_ACCENTS = [
-  {
-    bar: "from-blue-500 to-cyan-500",
-    badge: "bg-blue-600 text-white",
-    soft: "bg-blue-50 dark:bg-blue-950/30 border-blue-100 dark:border-blue-900/50",
-    chip: "bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200",
-  },
-  {
-    bar: "from-violet-500 to-fuchsia-500",
-    badge: "bg-violet-600 text-white",
-    soft: "bg-violet-50 dark:bg-violet-950/30 border-violet-100 dark:border-violet-900/50",
-    chip: "bg-violet-100 text-violet-800 dark:bg-violet-900/50 dark:text-violet-200",
-  },
-  {
-    bar: "from-amber-500 to-orange-500",
-    badge: "bg-amber-600 text-white",
-    soft: "bg-amber-50 dark:bg-amber-950/30 border-amber-100 dark:border-amber-900/50",
-    chip: "bg-amber-100 text-amber-900 dark:bg-amber-900/50 dark:text-amber-100",
-  },
-  {
-    bar: "from-emerald-500 to-teal-500",
-    badge: "bg-emerald-600 text-white",
-    soft: "bg-emerald-50 dark:bg-emerald-950/30 border-emerald-100 dark:border-emerald-900/50",
-    chip: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-200",
-  },
-];
 
 // Versions are linked through see_also (publicationKey() slugs) and stacked
 // by buildPublicationStacks, so the label is derived from the target's own
@@ -575,18 +601,13 @@ function renderRelatedVersionLinks(pub) {
       const url = target.doi || target.arxiv || target.url;
       if (!url) return "";
       const venue = target.conference?.short || target.journal?.short || "";
-      const label = `${relatedVersionLabel(pub, target)}${venue ? ` (${venue})` : ""}`;
-      return createLinkHtml({
-        url,
-        label: `${label} →`,
-        className:
-          "inline-flex items-center rounded-md bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800 px-2 py-0.5 text-[11px] font-semibold text-indigo-700 dark:text-indigo-300 hover:underline",
-      });
+      const label = `${relatedVersionLabel(pub, target)}${venue ? `, ${venue}` : ""}`;
+      return createLinkHtml({ url, label, className: "meta-link" });
     })
-    .join("");
+    .filter(Boolean);
 }
 
-function renderSelectedPaperRow(pub, index) {
+function renderSelectedPaperRow(pub) {
   if (!pub) return "";
 
   const venue =
@@ -597,73 +618,32 @@ function renderSelectedPaperRow(pub, index) {
         pub.journal?.full ||
         pub.booktitle ||
         "";
-  const typeLabel =
-    pub.type === "journal"
-      ? "Journal"
-      : pub.type === "conference"
-        ? "Conference"
-        : pub.type === "preprint"
-          ? "Preprint"
-          : pub.type
-            ? escapeHtml(pub.type)
-            : "";
   const link = pub.doi || pub.arxiv || pub.url;
+  const titleClass =
+    "font-medium text-gray-900 dark:text-white hover:text-blue-700 dark:hover:text-blue-300 transition-colors";
   const titleHtml = link
-    ? createLinkHtml({
-        url: link,
-        label: pub.title,
-        className:
-          "font-semibold text-gray-900 dark:text-white hover:text-blue-700 dark:hover:text-blue-300 transition-colors",
-      })
-    : `<span class="font-semibold text-gray-900 dark:text-white">${escapeHtml(
-        pub.title
-      )}</span>`;
-  const arxivLink = pub.arxiv
-    ? createLinkHtml({
-        url: pub.arxiv,
-        label: "arXiv",
-        className:
-          "inline-flex items-center rounded-md bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 dark:text-emerald-300 hover:underline",
-      })
-    : "";
-  const award = pub.award
-    ? `<span class="inline-flex items-center rounded-md bg-amber-100 dark:bg-amber-900/40 border border-amber-200 dark:border-amber-800 px-2 py-0.5 text-[11px] font-semibold text-amber-800 dark:text-amber-200">${escapeHtml(
-        pub.award
-      )}</span>`
-    : "";
-  const relatedVersionLinks = renderRelatedVersionLinks(pub);
+    ? createLinkHtml({ url: link, label: pub.title, className: titleClass })
+    : `<span class="font-medium text-gray-900 dark:text-white">${escapeHtml(pub.title)}</span>`;
+  const { head, others } = getPublicationStack(pub);
+  const award = [head, ...others].map((version) => version.award).find(Boolean);
+
+  const meta = [
+    `<span class="font-semibold text-gray-700 dark:text-gray-200">${escapeHtml(
+      [venue, pub.year].filter(Boolean).join(" ")
+    )}</span>`,
+    award ? `<span class="tag-award">★ ${escapeHtml(award)}</span>` : "",
+    pub.arxiv && pub.arxiv !== link
+      ? createLinkHtml({ url: pub.arxiv, label: "arXiv", className: "meta-link" })
+      : "",
+    ...renderRelatedVersionLinks(pub),
+  ].filter(Boolean);
 
   return `
-    <li class="group relative rounded-xl border border-gray-100 dark:border-gray-700/80 bg-white dark:bg-gray-900/60 px-3.5 py-3 shadow-sm hover:shadow-md hover:border-blue-200 dark:hover:border-blue-800 transition-all">
-      <div class="flex items-start gap-3">
-        <span class="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-[11px] font-bold text-gray-500 dark:text-gray-400 shadow-sm">
-          ${index + 1}
-        </span>
-        <div class="min-w-0 flex-1">
-          <div class="text-sm leading-6">${titleHtml}</div>
-          <div class="mt-2 flex flex-wrap items-center gap-2">
-            ${
-              typeLabel
-                ? `<span class="inline-flex items-center rounded-md bg-gray-100 dark:bg-gray-800 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">${typeLabel}</span>`
-                : ""
-            }
-            ${
-              venue
-                ? `<span class="text-xs text-gray-600 dark:text-gray-400">${escapeHtml(
-                    venue
-                  )}${pub.year ? ` · ${escapeHtml(String(pub.year))}` : ""}</span>`
-                : pub.year
-                  ? `<span class="text-xs text-gray-600 dark:text-gray-400">${escapeHtml(
-                      String(pub.year)
-                    )}</span>`
-                  : ""
-            }
-            ${arxivLink}
-            ${award}
-            ${relatedVersionLinks}
-          </div>
-        </div>
-      </div>
+    <li class="py-3">
+      <p class="text-[0.95rem] leading-6">${titleHtml}</p>
+      <p class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-gray-500 dark:text-gray-400">
+        ${meta.join("")}
+      </p>
     </li>
   `;
 }
@@ -678,73 +658,51 @@ function displayResearchThemes({ themes, publications }) {
     return;
   }
 
-  container.className = "space-y-4";
   container.innerHTML = `
-    <div class="grid gap-4 lg:grid-cols-2">
+    <div class="grid gap-6 lg:grid-cols-2">
       ${themes
         .map((theme, themeIndex) => {
-          const accent = THEME_ACCENTS[themeIndex % THEME_ACCENTS.length];
+          const light = THEME_LIGHTS[themeIndex % THEME_LIGHTS.length];
           const papers = (theme.selected_papers || [])
             .map((title) => findPublicationByTitle(publications, title))
             .filter(Boolean);
 
           return `
-            <article class="surface-card-hover group relative overflow-hidden h-full flex flex-col">
-              <div class="h-1.5 bg-gradient-to-r ${accent.bar}"></div>
-              <div class="p-5 flex flex-col flex-1">
-                <div class="flex items-start gap-3">
-                  <span class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-sm font-bold shadow-md ${accent.badge}">
-                    ${themeIndex + 1}
-                  </span>
-                  <div class="min-w-0">
-                    <h3 class="text-base sm:text-lg font-bold text-gray-900 dark:text-white leading-snug">
-                      ${escapeHtml(theme.title || "")}
-                    </h3>
-                    ${
+            <article id="theme-${themeIndex + 1}" class="surface-card scroll-mt-28 border-t-4 p-5 sm:p-6 ${light.border}">
+              <h3 class="flex items-baseline gap-2.5 text-xl font-bold leading-snug text-gray-900 dark:text-white">
+                <span class="light-dot translate-y-[-1px] ${light.text}"></span>
+                ${escapeHtml(theme.title || "")}
+              </h3>
+              ${
+                theme.description
+                  ? `<p class="mt-2 text-[0.95rem] leading-7 text-gray-600 dark:text-gray-300">${escapeHtml(
                       theme.description
-                        ? `<p class="mt-1.5 text-sm leading-6 text-gray-600 dark:text-gray-300">${escapeHtml(
-                            theme.description
-                          )}</p>`
-                        : ""
-                    }
-                  </div>
-                </div>
-                <ul class="mt-4 space-y-2 flex-1">
-                  ${
-                    papers.length
-                      ? papers
-                          .map((paper, paperIndex) =>
-                            renderSelectedPaperRow(paper, paperIndex)
-                          )
-                          .join("")
-                      : '<li class="text-sm text-gray-500 italic">No selected papers.</li>'
-                  }
-                </ul>
-              </div>
+                    )}</p>`
+                  : ""
+              }
+              <ul class="mt-4 divide-y divide-gray-200 dark:divide-gray-700 border-t border-gray-200 dark:border-gray-700">
+                ${
+                  papers.length
+                    ? papers.map((paper) => renderSelectedPaperRow(paper)).join("")
+                    : '<li class="py-3 text-sm text-gray-500 italic">No selected papers.</li>'
+                }
+              </ul>
             </article>
           `;
         })
         .join("")}
     </div>
-    <div class="surface-card px-5 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white/90 dark:bg-gray-900/50">
-      <div>
-        <p class="text-sm font-semibold text-gray-900 dark:text-white">Work with me on these themes</p>
-        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">
-          Open problems, supervision, and student opportunities.
-        </p>
-      </div>
-      <div class="flex flex-wrap gap-2 shrink-0">
-        <a href="for_students.html"
-           class="inline-flex items-center rounded-full border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/40 px-4 py-2 text-sm font-semibold text-blue-800 dark:text-blue-200 shadow-sm hover:shadow-md hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-all">
-          For students
-        </a>
-        <a href="publications.html"
-           class="inline-flex items-center rounded-full bg-blue-600 hover:bg-blue-700 px-4 py-2 text-sm font-semibold text-white shadow-md hover:shadow-lg transition-all">
-          Full publications →
-        </a>
+    <div class="mt-12 flex flex-col gap-4 border-y border-gray-200 dark:border-gray-700 py-5 sm:flex-row sm:items-center sm:justify-between">
+      <p class="text-lg font-bold text-gray-900 dark:text-white">
+        Open problems, supervision and student projects on these themes.
+      </p>
+      <div class="flex shrink-0 flex-wrap gap-2.5">
+        <a href="for_students.html" class="btn-quiet">For students</a>
+        <a href="publications.html" class="btn-primary">All publications</a>
       </div>
     </div>
   `;
+  renderMath(container);
 }
 
 function parseTalkSortKey(talk) {
@@ -773,87 +731,68 @@ function displayRecentTalks({ talks = [], featuredTitles = [], limit = 3 } = {})
       .slice(0, limit);
   }
 
-  const colorClass = "bg-purple-50 dark:bg-purple-950/40 border-purple-500";
-
-  // panel-body is already on the container in HTML; keep only the grid
-  container.className =
-    "panel-body talks-container grid gap-3 sm:grid-cols-2 xl:grid-cols-3";
+  container.className = "talks-container grid gap-4 sm:grid-cols-2 lg:grid-cols-3";
   container.innerHTML = recent.length
-    ? recent.map((talk) => displayAsTalkCard(talk, colorClass)).join("")
+    ? recent.map((talk) => displayAsTalkCard(talk)).join("")
     : '<p class="text-gray-600 dark:text-gray-400 italic">No talks listed.</p>';
 }
 
-function renderTeachingCards(
-  courses,
-  colorClass,
-  sectionLabel,
-  emptyMessage,
-  flagClass = "bg-teal-700 before:border-t-teal-900"
-) {
-  const sectionFlag = `
-    <div class="absolute -top-7 left-0 ${flagClass} text-white text-xs px-3 py-1 font-bold rounded-t-lg shadow-sm whitespace-nowrap z-10 before:content-[''] before:absolute before:top-full before:left-0 before:border-t-4 before:border-r-4 before:border-r-transparent">
-      ${escapeHtml(sectionLabel)}
-    </div>
-  `;
+// Teaching page: the same ruled list as the publications page — a group label
+// on the left (Current / Past), one row per course.
+function renderCourseRow(course) {
+  const title = course.title || course.course || "";
+  const session = course.session || course.duration || (course.year ? String(course.year) : "");
+  const titleHtml = course.url
+    ? createLinkHtml({
+        url: course.url,
+        label: title,
+        className: "hover:text-blue-700 dark:hover:text-blue-300 hover:underline underline-offset-2",
+      })
+    : escapeHtml(title);
 
-  if (!Array.isArray(courses) || courses.length === 0) {
-    return `
-      <div class="teaching-card surface-card-hover h-full p-4 !rounded-xl border-l-4 mt-8 ${colorClass} relative">
-        ${sectionFlag}
-        <p class="text-gray-900 dark:text-white font-medium">${escapeHtml(emptyMessage)}</p>
+  return `
+    <li class="border-t border-gray-200 dark:border-gray-700 first:border-t-0 py-4">
+      <div class="flex flex-col gap-x-6 gap-y-0.5 sm:flex-row sm:items-baseline sm:justify-between">
+        <p class="card-title min-w-0 text-base font-bold leading-snug text-gray-900 dark:text-white">${titleHtml}</p>
+        <p class="shrink-0 text-sm font-bold text-gray-800 dark:text-gray-200 sm:text-right">${escapeHtml(
+          course.institution || ""
+        )}</p>
       </div>
-    `;
-  }
-
-  return courses
-    .map((course, index) =>
-      displayAsTeachingCard(
-        {
-          course: course.title || course.course || "",
-          duration: course.session || course.duration || (course.year ? String(course.year) : ""),
-          institution: course.institution || "",
-          url: course.url,
-        },
-        colorClass,
-        index === 0 ? sectionLabel : null,
-        flagClass
-      )
-    )
-    .join("");
+      <p class="mt-1 flex flex-wrap items-baseline gap-x-4 gap-y-1 text-sm text-gray-600 dark:text-gray-300">
+        <span>${escapeHtml(session)}</span>
+        ${course.url ? createLinkHtml({ url: course.url, label: "Course website", className: "meta-link" }) : ""}
+      </p>
+    </li>
+  `;
 }
 
 function displayTeachingSection(teachingData) {
   const container = document.getElementById("teaching_content");
   if (!container) return;
 
-  const currentTeaching = teachingData?.currentTeaching || [];
-  const teaching = teachingData?.teaching || [];
-  const currentStyle = {
-    cardClass: "bg-teal-50 dark:bg-teal-950/40 border-teal-500",
-    flagClass: "bg-teal-700 before:border-t-teal-900",
-  };
-  const pastStyle = {
-    cardClass: "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500",
-    flagClass: "bg-emerald-700 before:border-t-emerald-900",
-  };
+  const groups = [
+    ["Current", teachingData?.currentTeaching || []],
+    ["Past", teachingData?.teaching || []],
+  ].filter(([, courses]) => courses.length);
 
-  container.className = "teaching-container grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 items-stretch";
-  container.innerHTML = `
-    ${renderTeachingCards(
-      currentTeaching,
-      currentStyle.cardClass,
-      "Current",
-      "No current teaching information available.",
-      currentStyle.flagClass
-    )}
-    ${renderTeachingCards(
-      teaching,
-      pastStyle.cardClass,
-      "Past",
-      "No past teaching information available.",
-      pastStyle.flagClass
-    )}
-  `;
+  container.className = "teaching-container";
+  container.innerHTML = groups.length
+    ? groups
+        .map(
+          ([label, courses]) => `
+            <div class="grid gap-x-8 gap-y-2 border-t border-gray-900/70 dark:border-gray-500 py-6 md:grid-cols-[9rem_minmax(0,1fr)]">
+              <div>
+                <h2 class="text-3xl font-bold text-gray-900 dark:text-white">${label}</h2>
+                <p class="mt-1 text-xs uppercase tracking-[0.14em] text-gray-500 dark:text-gray-400">${courses.length} ${
+                  courses.length === 1 ? "course" : "courses"
+                }</p>
+              </div>
+              <ul class="list-none m-0 p-0">${courses.map(renderCourseRow).join("")}</ul>
+            </div>
+          `
+        )
+        .join("")
+    : '<p class="text-gray-600 dark:text-gray-400 italic">No teaching information available.</p>';
 }
 
 function displayVisualizations(visualizations) {
@@ -863,7 +802,7 @@ function displayVisualizations(visualizations) {
   const simulators = (visualizations?.simulators || []).filter(
     (item) => item.featured_on_homepage !== false
   );
-  container.className = "panel-body grid gap-3 sm:grid-cols-2 xl:grid-cols-3";
+  container.className = "grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
   container.innerHTML = renderSimulatorCardsHtml(simulators);
 }
 
@@ -909,11 +848,11 @@ function setupGroupingButtons() {
   setActiveButton(groupByYearBtn, [groupByTypeBtn]);
 }
 
-const GROUP_BTN_ACTIVE = ["bg-blue-600", "text-white"];
+const GROUP_BTN_ACTIVE = ["bg-gray-900", "text-white", "dark:bg-gray-100", "dark:text-gray-900"];
 const GROUP_BTN_INACTIVE = [
-  "text-blue-700",
-  "dark:text-blue-300",
-  "hover:bg-blue-50",
+  "text-gray-700",
+  "dark:text-gray-200",
+  "hover:bg-gray-200/70",
   "dark:hover:bg-gray-700",
 ];
 
@@ -975,125 +914,75 @@ function groupPublicationsByTopic(publications) {
     .map(([topic, pubs]) => ({ type: topic, publications: pubs }));
 }
 
-function getPublicationAwardStyle(award) {
-  const normalizedAward = award.toLowerCase();
+const PUBLICATION_TYPE_LABELS = {
+  journal: "Journal",
+  conference: "Conference",
+  poster: "Poster",
+  preprint: "Preprint",
+};
 
-  if (normalizedAward.includes("best paper")) {
-    return {
-      badgeClass:
-        "bg-red-300 text-red-950 dark:bg-red-500/45 dark:text-red-50",
-    };
-  }
-
-  if (normalizedAward.includes("best poster")) {
-    return {
-      badgeClass:
-        "bg-cyan-100 text-cyan-900 dark:bg-cyan-300/15 dark:text-cyan-100",
-    };
-  }
-
-  return {
-    badgeClass:
-      "bg-rose-100 text-rose-900 dark:bg-rose-300/15 dark:text-rose-100",
-  };
-}
-
-function renderPublicationAwardBadge(award) {
-  const { badgeClass } = getPublicationAwardStyle(award);
-
-  return `
-    <div class="absolute left-0 top-0 max-w-[calc(100%-4.5rem)] rounded-tl-md rounded-br-md px-2.5 py-1 text-[10px] font-semibold leading-none shadow-sm ${badgeClass}">
-      ${escapeHtml(award)}
-    </div>
-  `;
-}
-
-function renderPublicationStatusBadge(label) {
-  return `
-    <div class="absolute right-0 top-0 rounded-tr-md rounded-bl-md bg-gray-100 px-2.5 py-1 text-[10px] font-medium leading-none text-gray-700 shadow-sm dark:bg-gray-800 dark:text-gray-200">
-      ${escapeHtml(label)}
-    </div>
-  `;
-}
-
-function displayAsCard(item, groupBy, colors, cardIndex, groupIndex, yearLabel = null) {
-  const yearFlag = yearLabel
-    ? `<div class="absolute top-px -left-1 -translate-y-full bg-blue-600 text-white text-xs px-3 py-1 font-bold rounded-t-lg shadow-sm whitespace-nowrap z-10 before:content-[''] before:absolute before:top-full before:left-0 before:border-t-4 before:border-t-blue-800 before:border-r-4 before:border-r-transparent">
-         ${yearLabel}
-       </div>`
-    : "";
-  const topSpacingClass = yearLabel ? "mt-7" : "mt-8";
-  const hasAwardBanner = Boolean(item.award);
-  const journalOrConference =
+// One publication as a typeset row. `showYear` is set when rows are not
+// already grouped under a year heading.
+function displayAsCard(item, groupBy, cardIndex, groupIndex) {
+  const venueShort =
     item.type === "preprint"
       ? "arXiv"
-      : item.conference?.short || item.journal?.short || "";
-  const awardBanner = hasAwardBanner ? renderPublicationAwardBadge(item.award) : "";
-  const statusBanner = !item.doi ? renderPublicationStatusBadge("To appear") : "";
+      : item.conference?.short || item.journal?.short || item.journal?.full || "";
+  const venueFull = item.conference?.full || item.journal?.full || "";
   const publicationLink = item.doi || item.url;
   const titleContent = publicationLink
     ? createLinkHtml({
         url: publicationLink,
         label: item.title,
-        className: "hover:underline transition-colors duration-200",
+        className:
+          "hover:text-blue-700 dark:hover:text-blue-300 transition-colors duration-150",
       })
     : escapeHtml(item.title);
-  const arxivBottomBanner = item.arxiv
-    ? `<div class="absolute bottom-0 right-0 bg-green-500 text-white px-2 py-0.5 text-xs rounded-tl-md rounded-br-md">${createLinkHtml({
-        url: item.arxiv,
-        label: "arXiv",
-        className: "text-white hover:underline transition-colors duration-200",
-      })}</div>`
-    : "";
-  const cardColorClass =
-    colors[item.type] || "bg-gray-100 dark:bg-gray-900 border-gray-600"; // Default color if type is not found
-  const cardBottomPaddingClass = "pb-8";
-  const cardTopPaddingClass = "pt-7";
+  const pubKey = publicationKey(item);
+  const { others: otherVersions } = getPublicationStack(item);
 
-  const keywordBubbles = (item.keywords || [])
-    .map(k => `<span class="inline-block bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 px-2 py-0.5 rounded-full text-[9px] font-bold mr-1 mb-1 border border-blue-200 dark:border-blue-800/50">${escapeHtml(k)}</span>`)
-    .join("");
-  const keywordSection = keywordBubbles
-    ? `<div class="card-keywords mt-4 flex flex-wrap">
-         ${keywordBubbles}
-       </div>`
-    : "";
+  const meta = [
+    `<span class="tag">${escapeHtml(PUBLICATION_TYPE_LABELS[item.type] || item.type || "Paper")}</span>`,
+    venueFull && venueFull !== venueShort
+      ? `<span class="min-w-0">${escapeHtml(venueFull)}${
+          groupBy === "type" ? `, ${escapeHtml(String(item.year))}` : ""
+        }</span>`
+      : groupBy === "type"
+        ? `<span>${escapeHtml(String(item.year))}</span>`
+        : "",
+    item.award ? `<span class="tag-award">★ ${escapeHtml(item.award)}</span>` : "",
+    !item.doi ? '<span class="tag">To appear</span>' : "",
+    item.arxiv ? createLinkHtml({ url: item.arxiv, label: "arXiv", className: "meta-link" }) : "",
+    item.abstract ? '<span class="meta-link cursor-pointer">Abstract</span>' : "",
+  ].filter(Boolean);
+
   const interactiveAttributes = item.abstract
     ? `role="button" tabindex="0" aria-expanded="false" aria-label="Show abstract for ${escapeHtml(
         item.title || "publication"
       )}"`
     : "";
   const interactiveClass = item.abstract
-    ? "cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900"
+    ? "cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
     : "";
 
-  const pubKey = publicationKey(item);
-  const { others: otherVersions } = getPublicationStack(item);
-  const stackShadowClass = otherVersions.length
-    ? "shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1),5px_5px_0_-1px_#d1d5db,10px_10px_0_-2px_#e5e7eb] dark:shadow-[0_10px_15px_-3px_rgba(0,0,0,0.3),5px_5px_0_-1px_#4b5563,10px_10px_0_-2px_#374151]"
-    : "shadow-lg";
-
-  // Add a data attribute for identifying the card
   return `
-    <div class="publication-card p-4 ${cardTopPaddingClass} ${stackShadowClass} rounded-lg border-l-4 w-full sm:w-56 ${topSpacingClass} ${cardBottomPaddingClass} ${cardColorClass} flex flex-col relative transition-colors duration-200 ${interactiveClass}"
+    <div class="publication-card relative -ml-4 border-t border-t-gray-200 dark:border-t-gray-700 first:border-t-transparent dark:first:border-t-transparent border-l-2 border-l-transparent hover:border-l-gray-300 dark:hover:border-l-gray-600 py-4 pl-4 pr-2 transition-colors duration-150 ${interactiveClass}"
          data-card-index="${cardIndex}" data-group-index="${groupIndex}" data-publication-key="${pubKey}" ${interactiveAttributes}>
-      ${yearFlag}
-      ${awardBanner}
-      ${statusBanner}
-      <div class="flex flex-1 flex-col">
-        <div>
-          <p class="card-title text-md font-bold text-black dark:text-white">${titleContent}</p>
-          ${keywordSection}
-        </div>
-        <div class="mt-auto pt-5">
-          <p class="card-authors text-sm font-semibold text-gray-800 dark:text-gray-200">${formatAuthors(item.authors)}</p>
-          <p class="card-details text-sm text-gray-700 dark:text-gray-300 mt-3">
-            ${journalOrConference} ${groupBy === "type" ? `(${item.year})` : ""}
-          </p>
-          ${renderOtherVersions(item, otherVersions)}
-        </div>
+      <div class="flex flex-col gap-x-4 gap-y-1 sm:flex-row sm:items-baseline sm:justify-between">
+        <p class="card-title min-w-0 text-base font-bold leading-snug text-gray-900 dark:text-white text-pretty">${titleContent}</p>
+        ${
+          venueShort
+            ? `<p class="shrink-0 text-sm font-semibold text-gray-900 dark:text-gray-100 sm:whitespace-nowrap"${
+                venueFull ? ` title="${escapeHtml(venueFull)}"` : ""
+              }>${escapeHtml(venueShort)}</p>`
+            : ""
+        }
       </div>
-      ${arxivBottomBanner}
+      <p class="card-authors mt-1.5 text-[0.95rem] leading-6 text-gray-600 dark:text-gray-300">${formatAuthors(item.authors)}</p>
+      <div class="card-details mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[13px] leading-5 text-gray-500 dark:text-gray-400">
+        ${meta.join("")}
+      </div>
+      ${renderOtherVersions(item, otherVersions)}
     </div>
   `;
 }
@@ -1109,32 +998,31 @@ function renderOtherVersions(head, versions) {
         .filter(Boolean)
         .join(" · ");
       const title = url
-        ? createLinkHtml({ url, label: version.title, className: "hover:underline" })
+        ? createLinkHtml({
+            url,
+            label: version.title,
+            className: "hover:text-blue-700 dark:hover:text-blue-300 hover:underline underline-offset-2",
+          })
         : escapeHtml(version.title);
       const arxiv =
         version.arxiv && version.arxiv !== url
-          ? ` · ${createLinkHtml({
-              url: version.arxiv,
-              label: "arXiv",
-              className: "text-emerald-700 dark:text-emerald-300 hover:underline",
-            })}`
+          ? ` · ${createLinkHtml({ url: version.arxiv, label: "arXiv", className: "meta-link" })}`
           : "";
       return `
-        <li class="publication-version rounded-md bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 px-2 py-1.5"
-            data-publication-key="${publicationKey(version)}">
-          <p class="text-xs font-semibold leading-snug text-gray-900 dark:text-white">${title}</p>
-          <p class="mt-0.5 text-[11px] text-gray-600 dark:text-gray-400">${escapeHtml(meta)}${arxiv}</p>
+        <li class="publication-version" data-publication-key="${publicationKey(version)}">
+          <p class="text-sm font-medium leading-snug text-gray-800 dark:text-gray-100">${title}</p>
+          <p class="mt-0.5 text-[13px] text-gray-500 dark:text-gray-400">${escapeHtml(meta)}${arxiv}</p>
         </li>
       `;
     })
     .join("");
   const label = `${versions.length} earlier version${versions.length > 1 ? "s" : ""}`;
   return `
-    <details class="publication-versions group/versions mt-3">
-      <summary class="cursor-pointer select-none list-none text-xs font-semibold text-blue-700 dark:text-blue-300 hover:underline [&::-webkit-details-marker]:hidden">
+    <details class="publication-versions group/versions mt-2">
+      <summary class="inline-block cursor-pointer select-none list-none text-[13px] font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white [&::-webkit-details-marker]:hidden">
         <span class="inline-block transition-transform group-open/versions:rotate-90">▸</span> ${label}
       </summary>
-      <ul class="absolute left-0 right-0 top-full z-20 mt-1 space-y-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-2 shadow-xl">${rows}</ul>
+      <ul class="mt-2 space-y-2.5 border-l border-gray-300 dark:border-gray-600 pl-4">${rows}</ul>
     </details>
   `;
 }
@@ -1281,13 +1169,6 @@ let activeTopics = new Set();
 let topicsInitialized = false;
 let currentFilterMode = "year";
 
-const colors = {
-  journal: "bg-red-100 dark:bg-red-900 border-red-600",
-  conference: "bg-blue-100 dark:bg-blue-900 border-blue-600",
-  poster: "bg-yellow-100 dark:bg-yellow-900 border-yellow-600",
-  preprint: "bg-gray-100 dark:bg-gray-900 border-gray-600",
-};
-
 function stackKeywords(pub) {
   const { head, others } = getPublicationStack(pub);
   return [head, ...others].flatMap((version) => version.keywords || ["Other"]);
@@ -1305,30 +1186,27 @@ function filterByActiveTopics(publications) {
 function buildTopicFilter(publications, topics, groupBy) {
   const wrapper = document.createElement("div");
   wrapper.id = "keyword-filter-container";
-  wrapper.className =
-    "mb-8 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 p-4 shadow-inner";
+  wrapper.className = "mb-12";
   wrapper.innerHTML = `
-    <div class="flex flex-wrap items-baseline justify-between gap-3 border-b border-gray-200 dark:border-gray-700 pb-3">
-      <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
-        Filter by topic
+    <div class="flex flex-wrap items-baseline justify-between gap-3">
+      <p class="text-xs font-semibold uppercase tracking-[0.16em] text-gray-500 dark:text-gray-400">
+        Topics
       </p>
       <div class="flex gap-4">
-        <button type="button" data-topic-action="all"
-          class="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline">Select all</button>
-        <button type="button" data-topic-action="none"
-          class="text-xs font-bold text-red-600 dark:text-red-400 hover:underline">Clear</button>
+        <button type="button" data-topic-action="all" class="meta-link">Select all</button>
+        <button type="button" data-topic-action="none" class="meta-link">Clear</button>
       </div>
     </div>
-    <div class="mt-3 flex flex-wrap gap-2">
+    <div class="mt-3 flex flex-wrap gap-1.5">
       ${topics
         .map((topic) => {
           const isActive = activeTopics.has(topic);
           return `
             <button type="button" data-topic="${escapeHtml(topic)}" aria-pressed="${isActive}"
-              class="rounded-full border px-3 py-1 text-xs font-semibold transition-all duration-200 ${
+              class="rounded-full border px-2.5 py-0.5 text-[13px] transition-colors duration-150 ${
                 isActive
-                  ? "border-blue-600 bg-blue-600 text-white shadow-md"
-                  : "border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400"
+                  ? "border-gray-400 dark:border-gray-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 hover:border-gray-900 dark:hover:border-gray-200"
+                  : "border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 line-through hover:text-gray-700 dark:hover:text-gray-300"
               }">${escapeHtml(topic)}</button>
           `;
         })
@@ -1365,7 +1243,7 @@ function displayAllPublications(publications, groupBy = "year") {
   const container = document.getElementById("publications_list");
   if (!container) return;
   container.innerHTML = "";
-  container.className = "publications-container mt-4";
+  container.className = "publications-container mt-8";
 
   const topics = [
     ...new Set(publications.flatMap((pub) => pub.keywords || ["Other"])),
@@ -1388,66 +1266,67 @@ function displayAllPublications(publications, groupBy = "year") {
     return;
   }
 
-  if (groupBy === "type") {
-    groupPublicationsByType(filtered).forEach((group, groupIndex) => {
-      const groupDiv = document.createElement("div");
-      groupDiv.className = "publication-group w-full mb-8";
-      groupDiv.setAttribute("data-group-index", groupIndex);
-      groupDiv.innerHTML = `
-        <h3 class="group-title text-xl font-bold mb-4 dark:text-white transition-colors duration-200">
-          ${group.type.charAt(0).toUpperCase() + group.type.slice(1).toLowerCase() + "s"}
-        </h3>
-        <div class="publication-cards flex flex-wrap gap-4 items-stretch">
-          ${group.publications.map((item, cardIndex) => displayAsCard(item, groupBy, colors, cardIndex, groupIndex)).join("")}
-        </div>
-      `;
-      container.appendChild(groupDiv);
-    });
-  } else {
-    const cardContainer = document.createElement("div");
-    cardContainer.className = "flex flex-wrap gap-4 items-stretch";
-    groupPublicationsByYear(filtered).forEach((group, groupIndex) => {
-      group.publications.forEach((item, cardIndex) => {
-        const yearLabel = cardIndex === 0 ? group.year : null;
-        cardContainer.innerHTML += displayAsCard(item, groupBy, colors, cardIndex, groupIndex, yearLabel);
-      });
-    });
-    container.appendChild(cardContainer);
-  }
+  // Each group is a ruled row: a sticky label in the margin, the papers beside it.
+  const groups =
+    groupBy === "type"
+      ? groupPublicationsByType(filtered).map((group) => ({
+          label: `${PUBLICATION_TYPE_LABELS[group.type] || group.type}s`,
+          publications: group.publications,
+        }))
+      : groupPublicationsByYear(filtered).map((group) => ({
+          label: group.year,
+          publications: group.publications,
+        }));
+
+  groups.forEach((group, groupIndex) => {
+    if (!group.publications.length) return;
+    const groupDiv = document.createElement("div");
+    groupDiv.className =
+      "publication-group grid gap-x-10 border-t border-gray-900/80 dark:border-gray-500 pt-4 pb-8 md:grid-cols-[9rem_minmax(0,1fr)]";
+    groupDiv.setAttribute("data-group-index", groupIndex);
+    groupDiv.innerHTML = `
+      <div class="md:sticky md:top-16 md:self-start">
+        <h2 class="group-title text-3xl font-bold text-gray-900 dark:text-white">${escapeHtml(
+          String(group.label)
+        )}</h2>
+        <p class="mt-1 text-xs uppercase tracking-[0.14em] text-gray-500 dark:text-gray-400">${
+          group.publications.length
+        } ${group.publications.length === 1 ? "paper" : "papers"}</p>
+      </div>
+      <div class="publication-cards mt-2 md:-mt-3 min-w-0">
+        ${group.publications
+          .map((item, cardIndex) => displayAsCard(item, groupBy, cardIndex, groupIndex))
+          .join("")}
+      </div>
+    `;
+    container.appendChild(groupDiv);
+  });
 
   setupPublicationClickHandlers(container, publications, groupBy);
   // Re-apply deep link after re-render (year/type switch, topic filter change)
   requestAnimationFrame(() => focusPublicationFromUrl());
 }
 
+const PUBLICATION_HIGHLIGHT_CLASSES = [
+  "publication-highlight",
+  "!border-l-blue-700",
+  "dark:!border-l-blue-300",
+  "bg-white",
+  "dark:bg-gray-800",
+];
+
 let publicationOpenController = null;
 
 function clearPublicationHighlights(container) {
   if (!container) return;
   container.querySelectorAll(".publication-card.publication-highlight").forEach((card) => {
-    card.classList.remove(
-      "publication-highlight",
-      "ring-4",
-      "ring-blue-500",
-      "ring-offset-2",
-      "dark:ring-offset-gray-900",
-      "scale-[1.02]",
-      "z-10"
-    );
+    card.classList.remove(...PUBLICATION_HIGHLIGHT_CLASSES);
   });
 }
 
 function highlightPublicationCard(card) {
   if (!card) return;
-  card.classList.add(
-    "publication-highlight",
-    "ring-4",
-    "ring-blue-500",
-    "ring-offset-2",
-    "dark:ring-offset-gray-900",
-    "scale-[1.02]",
-    "z-10"
-  );
+  card.classList.add(...PUBLICATION_HIGHLIGHT_CLASSES);
 }
 
 function focusPublicationFromUrl() {
@@ -1516,8 +1395,7 @@ function setupPublicationClickHandlers(container, allPublications, groupBy) {
     const abstractDiv = document.createElement("div");
     const abstractId = `publication-abstract-${groupIndex}-${cardIndex}`;
     abstractDiv.id = abstractId;
-    abstractDiv.className = "publication-abstract-wrapper w-full";
-    abstractDiv.style.width = "100%";
+    abstractDiv.className = "publication-abstract-wrapper";
     abstractDiv.innerHTML = renderAbstractPopout(pub);
 
     if (card.nextSibling) {
@@ -1538,15 +1416,7 @@ function setupPublicationClickHandlers(container, allPublications, groupBy) {
       };
     }
 
-    if (window.renderMathInElement) {
-      renderMathInElement(abstractDiv, {
-        delimiters: [
-          { left: "$$", right: "$$", display: true },
-          { left: "$", right: "$", display: false },
-        ],
-        throwOnError: false,
-      });
-    }
+    renderMath(abstractDiv);
 
     openAbstract = { groupIndex, cardIndex };
 
@@ -1627,20 +1497,20 @@ function setupPublicationClickHandlers(container, allPublications, groupBy) {
 
 function renderAbstractPopout(item) {
   if (!item.abstract) return "";
-  const keywordBubbles = (item.keywords || [])
-    .map(k => `<span class="inline-block bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 px-2 py-0.5 rounded-full text-[10px] font-bold mr-1 mb-1 border border-blue-200 dark:border-blue-800">${escapeHtml(k)}</span>`)
+  const keywords = (item.keywords || [])
+    .map((keyword) => `<span class="tag">${escapeHtml(keyword)}</span>`)
     .join("");
 
   return `
-    <div class="publication-abstract-popout w-full bg-white dark:bg-gray-900 border-t-4 border-blue-600 p-6 my-2 shadow-lg rounded-lg z-20 transition-colors duration-200">
-      <div class="flex justify-between items-center mb-4">
-        <div class="flex flex-wrap items-center">
-          <span class="font-bold text-lg text-black dark:text-white mr-4">Abstract</span>
-          ${keywordBubbles}
+    <div class="publication-abstract-popout -ml-4 border-l-2 border-blue-700 dark:border-blue-300 bg-white dark:bg-gray-800 px-4 pb-5 pt-1">
+      <div class="flex items-start justify-between gap-4">
+        <div class="flex flex-wrap items-center gap-1.5">
+          <span class="mr-2 text-xs font-semibold uppercase tracking-[0.16em] text-gray-500 dark:text-gray-400">Abstract</span>
+          ${keywords}
         </div>
-        <button class="close-abstract-popout text-gray-600 dark:text-gray-300 hover:text-red-600 text-xl font-bold px-2" aria-label="Close abstract">&times;</button>
+        <button class="close-abstract-popout -mt-1 px-2 text-xl leading-none text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white" aria-label="Close abstract">&times;</button>
       </div>
-      <div class="text-gray-800 dark:text-gray-200 text-justify leading-relaxed">${item.abstract}</div>
+      <div class="mt-3 max-w-3xl text-[0.95rem] leading-7 text-gray-700 dark:text-gray-200 text-pretty">${item.abstract}</div>
     </div>
   `;
 }
@@ -1655,18 +1525,18 @@ function getPublicationStack(pub) {
 
 function formatAuthors(authors) {
   const linkHoverClass =
-    "text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200";
+    "hover:text-blue-700 dark:hover:text-blue-300 hover:underline underline-offset-2 transition-colors duration-150";
   return authors
     .map((author) => {
       if (author === "Debasish Pattanayak") {
         const debasishUrl = commonAuthors[author]?.url;
         return debasishUrl && debasishUrl !== "#"
-          ? `<strong>${createLinkHtml({
+          ? `<strong class="font-semibold text-gray-900 dark:text-white">${createLinkHtml({
               url: debasishUrl,
               label: author,
               className: `highlighted ${linkHoverClass}`,
             })}</strong>`
-          : `<strong>${escapeHtml(author)}</strong>`;
+          : `<strong class="font-semibold text-gray-900 dark:text-white">${escapeHtml(author)}</strong>`;
       }
       const authorData = commonAuthors[author];
       return authorData && authorData.url !== "#"
@@ -1680,73 +1550,50 @@ function formatAuthors(authors) {
     .join(", ");
 }
 
-function displayAsTalkCard(talk, colorClass) {
-  const linksHTML = talk.links
-    ? Object.entries(talk.links)
-      .map(
-        ([key, url]) =>
-          createLinkHtml({
-            url,
-            label: key.charAt(0).toUpperCase() + key.slice(1),
-            className:
-              "text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200 mr-2",
-          })
-      )
-      .join("")
-    : "";
+function displayAsTalkCard(talk) {
+  const links = [
+    ...Object.entries(talk.links || {}).map(([key, url]) => ({
+      label: key.charAt(0).toUpperCase() + key.slice(1),
+      url,
+    })),
+    ...(talk.tweet ? [{ label: "Tweet", url: talk.tweet }] : []),
+  ]
+    .map((link) => createLinkHtml({ url: link.url, label: link.label, className: "meta-link" }))
+    .join("");
 
-  const tweetHTML = talk.tweet
-    ? createLinkHtml({
-        url: talk.tweet,
-        label: "Tweet",
-        className:
-          "text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200 mr-2",
-      })
-    : "";
-
-  const authorHTML = talk.author
-    ? `<div class="text-xs mt-1 text-gray-700 dark:text-gray-300">By ${createLinkHtml({
-        url: talk.author.url,
-        label: talk.author.name,
-        className: "hover:underline",
-      })}</div>`
-    : "";
-
-  const placeHTML = talk.Place
-    ? `<div class="text-xs text-gray-600 dark:text-gray-400">${escapeHtml(
-        talk.Place
-      )}</div>`
-    : "";
-
-  const organizerHTML = talk.Organizer
-    ? `<div class="text-xs text-gray-600 dark:text-gray-400">Org: ${createLinkHtml({
-        url: talk.Organizer.url,
-        label: talk.Organizer.name,
-        className: "hover:underline",
-      })}</div>`
-    : "";
+  const person = (prefix, who) =>
+    who
+      ? `<p class="text-sm text-gray-500 dark:text-gray-400">${prefix} ${createLinkHtml({
+          url: who.url,
+          label: who.name,
+          className: "hover:underline underline-offset-2",
+        })}</p>`
+      : "";
 
   return `
-    <div class="talk-card surface-card-hover h-full p-4 !rounded-xl border-l-4 ${colorClass} flex flex-col">
-      <p class="card-title text-sm sm:text-base font-bold text-gray-900 dark:text-white leading-snug">${escapeHtml(
+    <article class="talk-card surface-card h-full p-5 flex flex-col border-t-2 !border-t-violet-500">
+      ${
+        talk.date
+          ? `<p class="text-xs font-semibold uppercase tracking-[0.12em] text-gray-500 dark:text-gray-400">${escapeHtml(
+              talk.date
+            )}</p>`
+          : ""
+      }
+      <h3 class="card-title mt-1.5 text-base font-bold leading-snug text-gray-900 dark:text-white">${escapeHtml(
         talk.title
-      )}</p>
-      ${talk.event
-        ? `<p class="card-event text-sm font-medium text-gray-700 dark:text-gray-200 mt-2 mb-1">${escapeHtml(
-            talk.event
-          )}</p>`
-        : ""}
-      ${placeHTML}
-      ${organizerHTML}
-      ${authorHTML}
-      <div class="card-footer mt-auto pt-3 flex flex-wrap items-center gap-2 text-sm">
-        ${talk.date ? `<span class="text-gray-500 dark:text-gray-400 italic">${escapeHtml(talk.date)}</span>` : ""}
-        <div class="flex gap-2">
-          ${linksHTML}
-          ${tweetHTML}
-        </div>
-      </div>
-    </div>
+      )}</h3>
+      ${
+        talk.event
+          ? `<p class="card-event mt-2 text-sm leading-6 text-gray-700 dark:text-gray-200">${escapeHtml(
+              talk.event
+            )}</p>`
+          : ""
+      }
+      ${talk.Place ? `<p class="text-sm text-gray-500 dark:text-gray-400">${escapeHtml(talk.Place)}</p>` : ""}
+      ${person("Hosted by", talk.Organizer)}
+      ${person("By", talk.author)}
+      ${links ? `<p class="card-footer mt-auto pt-4 flex flex-wrap gap-x-4 gap-y-1">${links}</p>` : ""}
+    </article>
   `;
 }
 
@@ -1755,21 +1602,20 @@ function displayTalks(talks) {
   if (!container) return;
 
   container.className = "talks-container grid gap-4 sm:grid-cols-2 xl:grid-cols-3";
-  const colorClass = "bg-purple-50 dark:bg-purple-950/40 border-purple-500";
   const sorted = [...(talks || [])].sort(
     (a, b) => parseTalkSortKey(b) - parseTalkSortKey(a)
   );
 
   container.innerHTML = sorted.length
-    ? sorted.map((talk) => displayAsTalkCard(talk, colorClass)).join("")
+    ? sorted.map((talk) => displayAsTalkCard(talk)).join("")
     : '<p class="text-gray-600 dark:text-gray-400 italic">No talks listed.</p>';
 }
 
 function displayAwards(awards) {
   const container = document.getElementById("awards_content");
   if (container)
-    container.innerHTML = renderAwardsList((awards || []).slice(0, 3), {
-      containerClass: "flex flex-col gap-3 list-none p-0 m-0",
+    container.innerHTML = renderAwardsList((awards || []).slice(0, 4), {
+      containerClass: "list-none p-0 m-0",
     });
 }
 
@@ -1780,28 +1626,22 @@ function displayOutreach(social) {
   container.innerHTML = social
     .map(
       (item) => `
-        <article class="surface-card-hover h-full p-4 !rounded-xl">
-          <p>
+        <article>
+          <h3 class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
             ${createLinkHtml({
               url: item.url,
               label: item.title,
               className:
-                "text-base font-semibold text-blue-700 dark:text-blue-300 hover:underline transition-colors duration-200",
+                "text-xl font-bold text-gray-900 dark:text-white hover:text-blue-700 dark:hover:text-blue-300 transition-colors",
             })}
-            ${
-              item.role
-                ? `<span class="ml-2 inline-flex items-center rounded-full bg-rose-100 dark:bg-rose-900/50 px-2 py-0.5 text-xs font-semibold text-rose-800 dark:text-rose-200">${escapeHtml(
-                    item.role
-                  )}</span>`
-                : ""
-            }
-          </p>
-          <p class="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-300">${escapeHtml(
+            ${item.role ? `<span class="tag">${escapeHtml(item.role)}</span>` : ""}
+          </h3>
+          <p class="mt-3 max-w-2xl text-base leading-7 text-gray-700 dark:text-gray-200 text-pretty">${escapeHtml(
             item.description || ""
           )}</p>
           ${renderOutreachCredit(
             item,
-            "mt-2 text-sm text-gray-600 dark:text-gray-300"
+            "mt-3 text-sm text-gray-600 dark:text-gray-300"
           )}
         </article>
       `
@@ -1813,47 +1653,8 @@ function displayGrants(grants) {
   const container = document.getElementById("grants_content");
   if (container)
     container.innerHTML = renderGrantsList(grants || [], {
-      containerClass: "flex flex-col gap-3 list-none p-0 m-0",
+      containerClass: "list-none p-0 m-0",
     });
-}
-
-function displayAsTeachingCard(
-  course,
-  colorClass,
-  sectionLabel = null,
-  flagClass = "bg-teal-700 before:border-t-teal-900"
-) {
-  const courseTitle = course.course || "";
-  const sectionFlag = sectionLabel
-    ? `<div class="absolute -top-7 left-0 ${flagClass} text-white text-xs px-3 py-1 font-bold rounded-t-lg shadow-sm whitespace-nowrap z-10 before:content-[''] before:absolute before:top-full before:left-0 before:border-t-4 before:border-r-4 before:border-r-transparent">
-         ${escapeHtml(sectionLabel)}
-       </div>`
-    : "";
-  return `
-    <div class="teaching-card surface-card-hover h-full p-4 !rounded-xl border-l-4 mt-8 ${colorClass} flex flex-col relative">
-      ${sectionFlag}
-      <p class="card-title text-sm sm:text-base font-bold text-gray-900 dark:text-white leading-snug">${escapeHtml(
-        courseTitle
-      )}</p>
-      <p class="card-institution text-sm font-semibold text-gray-800 dark:text-gray-200 mt-2 mb-1">${escapeHtml(
-        course.institution
-      )}</p>
-      <p class="card-duration text-xs text-gray-600 dark:text-gray-400">${escapeHtml(
-        course.duration ? course.duration : (course.year ? String(course.year) : "")
-      )}</p>
-      <div class="card-footer mt-auto pt-2 text-sm">
-        ${course.url
-      ? createLinkHtml({
-          url: course.url,
-          label: "Course Website →",
-          className:
-            "text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-200 font-medium",
-        })
-      : ""
-    }
-      </div>
-    </div>
-  `;
 }
 
 function displayAdministrativeResponsibilities(responsibilities) {

@@ -14,7 +14,7 @@ import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
-const SITE = "https://drdebmath.github.io/";
+const SITE = "https://debasishpattanayak.com/";
 const PAGES = [
   "index.html",
   "publications.html",

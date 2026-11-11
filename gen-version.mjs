@@ -69,6 +69,11 @@ function stampAssets() {
         /(src=")(script\.js|cv\.js|for_students\.js|timeline\.js)(\?v=[0-9a-f]+)?"/g,
         (_, a, url) => `${a}${url}?v=${versions[url]}"`
       );
+      // Preload hints must name the same versioned URLs the page will request.
+      s = s.replace(
+        /(<link rel="(?:modulepreload|preload)" href=")(script\.js|cv\.js|for_students\.js|timeline\.js|shared\.js|data\.json)(\?v=[0-9a-f]+)?"/g,
+        (_, a, url) => `${a}${url}?v=${url === "shared.js" ? shared : url === "data.json" ? data : versions[url]}"`
+      );
       if (ROOT_PAGES.includes(file) && !META_RE.test(s)) {
         s = s.replace(
           /(\n?)([ \t]*)<\/head>/,

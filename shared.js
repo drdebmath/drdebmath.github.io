@@ -68,7 +68,7 @@ export function formatDateRange(startDate, endDate) {
 export function renderAwardsList(
   awards,
   {
-    containerClass = "grid gap-4 md:grid-cols-2 list-none p-0 m-0",
+    containerClass = "grid gap-x-10 md:grid-cols-2 list-none p-0 m-0",
     itemClass = "",
   } = {}
 ) {
@@ -84,21 +84,12 @@ export function renderAwardsList(
     <ul class="${containerClass}">
       ${awards
         .map(
-          (award, index) => `
-            <li class="rounded-lg border border-amber-200/80 dark:border-amber-900/70 bg-amber-50/70 dark:bg-amber-950/20 px-4 py-4 transition-colors duration-200 ${itemClass}">
-              <div class="flex items-start gap-3">
-                <span class="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-amber-500 text-sm font-semibold text-white">
-                  ${index + 1}
-                </span>
-                <div class="min-w-0">
-                  <span class="inline-flex items-center rounded-full border border-amber-200 dark:border-amber-800/70 bg-white/80 dark:bg-gray-900/60 px-2 py-0.5 text-xs font-semibold text-amber-800 dark:text-amber-200">
-                    Award
-                  </span>
-                  <p class="mt-2 text-sm leading-6 text-gray-800 dark:text-gray-100">
-                    ${escapeHtml(award)}
-                  </p>
-                </div>
-              </div>
+          (award) => `
+            <li class="flex items-start gap-3 border-b border-gray-200 dark:border-gray-700 py-3 ${itemClass}">
+              <span class="mt-[0.2rem] text-amber-600 dark:text-amber-400" aria-hidden="true">★</span>
+              <p class="min-w-0 text-[0.95rem] leading-6 text-gray-800 dark:text-gray-100">
+                ${escapeHtml(award)}
+              </p>
             </li>
           `
         )
@@ -110,7 +101,7 @@ export function renderAwardsList(
 export function renderGrantsList(
   grants,
   {
-    containerClass = "grid gap-4 md:grid-cols-2 list-none p-0 m-0",
+    containerClass = "grid gap-x-10 md:grid-cols-2 list-none p-0 m-0",
     itemClass = "",
   } = {}
 ) {
@@ -126,31 +117,30 @@ export function renderGrantsList(
     <ul class="${containerClass}">
       ${grants
         .map(
-          (grant, index) => `
-            <li class="rounded-lg border border-emerald-200/80 dark:border-emerald-900/70 bg-emerald-50/70 dark:bg-emerald-950/20 px-4 py-4 transition-colors duration-200 ${itemClass}">
-              <div class="flex items-start gap-3">
-                <span class="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-sm font-semibold text-white">
-                  ${index + 1}
-                </span>
-                <div class="min-w-0">
-                  <span class="inline-flex items-center rounded-full border border-emerald-200 dark:border-emerald-800/70 bg-white/80 dark:bg-gray-900/60 px-2 py-0.5 text-xs font-semibold text-emerald-800 dark:text-emerald-200">
-                    Grant
-                  </span>
-                  <p class="mt-2 text-sm font-semibold text-gray-800 dark:text-gray-100">
-                    ${escapeHtml(grant.title || "")}${grant.year ? ` (${escapeHtml(grant.year)})` : ""}
-                  </p>
-                  ${grant.funding_agency ? `<p class="mt-1 text-sm text-gray-600 dark:text-gray-300"><strong>Funding Agency:</strong> ${escapeHtml(grant.funding_agency)}</p>` : ""}
-                  ${grant.project_title ? `<p class="mt-1 text-sm text-gray-600 dark:text-gray-300"><strong>Project:</strong> ${
-                    grant.url
-                      ? createLinkHtml({
-                          url: grant.url,
-                          label: grant.project_title,
-                          className: "text-blue-700 dark:text-blue-300 hover:underline",
-                        })
-                      : escapeHtml(grant.project_title)
-                  }</p>` : ""}
-                </div>
-              </div>
+          (grant) => `
+            <li class="border-b border-gray-200 dark:border-gray-700 py-3 ${itemClass}">
+              <p class="text-xs font-semibold uppercase tracking-[0.14em] text-emerald-700 dark:text-emerald-300">
+                ${escapeHtml(
+                  [grant.funding_agency, grant.year].filter(Boolean).join(" · ") || "Grant"
+                )}
+              </p>
+              ${
+                grant.project_title
+                  ? `<p class="mt-1 text-base font-bold leading-snug text-gray-900 dark:text-white">${
+                      grant.url
+                        ? createLinkHtml({
+                            url: grant.url,
+                            label: grant.project_title,
+                            className:
+                              "underline decoration-gray-300 dark:decoration-gray-600 underline-offset-4 hover:decoration-current",
+                          })
+                        : escapeHtml(grant.project_title)
+                    }</p>`
+                  : ""
+              }
+              <p class="mt-1 text-sm leading-6 text-gray-600 dark:text-gray-300">
+                ${escapeHtml(grant.title || "")}
+              </p>
             </li>
           `
         )
@@ -201,7 +191,12 @@ export function linkifyBiographyHtml(
 export function setupDarkMode(toggleId = "darkModeToggle") {
   const htmlElement = document.documentElement;
   const darkModeToggle = document.getElementById(toggleId);
-  let darkMode = localStorage.getItem("darkMode") === "true";
+  // An explicit choice wins; otherwise follow the system colour scheme.
+  const stored = localStorage.getItem("darkMode");
+  let darkMode =
+    stored === null
+      ? Boolean(window.matchMedia?.("(prefers-color-scheme: dark)").matches)
+      : stored === "true";
 
   htmlElement.classList.toggle("dark", darkMode);
 
@@ -240,11 +235,9 @@ export function setupGoToTopButton(buttonId = "goToTop") {
   });
 }
 
-const NAV_LINK_CLASS =
-  "block rounded-md px-2.5 py-1.5 text-sm text-center text-gray-100 transition-colors duration-200 hover:bg-blue-700 dark:hover:bg-blue-900";
+const NAV_LINK_CLASS = "nav-link";
 
-const NAV_LINK_ACTIVE_CLASS =
-  "block rounded-md px-2.5 py-1.5 text-sm text-center font-semibold text-white bg-blue-700 dark:bg-blue-900";
+const NAV_LINK_ACTIVE_CLASS = "nav-link-active";
 
 export function getContactInfo(data) {
   const about = data?.about_me || {};
@@ -341,43 +334,43 @@ export function renderSiteFooter(data, containerId = "site_footer") {
   ].filter((link) => link.href);
 
   container.innerHTML = `
-    <div class="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8 py-10">
+    <div class="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8 py-12">
       <div class="grid gap-8 md:grid-cols-3">
         <div>
-          <h2 class="text-lg font-semibold text-white">${escapeHtml(name)}</h2>
-          <p class="mt-2 text-sm text-blue-100/90">
+          <h2 class="font-display text-xl font-semibold text-white">${escapeHtml(name)}</h2>
+          <p class="mt-2 text-sm text-blue-100">
             ${escapeHtml(about.position || "Assistant Professor")}${
               department ? `, ${escapeHtml(department)}` : ""
             }
           </p>
           ${
             institution
-              ? `<p class="mt-1 text-sm text-blue-100/80">${escapeHtml(
+              ? `<p class="mt-1 text-sm text-blue-100">${escapeHtml(
                   institution
                 )}</p>`
               : ""
           }
         </div>
         <div>
-          <h3 class="text-sm font-semibold uppercase tracking-wider text-blue-200">Contact</h3>
+          <h3 class="text-xs font-semibold uppercase tracking-[0.2em] text-blue-200">Contact</h3>
           <ul class="mt-3 space-y-2 text-sm text-blue-50">
             ${
               email
-                ? `<li><a class="hover:underline" href="mailto:${escapeAttribute(
+                ? `<li><a class="hover:text-white hover:underline underline-offset-4" href="mailto:${escapeAttribute(
                     email
                   )}">${escapeHtml(email)}</a></li>`
                 : ""
             }
             ${office ? `<li>${escapeHtml(office)}</li>` : ""}
             <li>
-              <a class="hover:underline" href="cv.html">Curriculum Vitae</a>
+              <a class="hover:text-white hover:underline underline-offset-4" href="cv.html">Curriculum Vitae</a>
               ·
-              <a class="hover:underline" href="for_students.html">For Students</a>
+              <a class="hover:text-white hover:underline underline-offset-4" href="for_students.html">For Students</a>
             </li>
           </ul>
         </div>
         <div>
-          <h3 class="text-sm font-semibold uppercase tracking-wider text-blue-200">Links</h3>
+          <h3 class="text-xs font-semibold uppercase tracking-[0.2em] text-blue-200">Links</h3>
           <ul class="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-sm text-blue-50">
             ${socialLinks
               .map(
@@ -385,22 +378,22 @@ export function renderSiteFooter(data, containerId = "site_footer") {
                   <li>${createLinkHtml({
                     url: link.href,
                     label: link.label,
-                    className: "hover:underline",
+                    className: "hover:text-white hover:underline underline-offset-4",
                   })}</li>
                 `
               )
               .join("")}
-            <li><a class="hover:underline" href="publications.html">Publications</a></li>
-            <li><a class="hover:underline" href="teaching.html">Teaching</a></li>
-            <li><a class="hover:underline" href="talks.html">Talks</a></li>
-            <li><a class="hover:underline" href="timeline.html">Timeline</a></li>
+            <li><a class="hover:text-white hover:underline underline-offset-4" href="publications.html">Publications</a></li>
+            <li><a class="hover:text-white hover:underline underline-offset-4" href="teaching.html">Teaching</a></li>
+            <li><a class="hover:text-white hover:underline underline-offset-4" href="talks.html">Talks</a></li>
+            <li><a class="hover:text-white hover:underline underline-offset-4" href="timeline.html">Timeline</a></li>
             ${(data?.community_services?.social || [])
               .map(
                 (item) => `
                   <li>${createLinkHtml({
                     url: item.url,
                     label: item.title,
-                    className: "hover:underline",
+                    className: "hover:text-white hover:underline underline-offset-4",
                   })}</li>
                 `
               )
@@ -411,7 +404,7 @@ export function renderSiteFooter(data, containerId = "site_footer") {
                     url: about.blog.url,
                     label: about.blog.label || "Blog",
                     title: about.blog.title || "",
-                    className: "hover:underline",
+                    className: "hover:text-white hover:underline underline-offset-4",
                   })}</li>`
                 : ""
             }
@@ -430,14 +423,14 @@ export function renderSiteFooter(data, containerId = "site_footer") {
                 ? `<li>${createLinkHtml({
                     url: about.whiteboard.url,
                     label: about.whiteboard.label || "Whiteboard",
-                    className: "hover:underline",
+                    className: "hover:text-white hover:underline underline-offset-4",
                   })}</li>`
                 : ""
             }
           </ul>
         </div>
       </div>
-      <p class="mt-8 border-t border-blue-500/40 pt-4 text-xs text-blue-100/70">
+      <p class="mt-8 border-t border-white/20 pt-4 text-xs text-blue-100/80">
         © ${new Date().getFullYear()} ${escapeHtml(name)}. Academic homepage.${
           lastUpdated ? ` Last updated ${lastUpdatedTimeHtml(lastUpdated)}.` : ""
         }
@@ -926,7 +919,7 @@ export function setupPrimaryNav(data = {}, extraLinks = []) {
   const activeHref = PAGE_HREFS[document.body.dataset.page] || "";
   navbar.innerHTML = "";
   navbar.className =
-    "flex min-w-0 flex-1 gap-1.5 overflow-x-auto whitespace-nowrap nav-scroll";
+    "flex min-w-0 flex-1 gap-0.5 overflow-x-auto whitespace-nowrap nav-scroll -ml-2.5";
   appendNavLinks(
     navbar,
     [...getPrimarySiteLinks(data), ...extraLinks].map((link) => ({
@@ -943,7 +936,7 @@ export function renderSimulatorCardsHtml(simulators = []) {
         url: item.url,
         label: item.name,
         className:
-          "text-base font-semibold text-blue-700 dark:text-blue-300 hover:underline transition-colors duration-200",
+          "text-lg font-bold text-gray-900 dark:text-white hover:text-blue-700 dark:hover:text-blue-300 transition-colors duration-150",
       });
       const sourceLink = item.source_url
         ? createLinkHtml({
@@ -955,7 +948,7 @@ export function renderSimulatorCardsHtml(simulators = []) {
         : "";
 
       return `
-        <article class="surface-card-hover h-full p-4 !rounded-xl">
+        <article class="surface-card-hover h-full p-4">
           <p>${primaryLink}</p>
           <p class="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-300">${escapeHtml(
             item.description || "Interactive resource"
@@ -977,6 +970,7 @@ export function getPrimarySiteLinks(data = {}) {
     (course) => /CS103/i.test(course.title || course.course || "")
   );
   if (cs103?.url) links.push({ href: cs103.url, label: "CS103" });
+  links.push({ href: "teaching.html", label: "Teaching" });
 
   links.push(
     { href: "talks.html", label: "Talks" },
@@ -987,24 +981,6 @@ export function getPrimarySiteLinks(data = {}) {
 
   if (data.about_me?.cv?.url) {
     links.push({ href: data.about_me.cv.url, label: "CV" });
-  }
-
-  links.push({ href: "teaching.html", label: "Teaching" });
-
-  if (data.about_me?.blog?.url) {
-    links.push({
-      href: data.about_me.blog.url,
-      label: data.about_me.blog.label || "Blog",
-      title: data.about_me.blog.title || "",
-    });
-  }
-
-  if (data.about_me?.mobility_matters?.url) {
-    links.push({
-      href: data.about_me.mobility_matters.url,
-      label: data.about_me.mobility_matters.label || "Mobility Matters",
-      title: data.about_me.mobility_matters.title || "",
-    });
   }
 
   return links;
@@ -1024,13 +1000,14 @@ export function renderProfileHeader(aboutMe, options = {}) {
     headerAddressContainerId = "header_address_container",
     pictureFallback = "debasish_photo.jpeg",
     linkItemClass =
-      "social-link inline-flex h-11 w-11 items-center justify-center rounded-full bg-white shadow-md hover:shadow-lg hover:scale-105 border border-white/60 transition-all duration-200 overflow-hidden",
-    iconImageClass = "h-6 w-6 object-contain",
+      "social-link inline-flex h-9 w-9 items-center justify-center rounded-full bg-white border border-gray-300 dark:border-gray-600 hover:border-gray-900 dark:hover:border-white transition-colors duration-150 overflow-hidden",
+    iconImageClass = "h-5 w-5 object-contain",
     pictureClass = "block w-full h-full object-cover object-top",
     positionLinkClass =
-      "text-blue-100 hover:text-white hover:underline decoration-blue-100 decoration-2 underline-offset-2 transition-colors",
+      "hover:text-blue-700 dark:hover:text-blue-300 underline decoration-gray-300 dark:decoration-gray-600 underline-offset-4 hover:decoration-current transition-colors",
     stackedPosition = false,
-    officeTextClass = "text-sm mt-2 font-medium opacity-90 lg:hidden leading-relaxed",
+    showOffice = true,
+    officeTextClass = "text-sm mt-2 text-gray-600 dark:text-gray-300 lg:hidden leading-relaxed",
   } = options;
 
   const nameElement = document.getElementById(nameId);
@@ -1074,15 +1051,15 @@ export function renderProfileHeader(aboutMe, options = {}) {
     if (stackedPosition) {
       const positionLines = [
         aboutMe.position
-          ? `<span class="block text-base sm:text-lg font-semibold text-white">${escapeHtml(
+          ? `<span class="block text-base font-semibold text-gray-900 dark:text-white">${escapeHtml(
               aboutMe.position
             )}</span>`
           : "",
         departmentHtml
-          ? `<span class="mt-1.5 block text-sm sm:text-base text-blue-50/95">${departmentHtml}</span>`
+          ? `<span class="mt-1 block text-sm sm:text-[0.95rem] font-normal text-gray-600 dark:text-gray-300 text-balance">${departmentHtml}</span>`
           : "",
         institutionHtml
-          ? `<span class="mt-1 block text-sm sm:text-base text-blue-50/90">${institutionHtml}</span>`
+          ? `<span class="mt-0.5 block text-sm sm:text-[0.95rem] font-normal text-gray-600 dark:text-gray-300 text-balance">${institutionHtml}</span>`
           : "",
       ].filter(Boolean);
 
@@ -1101,7 +1078,7 @@ export function renderProfileHeader(aboutMe, options = {}) {
     }
   }
 
-  if (department?.office && positionElement) {
+  if (showOffice && department?.office && positionElement) {
     const formattedOffice = escapeHtml(department.office).replaceAll(
       ",",
       ",<br>"
@@ -1119,8 +1096,8 @@ export function renderProfileHeader(aboutMe, options = {}) {
 
     if (headerAddressContainer) {
       headerAddressContainer.innerHTML = `
-        <p class="text-xs uppercase tracking-wider opacity-75 mb-1">Office</p>
-        <p class="font-bold text-lg leading-tight text-white shadow-sm">${formattedOffice}</p>
+        <p class="eyebrow mb-1.5">Office</p>
+        <p class="text-sm leading-6 text-gray-700 dark:text-gray-200">${formattedOffice}</p>
       `;
     }
   } else if (headerAddressContainer) {
@@ -1169,6 +1146,11 @@ export function renderProfileHeader(aboutMe, options = {}) {
         src: "assets/icons/linkedin.png",
         title: "LinkedIn Profile",
       },
+      {
+        href: aboutMe.email || aboutMe.contact?.email ? `mailto:${aboutMe.email || aboutMe.contact.email}` : "",
+        svg: '<svg viewBox="0 0 24 24" class="h-5 w-5 text-blue-700" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 7 8.5 6.5L20.5 7"/></svg>',
+        title: "Email",
+      },
     ];
 
     linksElement.classList.add(
@@ -1187,7 +1169,10 @@ export function renderProfileHeader(aboutMe, options = {}) {
           )} title="${escapeAttribute(icon.title)}" aria-label="${escapeAttribute(
             icon.title
           )}" class="${linkItemClass}">
-            <img src="${escapeAttribute(icon.src)}" alt="" class="${iconImageClass}" width="22" height="22" decoding="async" />
+            ${
+              icon.svg ||
+              `<img src="${escapeAttribute(icon.src)}" alt="" class="${iconImageClass}" width="22" height="22" decoding="async" />`
+            }
           </a>
         `
       )
@@ -1213,9 +1198,13 @@ export async function renderLatestBlogPosts(containerId, blog = {}, limit = 3) {
     const response = await fetch(blog.feed);
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const xml = new DOMParser().parseFromString(await response.text(), "application/xml");
+    // The feed may still name the blog's old address; point post links at blog.url.
+    const feedHome = xml.querySelector("channel > link")?.textContent?.trim() || "";
+    const postUrl = (url) =>
+      url && feedHome && blog.url && url.startsWith(feedHome) ? blog.url + url.slice(feedHome.length) : url;
     const posts = [...xml.querySelectorAll("item")].slice(0, limit).map((item) => ({
       title: item.querySelector("title")?.textContent?.trim() || "",
-      url: item.querySelector("link")?.textContent?.trim() || blog.url,
+      url: postUrl(item.querySelector("link")?.textContent?.trim()) || blog.url,
       date: item.querySelector("pubDate")?.textContent?.trim() || "",
       description: item.querySelector("description")?.textContent?.trim() || "",
     }));
@@ -1235,20 +1224,20 @@ export async function renderLatestBlogPosts(containerId, blog = {}, limit = 3) {
                   timeZone: "UTC",
                 });
             return `
-              <li class="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/80 dark:bg-gray-900/40 px-3.5 py-3">
+              <li class="border-b border-gray-200 dark:border-gray-700 pb-3">
                 ${
                   date
                     ? `<p class="text-[11px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">${escapeHtml(date)}</p>`
                     : ""
                 }
-                <p class="mt-1 text-sm font-semibold leading-snug">${createLinkHtml({
+                <p class="mt-1 text-base font-bold leading-snug">${createLinkHtml({
                   url: post.url,
                   label: post.title,
-                  className: "text-blue-600 dark:text-blue-400 hover:underline",
+                  className: "text-gray-900 dark:text-white hover:text-blue-700 dark:hover:text-blue-300",
                 })}</p>
                 ${
                   post.description
-                    ? `<p class="mt-1 text-xs leading-5 text-gray-600 dark:text-gray-300 line-clamp-3">${escapeHtml(post.description)}</p>`
+                    ? `<p class="mt-1 text-sm leading-6 text-gray-600 dark:text-gray-300 line-clamp-2">${escapeHtml(post.description)}</p>`
                     : ""
                 }
               </li>

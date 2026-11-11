@@ -4,7 +4,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { getPublicationDeepLink } from "./shared.js";
 
-const SITE = "https://drdebmath.github.io/";
+const SITE = "https://debasishpattanayak.com/";
 const data = JSON.parse(readFileSync("data.json", "utf8"));
 const a = data.about_me || {};
 

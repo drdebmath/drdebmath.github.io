@@ -2,7 +2,7 @@
 // Run via `npm run build`. ponytail: regenerated on every build, no hand-editing.
 import { readFileSync, writeFileSync } from "node:fs";
 
-const SITE = "https://drdebmath.github.io";
+const SITE = "https://debasishpattanayak.com";
 const data = JSON.parse(readFileSync("data.json", "utf8"));
 const a = data.about_me;
 
@@ -55,6 +55,19 @@ html = html.replace(
   /^[ \t]*<!-- SEO:JSONLD:START[\s\S]*?^[ \t]*<!-- SEO:JSONLD:END -->/m,
   jsonld,
 );
+
+// Prerender the hero's text so the first paint already shows it (script.js sets
+// the same values again from data.json).
+const esc = (t) => String(t ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const prerender = (id, text) => {
+  html = html.replace(
+    new RegExp(`(<(\\w+) id="${id}"[^>]*>)[\\s\\S]*?(</\\2>)`),
+    (_, open, _tag, close) => `${open}${esc(text)}${close}`,
+  );
+};
+prerender("name", a.name);
+prerender("name_odia", a.name_odia);
+prerender("tagline", a.tagline);
 writeFileSync("index.html", html);
 
 // ---- sitemap.xml: own HTML pages + simulator pages hosted on this domain ----

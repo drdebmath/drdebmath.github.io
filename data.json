@@ -1,6 +1,7 @@
 {
   "about_me": {
     "name": "Debasish Pattanayak",
+    "tagline": "I study what swarms of simple mobile robots and agents can compute together: how they gather, explore, disperse and form patterns, and how much failure they can tolerate.",
     "name_odia": "ଦେବାଶିଷ ପଟ୍ଟନାୟକ",
     "picture": "./debasish_photo.jpeg",
     "dblp": "https://dblp.uni-trier.de/pers/hd/p/Pattanayak:Debasish",
@@ -41,7 +42,7 @@
         "CV": "cv.html"
       },
       "short_bio": [
-        "I am an Assistant Professor in Computer Science and Engineering at the Indian Institute of Technology, Indore. My research focuses on distributed algorithms for mobile agents and mobile robots in graphs and geometric spaces, with interests in exploration, rendezvous, dispersion, pattern formation, and fault tolerance. I also develop interactive simulators for these systems. Before joining IIT Indore, I completed my PhD in Theoretical Computer Science from the Department of Mathematics at IIT Guwahati under the supervision of Prof. Partha Sarathi Mandal and Dr. H. Ramesh, and held visiting and postdoctoral research positions in Europe and Canada. See my CV for a fuller academic profile."
+        "I am an Assistant Professor in Computer Science and Engineering at the Indian Institute of Technology, Indore. My research focuses on distributed algorithms for mobile agents and mobile robots in graphs and geometric spaces, with interests in exploration, rendezvous, dispersion, pattern formation, and fault tolerance. I also develop interactive simulators for these systems. Before joining IIT Indore, I completed my PhD in Theoretical Computer Science from the Department of Mathematics at IIT Guwahati under the supervision of Prof. Partha Sarathi Mandal and Dr. H. Ramesh. I was a visiting researcher with Prof. Stefan Schmid at the University of Vienna and with Dr. Anisur Rahaman Molla at ISI Kolkata, and then a postdoctoral researcher with Prof. Giuseppe F. Italiano at LUISS Guido Carli, with Prof. Andrzej Pelc at UQO, and under the joint supervision of Prof. Nicola Santoro and Prof. Paola Flocchini at Carleton University and the University of Ottawa. See my CV for a fuller academic profile."
       ]
     },
     "education": [
@@ -200,20 +201,20 @@
     },
     "whiteboard": {
       "label": "Whiteboard",
-      "url": "https://drdebmath.github.io/whiteboard/"
+      "url": "https://debasishpattanayak.com/whiteboard/"
     },
     "blog": {
       "label": "Blog",
       "title": "The Oblivious Robot",
-      "url": "https://drdebmath.github.io/blog/",
-      "feed": "https://drdebmath.github.io/blog/feed.xml"
+      "url": "https://debasishpattanayak.com/blog/",
+      "feed": "https://debasishpattanayak.com/blog/feed.xml"
     },
     "mobility_matters": {
       "label": "Mobility Matters",
       "title": "A Living Survey of Open Problems on Autonomous Agents, Robots and Particles",
-      "url": "https://drdebmath.github.io/mobility-matters/",
+      "url": "https://debasishpattanayak.com/mobility-matters/",
       "description": "A public atlas of research problems in distributed computing by mobile entities: agents on graphs, robots in the plane, geometric search, and programmable matter. Each problem is mapped across its model settings, with the known results, the papers behind them, and what is still open.",
-      "pdf": "https://drdebmath.github.io/mobility-matters/mobility-matters.pdf",
+      "pdf": "https://debasishpattanayak.com/mobility-matters/mobility-matters.pdf",
       "source_url": "https://github.com/drdebmath/mobility-matters"
     },
     "email": "debasish@iiti.ac.in",
@@ -229,43 +230,48 @@
       {
         "name": "CCM Model",
         "description": "Interactive simulator for the coordinated concurrent movement model.",
-        "url": "https://drdebmath.github.io/CCMModel/",
+        "url": "https://debasishpattanayak.com/CCMModel/",
         "source_url": "https://github.com/drdebmath/CCM"
       },
       {
         "name": "LCM Model",
         "description": "Interactive simulator for the classic Look-Compute-Move model.",
-        "url": "https://drdebmath.github.io/LCMmodel/",
+        "url": "https://debasishpattanayak.com/LCMmodel/",
+        "embed_url": "https://debasishpattanayak.com/LCMmodel/?embed&loop=1&controls=play,reset,step,speed&algorithm=CircleFormation&robots=12&seed=7",
         "source_url": "https://github.com/drdebmath/LCM"
       },
       {
         "name": "Black Hole Search",
         "description": "Interactive simulator for the Black Hole Search problem with Byzantine agents.",
-        "url": "https://drdebmath.github.io/BlackHoleSearch/",
+        "url": "https://debasishpattanayak.com/BlackHoleSearch/",
         "source_url": "https://github.com/drdebmath/BlackHoleSearch"
       },
       {
         "name": "SILBOT",
         "description": "Interactive simulator for the SILBOT mobile robot model.",
-        "url": "https://drdebmath.github.io/SILBOT/",
+        "url": "https://debasishpattanayak.com/SILBOT/",
         "source_url": "https://github.com/drdebmath/SILBOT"
       },
       {
         "name": "MobileAutomata",
+        "featured_on_homepage": false,
         "description": "Interactive simulator for the MobileAutomata model.",
-        "url": "https://drdebmath.github.io/MobileAutomata/",
+        "url": "https://debasishpattanayak.com/MobileAutomata/",
         "source_url": "https://github.com/drdebmath/MobileAutomata"
       },
       {
         "name": "India Future Mobility Planner",
+        "featured_on_homepage": false,
         "description": "Interactive simulator of flight vs high-speed rail vs hybrid city-center journeys.",
-        "url": "https://drdebmath.github.io/Transport/",
+        "url": "https://debasishpattanayak.com/Transport/",
         "source_url": "https://github.com/drdebmath/Transport"
       },
       {
         "name": "Algorithm Visualizations",
+        "featured_on_homepage": false,
         "description": "Step-by-step demos by category: traversal, shortest paths, spanning trees, online algorithms, and distributed agents.",
-        "url": "visualizations/"
+        "url": "visualizations/",
+        "embed": false
       }
     ]
   },
@@ -305,7 +311,8 @@
     },
     {
       "date": "11 April 2026",
-      "title": "Awarded PM-ECRG by ANRF."
+      "title": "Awarded PM-ECRG by ANRF.",
+      "url": "cv.html#awards"
     },
     {
       "date": "7 April 2026",
@@ -446,7 +453,7 @@
       "course": "CS103: Introduction to Programming",
       "duration": "Jul-Nov 2026",
       "institution": "IIT Indore",
-      "url": "https://drdebmath.github.io/IITIJul2026CS103/"
+      "url": "https://debasishpattanayak.com/IITIJul2026CS103/"
     }
   ],
   "publications": [
@@ -487,7 +494,7 @@
         "euclidean plane",
         "Faults"
       ],
-      "title": "Gathering of mobile robots with weak multiplicity detection in presence of crash-faults.",
+      "title": "Gathering of Mobile Robots with Weak Multiplicity Detection in Presence of Crash-Faults",
       "journal": {
         "full": "Journal of Parallel and Distributed Computing",
         "short": "J. Parallel Distrib. Comput."
@@ -515,7 +522,7 @@
         "euclidean plane",
         "three dimensions"
       ],
-      "title": "Surveillance of Uneven Surface with Self-organizing Unmanned Aerial Vehicles.",
+      "title": "Surveillance of Uneven Surface with Self-organizing Unmanned Aerial Vehicles",
       "journal": {
         "full": "IEEE Transactions on Mobile Computing",
         "short": "IEEE Trans. Mobile Comput."
@@ -540,7 +547,7 @@
         "mobile robots",
         "euclidean plane"
       ],
-      "title": "Area Convergence of Weaker Robots with Additional Capabilities.",
+      "title": "Area Convergence of Weaker Robots with Additional Capabilities",
       "journal": {
         "full": "The Computer Journal",
         "short": "Comput. J."
@@ -565,7 +572,7 @@
         "euclidean plane",
         "randomized algorithms"
       ],
-      "title": "Randomized Gathering of Asynchronous Mobile Robots.",
+      "title": "Randomized Gathering of Asynchronous Mobile Robots",
       "journal": {
         "full": "Theoretical Computer Science",
         "short": "Theor. Comput. Sci."
@@ -589,7 +596,7 @@
         "mobile robots",
         "graphs"
       ],
-      "title": "Distributed Algorithms for Filling MIS Vertices of an Arbitrary Graph by Myopic Luminous Robots.",
+      "title": "Distributed Algorithms for Filling MIS Vertices of an Arbitrary Graph by Myopic Luminous Robots",
       "journal": {
         "full": "Theoretical Computer Science",
         "short": "Theor. Comput. Sci."
@@ -612,7 +619,7 @@
         "mobile agents",
         "graphs"
       ],
-      "title": "Deterministic Treasure Hunt and Rendezvous in Arbitrary Connected Graphs.",
+      "title": "Deterministic Treasure Hunt and Rendezvous in Arbitrary Connected Graphs",
       "journal": {
         "full": "Information Processing Letters",
         "short": "Inf. Process. Lett."
@@ -635,7 +642,7 @@
         "mobile agents",
         "graphs"
       ],
-      "title": "Graph Exploration by a Deterministic Memoryless Automaton with Pebbles.",
+      "title": "Graph Exploration by a Deterministic Memoryless Automaton with Pebbles",
       "journal": {
         "full": "Discrete Applied Mathematics",
         "short": "Discrete Appl. Math."
@@ -660,7 +667,7 @@
         "Faults",
         "euclidean plane"
       ],
-      "title": "Fault-Tolerant Gathering of Mobile Robots with Weak Multiplicity Detection.",
+      "title": "Fault-Tolerant Gathering of Mobile Robots with Weak Multiplicity Detection",
       "conference": {
         "full": "International Conference on Distributed Computing and Networking",
         "short": "ICDCN"
@@ -687,7 +694,7 @@
         "euclidean plane",
         "convergence"
       ],
-      "title": "Convergence of even simpler robots without position information.",
+      "title": "Convergence of Even Simpler Robots without Position Information",
       "conference": {
         "full": "Networked Systems - International Conference",
         "short": "NETYS"
@@ -714,7 +721,7 @@
         "euclidean plane",
         "evacuation"
       ],
-      "title": "Evacuating two robots from two unknown exits on the perimeter of a disk with wireless communication.",
+      "title": "Evacuating Two Robots from Two Unknown Exits on the Perimeter of a Disk with Wireless Communication",
       "conference": {
         "full": "International Conference on Distributed Computing and Networking",
         "short": "ICDCN"
@@ -740,7 +747,7 @@
         "euclidean plane",
         "evacuation"
       ],
-      "title": "Chauffeuring a crashed robot from a disk.",
+      "title": "Chauffeuring a Crashed Robot from a Disk",
       "conference": {
         "full": "International Symposium on Algorithms and Experiments for Wireless Sensor Networks",
         "short": "ALGOSENSORS"
@@ -765,7 +772,7 @@
         "euclidean plane",
         "three dimensions"
       ],
-      "title": "Surveillance of uneven surface with unmanned aerial vehicles.",
+      "title": "Surveillance of Uneven Surface with Unmanned Aerial Vehicles",
       "conference": {
         "full": "International Conference on Distributed Computing and Networking",
         "short": "ICDCN"
@@ -792,7 +799,7 @@
         "euclidean plane",
         "pattern formation"
       ],
-      "title": "Conic Formation in Presence of Faulty Robots.",
+      "title": "Conic Formation in Presence of Faulty Robots",
       "conference": {
         "full": "International Symposium on Algorithms and Experiments for Wireless Sensor Networks",
         "short": "ALGOSENSORS"
@@ -817,7 +824,7 @@
         "Faults",
         "graphs"
       ],
-      "title": "Dispersion of Mobile Robots Tolerating Faults.",
+      "title": "Dispersion of Mobile Robots Tolerating Faults",
       "conference": {
         "full": "Workshop on Distributed Algorithms for Large-scale Fault-tolerant Robots",
         "short": "WDALFR"
@@ -864,7 +871,7 @@
         "grid",
         "pattern formation"
       ],
-      "title": "Fort Formation by an Automaton.",
+      "title": "Fort Formation by an Automaton",
       "conference": {
         "full": "International Conference on COMmunication Systems & NETworkS",
         "short": "COMSNETS"
@@ -887,7 +894,7 @@
         "graphs",
         "dispersion"
       ],
-      "title": "Dispersion of Mobile Robots on Directed Anonymous Graphs.",
+      "title": "Dispersion of Mobile Robots on Directed Anonymous Graphs",
       "conference": {
         "full": "International Colloquium on Structural Information and Communication Complexity",
         "short": "SIROCCO"
@@ -914,7 +921,7 @@
         "Faults",
         "dispersion"
       ],
-      "title": "Dispersion of Mobile Robots on Directed Anonymous Graphs.",
+      "title": "Dispersion of Mobile Robots on Directed Anonymous Graphs",
       "journal": {
         "full": "Journal of Parallel and Distributed Computing",
         "short": "J. Parallel Distrib. Comput."
@@ -938,7 +945,7 @@
         "mobile robots",
         "graphs"
       ],
-      "title": "Filling MIS Vertices by Myopic Luminous Robots.",
+      "title": "Filling MIS Vertices by Myopic Luminous Robots",
       "conference": {
         "full": "International Conference on Distributed Computing and Internet Technology",
         "short": "ICDCIT"
@@ -965,7 +972,7 @@
         "graphs",
         "dispersion"
       ],
-      "title": "Dispersion of Mobile Robots in Spite of Faults.",
+      "title": "Dispersion of Mobile Robots in Spite of Faults",
       "conference": {
         "full": "International Symposium on Stabilization, Safety, and Security of Distributed Systems",
         "short": "SSS"
@@ -1007,7 +1014,7 @@
         "graphs",
         "maximal independent set"
       ],
-      "title": "Maximal Independent Set via Mobile Robots.",
+      "title": "Maximal Independent Set via Mobile Robots",
       "conference": {
         "full": "International Conference on Distributed Computing and Networking",
         "short": "ICDCN"
@@ -1030,7 +1037,7 @@
         "euclidean plane",
         "pattern formation"
       ],
-      "title": "Time-Color Tradeoff on Uniform Circle Formation by Asynchronous Robots.",
+      "title": "Time-Color Tradeoff on Uniform Circle Formation by Asynchronous Robots",
       "conference": {
         "full": "IEEE International Parallel and Distributed Processing Symposium",
         "short": "IPDPS"
@@ -1054,7 +1061,7 @@
         "euclidean plane",
         "pattern formation"
       ],
-      "title": "The Minimum Algorithm Size of k-Grouping by Silent Oblivious Robots.",
+      "title": "The Minimum Algorithm Size of k-Grouping by Silent Oblivious Robots",
       "conference": {
         "full": "International Workshop on Combinatorial Algorithms",
         "short": "IWOCA"
@@ -1078,7 +1085,7 @@
         "Faults",
         "euclidean plane"
       ],
-      "title": "Collaborative Evacuation of Mobile Robots.",
+      "title": "Collaborative Evacuation of Mobile Robots",
       "conference": {
         "full": "Doctoral Symposium, International Conference on Distributed Computing and Networking",
         "short": "ICDCN"
@@ -1103,7 +1110,7 @@
         "graphs",
         "edge connectivity"
       ],
-      "title": "On maximal k-edge-connected subgraphs of undirected graphs.",
+      "title": "On Maximal k-Edge-Connected Subgraphs of Undirected Graphs",
       "arxiv": "https://arxiv.org/abs/2211.06521",
       "doi": "https://doi.org/10.1016/j.jcss.2026.103801",
       "dblp": "https://dblp.org/rec/journals/jcss/GeorgiadisIKP26.html",
@@ -1129,7 +1136,7 @@
         "euclidean plane",
         "pattern formation"
       ],
-      "title": "BA: Optimal Uniform Circle Formation by Asynchronous Luminous Robots.",
+      "title": "BA: Optimal Uniform Circle Formation by Asynchronous Luminous Robots",
       "arxiv": "https://arxiv.org/abs/2405.06617",
       "type": "conference",
       "date": "Oct 29-31, 2024",
@@ -1466,7 +1473,7 @@
         "euclidean plane",
         "pattern formation"
       ],
-      "title": "Universal pattern formation by oblivious robots under sequential schedulers",
+      "title": "Universal Pattern Formation by Oblivious Robots under Sequential Schedulers",
       "type": "journal",
       "arxiv": "https://arxiv.org/abs/2412.10733",
       "doi": "https://doi.org/10.1007/s00446-026-00504-3",
@@ -1512,7 +1519,7 @@
       "Place": "IIT Indore",
       "date": "Oct 10 2026",
       "links": {
-        "talk": "https://drdebmath.github.io/Talks/ai-agents-life-and-money.html"
+        "talk": "https://debasishpattanayak.com/Talks/ai-agents-life-and-money.html"
       }
     },
     {
@@ -1521,8 +1528,9 @@
       "Place": "The Institute of Mathematical Sciences (IMSc), Chennai",
       "date": "Jun 19 2026",
       "links": {
-        "talk": "https://drdebmath.github.io/Talks/distributed-algorithms.html",
-        "event": "https://www.imsc.res.in/outreach/fstcs2026/"
+        "talk": "https://debasishpattanayak.com/Talks/distributed-algorithms.html",
+        "event": "https://www.imsc.res.in/outreach/events/foundation-series/2026/fstcs2026/",
+        "video": "https://www.youtube.com/watch?v=d_hQ7fupkyI"
       }
     },
     {
@@ -1530,7 +1538,7 @@
       "event": "Department of Mathematics, IIT Guwahati",
       "date": "Jun 12 2026",
       "links": {
-        "talk": "https://drdebmath.github.io/Talks/ai-agents-moving-frontier.html"
+        "talk": "https://debasishpattanayak.com/Talks/ai-agents-moving-frontier.html"
       }
     },
     {
@@ -1539,7 +1547,7 @@
       "date": "Feb 13 2026",
       "Place": "IIT Indore",
       "links": {
-        "talk": "https://drdebmath.github.io/Talks/aiagents.html"
+        "talk": "https://debasishpattanayak.com/Talks/aiagents.html"
       }
     },
     {
@@ -1701,13 +1709,13 @@
       "course": "CS637: Theory of Computation and Graph Theory",
       "duration": "Jan-Apr 2026",
       "institution": "IIT Indore",
-      "url": "https://drdebmath.github.io/IITIJan2026CS637"
+      "url": "https://debasishpattanayak.com/IITIJan2026CS637"
     },
     {
       "course": "CS103: Introduction to Programming",
       "duration": "July-Nov 2025",
       "institution": "IIT Indore",
-      "url": "https://drdebmath.github.io/IITIJul2025CS103"
+      "url": "https://debasishpattanayak.com/IITIJul2025CS103"
     },
     {
       "course": "Artificial Intelligence and Machine Learning (Bachelor)",
@@ -1990,6 +1998,32 @@
       }
     ]
   },
+  "hero_simulations": [
+    {
+      "label": "Circle formation",
+      "title": "Uniform circle formation",
+      "description": "Asynchronous robots in the Look–Compute–Move cycle spread themselves evenly on a circle.",
+      "embed_url": "https://debasishpattanayak.com/LCMmodel/?embed&loop=1&algorithm=CircleFormation&robots=12&seed=7"
+    },
+    {
+      "label": "Gathering",
+      "title": "Gathering at the centre of gravity",
+      "description": "Each robot looks, computes the centre of gravity of the swarm, and moves towards it.",
+      "embed_url": "https://debasishpattanayak.com/LCMmodel/?embed&loop=1&algorithm=Gathering&robots=10&seed=3"
+    },
+    {
+      "label": "Crash faults",
+      "title": "Gathering with crashed robots",
+      "description": "The same algorithm when two robots, chosen at random, crash and stop for good.",
+      "embed_url": "https://debasishpattanayak.com/LCMmodel/?embed&loop=1&algorithm=Gathering&robots=10&seed=3&num_of_faults=2&fault_type=crash"
+    },
+    {
+      "label": "Limited visibility",
+      "title": "Go-To-Center with limited visibility",
+      "description": "Three robots that see only 100 units converge without losing sight of each other; the lines show who sees whom.",
+      "embed_url": "https://debasishpattanayak.com/LCMmodel/?embed&loop=1&algorithm=GoToCenter&points=-80,10;0,0;95,-5&visibility=100&scheduler=sequential&speed=turn:1&links=1"
+    }
+  ],
   "research_themes": [
     {
       "title": "Dispersion of Mobile Agents",
@@ -1997,7 +2031,7 @@
       "selected_papers": [
         "Asynchronous Dispersion with Optimal Time Complexity",
         "Dispersion is (Almost) Optimal under (A)synchrony",
-        "Dispersion of Mobile Robots on Directed Anonymous Graphs."
+        "Dispersion of Mobile Robots on Directed Anonymous Graphs"
       ]
     },
     {
@@ -2006,7 +2040,7 @@
       "selected_papers": [
         "Optimal Luminous UCF under Asynchrony",
         "Universal Dancing by Luminous Robots Under Sequential Schedulers",
-        "Universal pattern formation by oblivious robots under sequential schedulers"
+        "Universal Pattern Formation by Oblivious Robots under Sequential Schedulers"
       ]
     },
     {
@@ -2014,8 +2048,8 @@
       "description": "Coordination and exploration under crash faults, Byzantine companions, and hazardous environments.",
       "selected_papers": [
         "Exploring Dangerous Graphs with Byzantine Companions",
-        "Gathering of mobile robots with weak multiplicity detection in presence of crash-faults.",
-        "Dispersion of Mobile Robots Tolerating Faults."
+        "Gathering of Mobile Robots with Weak Multiplicity Detection in Presence of Crash-Faults",
+        "Dispersion of Mobile Robots Tolerating Faults"
       ]
     },
     {
@@ -2023,8 +2057,8 @@
       "description": "Leader election, connectivity, treasure hunt, and computation via mobile agents on graphs.",
       "selected_papers": [
         "Faster Leader Election via Mobile Agents and its Applications",
-        "On maximal k-edge-connected subgraphs of undirected graphs.",
-        "Deterministic Treasure Hunt and Rendezvous in Arbitrary Connected Graphs."
+        "On Maximal k-Edge-Connected Subgraphs of Undirected Graphs",
+        "Deterministic Treasure Hunt and Rendezvous in Arbitrary Connected Graphs"
       ]
     }
   ],
