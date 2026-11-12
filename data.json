@@ -231,14 +231,14 @@
         "name": "CCM Model",
         "description": "Interactive simulator for the coordinated concurrent movement model.",
         "url": "https://debasishpattanayak.com/CCMModel/",
-        "source_url": "https://github.com/drdebmath/CCM"
+        "source_url": "https://github.com/drdebmath/CCMModel"
       },
       {
         "name": "LCM Model",
         "description": "Interactive simulator for the classic Look-Compute-Move model.",
         "url": "https://debasishpattanayak.com/LCMmodel/",
         "embed_url": "https://debasishpattanayak.com/LCMmodel/?embed&loop=1&controls=play,reset,step,speed&algorithm=CircleFormation&robots=12&seed=7",
-        "source_url": "https://github.com/drdebmath/LCM"
+        "source_url": "https://github.com/drdebmath/LCMmodel"
       },
       {
         "name": "Black Hole Search",

@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupDarkMode();
   setupGoToTopButton();
 
-  fetch("data.json?v=42e086e9ae")
+  fetch("data.json?v=9a6c2a59ed")
     .then((response) => response.json())
     .then((data) => initializeCVPage(data))
     .catch((error) => {
