@@ -18,7 +18,7 @@ import {
   setupGoToTopButton,
   setupPrimaryNav,
   setupSiteSearch,
-} from "./shared.js?v=9c1b8a704f";
+} from "./shared.js?v=3ba4c3c249";
 
 document.addEventListener("DOMContentLoaded", () => {
   setupDarkMode();

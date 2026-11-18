@@ -972,6 +972,14 @@ export function getPrimarySiteLinks(data = {}) {
   if (cs103?.url) links.push({ href: cs103.url, label: "CS103" });
   links.push({ href: "teaching.html", label: "Teaching" });
 
+  if (data.about_me?.blog?.url) {
+    links.push({
+      href: data.about_me.blog.url,
+      label: data.about_me.blog.label || "Blog",
+      title: data.about_me.blog.title || "",
+    });
+  }
+
   links.push(
     { href: "talks.html", label: "Talks" },
     { href: "timeline.html", label: "Timeline" },
