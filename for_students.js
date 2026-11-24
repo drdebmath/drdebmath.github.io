@@ -7,7 +7,7 @@ import {
   setupGoToTopButton,
   setupPrimaryNav,
   setupSiteSearch,
-} from "./shared.js?v=964661e959";
+} from "./shared.js?v=0ef2b1721c";
 
 const collaboratorData = [
   { name: "John Augustine", uni: "IIT Madras", coords: [12.9915, 80.2337], type: "indian" },

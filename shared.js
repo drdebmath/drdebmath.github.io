@@ -973,7 +973,6 @@ export function renderSimulatorCardsHtml(simulators = []) {
 export function getPrimarySiteLinks(data = {}) {
   const links = [
     { href: "index.html", label: "Home" },
-    { href: "publications.html", label: "Publications" },
   ];
 
   if (data.about_me?.research?.url) {
@@ -983,6 +982,7 @@ export function getPrimarySiteLinks(data = {}) {
       title: data.about_me.research.title || "",
     });
   }
+  links.push({ href: "publications.html", label: "Publications" });
 
   const cs103 = [...(data.current_teaching || []), ...(data.teaching || [])].find(
     (course) => /CS103/i.test(course.title || course.course || "")

@@ -51,7 +51,7 @@ amber award tags. No shadows, no rounded cards, no decoration that a paper would
 2. `<nav class="site-nav">` with inner `<div class="page-shell flex items-center justify-between gap-3 py-2.5">`.
    The `<ul id="navbar">` is filled by JS via `setupPrimaryNav(data)` from `shared.js`
    — the same links everywhere, in the order `getPrimarySiteLinks` builds them
-   (Home · Publications · Research · CS103 · Talks · Timeline · For Students · Simulators · CV · Teaching · Blog · Mobility Matters;
+   (Home · Research · Publications · CS103 · Talks · Timeline · For Students · Simulators · CV · Teaching · Blog · Mobility Matters;
    Research, CS103, CV, Blog and Mobility Matters appear only when `data.json` supplies their URLs — the blog is
    `about_me.blog`, also listed in the footer). Links are `.nav-link`; the active page gets
    `.nav-link-active` + `aria-current="page"`. Never hand-build a nav.
