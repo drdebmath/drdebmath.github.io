@@ -21,17 +21,17 @@
 </script>
     <!-- SEO:JSONLD:END -->
 
-    <link rel="stylesheet" href="assets/site.css?v=e40bdf93cc">
+    <link rel="stylesheet" href="assets/site.css?v=f96accdb5d">
     <script>
         // Dark class before first paint (stored choice, else the system setting).
         (() => { try { const s = localStorage.getItem("darkMode"); if (s === null ? matchMedia("(prefers-color-scheme: dark)").matches : s === "true") document.documentElement.classList.add("dark"); } catch {} })();
     </script>
-    <link rel="modulepreload" href="script.js?v=6fa17e7524">
-    <link rel="modulepreload" href="shared.js?v=0ef2b1721c">
-    <link rel="preload" href="data.json?v=a051de650c" as="fetch" crossorigin="anonymous">
+    <link rel="modulepreload" href="script.js?v=6420ca4776">
+    <link rel="modulepreload" href="shared.js?v=8690f11f26">
+    <link rel="preload" href="data.json?v=b002ff9560" as="fetch" crossorigin="anonymous">
     <link rel="preload" href="assets/fonts/LM-regular.woff2" as="font" type="font/woff2" crossorigin="">
 
-    <meta name="last-updated" content="2026-11-24T01:12:10Z">
+    <meta name="last-updated" content="2026-11-24T17:12:01Z">
 </head>
 
 <body data-page="home" class="bg-white text-gray-900 dark:bg-dark-bg dark:text-dark-text transition-colors duration-200 font-sans">
@@ -41,7 +41,7 @@
 
     <nav class="site-nav">
         <div class="page-shell flex items-center justify-between gap-3 py-2.5">
-            <ul id="navbar" class="flex min-w-0 flex-1 gap-0.5 overflow-x-auto whitespace-nowrap nav-scroll -ml-2.5"><li class="flex shrink-0 items-center"><a href="index.html" class="nav-link-active" aria-current="page">Home</a></li><li class="flex shrink-0 items-center"><a href="https://debasishpattanayak.com/Research/" target="_blank" rel="noopener noreferrer" class="nav-link" title="Research Notes in Look-Compute-Move">Research</a></li><li class="flex shrink-0 items-center"><a href="publications.html" class="nav-link">Publications</a></li><li class="flex shrink-0 items-center"><a href="https://debasishpattanayak.com/IITIJul2026CS103/" target="_blank" rel="noopener noreferrer" class="nav-link">CS103</a></li><li class="flex shrink-0 items-center"><a href="teaching.html" class="nav-link">Teaching</a></li><li class="flex shrink-0 items-center"><a href="https://debasishpattanayak.com/blog/" target="_blank" rel="noopener noreferrer" class="nav-link" title="The Oblivious Robot">Blog</a></li><li class="flex shrink-0 items-center"><a href="talks.html" class="nav-link">Talks</a></li><li class="flex shrink-0 items-center"><a href="timeline.html" class="nav-link">Timeline</a></li><li class="flex shrink-0 items-center"><a href="for_students.html" class="nav-link">For Students</a></li><li class="flex shrink-0 items-center"><a href="simulators.html" class="nav-link">Simulators</a></li><li class="flex shrink-0 items-center"><a href="cv.html" class="nav-link">CV</a></li></ul>
+            <ul id="navbar" class="flex min-w-0 flex-1 gap-0.5 overflow-x-auto whitespace-nowrap nav-scroll -ml-2.5"><li class="flex shrink-0 items-center"><a href="index.html" class="nav-link-active" aria-current="page">Home</a></li><li class="flex shrink-0 items-center"><a href="https://debasishpattanayak.com/Research/" class="nav-link" title="Research Notes in Look-Compute-Move">Research</a></li><li class="flex shrink-0 items-center"><a href="publications.html" class="nav-link">Publications</a></li><li class="flex shrink-0 items-center"><a href="talks.html" class="nav-link">Talks</a></li><li class="flex shrink-0 items-center"><a href="simulators.html" class="nav-link">Simulators</a></li><li class="flex shrink-0 items-center"><a href="teaching.html" class="nav-link">Teaching</a></li><li class="flex shrink-0 items-center"><a href="https://debasishpattanayak.com/IITIJul2026CS103/" class="nav-link">CS103</a></li><li class="flex shrink-0 items-center"><a href="for_students.html" class="nav-link">For Students</a></li><li class="flex shrink-0 items-center"><a href="https://debasishpattanayak.com/blog/" class="nav-link" title="The Oblivious Robot">Blog</a></li><li class="flex shrink-0 items-center"><a href="cv.html" class="nav-link">CV</a></li></ul>
             <button id="darkModeToggle" aria-label="Toggle dark mode" class="shrink-0 p-1.5 rounded-sm border border-white/50 hover:bg-white/10 hover:border-white transition-colors focus:outline-none focus-visible:ring" aria-pressed="false">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z"></path>
@@ -132,21 +132,21 @@
 
     <!-- Featured projects (data.json: about_me.mobility_matters, about_me.research); hidden when absent -->
     <section id="featured" aria-label="Featured projects" class="page-shell pt-12 md:pt-14">
-        <div id="featured_content" class="mx-auto max-w-4xl space-y-10">
-    <div class="theorem">
+        <div id="featured_content" class="grid gap-10 md:grid-cols-2 md:gap-12">
+    <div class="theorem flex flex-col">
       <h2 class="text-3xl font-bold leading-tight text-gray-900 dark:text-white">
         <a href="https://debasishpattanayak.com/mobility-matters/" target="_blank" rel="noopener noreferrer" class="hover:text-blue-700 dark:hover:text-blue-300 transition-colors">Mobility Matters</a>
       </h2>
-      <p class="mt-2 max-w-3xl text-lg leading-relaxed text-gray-800 dark:text-gray-200 text-pretty"><em>A Living Survey of Open Problems on Autonomous Agents, Robots and Particles.</em> A public atlas of research problems in distributed computing by mobile entities: agents on graphs, robots in the plane, geometric search, and programmable matter. Each problem is mapped across its model settings, with the known results, the papers behind them, and what is still open.</p>
-      <div class="mt-4 flex flex-wrap gap-2.5"><a href="https://debasishpattanayak.com/mobility-matters/" target="_blank" rel="noopener noreferrer" class="btn-primary">Open the survey →</a><a href="https://debasishpattanayak.com/mobility-matters/mobility-matters.pdf" target="_blank" rel="noopener noreferrer" class="btn-quiet">Book (PDF)</a><a href="https://github.com/drdebmath/mobility-matters" target="_blank" rel="noopener noreferrer" class="meta-link self-center ml-1.5">Contribute on GitHub</a></div>
+      <p class="mt-2 text-lg leading-relaxed text-gray-800 dark:text-gray-200 text-pretty"><em>A Living Survey of Open Problems on Autonomous Agents, Robots and Particles.</em> A public atlas of research problems in distributed computing by mobile entities: agents on graphs, robots in the plane, geometric search, and programmable matter. Each problem is mapped across its model settings, with the known results, the papers behind them, and what is still open.</p>
+      <div class="mt-auto pt-4 flex flex-wrap gap-2.5"><a href="https://debasishpattanayak.com/mobility-matters/" target="_blank" rel="noopener noreferrer" class="btn-primary">Open the survey →</a><a href="https://debasishpattanayak.com/mobility-matters/mobility-matters.pdf" target="_blank" rel="noopener noreferrer" class="btn-quiet">Book (PDF)</a><a href="https://github.com/drdebmath/mobility-matters" target="_blank" rel="noopener noreferrer" class="meta-link self-center ml-1.5">Contribute on GitHub</a></div>
     </div>
   
-    <div class="theorem">
+    <div class="theorem flex flex-col">
       <h2 class="text-3xl font-bold leading-tight text-gray-900 dark:text-white">
         <a href="https://debasishpattanayak.com/Research/" target="_blank" rel="noopener noreferrer" class="hover:text-blue-700 dark:hover:text-blue-300 transition-colors">Research</a>
       </h2>
-      <p class="mt-2 max-w-3xl text-lg leading-relaxed text-gray-800 dark:text-gray-200 text-pretty"><em>Research Notes in Look-Compute-Move.</em> Distributed algorithms for robots and agents that move, on graphs and in the plane. Each entry has an explainer, the paper, and where it helps, a simulator that runs in the browser.</p>
-      <div class="mt-4 flex flex-wrap gap-2.5"><a href="https://debasishpattanayak.com/Research/" target="_blank" rel="noopener noreferrer" class="btn-primary">Read the notes →</a><a href="https://github.com/drdebmath/Research" target="_blank" rel="noopener noreferrer" class="meta-link self-center ml-1.5">Source on GitHub</a></div>
+      <p class="mt-2 text-lg leading-relaxed text-gray-800 dark:text-gray-200 text-pretty"><em>Research Notes in Look-Compute-Move.</em> Distributed algorithms for robots and agents that move, on graphs and in the plane. Each entry has an explainer, the paper, and where it helps, a simulator that runs in the browser.</p>
+      <div class="mt-auto pt-4 flex flex-wrap gap-2.5"><a href="https://debasishpattanayak.com/Research/" target="_blank" rel="noopener noreferrer" class="btn-primary">Read the notes →</a><a href="https://github.com/drdebmath/Research" target="_blank" rel="noopener noreferrer" class="meta-link self-center ml-1.5">Source on GitHub</a></div>
     </div>
   </div>
     </section>
@@ -169,6 +169,12 @@
                 <div id="news_content">
     <ol class="divide-y divide-gray-200 dark:divide-gray-700">
       
+            <li class="py-3.5 first:pt-0">
+              <p class="text-xs font-semibold uppercase tracking-[0.12em] text-gray-500 dark:text-gray-400 tabular-nums">15 Nov 2026</p>
+              <p class="mt-1 text-[0.95rem] leading-6 text-gray-800 dark:text-gray-200"><a href="https://arxiv.org/abs/2610.16935" target="_blank" rel="noopener noreferrer" class="text-gray-900 dark:text-gray-100 hover:text-blue-700 dark:hover:text-blue-300 underline decoration-gray-300 dark:decoration-gray-600 underline-offset-4 hover:decoration-current">Co-best paper award at ICDCN 2027 for Beyond the Boundary: Optimal Grid Dispersion by Spread, Reverse, and Collect.</a></p>
+              
+            </li>
+          
             <li class="py-3.5 first:pt-0">
               <p class="text-xs font-semibold uppercase tracking-[0.12em] text-gray-500 dark:text-gray-400 tabular-nums">2 Oct 2026</p>
               <p class="mt-1 text-[0.95rem] leading-6 text-gray-800 dark:text-gray-200"><a href="https://arxiv.org/abs/2610.16935" target="_blank" rel="noopener noreferrer" class="text-gray-900 dark:text-gray-100 hover:text-blue-700 dark:hover:text-blue-300 underline decoration-gray-300 dark:decoration-gray-600 underline-offset-4 hover:decoration-current">Beyond the Boundary: Optimal Grid Dispersion by Spread, Reverse, and Collect accepted to ICDCN 2027, to be held at NIT Karnataka, Surathkal.</a></p>
@@ -196,12 +202,6 @@
             <li class="py-3.5 first:pt-0">
               <p class="text-xs font-semibold uppercase tracking-[0.12em] text-gray-500 dark:text-gray-400 tabular-nums">26 May 2026</p>
               <p class="mt-1 text-[0.95rem] leading-6 text-gray-800 dark:text-gray-200"><a href="https://spaa.acm.org/" target="_blank" rel="noopener noreferrer" class="text-gray-900 dark:text-gray-100 hover:text-blue-700 dark:hover:text-blue-300 underline decoration-gray-300 dark:decoration-gray-600 underline-offset-4 hover:decoration-current">Brief Announcement: Asynchronous Dispersion with Optimal Time Complexity accepted to SPAA 2026.</a></p>
-              
-            </li>
-          
-            <li class="py-3.5 first:pt-0">
-              <p class="text-xs font-semibold uppercase tracking-[0.12em] text-gray-500 dark:text-gray-400 tabular-nums">17 Apr 2026</p>
-              <p class="mt-1 text-[0.95rem] leading-6 text-gray-800 dark:text-gray-200"><a href="https://doi.org/10.1016/j.jcss.2026.103801" target="_blank" rel="noopener noreferrer" class="text-gray-900 dark:text-gray-100 hover:text-blue-700 dark:hover:text-blue-300 underline decoration-gray-300 dark:decoration-gray-600 underline-offset-4 hover:decoration-current">Paper on $k$-edge connected subgraph accepted to JCSS.</a></p>
               
             </li>
           
@@ -408,6 +408,13 @@
             <li class="flex items-start gap-3 border-b border-gray-200 dark:border-gray-700 py-3 ">
               <span class="mt-[0.2rem] text-amber-600 dark:text-amber-400" aria-hidden="true">★</span>
               <p class="min-w-0 text-[0.95rem] leading-6 text-gray-800 dark:text-gray-100">
+                Co-best paper award for Optimal Grid Dispersion paper in ICDCN 2027.
+              </p>
+            </li>
+          
+            <li class="flex items-start gap-3 border-b border-gray-200 dark:border-gray-700 py-3 ">
+              <span class="mt-[0.2rem] text-amber-600 dark:text-amber-400" aria-hidden="true">★</span>
+              <p class="min-w-0 text-[0.95rem] leading-6 text-gray-800 dark:text-gray-100">
                 Best paper award for Universal Dancing paper in SIROCCO 2026.
               </p>
             </li>
@@ -423,13 +430,6 @@
               <span class="mt-[0.2rem] text-amber-600 dark:text-amber-400" aria-hidden="true">★</span>
               <p class="min-w-0 text-[0.95rem] leading-6 text-gray-800 dark:text-gray-100">
                 Best Paper award at ICDCIT 2023 for paper on MIS Filling.
-              </p>
-            </li>
-          
-            <li class="flex items-start gap-3 border-b border-gray-200 dark:border-gray-700 py-3 ">
-              <span class="mt-[0.2rem] text-amber-600 dark:text-amber-400" aria-hidden="true">★</span>
-              <p class="min-w-0 text-[0.95rem] leading-6 text-gray-800 dark:text-gray-100">
-                Awarded position under Distributed Computing Chair Research Grant, 2022 to work at UQO, Canada.
               </p>
             </li>
           
@@ -599,7 +599,7 @@
         </div>
       </div>
       <p class="mt-8 border-t border-white/20 pt-4 text-xs text-blue-100/80">
-        © 2026 Debasish Pattanayak. Academic homepage. Last updated <time data-last-updated="" datetime="2026-11-24T01:12:10Z" title="24 Nov 2026">24 Nov 2026</time>.
+        © 2026 Debasish Pattanayak. Academic homepage. Last updated <time data-last-updated="" datetime="2026-11-24T17:12:01Z" title="24 Nov 2026">24 Nov 2026</time>.
       </p>
     </div>
   </footer>
@@ -608,5 +608,5 @@
         ↑
     </button>
 
-    <script type="module" src="script.js?v=6fa17e7524"></script>
+    <script type="module" src="script.js?v=6420ca4776"></script>
 </body></html>

@@ -18,13 +18,13 @@ import {
   setupGoToTopButton,
   setupPrimaryNav,
   setupSiteSearch,
-} from "./shared.js?v=0ef2b1721c";
+} from "./shared.js?v=8690f11f26";
 
 document.addEventListener("DOMContentLoaded", () => {
   setupDarkMode();
   setupGoToTopButton();
 
-  fetch("data.json?v=a051de650c")
+  fetch("data.json?v=b002ff9560")
     .then((response) => response.json())
     .then((data) => {
       commonAuthors = data.common_authors || {};
@@ -199,7 +199,7 @@ function displayFeatured(data) {
           : "",
       ].filter(Boolean);
       return `
-    <div class="theorem">
+    <div class="theorem flex flex-col">
       <h2 class="text-3xl font-bold leading-tight text-gray-900 dark:text-white">
         ${createLinkHtml({
           url: project.url,
@@ -207,10 +207,10 @@ function displayFeatured(data) {
           className: "hover:text-blue-700 dark:hover:text-blue-300 transition-colors",
         })}
       </h2>
-      <p class="mt-2 max-w-3xl text-lg leading-relaxed text-gray-800 dark:text-gray-200 text-pretty">${
+      <p class="mt-2 text-lg leading-relaxed text-gray-800 dark:text-gray-200 text-pretty">${
         project.title ? `<em>${escapeHtml(project.title)}.</em> ` : ""
       }${escapeHtml(project.description || "")}</p>
-      <div class="mt-4 flex flex-wrap gap-2.5">${actions.join("")}</div>
+      <div class="mt-auto pt-4 flex flex-wrap gap-2.5">${actions.join("")}</div>
     </div>
   `;
     })

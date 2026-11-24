@@ -21,6 +21,13 @@ export function isExternalUrl(url) {
   return EXTERNAL_URL_PATTERN.test(String(url ?? ""));
 }
 
+// Pages on this domain (the Research notes, the blog, course sites) are part of the site.
+const OWN_SITE_PATTERN = /^https?:\/\/(www\.)?debasishpattanayak\.com(\/|$)/i;
+
+export function isOwnSiteUrl(url) {
+  return OWN_SITE_PATTERN.test(String(url ?? ""));
+}
+
 export function getLinkAttributes(url) {
   return isExternalUrl(url) ? ' target="_blank" rel="noopener noreferrer"' : "";
 }
@@ -31,13 +38,14 @@ export function createLinkHtml({
   className = "",
   title = "",
   extraAttributes = "",
+  sameTab = false,
 }) {
   const href = escapeAttribute(url || "#");
   const classes = className ? ` class="${className}"` : "";
   const titleAttribute = title ? ` title="${escapeAttribute(title)}"` : "";
   const otherAttributes = extraAttributes ? ` ${extraAttributes.trim()}` : "";
 
-  return `<a href="${href}"${getLinkAttributes(url)}${classes}${titleAttribute}${otherAttributes}>${escapeHtml(label)}</a>`;
+  return `<a href="${href}"${sameTab ? "" : getLinkAttributes(url)}${classes}${titleAttribute}${otherAttributes}>${escapeHtml(label)}</a>`;
 }
 
 export function formatMonthYear(dateString) {
@@ -906,6 +914,7 @@ export function appendNavLinks(navbar, links, className = NAV_LINK_CLASS) {
       title: link.title || "",
       className: link.active ? NAV_LINK_ACTIVE_CLASS : className,
       extraAttributes: link.active ? 'aria-current="page"' : "",
+      sameTab: isOwnSiteUrl(link.href),
     });
     navbar.appendChild(li);
   });
@@ -971,42 +980,32 @@ export function renderSimulatorCardsHtml(simulators = []) {
 }
 
 export function getPrimarySiteLinks(data = {}) {
-  const links = [
-    { href: "index.html", label: "Home" },
-  ];
+  const about = data.about_me || {};
+  // Research and output first, then the pages for students, then the blog and the CV.
+  const links = [{ href: "index.html", label: "Home" }];
 
-  if (data.about_me?.research?.url) {
-    links.push({
-      href: data.about_me.research.url,
-      label: data.about_me.research.label || "Research",
-      title: data.about_me.research.title || "",
-    });
+  if (about.research?.url) {
+    links.push({ href: about.research.url, label: about.research.label || "Research", title: about.research.title || "" });
   }
-  links.push({ href: "publications.html", label: "Publications" });
+  links.push(
+    { href: "publications.html", label: "Publications" },
+    { href: "talks.html", label: "Talks" },
+    { href: "simulators.html", label: "Simulators" },
+    { href: "teaching.html", label: "Teaching" }
+  );
 
   const cs103 = [...(data.current_teaching || []), ...(data.teaching || [])].find(
     (course) => /CS103/i.test(course.title || course.course || "")
   );
   if (cs103?.url) links.push({ href: cs103.url, label: "CS103" });
-  links.push({ href: "teaching.html", label: "Teaching" });
 
-  if (data.about_me?.blog?.url) {
-    links.push({
-      href: data.about_me.blog.url,
-      label: data.about_me.blog.label || "Blog",
-      title: data.about_me.blog.title || "",
-    });
+  links.push({ href: "for_students.html", label: "For Students" });
+
+  if (about.blog?.url) {
+    links.push({ href: about.blog.url, label: about.blog.label || "Blog", title: about.blog.title || "" });
   }
-
-  links.push(
-    { href: "talks.html", label: "Talks" },
-    { href: "timeline.html", label: "Timeline" },
-    { href: "for_students.html", label: "For Students" },
-    { href: "simulators.html", label: "Simulators" }
-  );
-
-  if (data.about_me?.cv?.url) {
-    links.push({ href: data.about_me.cv.url, label: "CV" });
+  if (about.cv?.url) {
+    links.push({ href: about.cv.url, label: "CV" });
   }
 
   return links;

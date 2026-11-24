@@ -117,6 +117,7 @@ My research interests lie in the design and analysis of algorithms for mobile ag
 
 ## Awards
 
+- Co-best paper award for Optimal Grid Dispersion paper in ICDCN 2027.
 - Best paper award for Universal Dancing paper in SIROCCO 2026.
 - Best Doctoral Thesis award from the Department of Mathematics, IIT Guwahati.
 - Best Paper award at ICDCIT 2023 for paper on MIS Filling.

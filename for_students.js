@@ -7,7 +7,7 @@ import {
   setupGoToTopButton,
   setupPrimaryNav,
   setupSiteSearch,
-} from "./shared.js?v=0ef2b1721c";
+} from "./shared.js?v=8690f11f26";
 
 const collaboratorData = [
   { name: "John Augustine", uni: "IIT Madras", coords: [12.9915, 80.2337], type: "indian" },
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupDarkMode();
   setupGoToTopButton();
 
-  fetch("data.json?v=a051de650c")
+  fetch("data.json?v=b002ff9560")
     .then((response) => response.json())
     .then((data) => {
       initializePage(data);
