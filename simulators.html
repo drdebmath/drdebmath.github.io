@@ -17,11 +17,11 @@
         // Dark class before first paint (stored choice, else the system setting).
         (() => { try { const s = localStorage.getItem("darkMode"); if (s === null ? matchMedia("(prefers-color-scheme: dark)").matches : s === "true") document.documentElement.classList.add("dark"); } catch {} })();
     </script>
-    <link rel="modulepreload" href="script.js?v=5d34de37ab">
-    <link rel="modulepreload" href="shared.js?v=3ba4c3c249">
-    <link rel="preload" href="data.json?v=9a6c2a59ed" as="fetch" crossorigin="anonymous">
+    <link rel="modulepreload" href="script.js?v=65b9dd926f">
+    <link rel="modulepreload" href="shared.js?v=964661e959">
+    <link rel="preload" href="data.json?v=a051de650c" as="fetch" crossorigin="anonymous">
     <link rel="preload" href="assets/fonts/LM-regular.woff2" as="font" type="font/woff2" crossorigin="">
-    <meta name="last-updated" content="2026-11-18T10:18:53Z">
+    <meta name="last-updated" content="2026-11-24T01:08:10Z">
 </head>
 
 <body data-page="simulators" class="bg-white text-gray-900 dark:bg-dark-bg dark:text-dark-text transition-colors duration-200 font-sans">
@@ -31,7 +31,7 @@
 
     <nav class="site-nav">
         <div class="page-shell flex items-center justify-between gap-3 py-2.5">
-            <ul id="navbar" class="flex min-w-0 flex-1 gap-0.5 overflow-x-auto whitespace-nowrap nav-scroll -ml-2.5"><li class="flex shrink-0 items-center"><a href="index.html" class="nav-link">Home</a></li><li class="flex shrink-0 items-center"><a href="publications.html" class="nav-link">Publications</a></li><li class="flex shrink-0 items-center"><a href="https://debasishpattanayak.com/IITIJul2026CS103/" target="_blank" rel="noopener noreferrer" class="nav-link">CS103</a></li><li class="flex shrink-0 items-center"><a href="teaching.html" class="nav-link">Teaching</a></li><li class="flex shrink-0 items-center"><a href="https://debasishpattanayak.com/blog/" target="_blank" rel="noopener noreferrer" class="nav-link" title="The Oblivious Robot">Blog</a></li><li class="flex shrink-0 items-center"><a href="talks.html" class="nav-link">Talks</a></li><li class="flex shrink-0 items-center"><a href="timeline.html" class="nav-link">Timeline</a></li><li class="flex shrink-0 items-center"><a href="for_students.html" class="nav-link">For Students</a></li><li class="flex shrink-0 items-center"><a href="simulators.html" class="nav-link-active" aria-current="page">Simulators</a></li><li class="flex shrink-0 items-center"><a href="cv.html" class="nav-link">CV</a></li></ul>
+            <ul id="navbar" class="flex min-w-0 flex-1 gap-0.5 overflow-x-auto whitespace-nowrap nav-scroll -ml-2.5"><li class="flex shrink-0 items-center"><a href="index.html" class="nav-link">Home</a></li><li class="flex shrink-0 items-center"><a href="publications.html" class="nav-link">Publications</a></li><li class="flex shrink-0 items-center"><a href="https://debasishpattanayak.com/Research/" target="_blank" rel="noopener noreferrer" class="nav-link" title="Research Notes in Look-Compute-Move">Research</a></li><li class="flex shrink-0 items-center"><a href="https://debasishpattanayak.com/IITIJul2026CS103/" target="_blank" rel="noopener noreferrer" class="nav-link">CS103</a></li><li class="flex shrink-0 items-center"><a href="teaching.html" class="nav-link">Teaching</a></li><li class="flex shrink-0 items-center"><a href="https://debasishpattanayak.com/blog/" target="_blank" rel="noopener noreferrer" class="nav-link" title="The Oblivious Robot">Blog</a></li><li class="flex shrink-0 items-center"><a href="talks.html" class="nav-link">Talks</a></li><li class="flex shrink-0 items-center"><a href="timeline.html" class="nav-link">Timeline</a></li><li class="flex shrink-0 items-center"><a href="for_students.html" class="nav-link">For Students</a></li><li class="flex shrink-0 items-center"><a href="simulators.html" class="nav-link-active" aria-current="page">Simulators</a></li><li class="flex shrink-0 items-center"><a href="cv.html" class="nav-link">CV</a></li></ul>
             <button id="darkModeToggle" aria-label="Toggle dark mode" class="shrink-0 p-1.5 rounded-sm border border-white/50 hover:bg-white/10 hover:border-white transition-colors focus:outline-none focus-visible:ring" aria-pressed="false">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z"></path>
@@ -184,13 +184,14 @@
                   <li><a href="https://projectpankhuri.github.io" target="_blank" rel="noopener noreferrer" class="hover:text-white hover:underline underline-offset-4">Project Pankhuri</a></li>
                 
             <li><a href="https://debasishpattanayak.com/blog/" target="_blank" rel="noopener noreferrer" class="hover:text-white hover:underline underline-offset-4" title="The Oblivious Robot">Blog</a></li>
+            <li><a href="https://debasishpattanayak.com/Research/" target="_blank" rel="noopener noreferrer" class="hover:text-white hover:underline underline-offset-4" title="Research Notes in Look-Compute-Move">Research</a></li>
             <li><a href="https://debasishpattanayak.com/mobility-matters/" target="_blank" rel="noopener noreferrer" class="hover:underline" title="A Living Survey of Open Problems on Autonomous Agents, Robots and Particles">Mobility Matters</a></li>
             <li><a href="https://debasishpattanayak.com/whiteboard/" target="_blank" rel="noopener noreferrer" class="hover:text-white hover:underline underline-offset-4">Whiteboard</a></li>
           </ul>
         </div>
       </div>
       <p class="mt-8 border-t border-white/20 pt-4 text-xs text-blue-100/80">
-        © 2026 Debasish Pattanayak. Academic homepage. Last updated <time data-last-updated="" datetime="2026-11-18T10:18:53Z" title="18 Nov 2026">18 Nov 2026</time>.
+        © 2026 Debasish Pattanayak. Academic homepage. Last updated <time data-last-updated="" datetime="2026-11-24T01:08:10Z" title="24 Nov 2026">24 Nov 2026</time>.
       </p>
     </div>
   </footer>
@@ -199,5 +200,5 @@
         ↑
     </button>
 
-    <script type="module" src="script.js?v=5d34de37ab"></script>
+    <script type="module" src="script.js?v=65b9dd926f"></script>
 </body></html>

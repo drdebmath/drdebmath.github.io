@@ -30,6 +30,7 @@ My research interests lie in the design and analysis of algorithms for mobile ag
 
 ## Projects
 
+- [Research](https://debasishpattanayak.com/Research/): Research Notes in Look-Compute-Move
 - [Mobility Matters](https://debasishpattanayak.com/mobility-matters/): A Living Survey of Open Problems on Autonomous Agents, Robots and Particles ([PDF](https://debasishpattanayak.com/mobility-matters/mobility-matters.pdf))
 - [The Oblivious Robot](https://debasishpattanayak.com/blog/): blog
 - [CCM Model](https://debasishpattanayak.com/CCMModel/): Interactive simulator for the coordinated concurrent movement model.

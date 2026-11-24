@@ -217,6 +217,13 @@
       "pdf": "https://debasishpattanayak.com/mobility-matters/mobility-matters.pdf",
       "source_url": "https://github.com/drdebmath/mobility-matters"
     },
+    "research": {
+      "label": "Research",
+      "title": "Research Notes in Look-Compute-Move",
+      "url": "https://debasishpattanayak.com/Research/",
+      "description": "Distributed algorithms for robots and agents that move, on graphs and in the plane. Each entry has an explainer, the paper, and where it helps, a simulator that runs in the browser.",
+      "source_url": "https://github.com/drdebmath/Research"
+    },
     "email": "debasish@iiti.ac.in",
     "contact": {
       "email": "debasish@iiti.ac.in",

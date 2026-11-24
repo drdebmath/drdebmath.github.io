@@ -409,6 +409,16 @@ export function renderSiteFooter(data, containerId = "site_footer") {
                 : ""
             }
             ${
+              about.research?.url
+                ? `<li>${createLinkHtml({
+                    url: about.research.url,
+                    label: about.research.label || "Research",
+                    title: about.research.title || "",
+                    className: "hover:text-white hover:underline underline-offset-4",
+                  })}</li>`
+                : ""
+            }
+            ${
               about.mobility_matters?.url
                 ? `<li>${createLinkHtml({
                     url: about.mobility_matters.url,
@@ -965,6 +975,14 @@ export function getPrimarySiteLinks(data = {}) {
     { href: "index.html", label: "Home" },
     { href: "publications.html", label: "Publications" },
   ];
+
+  if (data.about_me?.research?.url) {
+    links.push({
+      href: data.about_me.research.url,
+      label: data.about_me.research.label || "Research",
+      title: data.about_me.research.title || "",
+    });
+  }
 
   const cs103 = [...(data.current_teaching || []), ...(data.teaching || [])].find(
     (course) => /CS103/i.test(course.title || course.course || "")

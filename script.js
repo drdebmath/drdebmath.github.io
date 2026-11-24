@@ -18,13 +18,13 @@ import {
   setupGoToTopButton,
   setupPrimaryNav,
   setupSiteSearch,
-} from "./shared.js?v=3ba4c3c249";
+} from "./shared.js?v=964661e959";
 
 document.addEventListener("DOMContentLoaded", () => {
   setupDarkMode();
   setupGoToTopButton();
 
-  fetch("data.json?v=9a6c2a59ed")
+  fetch("data.json?v=a051de650c")
     .then((response) => response.json())
     .then((data) => {
       commonAuthors = data.common_authors || {};
@@ -165,36 +165,56 @@ function setupHeroSimulation(simulations) {
   else window.addEventListener("load", whenIdle, { once: true });
 }
 
-// The featured project (about_me.mobility_matters), set as a theorem-like block.
+// The featured projects (about_me.mobility_matters, about_me.research), each set as a theorem-like block.
 function displayFeatured(data) {
   const section = document.getElementById("featured");
   const container = document.getElementById("featured_content");
-  const survey = data.about_me?.mobility_matters;
-  if (!section || !container || !survey?.url) return;
+  if (!section || !container) return;
 
-  const actions = [
-    createLinkHtml({ url: survey.url, label: "Open the survey →", className: "btn-primary" }),
-    survey.pdf ? createLinkHtml({ url: survey.pdf, label: "Book (PDF)", className: "btn-quiet" }) : "",
-    survey.source_url
-      ? createLinkHtml({ url: survey.source_url, label: "Contribute on GitHub", className: "meta-link self-center ml-1.5" })
-      : "",
+  const about = data.about_me || {};
+  const projects = [
+    about.mobility_matters?.url && {
+      ...about.mobility_matters,
+      label: about.mobility_matters.label || "Mobility Matters",
+      openLabel: "Open the survey →",
+      extra: about.mobility_matters.pdf ? { url: about.mobility_matters.pdf, label: "Book (PDF)" } : null,
+      sourceLabel: "Contribute on GitHub",
+    },
+    about.research?.url && {
+      ...about.research,
+      label: about.research.label || "Research",
+      openLabel: "Read the notes →",
+      sourceLabel: "Source on GitHub",
+    },
   ].filter(Boolean);
+  if (!projects.length) return;
 
-  container.innerHTML = `
+  container.innerHTML = projects
+    .map((project) => {
+      const actions = [
+        createLinkHtml({ url: project.url, label: project.openLabel, className: "btn-primary" }),
+        project.extra ? createLinkHtml({ ...project.extra, className: "btn-quiet" }) : "",
+        project.source_url
+          ? createLinkHtml({ url: project.source_url, label: project.sourceLabel, className: "meta-link self-center ml-1.5" })
+          : "",
+      ].filter(Boolean);
+      return `
     <div class="theorem">
       <h2 class="text-3xl font-bold leading-tight text-gray-900 dark:text-white">
         ${createLinkHtml({
-          url: survey.url,
-          label: survey.label || "Mobility Matters",
+          url: project.url,
+          label: project.label,
           className: "hover:text-blue-700 dark:hover:text-blue-300 transition-colors",
         })}
       </h2>
       <p class="mt-2 max-w-3xl text-lg leading-relaxed text-gray-800 dark:text-gray-200 text-pretty">${
-        survey.title ? `<em>${escapeHtml(survey.title)}.</em> ` : ""
-      }${escapeHtml(survey.description || "")}</p>
+        project.title ? `<em>${escapeHtml(project.title)}.</em> ` : ""
+      }${escapeHtml(project.description || "")}</p>
       <div class="mt-4 flex flex-wrap gap-2.5">${actions.join("")}</div>
     </div>
   `;
+    })
+    .join("");
   section.classList.remove("hidden");
 }
 

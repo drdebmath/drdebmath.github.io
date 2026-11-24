@@ -51,8 +51,8 @@ amber award tags. No shadows, no rounded cards, no decoration that a paper would
 2. `<nav class="site-nav">` with inner `<div class="page-shell flex items-center justify-between gap-3 py-2.5">`.
    The `<ul id="navbar">` is filled by JS via `setupPrimaryNav(data)` from `shared.js`
    — the same links everywhere, in the order `getPrimarySiteLinks` builds them
-   (Home · Publications · CS103 · Talks · Timeline · For Students · Simulators · CV · Teaching · Blog · Mobility Matters;
-   CS103, CV, Blog and Mobility Matters appear only when `data.json` supplies their URLs — the blog is
+   (Home · Publications · Research · CS103 · Talks · Timeline · For Students · Simulators · CV · Teaching · Blog · Mobility Matters;
+   Research, CS103, CV, Blog and Mobility Matters appear only when `data.json` supplies their URLs — the blog is
    `about_me.blog`, also listed in the footer). Links are `.nav-link`; the active page gets
    `.nav-link-active` + `aria-current="page"`. Never hand-build a nav.
 3. Header: `<header class="site-band">` (blue, with the grid), inner `page-shell`.
@@ -64,7 +64,7 @@ amber award tags. No shadows, no rounded cards, no decoration that a paper would
    - **CV**: the large portrait, name, position, office.
 4. `<main class="page-shell …">`. Home sections are open: a `.section-rule` row
    (`h2.section-heading` + optional `.more-link`s) and then content. Headings are not numbered.
-   The featured project (`about_me.mobility_matters`) is a `.theorem` block; research themes
+   The featured projects (`about_me.mobility_matters`, `about_me.research`) are `.theorem` blocks; research themes
    are `.surface-card`s. Subpages may group content in `.surface-panel`.
 5. `<footer id="site_footer" class="site-footer …">` — rendered by `renderSiteFooter(data)`.
 6. Go-to-top button (`#goToTop`) + dark-mode toggle in nav (`#darkModeToggle`).

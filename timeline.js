@@ -8,13 +8,13 @@ import {
   setupGoToTopButton,
   setupPrimaryNav,
   setupSiteSearch,
-} from "./shared.js?v=3ba4c3c249";
+} from "./shared.js?v=964661e959";
 
 document.addEventListener("DOMContentLoaded", () => {
   setupDarkMode();
   setupGoToTopButton();
 
-  fetch("data.json?v=9a6c2a59ed")
+  fetch("data.json?v=a051de650c")
     .then((response) => response.json())
     .then((data) => {
       setupPrimaryNav(data);

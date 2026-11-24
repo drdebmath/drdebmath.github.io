@@ -56,6 +56,8 @@ const lines = [
     a.cv?.url && `- ${link("CV", a.cv.url)}`,
   ]),
   ...section("Projects", [
+    a.research?.url &&
+      `- ${link(a.research.label || "Research", a.research.url)}: ` + clean(a.research.title),
     a.mobility_matters?.url &&
       `- ${link(a.mobility_matters.label || "Mobility Matters", a.mobility_matters.url)}: ` +
         clean(a.mobility_matters.title) +
